@@ -5,10 +5,10 @@ export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   firstName: text("first_name"),
   lastName: text("last_name"),
-  email: text("email"),
-  username: text("username"),
-  password: text("password"),
-  createdAt: timestamp("created_at").default(sql`CURRENT_TIMESTAMP`),
+  email: text("email").unique(),
+  username: text("username").unique(),
+  password: text("password").notNull(),
+  createdAt: timestamp("created_at").default(sql`now()`),
 })
 
 export type User = typeof users.$inferSelect
