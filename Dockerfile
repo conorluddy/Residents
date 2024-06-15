@@ -18,7 +18,7 @@ COPY src ./src
 RUN npm run build
 
 # Expose the port the app runs on
-EXPOSE 3000
+EXPOSE 8080
 
 # Command to run your app using the JavaScript output in dist
 CMD ["node", "dist/index.js"]

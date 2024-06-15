@@ -1,7 +1,7 @@
 import { Request, Response } from "express"
 import { NewUser, User, tableUsers } from "../db/schema"
 import { createHash, validateHash } from "../utils/crypt"
-import db from "../db/connection"
+import db from "../db"
 import { eq } from "drizzle-orm"
 import {
   HTTP_CLIENT_ERROR,

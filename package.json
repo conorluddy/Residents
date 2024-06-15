@@ -10,7 +10,8 @@
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "push": "drizzle-kit push",
     "introspect": "drizzle-kit introspect",
-    "studio": "drizzle-kit studio"
+    "studio": "drizzle-kit studio",
+    "dockerup": "docker-compose up -d"
   },
   "author": "",
   "license": "ISC",
@@ -20,6 +21,7 @@
     "dotenv": "^16.4.5",
     "drizzle-orm": "^0.31.2",
     "express": "^4.19.2",
+    "helmet": "^7.1.0",
     "jsonwebtoken": "^9.0.2",
     "pg": "^8.12.0",
     "reflect-metadata": "^0.2.2",
