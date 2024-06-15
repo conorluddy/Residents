@@ -8,10 +8,13 @@ import {
   HTTP_SERVER_ERROR,
   HTTP_SUCCESS,
 } from "../constants/http"
+import { generateJwt } from "../utils/jwt"
 
+/**
+ *
+ */
 export const createUser = async ({ body }: Request, res: Response) => {
   try {
-    // Move this to controller
     const {
       username,
       firstName,
@@ -37,6 +40,9 @@ export const createUser = async ({ body }: Request, res: Response) => {
   }
 }
 
+/**
+ *
+ */
 export const getAllUsers = async (req: Request, res: Response) => {
   try {
     const result: User[] = await db.select().from(tableUsers)
@@ -49,6 +55,9 @@ export const getAllUsers = async (req: Request, res: Response) => {
   }
 }
 
+/**
+ *
+ */
 export const loginUser = async ({ body }: Request, res: Response) => {
   try {
     const { username, password } = body as Record<string, string>
@@ -56,9 +65,11 @@ export const loginUser = async ({ body }: Request, res: Response) => {
       .select()
       .from(tableUsers)
       .where(eq(tableUsers.username, username))
+    const user = results[0]
 
-    if (results[0] && (await validateHash(password, results[0].password))) {
-      res.status(HTTP_SUCCESS.OK).send("Login successful")
+    if (user && (await validateHash(password, user.password))) {
+      const accessToken = generateJwt(user)
+      res.status(HTTP_SUCCESS.OK).json({ accessToken })
     } else {
       res.status(HTTP_CLIENT_ERROR.FORBIDDEN).send("Not today, buddy")
     }

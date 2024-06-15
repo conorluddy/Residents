@@ -7,6 +7,8 @@ const port = 3000
 
 // Pin the Drizzle instance to the request object
 app.use(attachDb)
+
+// Middleware
 app.use(express.json())
 
 // Routers
