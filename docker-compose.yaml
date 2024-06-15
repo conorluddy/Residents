@@ -1,6 +1,20 @@
 version: '3.8'
 
 services:
+  app:
+    build: .
+    ports:
+      - "${API_PORT}:3000"
+    environment:
+      - NODE_ENV=${NODE_ENV}
+      - POSTGRES_URL=postgres
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - JWT_TOKEN_SECRET=${JWT_TOKEN_SECRET}
+      - JWT_TOKEN_EXPIRY=${JWT_TOKEN_EXPIRY}
+    depends_on:
+      - postgres
   postgres:
     image: postgres:latest
     restart: always
