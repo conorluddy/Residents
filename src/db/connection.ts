@@ -12,6 +12,6 @@ const client = new Client({
 })
 
 client.connect()
-const db = drizzle(client)
+const db = drizzle(client, { logger: process.env.POSTGRES_LOG === "true" })
 
 export default db

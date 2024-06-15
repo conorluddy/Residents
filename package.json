@@ -7,7 +7,7 @@
     "start": "ts-node src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
-    "dkp": "drizzle-kit push",
+    "push": "drizzle-kit push",
     "introspect": "drizzle-kit introspect",
     "studio": "drizzle-kit studio"
   },

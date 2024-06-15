@@ -1,12 +1,15 @@
+import { SALT_ROUNDS } from "../constants/crypt"
+
 const bcrypt = require("bcrypt")
 
 export async function createHash(input: string) {
-  const saltRounds = 10
-  const hashedPassword = await bcrypt.hash(input, saltRounds)
-  return hashedPassword
+  return await bcrypt.hash(input, SALT_ROUNDS)
 }
 
 export async function validateHash(input: string, hash: string) {
-  const isValid = await bcrypt.compare(input, hash)
-  return isValid
+  try {
+    return await bcrypt.compare(input, hash)
+  } catch {
+    return false
+  }
 }

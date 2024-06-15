@@ -2,10 +2,14 @@ import { Router } from "express"
 import { NewUser, User, users } from "../db/schema"
 import { createHash, validateHash } from "../utils/crypt"
 import { eq } from "drizzle-orm"
+import db from "../db/connection"
 
 const router = Router()
 
-router.get("/", async ({ db }, res) => {
+/**
+ * Get all users
+ */
+router.get("/", async (req, res) => {
   try {
     const result: User[] = await db.select().from(users)
     return res.json(result)
@@ -15,17 +19,26 @@ router.get("/", async ({ db }, res) => {
   }
 })
 
-router.post("/register", async (req, res) => {
+/**
+ * Register a new user
+ */
+router.post("/register", async ({ body }, res) => {
   try {
-    const { db } = req
-    const { username, password, firstName, lastName, email } = req.body
-    const hashedPassword = await createHash(password)
+    // const { db } = req // Need to get types working for this approach
+    const {
+      username,
+      firstName,
+      lastName,
+      email,
+      password: plainPassword,
+    } = body
+    const password = await createHash(plainPassword)
     const user: NewUser = {
       firstName,
       lastName,
       email,
       username,
-      password: hashedPassword,
+      password,
     }
     await db.insert(users).values(user).returning()
     res.status(201).send("User registered")
@@ -34,10 +47,13 @@ router.post("/register", async (req, res) => {
   }
 })
 
-router.post("/login", async (req, res) => {
+/**
+ * Login a user
+ */
+router.post("/login", async ({ body }, res) => {
   try {
-    const { username, password } = req.body
-    const results: User[] = await req.db
+    const { username, password } = body
+    const results: User[] = await db
       .select()
       .from(users)
       .where(eq(users.username, username))
@@ -45,7 +61,7 @@ router.post("/login", async (req, res) => {
     if (results[0] && (await validateHash(password, results[0].password))) {
       res.send("Login successful")
     } else {
-      res.status(400).send("Invalid credentials")
+      res.status(400).send("Not today, buddy")
     }
   } catch (error) {
     console.log(error)
