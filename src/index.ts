@@ -1,6 +1,7 @@
 import express from "express"
 import usersRouter from "./routes/users"
 import { attachDb } from "./middleware/db"
+import { logger } from "./utils/logger"
 
 const app = express()
 const port = 3000
@@ -15,5 +16,5 @@ app.use(express.json())
 app.use("/users", usersRouter)
 
 app.listen(port, () => {
-  console.log(`App running on http://localhost:${port}`)
+  logger.info(`App running on http://localhost:${port}`)
 })
