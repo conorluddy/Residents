@@ -1,3 +1,21 @@
-import { User, NewUser, enumUserRole, tableUsers } from "./Users"
+import {
+  User,
+  NewUser,
+  enumUserRole,
+  enumUserVerification,
+  tableUsers,
+  tableFederatedCredentials,
+  FederatedCredentials,
+  NewFederatedCredentials,
+} from "./Users"
 
-export { User, NewUser, enumUserRole, tableUsers }
+export {
+  User,
+  NewUser,
+  enumUserRole,
+  enumUserVerification,
+  tableUsers,
+  tableFederatedCredentials,
+  FederatedCredentials,
+  NewFederatedCredentials,
+}
