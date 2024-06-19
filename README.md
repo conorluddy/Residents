@@ -1,21 +1,6 @@
+![Last Commit](https://img.shields.io/github/last-commit/conorluddy/backstrap) ![License](https://img.shields.io/github/license/conorluddy/backstrap) ![Version](https://img.shields.io/github/package-json/v/conorluddy/backstrap)
 
 # Backstrap
-
-![Build Status](https://img.shields.io/github/actions/workflow/status/conorluddy/backstrap/main.yml)
-![Dependencies](https://img.shields.io/david/conorluddy/backstrap)
-![Dev Dependencies](https://img.shields.io/david/dev/conorluddy/backstrap)
-![License](https://img.shields.io/github/license/conorluddy/backstrap)
-![Version](https://img.shields.io/github/package-json/v/conorluddy/backstrap)
-![Coverage](https://img.shields.io/codecov/c/github/conorluddy/backstrap)
-![Issues](https://img.shields.io/github/issues/conorluddy/backstrap)
-![Forks](https://img.shields.io/github/forks/conorluddy/backstrap)
-![Stars](https://img.shields.io/github/stars/conorluddy/backstrap)
-![Contributors](https://img.shields.io/github/contributors/conorluddy/backstrap)
-![Last Commit](https://img.shields.io/github/last-commit/conorluddy/backstrap)
-![Node Version](https://img.shields.io/node/v/your-package-name)
-![Docker Pulls](https://img.shields.io/docker/pulls/conorluddy/backstrap)
-
-## Backstrap
 
 Backstrap is a Node.js Express back-end foundation designed for bootstrapping new projects quickly and efficiently. It leverages a robust stack including Postgres, Drizzle ORM, JWT, PassportJS, and Docker to streamline development and deployment processes.
 
@@ -43,41 +28,27 @@ To get started with Backstrap, follow these steps:
    ```
 
 3. **Set up environment variables:**
-   Create a `.env` file in the root of your project and configure the necessary environment variables.
+   Create a `.env` file in the root of your project and configure the necessary environment variables. You can run `cp .env.example .env` for a shortcut. You'll want to update some of them with your own API keys where applicable. Most of the example values will be fine for local development. 
 
-4. **Run the application:**
+4. **Set up the Postgres Database:**
+   You can point this at any Postgres instance you like, or you can run `docker-compose up -d` to set up a Docker instance which will run both the database and the Express app. However it will expose the Express app at port 8080 so that you can still run your development version locally at 3000 etc.
+   
+5. **Push the schema to the DB on first run:**
+   `drizzle-kit push` is a handy one for local development but it will likely nuke your data. See [here](https://orm.drizzle.team/kit-docs/overview#prototyping-with-db-push) and [here](https://orm.drizzle.team/kit-docs/commands#generate-migrations). 
+
+6. **Build your JS bundle from the TS source:**
+   ```sh
+   npm run build
+   ```
+
+7. **Run the application:**
    ```sh
    npm start
    ```
 
 ## Configuration
 
-Backstrap uses environment variables for configuration. Here is an example `.env` file:
-
-```dotenv
-# Node
-NODE_ENV=development
-
-# DOCKER
-DOCKER_API_PORT=8080
-LOCAL_API_PORT=3000
-
-# Postgres
-POSTGRES_DB=mydatabase
-POSTGRES_USER=myuser
-POSTGRES_PASSWORD=mypassword
-POSTGRES_URL=127.0.0.1
-
-# JSON Web Token 
-JWT_TOKEN_SECRET=mysecret
-JWT_TOKEN_EXPIRY=1day
-
-# Passport
-GOOGLE_CALLBACK_URL=http://localhost:3000/auth/google/callback
-GOOGLE_CLIENT_ID=xxxx
-GOOGLE_CLIENT_SECRET=XXXX
-GOOGLE_CLIENT_API_KEY=XXXX
-```
+Backstrap uses environment variables for configuration. You'll find an example in the `.env.example` file.
 
 ## Scripts
 

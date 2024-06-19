@@ -27,7 +27,7 @@ export const authenticateToken = (
       console.error(err)
       return res.sendStatus(HTTP_CLIENT_ERROR.FORBIDDEN)
     }
-    req.jwt = user
+    req.user = user
     next()
   })
 }

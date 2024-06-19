@@ -66,7 +66,7 @@ export const getUser = async (req: Request, res: Response) => {
     const user = await db
       .select()
       .from(tableUsers)
-      .where(eq(tableUsers.id, userId))
+      .where(eq(tableUsers.id, Number(userId)))
 
     return res.status(HTTP_SUCCESS.OK).json(user)
   } catch (error) {
