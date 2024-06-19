@@ -5,15 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1718391837404,
-      "tag": "0000_bent_korg",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1718823285818,
-      "tag": "0001_sudden_forge",
+      "when": 1718826271811,
+      "tag": "0000_solid_silver_fox",
       "breakpoints": true
     }
   ]

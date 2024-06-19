@@ -71,9 +71,11 @@ export const getUser = async (req: Request, res: Response) => {
     return res.status(HTTP_SUCCESS.OK).json(user)
   } catch (error) {
     logger.error(error)
-    res
-      .status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR)
-      .send("Error getting users")
+    {
+      res
+        .status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR)
+        .send("Error getting users")
+    }
   }
 }
 

@@ -10,12 +10,12 @@ import {
 } from "./Users"
 
 export {
-  User,
-  NewUser,
   enumUserRole,
   enumUserVerification,
   tableUsers,
   tableFederatedCredentials,
+  User,
+  NewUser,
   FederatedCredentials,
   NewFederatedCredentials,
 }

@@ -1,6 +1,7 @@
 import { Router } from "express"
 import { loginUser } from "../controllers/users"
 import passport from "../passport/google"
+import { HTTP_SUCCESS } from "../constants/http"
 
 const router = Router()
 
@@ -16,8 +17,12 @@ router
   )
   .get(
     "/google/callback",
-    passport.authenticate("google", { failureRedirect: "/" }),
-    (req, res) => console.log("WELCOME!") // Successful authentication, redirect home....
+    passport.authenticate("google", { failureRedirect: "/", session: false }),
+    (req, res) => {
+      console.log("\n\n\n\nWELCOME!") // Successful authentication, redirect home....
+      console.log(req.user)
+      return res.status(HTTP_SUCCESS.OK).send("Welcome!")
+    }
   )
 
 export default router
