@@ -37,7 +37,6 @@ export const tableFederatedCredentials = pgTable("federatedCredentials", {
 
 export type User = InferSelectModel<typeof tableUsers>
 export type NewUser = InferInsertModel<typeof tableUsers>
-
 export type FederatedCredentials = InferSelectModel<
   typeof tableFederatedCredentials
 >

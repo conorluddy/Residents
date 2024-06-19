@@ -85,14 +85,20 @@ export const getUser = async (req: Request, res: Response) => {
 export const loginUser = async ({ body }: Request, res: Response) => {
   try {
     const { username, password } = body as Record<string, string>
-    const results: User[] = await db
+    const users: User[] = await db
       .select()
       .from(tableUsers)
       .where(eq(tableUsers.username, username))
 
-    const user = results[0]
+    const user = users[0]
 
-    if (user && (await validateHash(password, user.password))) {
+    if (
+      password.length > 0 &&
+      user &&
+      user.password &&
+      user.password?.length > 0
+    ) {
+      await validateHash(password, user.password)
       const accessToken = generateJwt(user)
       res.status(HTTP_SUCCESS.OK).json({ accessToken })
     } else {

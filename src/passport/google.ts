@@ -9,6 +9,7 @@ import {
   tableUsers,
 } from "../db/schema/Users"
 import { and, eq } from "drizzle-orm"
+import { JWTUserPayload } from "../utils/jwt"
 
 dotenv.config()
 const GoogleStrategy = Google.Strategy
@@ -43,14 +44,20 @@ if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET || !GOOGLE_CALLBACK_URL) {
         const exists = fedCreds.length > 0
 
         if (exists) {
-          const user = await db
-            .select()
+          const users: JWTUserPayload[] = await db
+            .select({
+              firstName: tableUsers.firstName,
+              lastName: tableUsers.lastName,
+              email: tableUsers.email,
+              username: tableUsers.username,
+              role: tableUsers.role,
+            })
             .from(tableUsers)
             .where(eq(tableUsers.id, fedCreds[0].user_id))
 
-          if (!user[0]) throw new Error("User not found")
+          if (!users[0]) throw new Error("User not found")
 
-          return done(null, user)
+          return done(null, users[0])
         } else {
           try {
             const user: NewUser = {
@@ -60,15 +67,15 @@ if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET || !GOOGLE_CALLBACK_URL) {
               username: profile.displayName,
             }
 
-            const newUser = await db
+            const newUsers = await db
               .insert(tableUsers)
               .values(user)
               .onConflictDoNothing({ target: tableUsers.id })
               .returning()
 
-            if (!newUser) throw new Error("Failed to create user")
+            if (!newUsers) throw new Error("Failed to create user")
 
-            const { id } = newUser[0]
+            const { id } = newUsers[0]
 
             const fedCreds = {
               user_id: id,
@@ -87,7 +94,13 @@ if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET || !GOOGLE_CALLBACK_URL) {
             if (!newFedCred)
               throw new Error("Failed to create new federated credentials")
 
-            return done(null, newUser)
+            return done(null, {
+              firstName: newUsers[0].firstName,
+              lastName: newUsers[0].lastName,
+              email: newUsers[0].email,
+              username: newUsers[0].username,
+              role: newUsers[0].role,
+            })
           } catch (error) {
             logger.error("Failed to create user")
           }

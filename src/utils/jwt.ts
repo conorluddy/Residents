@@ -3,12 +3,16 @@ import jwt from "jsonwebtoken"
 
 const DEFAULT_JWT_TOKEN_EXPIRY = "1m"
 
-export const generateJwt = (user: User) => {
+export const generateJwt = (userPayload: JWTUserPayload) => {
   const secret = process.env.JWT_TOKEN_SECRET
-
   if (secret == null) throw new Error("JWT secret not found")
 
-  return jwt.sign(user, secret, {
+  return jwt.sign(userPayload, secret, {
     expiresIn: process.env.JWT_TOKEN_EXPIRY ?? DEFAULT_JWT_TOKEN_EXPIRY,
   })
 }
+
+export type JWTUserPayload = Pick<
+  User,
+  "firstName" | "lastName" | "email" | "username" | "role"
+>
