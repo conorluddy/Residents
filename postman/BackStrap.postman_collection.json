@@ -7,8 +7,73 @@
 	},
 	"item": [
 		{
-			"name": "localhost:3000/users",
+			"name": "/auth",
 			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"USER1\",\n    \"password\": \"password\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/auth",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"auth"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/users/register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"firstName\": \"firstName\",\n    \"lastName\": \"lastName\",\n    \"email\": \"email2\",\n    \"username\": \"USER2\",\n    \"password\": \"password\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/users/register",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"users",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/users",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZmlyc3ROYW1lIjoiZmlyc3ROYW1lIiwibGFzdE5hbWUiOiJsYXN0TmFtZSIsImVtYWlsIjoiZW1haWwiLCJ1c2VybmFtZSI6IlVTRVIxIiwicGFzc3dvcmQiOiIkMmIkMTAkdm1ua2ZwWlJMUFdQdEkwN3ZqUzY2dTZrRmRQRzFkbHl6b0hmdW5ydHY4azNsZUFkcFZKMnkiLCJjcmVhdGVkQXQiOiIyMDI0LTA2LTE1VDExOjUyOjM3LjY4NFoiLCJyb2xlIjoiZGVmYXVsdCIsImlhdCI6MTcxODczODQzMiwiZXhwIjoxNzE4ODI0ODMyfQ.j854b1Uto1GJuiRoAVtrfMu3YRrVDa4ovzeGbWm802o",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
 				"header": [],
 				"url": {
@@ -25,9 +90,72 @@
 			"response": []
 		},
 		{
-			"name": "localhost:3000/users/login",
+			"name": "/users/id",
 			"request": {
-				"method": "POST",
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZmlyc3ROYW1lIjoiZmlyc3ROYW1lIiwibGFzdE5hbWUiOiJsYXN0TmFtZSIsImVtYWlsIjoiZW1haWwiLCJ1c2VybmFtZSI6IlVTRVIxIiwicGFzc3dvcmQiOiIkMmIkMTAkdm1ua2ZwWlJMUFdQdEkwN3ZqUzY2dTZrRmRQRzFkbHl6b0hmdW5ydHY4azNsZUFkcFZKMnkiLCJjcmVhdGVkQXQiOiIyMDI0LTA2LTE1VDExOjUyOjM3LjY4NFoiLCJyb2xlIjoiZGVmYXVsdCIsImlhdCI6MTcxODczODQzMiwiZXhwIjoxNzE4ODI0ODMyfQ.j854b1Uto1GJuiRoAVtrfMu3YRrVDa4ovzeGbWm802o",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/users/6",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"users",
+						"6"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/auth/google",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/auth/google",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"auth",
+						"google"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/auth/google/callback",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
 				"header": [],
 				"body": {
 					"mode": "raw",
@@ -39,42 +167,16 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3000/users/login",
+					"raw": "http://localhost:3000/auth/google/callback",
+					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
-						"users",
-						"login"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "localhost:3000/users/register",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"firstName\": \"firstName\",\n    \"lastName\": \"lastName\",\n    \"email\": \"email\",\n    \"username\": \"USER1\",\n    \"password\": \"password\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "localhost:3000/users/register",
-					"host": [
-						"localhost"
-					],
-					"port": "3000",
-					"path": [
-						"users",
-						"register"
+						"auth",
+						"google",
+						"callback"
 					]
 				}
 			},

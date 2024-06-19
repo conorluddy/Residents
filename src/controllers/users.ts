@@ -12,7 +12,7 @@ import { generateJwt } from "../utils/jwt"
 import { logger } from "../utils/logger"
 
 /**
- *
+ * createUser
  */
 export const createUser = async ({ body }: Request, res: Response) => {
   try {
@@ -43,7 +43,7 @@ export const createUser = async ({ body }: Request, res: Response) => {
 }
 
 /**
- *
+ * getAllUsers
  */
 export const getAllUsers = async (req: Request, res: Response) => {
   try {
@@ -58,7 +58,27 @@ export const getAllUsers = async (req: Request, res: Response) => {
 }
 
 /**
- *
+ * getUser
+ */
+export const getUser = async (req: Request, res: Response) => {
+  try {
+    const userId = req.params.id
+    const user = await db
+      .select()
+      .from(tableUsers)
+      .where(eq(tableUsers.id, userId))
+
+    return res.status(HTTP_SUCCESS.OK).json(user)
+  } catch (error) {
+    logger.error(error)
+    res
+      .status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR)
+      .send("Error getting users")
+  }
+}
+
+/**
+ * loginUser
  */
 export const loginUser = async ({ body }: Request, res: Response) => {
   try {
@@ -67,6 +87,7 @@ export const loginUser = async ({ body }: Request, res: Response) => {
       .select()
       .from(tableUsers)
       .where(eq(tableUsers.username, username))
+
     const user = results[0]
 
     if (user && (await validateHash(password, user.password))) {
