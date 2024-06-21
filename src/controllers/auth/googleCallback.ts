@@ -10,6 +10,9 @@ import { generateJwt, JWTUserPayload } from "../../utils/jwt"
 export const googleCallback = async (req: Request, res: Response) => {
   try {
     if (!req.user) throw new Error("User not found")
+
+    // TODO: Revalidate before returning token
+
     const token = generateJwt(req.user as JWTUserPayload)
     return res.status(HTTP_SUCCESS.OK).json({ token })
   } catch (error) {
