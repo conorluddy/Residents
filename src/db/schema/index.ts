@@ -1,12 +1,15 @@
 import {
   User,
   NewUser,
+  FederatedCredentials,
+  NewFederatedCredentials,
+} from "../types"
+
+import {
   enumUserRole,
   enumUserVerification,
   tableUsers,
   tableFederatedCredentials,
-  FederatedCredentials,
-  NewFederatedCredentials,
 } from "./Users"
 
 export {

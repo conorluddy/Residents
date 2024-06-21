@@ -3,13 +3,10 @@ import Google from "passport-google-oauth20"
 import dotenv from "dotenv"
 import { logger } from "../utils/logger"
 import db from "../db"
-import {
-  NewUser,
-  tableFederatedCredentials,
-  tableUsers,
-} from "../db/schema/Users"
+import { tableFederatedCredentials, tableUsers } from "../db/schema/Users"
 import { and, eq } from "drizzle-orm"
 import { JWTUserPayload } from "../utils/jwt"
+import { NewUser } from "../db/types"
 
 dotenv.config()
 const GoogleStrategy = Google.Strategy

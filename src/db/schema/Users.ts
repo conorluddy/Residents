@@ -34,12 +34,3 @@ export const tableFederatedCredentials = pgTable("federatedCredentials", {
   provider: text("provider").notNull(),
   subject: text("subject").notNull().unique(),
 })
-
-export type User = InferSelectModel<typeof tableUsers>
-export type NewUser = InferInsertModel<typeof tableUsers>
-export type FederatedCredentials = InferSelectModel<
-  typeof tableFederatedCredentials
->
-export type NewFederatedCredentials = InferInsertModel<
-  typeof tableFederatedCredentials
->
