@@ -1,8 +1,8 @@
-![Last Commit](https://img.shields.io/github/last-commit/conorluddy/backstrap) ![License](https://img.shields.io/github/license/conorluddy/backstrap) ![Version](https://img.shields.io/github/package-json/v/conorluddy/backstrap)
+![Last Commit](https://img.shields.io/github/last-commit/conorluddy/BaseForge) ![License](https://img.shields.io/github/license/conorluddy/BaseForge) ![Version](https://img.shields.io/github/package-json/v/conorluddy/BaseForge)
 
-# Backstrap
+# BaseForge
 
-Backstrap is a Node.js Express back-end foundation designed for bootstrapping new projects quickly and efficiently. It leverages a robust stack including Postgres, Drizzle ORM, JWT, PassportJS, and Docker to streamline development and deployment processes.
+BaseForge is a Node.js Express back-end foundation designed for bootstrapping new projects quickly and efficiently. It leverages a robust stack including Postgres, Drizzle ORM, JWT, PassportJS, and Docker to streamline development and deployment processes.
 
 ## Features
 
@@ -14,13 +14,13 @@ Backstrap is a Node.js Express back-end foundation designed for bootstrapping ne
 
 ## Getting Started
 
-To get started with Backstrap, follow these steps:
+To get started with BaseForge, follow these steps:
 
 1. **Clone the repository:**
 
 ```sh
-git clone https://github.com/conorluddy/backstrap.git
-cd backstrap
+git clone https://github.com/conorluddy/BaseForge.git
+cd BaseForge
 ```
 
 2. **Install dependencies:**
@@ -55,7 +55,7 @@ npm start
 
 ## Configuration
 
-Backstrap uses environment variables for configuration. You'll find an example in the `.env.example` file.
+BaseForge uses environment variables for configuration. You'll find an example in the `.env.example` file.
 
 ## Scripts
 
