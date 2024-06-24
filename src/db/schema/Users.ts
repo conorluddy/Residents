@@ -8,12 +8,14 @@ export const enumUserRole = pgEnum("userRole", [
   "default",
 ])
 
-export const enumUserVerification = pgEnum("userVerification", [
-  "unverified",
-  "pending",
-  "verified",
-  "rejected",
+export const enumUserStatus = pgEnum("userVerification", [
   "banned",
+  "deleted",
+  "pending",
+  "rejected",
+  "suspended",
+  "unverified",
+  "verified",
 ])
 
 export const tableUsers = pgTable("users", {
@@ -21,8 +23,7 @@ export const tableUsers = pgTable("users", {
   firstName: text("first_name"),
   lastName: text("last_name"),
   email: text("email").unique().notNull(),
-  email_verified:
-    enumUserVerification("userVerification").default("unverified"),
+  email_verified: enumUserStatus("user_status").default("unverified"),
   username: text("username").unique().notNull(),
   password: text("password"),
   createdAt: timestamp("created_at").default(sql`now()`),

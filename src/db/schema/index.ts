@@ -7,14 +7,14 @@ import {
 
 import {
   enumUserRole,
-  enumUserVerification,
+  enumUserStatus,
   tableUsers,
   tableFederatedCredentials,
 } from "./Users"
 
 export {
   enumUserRole,
-  enumUserVerification,
+  enumUserStatus,
   tableUsers,
   tableFederatedCredentials,
   User,
