@@ -1,9 +1,11 @@
 import express from "express"
-import usersRouter from "./routes/users"
+import usersRouter from "./routes/users/index"
 import authRouter from "./routes/auth"
 import { attachDb } from "./middleware/db"
 import { logger } from "./utils/logger"
 import helmet from "helmet"
+
+import swaggerSetup from "../swagger"
 
 import dotenv from "dotenv"
 dotenv.config()
@@ -22,4 +24,11 @@ app.use("/users", usersRouter)
 app.use("/auth", authRouter)
 
 // Run
-app.listen(port, () => logger.info(`Running: http://localhost:${port}`))
+app.listen(port, () => {
+  logger.info(`Running: http://localhost:${port}`)
+  logger.info(
+    `Swagger API docs are available at http://localhost:${port}/api-docs`
+  )
+})
+
+swaggerSetup(app)
