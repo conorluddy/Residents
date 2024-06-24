@@ -1,4 +1,4 @@
-![Last Commit](https://img.shields.io/github/last-commit/conorluddy/BaseForge) ![License](https://img.shields.io/github/license/conorluddy/BaseForge) ![Version](https://img.shields.io/github/package-json/v/conorluddy/BaseForge) ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/conorluddy/BaseForge/ci.yml)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/conorluddy/BaseForge/ci.yml) ![Last Commit](https://img.shields.io/github/last-commit/conorluddy/BaseForge) ![License](https://img.shields.io/github/license/conorluddy/BaseForge) ![Version](https://img.shields.io/github/package-json/v/conorluddy/BaseForge) 
 
 
 # BaseForge
