@@ -1,8 +1,18 @@
 {
-  "name": "Residents",
-  "version": "0.0.1",
-  "description": "",
-  "main": "index.js",
+  "name": "residents",
+  "version": "0.0.2",
+  "author": "Conor Luddy <conorluddy@gmail.com>",
+  "license": "MIT",
+  "description": "Residents is a Node.js Express back-end foundation designed for bootstrapping new projects quickly and efficiently. Its main goal is to set up a robust infrastructure for user management, because users are the core of any application. These users are your Residents. It leverages a robust stack including Postgres, Drizzle ORM, JWT, PassportJS, Docker and Swagger to streamline development and deployment processes.",
+  "main": "dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/conorluddy/residents.git"
+  },
+  "bugs": {
+    "url": "https://github.com/conorluddy/residents/issues"
+  },
+  "homepage": "https://github.com/conorluddy/residents#readme",
   "scripts": {
     "start": "node dist/index.js",
     "build": "tsc",
@@ -17,8 +27,6 @@
     "studio": "drizzle-kit studio",
     "dockerup": "docker-compose up -d"
   },
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "@types/jsonwebtoken": "^9.0.6",
     "bcrypt": "^5.1.1",
