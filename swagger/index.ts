@@ -8,7 +8,7 @@ const options = {
   definition: {
     openapi: "3.0.0",
     info: {
-      title: "BaseForge API",
+      title: "Residents API",
       version: "0.0.1",
       description: "API documentation",
     },

@@ -1,9 +1,9 @@
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/conorluddy/BaseForge/ci.yml) ![Last Commit](https://img.shields.io/github/last-commit/conorluddy/BaseForge) ![License](https://img.shields.io/github/license/conorluddy/BaseForge) ![Version](https://img.shields.io/github/package-json/v/conorluddy/BaseForge) 
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/conorluddy/Residents/ci.yml) ![Last Commit](https://img.shields.io/github/last-commit/conorluddy/Residents) ![License](https://img.shields.io/github/license/conorluddy/Residents) ![Version](https://img.shields.io/github/package-json/v/conorluddy/Residents) 
 
 
-# BaseForge
+# Residents
 
-BaseForge is a Node.js Express back-end foundation designed for bootstrapping new projects quickly and efficiently. It leverages a robust stack including Postgres, Drizzle ORM, JWT, PassportJS, and Docker to streamline development and deployment processes.
+Residents is a Node.js Express back-end foundation designed for bootstrapping new projects quickly and efficiently. Its main goal is to set up a robust infrastructure for user management, because users are the core of any application. These users are your Residents. It leverages a robust stack including Postgres, Drizzle ORM, JWT, PassportJS, Docker and Swagger to streamline development and deployment processes.
 
 ## Features
 
@@ -12,16 +12,17 @@ BaseForge is a Node.js Express back-end foundation designed for bootstrapping ne
 - **Drizzle ORM** for a type-safe and performant data layer.
 - **JWT** and **PassportJS** for secure authentication and authorization.
 - **Docker** for containerized development and deployment.
+- **Swagger** for API documentation.
 
 ## Getting Started
 
-To get started with BaseForge, follow these steps:
+To get started with Residents, follow these steps:
 
 1. **Clone the repository:**
 
 ```sh
-git clone https://github.com/conorluddy/BaseForge.git
-cd BaseForge
+git clone https://github.com/conorluddy/Residents.git
+cd Residents
 ```
 
 2. **Install dependencies:**
@@ -56,7 +57,7 @@ npm start
 
 ## Configuration
 
-BaseForge uses environment variables for configuration. You'll find an example in the `.env.example` file.
+Residents uses environment variables for configuration. You'll find an example in the `.env.example` file.
 
 ## Scripts
 
