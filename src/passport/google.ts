@@ -107,4 +107,4 @@ if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET || !GOOGLE_CALLBACK_URL) {
   )
 }
 
-export default passport
+export { passport as googlePassport }

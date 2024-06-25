@@ -12,5 +12,5 @@
     "outDir": "./dist",
     "typeRoots": ["./node_modules/@types", "./src/types"],
   },
-  "include": ["src/**/*", "swagger/**/*"],
+  "include": ["src/**/*", "swagger/**/*.ts"],
 }
