@@ -4,9 +4,7 @@ import authRouter from "./routes/auth"
 import { attachDb } from "./middleware/db"
 import { logger } from "./utils/logger"
 import helmet from "helmet"
-
 import swaggerSetup from "../swagger"
-
 import dotenv from "dotenv"
 dotenv.config()
 
