@@ -5,7 +5,7 @@ import { logger } from "../utils/logger"
 import db from "../db"
 import { tableFederatedCredentials, tableUsers } from "../db/schema/Users"
 import { and, eq } from "drizzle-orm"
-import { JWTUserPayload } from "../utils/jwt"
+import { JWTUserPayload } from "../utils/generateJwt"
 import { NewUser } from "../db/types"
 
 dotenv.config()

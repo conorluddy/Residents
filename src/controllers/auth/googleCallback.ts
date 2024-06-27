@@ -1,7 +1,7 @@
 import { Request, Response } from "express"
 import { HTTP_CLIENT_ERROR, HTTP_SUCCESS } from "../../constants/http"
 import { logger } from "../../utils/logger"
-import { generateJwt, JWTUserPayload } from "../../utils/jwt"
+import { generateJwt, JWTUserPayload } from "../../utils/generateJwt"
 
 /**
  * googleCallback

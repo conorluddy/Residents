@@ -1,4 +1,4 @@
-import { generateJwt, JWTUserPayload } from "../../../src/utils/jwt"
+import { generateJwt, JWTUserPayload } from "./generateJwt"
 import jwt from "jsonwebtoken"
 jest.mock("jsonwebtoken")
 

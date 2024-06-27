@@ -1,10 +1,10 @@
-import { createUser } from "../../../src/controllers/users/createUser"
+import { createUser } from "./createUser"
 import { Request, Response } from "express"
-import { createHash } from "../../../src/utils/crypt"
-import db from "../../../src/db"
-import { tableUsers } from "../../../src/db/schema"
-import { logger } from "../../../src/utils/logger"
-import { HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../../src/constants/http"
+import { createHash } from "../../utils/crypt"
+import db from "../../db"
+import { tableUsers } from "../../db/schema"
+import { logger } from "../../utils/logger"
+import { HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constants/http"
 
 jest.mock("../../../src/utils/crypt")
 jest.mock("../../../src/db")

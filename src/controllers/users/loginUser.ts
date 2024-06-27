@@ -8,7 +8,7 @@ import {
 import db from "../../db"
 import { User, tableUsers } from "../../db/schema"
 import { validateHash } from "../../utils/crypt"
-import { generateJwt } from "../../utils/jwt"
+import { generateJwt } from "../../utils/generateJwt"
 
 /**
  * loginUser

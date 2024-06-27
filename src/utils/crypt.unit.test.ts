@@ -1,5 +1,6 @@
-import { createHash, validateHash } from "../../../src/utils/crypt"
-import { SALT_ROUNDS } from "../../../src/constants/crypt"
+import { SALT_ROUNDS } from "../constants/crypt"
+import { createHash, validateHash } from "./crypt"
+
 const bcrypt = require("bcrypt")
 
 jest.mock("bcrypt")
