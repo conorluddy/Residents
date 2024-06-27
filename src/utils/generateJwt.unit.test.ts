@@ -1,3 +1,4 @@
+import { ROLES } from "../constants/roles"
 import { generateJwt, JWTUserPayload } from "./generateJwt"
 import jwt from "jsonwebtoken"
 jest.mock("jsonwebtoken")
@@ -11,7 +12,7 @@ describe("generateJwt", () => {
     lastName: "Dope",
     email: "john.dope@example.com",
     username: "johndope",
-    role: "default",
+    role: ROLES.DEFAULT,
   }
 
   it("should generate a JWT with the correct payload and options", () => {
