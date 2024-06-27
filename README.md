@@ -5,6 +5,8 @@
 
 Residents is a Node.js Express back-end foundation designed for bootstrapping new projects quickly and efficiently. Its main goal is to set up a robust infrastructure for user management, because users are the core of any application. These users are your Residents. It leverages a robust stack including Postgres, Drizzle ORM, JWT, PassportJS, Docker and Swagger to streamline development and deployment processes.
 
+![readme-hero](https://github.com/conorluddy/Residents/assets/846373/3da967a0-00dc-419b-9cc5-e668e090582e)
+
 ## Features
 
 - **Node.js** and **Express** for building a scalable server-side application.
