@@ -13,7 +13,9 @@ export const deleteUser = async (req: Request, res: Response) => {
     //   .from(tableUsers)
     //   .where(eq(tableUsers.id, Number(userId)))
 
-    return res.status(HTTP_SUCCESS.OK) //.json(user)
+    console.log("\n\n\nDELETE\n\n\n")
+
+    return res.status(HTTP_SUCCESS.OK).json({ message: "User deleted" })
   } catch (error) {
     logger.error(error)
     {

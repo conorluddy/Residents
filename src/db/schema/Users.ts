@@ -1,13 +1,9 @@
 import { sql } from "drizzle-orm"
 import { real } from "drizzle-orm/pg-core"
 import { pgEnum, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core"
+import { ROLES, ROLES_ARRAY } from "../../constants/roles"
 
-export const enumUserRole = pgEnum("userRole", [
-  "owner",
-  "admin",
-  "moderator",
-  "default",
-])
+export const enumUserRole = pgEnum("userRole", ROLES_ARRAY)
 
 export const enumUserStatus = pgEnum("userStatus", [
   "banned",
@@ -25,7 +21,7 @@ export const tableUsers = pgTable("users", {
   firstName: text("first_name"),
   lastName: text("last_name"),
   email: text("email").unique().notNull(),
-  role: enumUserRole("role").default("default"),
+  role: enumUserRole("role").default(ROLES.DEFAULT),
   rank: real("rank").default(1.0),
   password: text("password"),
   userStatus: enumUserStatus("status").default("unverified"),

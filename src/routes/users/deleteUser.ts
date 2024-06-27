@@ -1,7 +1,7 @@
-
 import { Router } from "express"
 import { authenticateToken } from "../../middleware/jwt"
 import { deleteUser } from "../../controllers/users/deleteUser"
+import { canDeleteAnyUser } from "../../middleware/authorization"
 
 const router = Router()
 
@@ -34,6 +34,6 @@ const router = Router()
  *               type: string
  *               example: Error deleting user
  */
-router.delete("/:id", authenticateToken, deleteUser)
+router.delete("/:id", authenticateToken, canDeleteAnyUser, deleteUser)
 
 export default router
