@@ -8,6 +8,7 @@ process.env.JWT_TOKEN_EXPIRY = "1m"
 
 describe("generateJwt", () => {
   const userPayload: JWTUserPayload = {
+    id: 13,
     firstName: "John",
     lastName: "Dope",
     email: "john.dope@example.com",
@@ -16,9 +17,7 @@ describe("generateJwt", () => {
   }
 
   it("should generate a JWT with the correct payload and options", () => {
-    const signSpy = jest.spyOn(jwt, "sign") as jest.MockedFunction<
-      typeof jwt.sign
-    >
+    const signSpy = jest.spyOn(jwt, "sign") as jest.MockedFunction<typeof jwt.sign>
     signSpy.mockReturnValue("testtoken" as any)
     const token = generateJwt(userPayload)
     expect(signSpy).toHaveBeenCalledWith(userPayload, "testsecret", {
@@ -36,9 +35,7 @@ describe("generateJwt", () => {
 
   it("should use the default expiry time if JWT_TOKEN_EXPIRY is not set", () => {
     delete process.env.JWT_TOKEN_EXPIRY
-    const signSpy = jest.spyOn(jwt, "sign") as jest.MockedFunction<
-      typeof jwt.sign
-    >
+    const signSpy = jest.spyOn(jwt, "sign") as jest.MockedFunction<typeof jwt.sign>
     signSpy.mockReturnValue("testtoken" as any)
     generateJwt(userPayload)
     expect(signSpy).toHaveBeenCalledWith(

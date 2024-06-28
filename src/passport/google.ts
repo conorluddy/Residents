@@ -12,8 +12,7 @@ dotenv.config()
 const GoogleStrategy = Google.Strategy
 const PROVIDER = "google"
 
-const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_CALLBACK_URL } =
-  process.env
+const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_CALLBACK_URL } = process.env
 
 if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET || !GOOGLE_CALLBACK_URL) {
   logger.error("Missing Google OAuth environment variables")
@@ -32,10 +31,7 @@ if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET || !GOOGLE_CALLBACK_URL) {
           .select({ user_id: tableFederatedCredentials.user_id })
           .from(tableFederatedCredentials)
           .where(
-            and(
-              eq(tableFederatedCredentials.provider, PROVIDER),
-              eq(tableFederatedCredentials.subject, profile.id)
-            )
+            and(eq(tableFederatedCredentials.provider, PROVIDER), eq(tableFederatedCredentials.subject, profile.id))
           )
 
         const exists = fedCreds.length > 0
@@ -43,6 +39,7 @@ if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET || !GOOGLE_CALLBACK_URL) {
         if (exists) {
           const users: JWTUserPayload[] = await db
             .select({
+              id: tableUsers.id,
               firstName: tableUsers.firstName,
               lastName: tableUsers.lastName,
               email: tableUsers.email,
@@ -88,8 +85,7 @@ if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET || !GOOGLE_CALLBACK_URL) {
               })
               .returning()
 
-            if (!newFedCred)
-              throw new Error("Failed to create new federated credentials")
+            if (!newFedCred) throw new Error("Failed to create new federated credentials")
 
             return done(null, {
               firstName: newUsers[0].firstName,

@@ -8,7 +8,7 @@
   "bracketSameLine": false,
   "jsxBracketSameLine": false,
   "jsxSingleQuote": false,
-  "printWidth": 80,
+  "printWidth": 120,
   "proseWrap": "always",
   "quoteProps": "as-needed",
   "requirePragma": false,
@@ -18,6 +18,5 @@
   "trailingComma": "es5",
   "useTabs": false,
   "embeddedLanguageFormatting": "auto",
-  "vueIndentScriptAndStyle": false,
   "parser": "typescript"
 }

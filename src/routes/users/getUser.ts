@@ -1,33 +1,10 @@
-
 import { Router } from "express"
-import { authenticateToken } from "../../middleware/jwt"
+import { authenticateToken } from "../../middleware/jsonWebTokens"
 import { getUser } from "../../controllers/users/getUser"
+import { RBAC } from "../../middleware/roleBasedAccessControl"
 
 const router = Router()
 
-/**
- * @swagger
- * /users/{id}:
- *   get:
- *     summary: Get a user by ID
- *     tags: [Users]
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: The user id
- *     responses:
- *       200:
- *         description: The user description by id
- *         contents:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/User'
- *       404:
- *         description: The user was not found
- */
-router.get("/:id", authenticateToken, getUser)
+router.get("/:id", authenticateToken, RBAC.checkCanGetUsers, getUser)
 
 export default router

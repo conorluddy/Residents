@@ -12,7 +12,4 @@ export const generateJwt = (userPayload: JWTUserPayload) => {
   })
 }
 
-export type JWTUserPayload = Pick<
-  User,
-  "firstName" | "lastName" | "email" | "username" | "role"
->
+export type JWTUserPayload = Pick<User, "id" | "firstName" | "lastName" | "email" | "username" | "role">
