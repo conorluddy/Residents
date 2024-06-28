@@ -5,6 +5,6 @@ import { RBAC } from "../../middleware/roleBasedAccessControl"
 
 const router = Router()
 
-router.get("/:id", authenticateToken, RBAC.checkCanGetUsers, getUser)
+router.get("/:id", authenticateToken, RBAC.checkCanGetUsers, RBAC.checkRoleSuperiority, getUser)
 
 export default router

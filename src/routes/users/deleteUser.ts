@@ -5,6 +5,6 @@ import { RBAC } from "../../middleware/roleBasedAccessControl"
 
 const router = Router()
 
-router.delete("/:id", authenticateToken, RBAC.checkCanDeleteUser, deleteUser)
+router.delete("/:id", authenticateToken, RBAC.checkCanDeleteUser, RBAC.checkRoleSuperiority, deleteUser)
 
 export default router

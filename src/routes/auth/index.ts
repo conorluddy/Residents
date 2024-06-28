@@ -7,10 +7,12 @@ import magicLoginWithToken from "./magicLoginWithToken"
 import resetPassword from "./resetPassword"
 import resetPasswordWithToken from "./resetPasswordWithToken"
 import googleLogin from "./googleLogin"
+import logout from "./logout"
 
 const router = Router()
 
 router.use(login)
+router.use(logout)
 router.use(magicLogin)
 router.use(magicLoginWithToken)
 router.use(resetPassword)
