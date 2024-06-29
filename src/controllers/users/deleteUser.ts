@@ -1,22 +1,29 @@
 import { Request, Response } from "express"
-import { HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constants/http"
+import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constants/http"
 import { logger } from "../../utils/logger"
+import { eq } from "drizzle-orm"
+import db from "../../db"
+import { tableUsers } from "../../db/schema"
+import { STATUS } from "../../constants/user"
 
 /**
  * deleteUser
  */
 export const deleteUser = async (req: Request, res: Response) => {
   try {
-    const userId = req.params.id
-    // const user = await db
-    //   .select()
-    //   .from(tableUsers)
-    //   .where(eq(tableUsers.id, Number(userId)))
+    const targetId = req.params.id
 
-    console.log("\n\n\nDELETE\n\n\n")
+    if (!targetId) {
+      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).send("ID is missing in the request.")
+    }
 
-    return res.status(HTTP_SERVER_ERROR.NOT_IMPLEMENTED).send("Not implemented yet")
-    // return res.status(HTTP_SUCCESS.OK).json({ message: "User deleted" })
+    const result = await db
+      .update(tableUsers)
+      .set({ userStatus: STATUS.DELETED, deletedAt: new Date() })
+      .where(eq(tableUsers.id, targetId))
+      .returning({ updatedId: tableUsers.id })
+
+    return res.status(HTTP_SUCCESS.OK).json({ message: `User ${result[0].updatedId} deleted` })
   } catch (error) {
     logger.error(error)
     res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).send("Error getting users")

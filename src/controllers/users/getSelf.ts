@@ -17,10 +17,7 @@ export const getSelf = async (req: Request, res: Response) => {
       return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).send("User ID is missing in the request.")
     }
 
-    const user = await db
-      .select()
-      .from(tableUsers)
-      .where(eq(tableUsers.id, Number(userId)))
+    const user = await db.select().from(tableUsers).where(eq(tableUsers.id, userId))
 
     if (user.length === 0) {
       return res.status(HTTP_CLIENT_ERROR.NOT_FOUND).send("User not found.")

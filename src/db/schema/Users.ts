@@ -1,22 +1,17 @@
 import { sql } from "drizzle-orm"
 import { real } from "drizzle-orm/pg-core"
 import { pgEnum, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core"
-import { ROLES, ROLES_ARRAY } from "../../constants/roles"
+
+import { createId } from "@paralleldrive/cuid2"
+import { ROLES_ARRAY, STATUS_ARRAY, ROLES, STATUS } from "../../constants/user"
 
 export const enumUserRole = pgEnum("userRole", ROLES_ARRAY)
-
-export const enumUserStatus = pgEnum("userStatus", [
-  "banned",
-  "deleted",
-  "pending",
-  "rejected",
-  "suspended",
-  "unverified",
-  "verified",
-])
+export const enumUserStatus = pgEnum("userStatus", STATUS_ARRAY)
 
 export const tableUsers = pgTable("users", {
-  id: serial("id").primaryKey(),
+  id: text("id")
+    .$defaultFn(() => createId())
+    .primaryKey(),
   username: text("username").unique().notNull(),
   firstName: text("first_name"),
   lastName: text("last_name"),
@@ -24,12 +19,13 @@ export const tableUsers = pgTable("users", {
   role: enumUserRole("role").default(ROLES.DEFAULT),
   rank: real("rank").default(1.0),
   password: text("password"),
-  userStatus: enumUserStatus("status").default("unverified"),
+  userStatus: enumUserStatus("status").default(STATUS.UNVERIFIED),
   createdAt: timestamp("created_at").default(sql`now()`),
+  deletedAt: timestamp("deleted_at"),
 })
 
 export const tableFederatedCredentials = pgTable("federatedCredentials", {
-  user_id: serial("user_id").notNull().primaryKey(),
+  user_id: text("user_id").notNull().primaryKey(),
   provider: text("provider").notNull(),
   subject: text("subject").notNull().unique(),
 })

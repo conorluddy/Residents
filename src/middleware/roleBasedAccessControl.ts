@@ -5,8 +5,9 @@ import { ACL, PERMISSIONS } from "../constants/accessControlList"
 import db from "../db"
 import { tableUsers } from "../db/schema"
 import { eq } from "drizzle-orm"
-import { ROLES, ROLES_ARRAY } from "../constants/roles"
+
 import { logger } from "../utils/logger"
+import { ROLES, ROLES_ARRAY } from "../constants/user"
 
 export const RBAC = {
   checkCanGetUsers: checkPermission(PERMISSIONS.CAN_GET_ALL_USERS),
@@ -49,10 +50,7 @@ function checkRoleSuperiority() {
         return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "User has no role" })
       }
 
-      const targetUser = await db
-        .select()
-        .from(tableUsers)
-        .where(eq(tableUsers.id, Number(targetUserId)))
+      const targetUser = await db.select().from(tableUsers).where(eq(tableUsers.id, targetUserId))
 
       // No user found
       if (!targetUser[0]?.role) {

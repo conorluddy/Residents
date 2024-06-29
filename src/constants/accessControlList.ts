@@ -1,4 +1,4 @@
-import { ROLES } from "./roles"
+import { ROLES } from "./user"
 
 export enum PERMISSIONS {
   CAN_CREATE_USERS = "can_create_users",

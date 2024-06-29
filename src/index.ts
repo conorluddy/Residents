@@ -4,8 +4,8 @@ import authRouter from "./routes/auth"
 import { attachDb } from "./middleware/database"
 import { logger } from "./utils/logger"
 import helmet from "helmet"
-import swaggerSetup from "../swagger"
 import dotenv from "dotenv"
+import swaggerSetup from "./swagger"
 dotenv.config()
 
 const port = process.env.LOCAL_API_PORT

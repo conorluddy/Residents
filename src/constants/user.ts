@@ -18,3 +18,14 @@ export enum ROLES {
   LOCKED = "locked",
 }
 export const ROLES_ARRAY = getEnumValues(ROLES)
+
+export enum STATUS {
+  BANNED = "banned",
+  DELETED = "deleted",
+  PENDING = "pending",
+  REJECTED = "rejected",
+  SUSPENDED = "suspended",
+  UNVERIFIED = "unverified",
+  VERIFIED = "verified",
+}
+export const STATUS_ARRAY = getEnumValues(STATUS)
