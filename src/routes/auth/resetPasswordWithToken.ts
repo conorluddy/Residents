@@ -3,6 +3,6 @@ import { requestPasswordReset } from "../../controllers/auth/requestPasswordRese
 
 const router = Router()
 
-router.post("/request-password-with-token", requestPasswordReset)
+router.get("/request-password/:token", requestPasswordReset)
 
 export default router
