@@ -1,10 +1,10 @@
 import { Router } from "express"
 import { authenticateToken } from "../../middleware/jsonWebTokens"
-import { getAllUsers } from "../../controllers/users/getAllUsers"
 import { RBAC } from "../../middleware/roleBasedAccessControl"
+import CONTROLLERS from "../../controllers"
 
 const router = Router()
 
-router.get("/", authenticateToken, RBAC.checkCanGetUsers, getAllUsers)
+router.get("/", authenticateToken, RBAC.checkCanGetUsers, CONTROLLERS.USER.getAllUsers)
 
 export default router

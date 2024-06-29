@@ -1,9 +1,9 @@
 import { Router } from "express"
 import { authenticateToken } from "../../middleware/jsonWebTokens"
-import { validateAccount } from "../../controllers/auth/validateAccount"
+import CONTROLLERS from "../../controllers"
 
 const router = Router()
 
-router.get("/validate/:token", authenticateToken, validateAccount)
+router.get("/validate/:token", authenticateToken, CONTROLLERS.AUTH.validateAccount)
 
 export default router

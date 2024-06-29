@@ -1,8 +1,8 @@
 import { Router } from "express"
-import { magicToken } from "../../controllers/auth/magicToken"
+import CONTROLLERS from "../../controllers"
 
 const router = Router()
 
-router.get("/magic-login/:token", magicToken)
+router.get("/magic-login/:token", CONTROLLERS.AUTH.magicToken)
 
 export default router

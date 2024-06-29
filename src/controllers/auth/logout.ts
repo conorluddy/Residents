@@ -2,9 +2,9 @@ import { Request, Response } from "express"
 import { HTTP_SERVER_ERROR } from "../../constants/http"
 
 /**
- * loginUser
+ * logout
  */
-export const logoutUser = async ({ body }: Request, res: Response) => {
+export const logout = async ({ body }: Request, res: Response) => {
   try {
     res.status(HTTP_SERVER_ERROR.NOT_IMPLEMENTED).send("Not implemented yet")
   } catch (error) {

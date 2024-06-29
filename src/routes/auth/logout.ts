@@ -1,8 +1,8 @@
 import { Router } from "express"
-import { logoutUser } from "../../controllers/users/logoutUser"
+import CONTROLLERS from "../../controllers"
 
 const router = Router()
 
-router.get("/logout", logoutUser)
+router.get("/logout", CONTROLLERS.AUTH.logout)
 
 export default router

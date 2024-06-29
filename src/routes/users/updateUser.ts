@@ -1,10 +1,10 @@
 import { Router } from "express"
 import { authenticateToken } from "../../middleware/jsonWebTokens"
-import { updateUser } from "../../controllers/users/updateUser"
 import { RBAC } from "../../middleware/roleBasedAccessControl"
+import CONTROLLERS from "../../controllers"
 
 const router = Router()
 
-router.put("/:id", authenticateToken, RBAC.checkCanUpdateUsers, RBAC.checkRoleSuperiority, updateUser)
+router.put("/:id", authenticateToken, RBAC.checkCanUpdateUsers, RBAC.checkRoleSuperiority, CONTROLLERS.USER.updateUser)
 
 export default router

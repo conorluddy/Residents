@@ -1,8 +1,8 @@
 import { Router } from "express"
-import { resetPassword } from "../../controllers/auth/resetPassword"
+import CONTROLLERS from "../../controllers"
 
 const router = Router()
 
-router.post("/reset-password", resetPassword)
+router.post("/reset-password", CONTROLLERS.AUTH.resetPassword)
 
 export default router
