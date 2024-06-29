@@ -1,4 +1,4 @@
-import { ROLES } from "../constants/roles"
+import { ROLES } from "../constants/user"
 import { generateJwt, JWTUserPayload } from "./generateJwt"
 import jwt from "jsonwebtoken"
 jest.mock("jsonwebtoken")
@@ -8,7 +8,7 @@ process.env.JWT_TOKEN_EXPIRY = "1m"
 
 describe("generateJwt", () => {
   const userPayload: JWTUserPayload = {
-    id: 13,
+    id: "13",
     firstName: "John",
     lastName: "Dope",
     email: "john.dope@example.com",

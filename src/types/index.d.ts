@@ -6,5 +6,6 @@ declare module "express-serve-static-core" {
   interface Request {
     db: NodePgDatabase<Record<string, never>>
     user: JWTUserPayload | JwtPayload | string | undefined
+    targetUserId: string | undefined
   }
 }

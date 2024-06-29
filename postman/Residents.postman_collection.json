@@ -32,7 +32,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"username\": \"U2SER2\",\n    \"password\": \"pas2sword\"\n}",
+					"raw": "{\n    \"username\": \"USER5\",\n    \"password\": \"password\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -100,7 +100,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"firstName\": \"firstName\",\n    \"lastName\": \"lastName\",\n    \"email\": \"email2\",\n    \"username\": \"USER2\",\n    \"password\": \"password\"\n}",
+					"raw": "{\n    \"firstName\": \"firstName\",\n    \"lastName\": \"lastName\",\n    \"email\": \"email5\",\n    \"username\": \"USER5\",\n    \"password\": \"password\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -124,11 +124,21 @@
 		{
 			"name": "/users/update",
 			"request": {
-				"method": "POST",
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{JWT}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"firstName\": \"firstName\",\n    \"lastName\": \"lastName\",\n    \"email\": \"email2\",\n    \"username\": \"USER2\",\n    \"password\": \"password\"\n}",
+					"raw": "{\n    \"id\": \"ru04uszr1voxnxjjvqsbcmof\",\n    \"firstName\": \"bansana\",\n    \"lastName\": \"rama\",\n    \"email\": \"email@gmaei.cam\",\n    \"username\": \"XXXX\",\n    \"password\": \"asdfasdf\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -136,14 +146,14 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3000/users/update",
+					"raw": "localhost:3000/users/ru04uszr1voxnxjjvqsbcmof",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
 						"users",
-						"update"
+						"ru04uszr1voxnxjjvqsbcmof"
 					]
 				}
 			},
@@ -157,7 +167,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZmlyc3ROYW1lIjoiZmlyc3ROYW1lIiwibGFzdE5hbWUiOiJsYXN0TmFtZSIsImVtYWlsIjoiZW1haWwiLCJ1c2VybmFtZSI6IlVTRVIxIiwicGFzc3dvcmQiOiIkMmIkMTAkdm1ua2ZwWlJMUFdQdEkwN3ZqUzY2dTZrRmRQRzFkbHl6b0hmdW5ydHY4azNsZUFkcFZKMnkiLCJjcmVhdGVkQXQiOiIyMDI0LTA2LTE1VDExOjUyOjM3LjY4NFoiLCJyb2xlIjoiZGVmYXVsdCIsImlhdCI6MTcxODczODQzMiwiZXhwIjoxNzE4ODI0ODMyfQ.j854b1Uto1GJuiRoAVtrfMu3YRrVDa4ovzeGbWm802o",
+							"value": "{{JWT}}",
 							"type": "string"
 						}
 					]
@@ -384,14 +394,14 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "localhost:3000/users/6",
+					"raw": "localhost:3000/users/ru04uszr1voxnxjjvsbcmof",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
 						"users",
-						"6"
+						"ru04uszr1voxnxjjvsbcmof"
 					]
 				}
 			},

@@ -82,6 +82,7 @@ function checkRoleSuperiority() {
           .json({ message: "Role superiority is required for this operation" })
       }
 
+      req.targetUserId = targetUser[0].id
       next()
     } catch (error) {
       logger.error(`Error checking role superiority for user ${user.id} and target ${targetUserId}: ${error}`)
