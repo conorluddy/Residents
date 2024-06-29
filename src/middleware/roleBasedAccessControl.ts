@@ -9,7 +9,6 @@ import { ROLES, ROLES_ARRAY } from "../constants/roles"
 import { logger } from "../utils/logger"
 
 export const RBAC = {
-  checkCanGetSelf: checkPermission(PERMISSIONS.CAN_GET_OWN_USER, true),
   checkCanGetUsers: checkPermission(PERMISSIONS.CAN_GET_ALL_USERS),
   checkCanUpdateUsers: checkPermission(PERMISSIONS.CAN_UPDATE_ANY_USER),
   checkCanDeleteUser: checkPermission(PERMISSIONS.CAN_DELETE_ANY_USER),
@@ -25,13 +24,9 @@ export const RBAC = {
  * @param permission PERMISSIONS
  * @param matchId boolean - If true then the user id must match the resource id (can only edit self etc)
  */
-function checkPermission(permission: PERMISSIONS, matchId?: boolean) {
+function checkPermission(permission: PERMISSIONS) {
   return (req: Request, res: Response, next: NextFunction) => {
     const user = req.user as JWTUserPayload
-    if (matchId && req.params.id !== user.id.toString()) {
-      logger.warn(`User ${user.id} forbidden from accessing resource ${req.params.id}`)
-      return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Forbidden" })
-    }
     if (user.role && !ACL[user.role].includes(permission)) {
       logger.warn(`User ${user.id} with role ${user.role} lacks permission ${permission}`)
       return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Forbidden" })
