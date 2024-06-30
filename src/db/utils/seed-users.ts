@@ -1,5 +1,5 @@
 import db from ".."
-import { ROLES_ARRAY, STATUS_ARRAY } from "../../constants/user"
+import { ROLES_ARRAY, STATUS_ARRAY } from "../../constants/database"
 import { createHash } from "../../utils/crypt"
 import { tableUsers } from "../schema"
 import { NewUser } from "../types"

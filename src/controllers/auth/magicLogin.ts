@@ -1,13 +1,19 @@
 import { Request, Response } from "express"
-import { HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constants/http"
+import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from "../../constants/http"
 import { logger } from "../../utils/logger"
 
 /**
  * magicLogin
  * POST
  */
-export const magicLogin = async ({ body }: Request, res: Response) => {
+export const magicLogin = async (req: Request, res: Response) => {
   try {
+    const { email } = req.body
+
+    if (!email) {
+      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).send("Email is required")
+    }
+
     return res.status(HTTP_SERVER_ERROR.NOT_IMPLEMENTED).send("Not implemented yet")
   } catch (error) {
     logger.error(error)

@@ -1,4 +1,4 @@
-import { ROLES } from "../constants/user"
+import { ROLES } from "../constants/database"
 import { generateJwt, JWTUserPayload } from "./generateJwt"
 import jwt from "jsonwebtoken"
 jest.mock("jsonwebtoken")

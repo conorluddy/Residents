@@ -4,7 +4,7 @@ import { logger } from "../../utils/logger"
 import { eq } from "drizzle-orm"
 import db from "../../db"
 import { tableUsers } from "../../db/schema"
-import { STATUS } from "../../constants/user"
+import { STATUS } from "../../constants/database"
 
 /**
  * deleteUser

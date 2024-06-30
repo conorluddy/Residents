@@ -19,6 +19,9 @@ export enum ROLES {
 }
 export const ROLES_ARRAY = getEnumValues(ROLES)
 
+/**
+ * User statuses will be set as an Enum in PostGres
+ */
 export enum STATUS {
   BANNED = "banned",
   DELETED = "deleted",
@@ -29,3 +32,12 @@ export enum STATUS {
   VERIFIED = "verified",
 }
 export const STATUS_ARRAY = getEnumValues(STATUS)
+
+/**
+ * Token types will be set as an Enum in PostGres
+ */
+export enum TOKEN_TYPE {
+  REFRESH = "refresh",
+  MAGIC = "magic",
+}
+export const TOKEN_TYPE_ARRAY = getEnumValues(TOKEN_TYPE)

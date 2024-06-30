@@ -7,7 +7,7 @@ import { tableUsers } from "../db/schema"
 import { eq } from "drizzle-orm"
 
 import { logger } from "../utils/logger"
-import { ROLES, ROLES_ARRAY } from "../constants/user"
+import { ROLES, ROLES_ARRAY } from "../constants/database"
 
 export const RBAC = {
   checkCanGetUsers: checkPermission(PERMISSIONS.CAN_GET_ALL_USERS),
