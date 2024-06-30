@@ -4,7 +4,7 @@ import { logger } from "../../utils/logger"
 import { eq } from "drizzle-orm"
 import db from "../../db"
 import { tableUsers } from "../../db/schema"
-import { STATUS } from "../../constants/user"
+import { STATUS } from "../../constants/database"
 
 /**
  * deleteUser
@@ -34,6 +34,6 @@ export const deleteUser = async (req: Request, res: Response) => {
     return res.status(HTTP_SUCCESS.OK).json({ message: `User ${result[0].updatedId} deleted` })
   } catch (error) {
     logger.error(error)
-    res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).send("Error getting users")
+    return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).send("Error getting users")
   }
 }

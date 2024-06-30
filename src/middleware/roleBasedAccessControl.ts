@@ -7,7 +7,7 @@ import { tableUsers } from "../db/schema"
 import { eq } from "drizzle-orm"
 
 import { logger } from "../utils/logger"
-import { ROLES, ROLES_ARRAY } from "../constants/user"
+import { ROLES, ROLES_ARRAY } from "../constants/database"
 
 export const RBAC = {
   checkCanGetUsers: checkPermission(PERMISSIONS.CAN_GET_ALL_USERS),
@@ -86,7 +86,7 @@ function checkRoleSuperiority() {
       next()
     } catch (error) {
       logger.error(`Error checking role superiority for user ${user.id} and target ${targetUserId}: ${error}`)
-      res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Internal Server Error" })
+      return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Internal Server Error" })
     }
   }
 }

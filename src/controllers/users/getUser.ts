@@ -22,7 +22,7 @@ export const getUser = async (req: Request, res: Response) => {
   } catch (error) {
     logger.error(error)
     {
-      res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).send("Error getting users")
+      return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).send("Error getting users")
     }
   }
 }

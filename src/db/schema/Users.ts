@@ -2,7 +2,7 @@ import { sql } from "drizzle-orm"
 import { real } from "drizzle-orm/pg-core"
 import { pgEnum, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core"
 import { createId } from "@paralleldrive/cuid2"
-import { ROLES_ARRAY, STATUS_ARRAY, ROLES, STATUS } from "../../constants/user"
+import { ROLES_ARRAY, STATUS_ARRAY, ROLES, STATUS } from "../../constants/database"
 
 const enumUserRole = pgEnum("userRole", ROLES_ARRAY)
 const enumUserStatus = pgEnum("userStatus", STATUS_ARRAY)

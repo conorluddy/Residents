@@ -3,6 +3,6 @@ import CONTROLLERS from "../../controllers"
 
 const router = Router()
 
-router.get("/magic-login/:token", CONTROLLERS.AUTH.magicToken)
+router.get("/magic-login/:token", CONTROLLERS.AUTH.magicLoginWithToken)
 
 export default router

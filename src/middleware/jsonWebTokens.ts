@@ -13,18 +13,18 @@ export const authenticateToken = (req: Request, res: Response, next: NextFunctio
 
   if (token == null) {
     logger.warn("JWT token is not provided in the request headers")
-    return res.sendStatus(HTTP_CLIENT_ERROR.UNAUTHORIZED)
+    return res.status(HTTP_CLIENT_ERROR.UNAUTHORIZED).json({ message: "Token is required" })
   }
 
   if (secret == null) {
     logger.warn("JWT token secret is not defined in your environment variables")
-    return res.sendStatus(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR)
+    return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Internal server error" })
   }
 
   jwt.verify(token, secret, (err, user) => {
     if (err) {
       logger.warn("JWT token is invalid or expired")
-      return res.sendStatus(HTTP_CLIENT_ERROR.FORBIDDEN)
+      return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Token is invalid or expired" })
     }
     req.user = user
     next()
