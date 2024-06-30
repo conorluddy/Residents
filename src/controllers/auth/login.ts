@@ -16,14 +16,14 @@ export const login = async ({ body }: Request, res: Response) => {
 
     const user = users[0]
 
-    if (password.length > 0 && user && user.password && user.password?.length > 0) {
+    if (password.length > 0 && user && user.password && user.password.length > 0) {
       await validateHash(password, user.password)
       const accessToken = generateJwt(user)
-      res.status(HTTP_SUCCESS.OK).json({ accessToken })
+      return res.status(HTTP_SUCCESS.OK).json({ accessToken })
     } else {
-      res.status(HTTP_CLIENT_ERROR.FORBIDDEN).send("Not today, buddy")
+      return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).send("Not today, buddy")
     }
   } catch (error) {
-    res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).send("Error logging in")
+    return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).send("Error logging in")
   }
 }

@@ -3,6 +3,6 @@ import CONTROLLERS from "../../controllers"
 
 const router = Router()
 
-router.get("/request-password/:token", CONTROLLERS.AUTH.requestPasswordReset)
+router.get("/reset-password/:token", CONTROLLERS.AUTH.resetPasswordWithToken)
 
 export default router

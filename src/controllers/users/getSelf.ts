@@ -26,7 +26,7 @@ export const getSelf = async (req: Request, res: Response) => {
     return res.status(HTTP_SUCCESS.OK).json(user[0])
   } catch (error) {
     logger.error(error)
-    res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).send("Internal server error while getting user.")
+    return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).send("Internal server error while getting user.")
   }
 }
 

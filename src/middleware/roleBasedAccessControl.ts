@@ -86,7 +86,7 @@ function checkRoleSuperiority() {
       next()
     } catch (error) {
       logger.error(`Error checking role superiority for user ${user.id} and target ${targetUserId}: ${error}`)
-      res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Internal Server Error" })
+      return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Internal Server Error" })
     }
   }
 }

@@ -3,10 +3,10 @@ import { HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constants/http"
 import { logger } from "../../utils/logger"
 
 /**
- * resetPassword
- * POST
+ * magicWithToken
+ * GET
  */
-export const resetPassword = async ({ body }: Request, res: Response) => {
+export const magicLoginWithToken = async ({ body }: Request, res: Response) => {
   try {
     return res.status(HTTP_SERVER_ERROR.NOT_IMPLEMENTED).send("Not implemented yet")
   } catch (error) {

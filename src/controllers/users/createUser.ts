@@ -10,13 +10,7 @@ import db from "../../db"
  */
 export const createUser = async ({ body }: Request, res: Response) => {
   try {
-    const {
-      username,
-      firstName,
-      lastName,
-      email,
-      password: plainPassword,
-    } = body
+    const { username, firstName, lastName, email, password: plainPassword } = body
     const password = await createHash(plainPassword)
     const user: NewUser = {
       firstName,
@@ -27,11 +21,9 @@ export const createUser = async ({ body }: Request, res: Response) => {
     }
     await db.insert(tableUsers).values(user).returning()
 
-    res.status(HTTP_SUCCESS.CREATED).send("User registered")
+    return res.status(HTTP_SUCCESS.CREATED).send("User registered")
   } catch (error) {
     logger.error(error)
-    res
-      .status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR)
-      .send("Error registering user")
+    return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).send("Error registering user")
   }
 }
