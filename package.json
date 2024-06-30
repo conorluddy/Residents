@@ -25,7 +25,8 @@
     "migrate": "drizzle-kit migrate",
     "introspect": "drizzle-kit introspect",
     "studio": "drizzle-kit studio",
-    "dockerup": "docker-compose up -d"
+    "dockerup": "docker-compose up -d",
+    "seed": "ts-node --transpile-only src/db/utils/seed-users.ts"
   },
   "dependencies": {
     "@paralleldrive/cuid2": "^2.2.2",
@@ -46,6 +47,7 @@
     "winston": "^3.13.0"
   },
   "devDependencies": {
+    "@faker-js/faker": "^9.0.0-alpha.1",
     "@types/express": "^4.17.21",
     "@types/jest": "^29.5.12",
     "@types/node": "^20.14.2",

@@ -27,7 +27,7 @@ export const deleteUser = async (req: Request, res: Response) => {
 
     const result = await db
       .update(tableUsers)
-      .set({ userStatus: STATUS.DELETED, deletedAt: new Date() })
+      .set({ status: STATUS.DELETED, deletedAt: new Date() })
       .where(eq(tableUsers.id, id))
       .returning({ updatedId: tableUsers.id })
 
