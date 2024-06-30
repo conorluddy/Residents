@@ -1,14 +1,13 @@
 import { sql } from "drizzle-orm"
 import { real } from "drizzle-orm/pg-core"
 import { pgEnum, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core"
-
 import { createId } from "@paralleldrive/cuid2"
 import { ROLES_ARRAY, STATUS_ARRAY, ROLES, STATUS } from "../../constants/user"
 
-export const enumUserRole = pgEnum("userRole", ROLES_ARRAY)
-export const enumUserStatus = pgEnum("userStatus", STATUS_ARRAY)
+const enumUserRole = pgEnum("userRole", ROLES_ARRAY)
+const enumUserStatus = pgEnum("userStatus", STATUS_ARRAY)
 
-export const tableUsers = pgTable("users", {
+const tableUsers = pgTable("users", {
   id: text("id")
     .$defaultFn(() => createId())
     .primaryKey(),
@@ -19,13 +18,15 @@ export const tableUsers = pgTable("users", {
   role: enumUserRole("role").default(ROLES.DEFAULT),
   rank: real("rank").default(1.0),
   password: text("password"),
-  userStatus: enumUserStatus("status").default(STATUS.UNVERIFIED),
+  status: enumUserStatus("status").default(STATUS.UNVERIFIED),
   createdAt: timestamp("created_at").default(sql`now()`),
   deletedAt: timestamp("deleted_at"),
 })
 
-export const tableFederatedCredentials = pgTable("federatedCredentials", {
+const tableFederatedCredentials = pgTable("federatedCredentials", {
   user_id: text("user_id").notNull().primaryKey(),
   provider: text("provider").notNull(),
   subject: text("subject").notNull().unique(),
 })
+
+export { enumUserRole, enumUserStatus, tableUsers, tableFederatedCredentials }
