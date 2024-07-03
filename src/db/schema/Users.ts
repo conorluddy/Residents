@@ -1,8 +1,9 @@
-import { sql } from "drizzle-orm"
+import { relations, sql } from "drizzle-orm"
 import { real } from "drizzle-orm/pg-core"
 import { pgEnum, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core"
 import { createId } from "@paralleldrive/cuid2"
 import { ROLES_ARRAY, STATUS_ARRAY, ROLES, STATUS } from "../../constants/database"
+import { tableTokens } from "./Tokens"
 
 const enumUserRole = pgEnum("userRole", ROLES_ARRAY)
 const enumUserStatus = pgEnum("userStatus", STATUS_ARRAY)
@@ -29,4 +30,8 @@ const tableFederatedCredentials = pgTable("federatedCredentials", {
   subject: text("subject").notNull().unique(),
 })
 
-export { enumUserRole, enumUserStatus, tableUsers, tableFederatedCredentials }
+const usersRelations = relations(tableUsers, ({ many }) => ({
+  tokens: many(tableTokens),
+}))
+
+export { enumUserRole, enumUserStatus, tableUsers, tableFederatedCredentials, usersRelations }
