@@ -11,14 +11,12 @@ const tableTokens = pgTable("tokens", {
     .unique()
     .$defaultFn(() => createId())
     .primaryKey(),
-
   user_id: text("user_id").notNull(),
   token: text("token").notNull(),
   type: enumTokenType("type"),
   used: boolean("used").default(false),
-
   created_at: timestamp("created_at").default(sql`now()`),
-  expires_at: timestamp("created_at").default(sql`now()`),
+  expires_at: timestamp("expires_at").default(sql`now()`),
 })
 
 const tokensRelations = relations(tableTokens, ({ one }) => ({
