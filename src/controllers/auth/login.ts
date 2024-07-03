@@ -1,18 +1,33 @@
-import { eq } from "drizzle-orm"
+import { eq, or } from "drizzle-orm"
 import { Request, Response } from "express"
 import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constants/http"
 import db from "../../db"
 import { User, tableUsers } from "../../db/schema"
 import { validateHash } from "../../utils/crypt"
 import { generateJwt } from "../../utils/generateJwt"
+import { isEmail } from "validator"
 
 /**
  * login
  */
 export const login = async ({ body }: Request, res: Response) => {
   try {
-    const { username, password } = body as Record<string, string>
-    const users: User[] = await db.select().from(tableUsers).where(eq(tableUsers.username, username))
+    const { username, email, password } = body as Record<string, string>
+
+    if (!username && !email) {
+      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).send("Username or email is required")
+    }
+    if (!password) {
+      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).send("Password is required")
+    }
+    if (!username && email && !isEmail(email)) {
+      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).send("Invalid email address")
+    }
+
+    const users: User[] = await db
+      .select()
+      .from(tableUsers)
+      .where(or(eq(tableUsers.username, username), eq(tableUsers.email, email)))
 
     const user = users[0]
 
