@@ -1,6 +1,6 @@
 import { User, NewUser, FederatedCredentials, NewFederatedCredentials } from "../types"
-import { enumUserRole, enumUserStatus, tableUsers, tableFederatedCredentials } from "./Users"
-import { enumTokenType, tableTokens } from "./Tokens"
+import { enumUserRole, enumUserStatus, tableUsers, tableFederatedCredentials, usersRelations } from "./Users"
+import { enumTokenType, tableTokens, tokensRelations } from "./Tokens"
 
 export {
   enumTokenType,
@@ -11,6 +11,8 @@ export {
   NewUser,
   tableFederatedCredentials,
   tableTokens,
+  tokensRelations,
   tableUsers,
+  usersRelations,
   User,
 }
