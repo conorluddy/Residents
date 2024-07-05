@@ -4,6 +4,9 @@ import { RBAC } from "./roleBasedAccessControl"
 import errorHandler from "./errorHandler"
 import findUserByValidEmail from "./findUserByValidEmail"
 import validateRequestEmail from "./validateRequestEmail"
+import validateRequestToken from "./validateRequestToken"
+import findUserByValidToken from "./findUserByValidToken"
+import discardToken from "./discardToken"
 
 const MW = {
   attachDb,
@@ -11,7 +14,10 @@ const MW = {
   RBAC,
   errorHandler,
   findUserByValidEmail,
+  findUserByValidToken,
   validateRequestEmail,
+  validateRequestToken,
+  discardToken,
 }
 
 export default MW

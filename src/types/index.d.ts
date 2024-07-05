@@ -10,5 +10,7 @@ declare module "express-serve-static-core" {
     userNoPW?: UserNoPW
     targetUserId?: string
     validatedEmail?: string
+    validatedToken?: string
+    tokenWithUser?: TokenWithUser
   }
 }
