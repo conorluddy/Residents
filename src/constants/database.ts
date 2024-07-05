@@ -39,5 +39,6 @@ export const STATUS_ARRAY = getEnumValues(STATUS)
 export enum TOKEN_TYPE {
   REFRESH = "refresh",
   MAGIC = "magic",
+  RESET = "reset",
 }
 export const TOKEN_TYPE_ARRAY = getEnumValues(TOKEN_TYPE)
