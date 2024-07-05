@@ -1,17 +1,38 @@
 import { Request, Response } from "express"
-import { HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constants/http"
+import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constants/http"
 import { NewUser, tableUsers } from "../../db/schema"
 import { createHash } from "../../utils/crypt"
 import { logger } from "../../utils/logger"
 import db from "../../db"
+import { isStrongPassword, normalizeEmail } from "validator"
 
 /**
  * createUser
  */
 export const createUser = async ({ body }: Request, res: Response) => {
   try {
-    const { username, firstName, lastName, email, password: plainPassword } = body
+    const { username, firstName, lastName, email: plainEmail, password: plainPassword } = body
+
+    // Centralise configuration for this somewhere (MW)
+    if (
+      !isStrongPassword(plainPassword, {
+        minLength: 6,
+        minLowercase: 1,
+        minUppercase: 1,
+        minNumbers: 1,
+        minSymbols: 1,
+        returnScore: false,
+      })
+    ) {
+      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).send("Password not strong enough, try harder")
+    }
     const password = await createHash(plainPassword)
+    const email = normalizeEmail(plainEmail)
+
+    if (!email) {
+      throw new Error(`Problem with email normalization for ${plainEmail}`)
+    }
+
     const user: NewUser = {
       firstName,
       lastName,
