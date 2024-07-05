@@ -12,11 +12,12 @@ const tableTokens = pgTable("tokens", {
     .$defaultFn(() => createId())
     .primaryKey(),
   user_id: text("user_id").notNull(),
-  token: text("token").notNull(),
   type: enumTokenType("type"),
   used: boolean("used").default(false),
   created_at: timestamp("created_at").default(sql`now()`),
-  expires_at: timestamp("expires_at").default(sql`now()`),
+  expires_at: timestamp("expires_at")
+    .notNull()
+    .default(sql`now()`), // Possibly redundant, but we'll see. Prevent open-ended tokens. notNull should be enough.
 })
 
 const tokensRelations = relations(tableTokens, ({ one }) => ({

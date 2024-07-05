@@ -20,6 +20,7 @@ const tableUsers = pgTable("users", {
   rank: real("rank").default(1.0),
   password: text("password"),
   status: enumUserStatus("status").default(STATUS.UNVERIFIED),
+  referredBy: text("referred_by"),
   createdAt: timestamp("created_at").default(sql`now()`),
   deletedAt: timestamp("deleted_at"),
 })

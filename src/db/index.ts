@@ -1,7 +1,7 @@
 import { drizzle } from "drizzle-orm/node-postgres"
 import { Client } from "pg"
+import * as schema from "./schema/index"
 import dotenv from "dotenv"
-
 dotenv.config()
 
 const client = new Client({
@@ -13,6 +13,6 @@ const client = new Client({
 })
 
 client.connect()
-const db = drizzle(client, { logger: process.env.POSTGRES_LOG === "true" })
 
+const db = drizzle(client, { schema, logger: process.env.POSTGRES_LOG === "true" })
 export default db

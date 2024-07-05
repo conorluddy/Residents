@@ -1,5 +1,6 @@
 import { User } from "../db/schema"
 import jwt from "jsonwebtoken"
+import { UserNoPW } from "../db/types"
 
 const DEFAULT_JWT_TOKEN_EXPIRY = "1m"
 
@@ -12,4 +13,4 @@ export const generateJwt = (userPayload: JWTUserPayload) => {
   })
 }
 
-export type JWTUserPayload = Pick<User, "id" | "firstName" | "lastName" | "email" | "username" | "role">
+export type JWTUserPayload = Partial<UserNoPW>
