@@ -1,8 +1,15 @@
 import { Router } from "express"
 import CONTROLLERS from "../../controllers"
+import MW from "../../middleware"
 
 const router = Router()
 
-router.get("/reset-password/:token", CONTROLLERS.AUTH.resetPasswordWithToken)
+router.post(
+  "/reset-password/:token",
+  MW.validateRequestToken,
+  MW.findUserByValidToken,
+  MW.discardToken,
+  CONTROLLERS.AUTH.resetPasswordWithToken
+)
 
 export default router

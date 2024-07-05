@@ -6,7 +6,7 @@ import { logger } from "./utils/logger"
 import helmet from "helmet"
 import dotenv from "dotenv"
 import swaggerSetup from "./swagger"
-import rateLimiter from "./utils/rateLimiter"
+import rateLimiter from "./middleware/rateLimiter"
 dotenv.config()
 
 const port = process.env.LOCAL_API_PORT
