@@ -4,6 +4,7 @@ import { logger } from "../../utils/logger"
 import { eq } from "drizzle-orm"
 import db from "../../db"
 import { tableUsers } from "../../db/schema"
+import { normalizeEmail } from "validator"
 
 /**
  * updateUser
@@ -25,11 +26,17 @@ export const updateUser = async (req: Request, res: Response) => {
       return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).send("You are not allowed to update this user.")
     }
 
-    const updateFields: Record<string, string> = {}
+    const updateFields: Record<string, string | false> = {}
     if (username) updateFields.username = username
     if (firstName) updateFields.firstName = firstName
     if (lastName) updateFields.lastName = lastName
-    if (email) updateFields.email = email
+    if (email) updateFields.email = normalizeEmail(email)
+
+    // Add the rest of the user fields and check the password strength
+    // if (password) updateFields.password = password
+
+    // Bit smelly here, normalizeEmail returns false if there's a problem.
+    if (updateFields.email === false) throw new Error(`Problem with email normalization for ${email}`)
 
     const result = await db
       .update(tableUsers)

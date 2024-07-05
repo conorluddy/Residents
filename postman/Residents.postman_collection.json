@@ -32,7 +32,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"username\": \"USER5\",\n    \"password\": \"password\"\n}",
+					"raw": "{\n    \"username\": \"Dorothea29\",\n    \"password\": \"Dorothea29\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -50,7 +50,113 @@
 					]
 				}
 			},
-			"response": []
+			"response": [
+				{
+					"name": "/auth",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"Dorothea29\",\n    \"password\": \"Dorothea29\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/auth",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"auth"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Security-Policy",
+							"value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+						},
+						{
+							"key": "Cross-Origin-Opener-Policy",
+							"value": "same-origin"
+						},
+						{
+							"key": "Cross-Origin-Resource-Policy",
+							"value": "same-origin"
+						},
+						{
+							"key": "Origin-Agent-Cluster",
+							"value": "?1"
+						},
+						{
+							"key": "Referrer-Policy",
+							"value": "no-referrer"
+						},
+						{
+							"key": "Strict-Transport-Security",
+							"value": "max-age=15552000; includeSubDomains"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-DNS-Prefetch-Control",
+							"value": "off"
+						},
+						{
+							"key": "X-Download-Options",
+							"value": "noopen"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "SAMEORIGIN"
+						},
+						{
+							"key": "X-Permitted-Cross-Domain-Policies",
+							"value": "none"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "0"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "551"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"227-dsaOgdnfvMiuAcMz6OfRkzm3Gkc\""
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 30 Jun 2024 14:32:28 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"accessToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImpsZXd4ZnZpb3hvZ2FiZTV6Yms0M3dvaCIsInVzZXJuYW1lIjoiRG9yb3RoZWEyOSIsImZpcnN0TmFtZSI6IkJyYWRseSIsImxhc3ROYW1lIjoiQ29sbGllciIsImVtYWlsIjoiRWxveTg3QGdtYWlsLmNvbSIsInJvbGUiOiJhZG1pbiIsInJhbmsiOjMwLjIsInBhc3N3b3JkIjoiJDJiJDEwJG4xdy5WNmkvMjl2cm0ybDhQbnBTeGVNekRQQ2MuclY3U1BkT0pZOS9vUGFuOVI3QWlWaFNhIiwic3RhdHVzIjoidW52ZXJpZmllZCIsImNyZWF0ZWRBdCI6IjIwMjQtMDYtMzBUMTI6NDI6NTguODkxWiIsImRlbGV0ZWRBdCI6bnVsbCwiaWF0IjoxNzE5NzU3OTQ4LCJleHAiOjE3MTk4NDQzNDh9.BgfEjXpr5i2PrAsgv-Q_cN9cybHnF9ariWMU-2sR0fU\"\n}"
+				}
+			]
 		},
 		{
 			"name": "/auth/logout",
@@ -134,11 +240,11 @@
 						}
 					]
 				},
-				"method": "PUT",
+				"method": "PATCH",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"id\": \"ru04uszr1voxnxjjvqsbcmof\",\n    \"firstName\": \"bansana\",\n    \"lastName\": \"rama\",\n    \"email\": \"email@gmaei.cam\",\n    \"username\": \"XXXX\",\n    \"password\": \"asdfasdf\"\n}",
+					"raw": "{\n    \"firstName\": \"bansana\",\n    \"lastName\": \"rama\",\n    \"email\": \"email@gmaei.cam\",\n    \"username\": \"XXXX\",\n    \"password\": \"asdfasdf\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -146,14 +252,14 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3000/users/ru04uszr1voxnxjjvqsbcmof",
+					"raw": "localhost:3000/users/e6os0az2mqtnt7yynmnuhbzl",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
 						"users",
-						"ru04uszr1voxnxjjvqsbcmof"
+						"e6os0az2mqtnt7yynmnuhbzl"
 					]
 				}
 			},
@@ -202,15 +308,24 @@
 				},
 				"method": "POST",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"conorluddy@gmail.com\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
-					"raw": "localhost:3000/auth/magic",
+					"raw": "localhost:3000/auth/magic-login",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
 						"auth",
-						"magic"
+						"magic-login"
 					]
 				}
 			},
@@ -254,6 +369,15 @@
 				},
 				"method": "POST",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"email\": \"conorluddy@\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
 					"raw": "localhost:3000/auth/reset-password",
 					"host": [
@@ -263,6 +387,13 @@
 					"path": [
 						"auth",
 						"reset-password"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": "",
+							"disabled": true
+						}
 					]
 				}
 			},
@@ -274,10 +405,19 @@
 				"auth": {
 					"type": "noauth"
 				},
-				"method": "GET",
+				"method": "POST",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"password\": \"mt!@vbSFSDFn3__dbbxhyxnzy0zltfxn9\" }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
-					"raw": "localhost:3000/auth/reset-password/123",
+					"raw": "localhost:3000/auth/reset-password/pk9ctoc0cu4ompfle4doukti",
 					"host": [
 						"localhost"
 					],
@@ -285,7 +425,7 @@
 					"path": [
 						"auth",
 						"reset-password",
-						"123"
+						"pk9ctoc0cu4ompfle4doukti"
 					]
 				}
 			},
@@ -307,14 +447,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:3000/users/24",
+					"raw": "localhost:3000/users/e6os0az2mqtnt7yynmnuhbzl",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
 						"users",
-						"24"
+						"e6os0az2mqtnt7yynmnuhbzl"
 					]
 				}
 			},
@@ -394,14 +534,14 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "localhost:3000/users/ru04uszr1voxnxjjvsbcmof",
+					"raw": "localhost:3000/users/yc92thpsc31l68wxa5d5c30l",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
 						"users",
-						"ru04uszr1voxnxjjvsbcmof"
+						"yc92thpsc31l68wxa5d5c30l"
 					]
 				}
 			},
