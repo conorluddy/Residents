@@ -7,7 +7,9 @@ import { JWTUserPayload } from "../utils/generateJwt"
 import { RBAC } from "./roleBasedAccessControl"
 
 jest.mock("../utils/logger")
-jest.mock("../db")
+jest.mock("../db", () => ({
+  select: jest.fn(),
+}))
 
 describe("Middleware:RBAC:checkPermission", () => {
   let mockRequest: Partial<Request>
@@ -18,8 +20,6 @@ describe("Middleware:RBAC:checkPermission", () => {
   let mockLockedUser: Partial<User>
   let mockDeletedAdminUser: Partial<User>
   let mockDeletedDefaultUser: Partial<User>
-  // let mockOwnerUser: Partial<User>
-  // let mockModeratorUser: Partial<User>
 
   beforeAll(async () => {
     mockAdminUser = await makeAFakeUser({ role: ROLES.ADMIN })
