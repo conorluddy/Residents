@@ -6,6 +6,7 @@ import { User, tableUsers } from "../../db/schema"
 import { validateHash } from "../../utils/crypt"
 import { generateJwt } from "../../utils/generateJwt"
 import { isEmail } from "validator"
+import { logger } from "../../utils/logger"
 
 /**
  * login
@@ -31,14 +32,18 @@ export const login = async ({ body }: Request, res: Response) => {
 
     const user = users[0]
 
-    if (password.length > 0 && user && user.password && user.password.length > 0) {
-      await validateHash(password, user.password)
+    if (
+      password.length > 0 &&
+      user?.password &&
+      user.password.length > 0 &&
+      (await validateHash(password, user.password))
+    ) {
       const accessToken = generateJwt(user)
       return res.status(HTTP_SUCCESS.OK).json({ accessToken })
-    } else {
-      return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).send("Not today, buddy")
     }
+    return res.sendStatus(HTTP_CLIENT_ERROR.FORBIDDEN)
   } catch (error) {
+    logger.error(error)
     return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).send("Error logging in")
   }
 }

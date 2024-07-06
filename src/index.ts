@@ -24,9 +24,15 @@ app.use("/users", usersRouter)
 app.use("/auth", authRouter)
 
 // Run
-app.listen(port, () => {
+const server = app.listen(port, () => {
   logger.info(`Running: http://localhost:${port}`)
   logger.info(`Swagger API docs are available at http://localhost:${port}/api-docs`)
 })
 
 swaggerSetup(app)
+
+// Graceful shutdown
+process.on("SIGTERM", () => {
+  logger.info("SIGTERM signal received: closing HTTP server")
+  server.close(() => logger.info("HTTP server closed"))
+})

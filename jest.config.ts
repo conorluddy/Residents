@@ -1,9 +1,10 @@
 module.exports = {
   preset: "ts-jest",
   testEnvironment: "node",
-  testMatch: ["**/?(*.)+(spec|test).[jt]s?(x)"],
+  testMatch: ["**/*.test.ts"],
   collectCoverage: true,
   coverageDirectory: "coverage",
   coverageReporters: ["text", "lcov"],
-  collectCoverageFrom: ["src/**/*.{ts,tsx}", "!src/**/*.d.ts", "!dist/**/*"],
+  collectCoverageFrom: ["src/**/*.ts", "!src/**/*.d.ts", "!dist/**/*"],
+  testPathIgnorePatterns: ["/node_modules/", "/dist/"],
 }

@@ -8,9 +8,14 @@ import resetPasswordWithToken from "./resetPasswordWithToken"
 import googleLogin from "./googleLogin"
 import logout from "./logout"
 import validateAccount from "./validateAccount"
+import MW from "../../middleware"
 
 const router = Router()
 
+// Middleware
+router.use(MW.errorHandler)
+
+// Routes
 router.use(login)
 router.use(logout)
 router.use(magicLogin)
