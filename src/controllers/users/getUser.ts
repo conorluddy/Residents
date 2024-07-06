@@ -18,6 +18,10 @@ export const getUser = async (req: Request, res: Response) => {
 
     const user = await db.select().from(tableUsers).where(eq(tableUsers.id, userId))
 
+    if (!user) {
+      return res.status(HTTP_CLIENT_ERROR.NOT_FOUND).send("User not found")
+    }
+
     return res.status(HTTP_SUCCESS.OK).json(user)
   } catch (error) {
     logger.error(error)
