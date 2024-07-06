@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express"
-import validateRequestToken from "../middleware/validateRequestToken"
+import validateRequestToken from "./validateRequestToken"
 import { createId } from "@paralleldrive/cuid2"
 
 describe("Middleware: validateRequestToken", () => {

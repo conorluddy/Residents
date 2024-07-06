@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express"
-import validateRequestEmail from "../middleware/validateRequestEmail"
+import validateRequestEmail from "./validateRequestEmail"
 
 describe("Middleware: validateRequestEmail", () => {
   let mockRequest: Partial<Request>

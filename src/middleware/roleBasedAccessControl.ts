@@ -5,19 +5,19 @@ import { ACL, PERMISSIONS } from "../constants/accessControlList"
 import db from "../db"
 import { tableUsers } from "../db/schema"
 import { eq } from "drizzle-orm"
-
 import { logger } from "../utils/logger"
 import { ROLES, ROLES_ARRAY } from "../constants/database"
 
 export const RBAC = {
+  canGetOwnUser: checkPermission(PERMISSIONS.CAN_GET_OWN_USER),
+  checkCanCreateUsers: checkPermission(PERMISSIONS.CAN_CREATE_USERS),
   checkCanGetUsers: checkPermission(PERMISSIONS.CAN_GET_ALL_USERS),
   checkCanUpdateUsers: checkPermission(PERMISSIONS.CAN_UPDATE_ANY_USER),
+  checkCanUpdateOwnUser: checkPermission(PERMISSIONS.CAN_UPDATE_OWN_USER),
   checkCanDeleteUser: checkPermission(PERMISSIONS.CAN_DELETE_ANY_USER),
-  checkCanUpdateUserStatus: checkPermission(PERMISSIONS.CAN_UPDATE_ANY_USER_STATUS),
-  checkCanUpdateOwnProfile: checkPermission(PERMISSIONS.CAN_UPDATE_OWN_PROFILE),
+  checkCanUpdateAnyUserStatus: checkPermission(PERMISSIONS.CAN_UPDATE_ANY_USER_STATUS),
+  checkCanUpdateOwnProfile: checkPermission(PERMISSIONS.CAN_UPDATE_OWN_USER),
   checkRoleSuperiority: checkRoleSuperiority(),
-
-  checkCanCreateUsers: (req: Request, res: Response, next: NextFunction) => next(),
 }
 
 /**
@@ -28,10 +28,17 @@ export const RBAC = {
 function checkPermission(permission: PERMISSIONS) {
   return (req: Request, res: Response, next: NextFunction) => {
     const user = req.user as JWTUserPayload
+
+    if (user.deletedAt !== null) {
+      logger.warn(`User ${user.id} lacks permission ${permission} because they are deleted`)
+      return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Forbidden" })
+    }
+
     if (user.role && !ACL[user.role].includes(permission)) {
       logger.warn(`User ${user.id} with role ${user.role} lacks permission ${permission}`)
       return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Forbidden" })
     }
+
     next()
   }
 }
