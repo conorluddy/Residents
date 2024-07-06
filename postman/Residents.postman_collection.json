@@ -7,469 +7,530 @@
 	},
 	"item": [
 		{
-			"name": "/auth",
-			"event": [
+			"name": "AUTH",
+			"item": [
 				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"",
-							"const jsonData = pm.response.json();",
-							"if (jsonData.accessToken) {",
-							"    pm.environment.set(\"JWT\", jsonData.accessToken);",
-							"} else {",
-							"    console.error(\"JWT not found in response.\");",
-							"}",
-							""
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"username\": \"USER5\",\n    \"password\": \"password\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "localhost:3000/auth",
-					"host": [
-						"localhost"
-					],
-					"port": "3000",
-					"path": [
-						"auth"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "/auth/logout",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
+					"name": "Federated/Passport Logins",
+					"item": [
 						{
-							"key": "token",
-							"value": "{{JWT}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"username\": \"USER1\",\n    \"password\": \"password\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "localhost:3000/auth/logout",
-					"host": [
-						"localhost"
-					],
-					"port": "3000",
-					"path": [
-						"auth",
-						"logout"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "/users/register",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"firstName\": \"firstName\",\n    \"lastName\": \"lastName\",\n    \"email\": \"email5\",\n    \"username\": \"USER5\",\n    \"password\": \"password\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "localhost:3000/users/register",
-					"host": [
-						"localhost"
-					],
-					"port": "3000",
-					"path": [
-						"users",
-						"register"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "/users/update",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
+							"name": "Google login [auth]",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:3000/auth/google",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"auth",
+										"google"
+									]
+								}
+							},
+							"response": []
+						},
 						{
-							"key": "token",
-							"value": "{{JWT}}",
-							"type": "string"
+							"name": "Google callback [auth]",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"username\": \"USER1\",\n    \"password\": \"password\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/auth/google/callback",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"auth",
+										"google",
+										"callback"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
-				"method": "PUT",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"id\": \"ru04uszr1voxnxjjvqsbcmof\",\n    \"firstName\": \"bansana\",\n    \"lastName\": \"rama\",\n    \"email\": \"email@gmaei.cam\",\n    \"username\": \"XXXX\",\n    \"password\": \"asdfasdf\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "localhost:3000/users/ru04uszr1voxnxjjvqsbcmof",
-					"host": [
-						"localhost"
-					],
-					"port": "3000",
-					"path": [
-						"users",
-						"ru04uszr1voxnxjjvqsbcmof"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "/users",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
+				{
+					"name": "Login [auth]",
+					"event": [
 						{
-							"key": "token",
-							"value": "{{JWT}}",
-							"type": "string"
+							"listen": "test",
+							"script": {
+								"exec": [
+									"",
+									"const jsonData = pm.response.json();",
+									"if (jsonData.accessToken) {",
+									"    pm.environment.set(\"JWT\", jsonData.accessToken);",
+									"} else {",
+									"    console.error(\"JWT not found in response.\");",
+									"}",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
 						}
-					]
-				},
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "localhost:3000/users",
-					"host": [
-						"localhost"
 					],
-					"port": "3000",
-					"path": [
-						"users"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "/auth/magic",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZmlyc3ROYW1lIjoiZmlyc3ROYW1lIiwibGFzdE5hbWUiOiJsYXN0TmFtZSIsImVtYWlsIjoiZW1haWwiLCJ1c2VybmFtZSI6IlVTRVIxIiwicGFzc3dvcmQiOiIkMmIkMTAkdm1ua2ZwWlJMUFdQdEkwN3ZqUzY2dTZrRmRQRzFkbHl6b0hmdW5ydHY4azNsZUFkcFZKMnkiLCJjcmVhdGVkQXQiOiIyMDI0LTA2LTE1VDExOjUyOjM3LjY4NFoiLCJyb2xlIjoiZGVmYXVsdCIsImlhdCI6MTcxODczODQzMiwiZXhwIjoxNzE4ODI0ODMyfQ.j854b1Uto1GJuiRoAVtrfMu3YRrVDa4ovzeGbWm802o",
-							"type": "string"
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"Dorothea29\",\n    \"password\": \"Dorothea29\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/auth",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"auth"
+							]
 						}
-					]
+					},
+					"response": []
 				},
-				"method": "POST",
-				"header": [],
-				"url": {
-					"raw": "localhost:3000/auth/magic",
-					"host": [
-						"localhost"
-					],
-					"port": "3000",
-					"path": [
-						"auth",
-						"magic"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "/auth/magic/token",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZmlyc3ROYW1lIjoiZmlyc3ROYW1lIiwibGFzdE5hbWUiOiJsYXN0TmFtZSIsImVtYWlsIjoiZW1haWwiLCJ1c2VybmFtZSI6IlVTRVIxIiwicGFzc3dvcmQiOiIkMmIkMTAkdm1ua2ZwWlJMUFdQdEkwN3ZqUzY2dTZrRmRQRzFkbHl6b0hmdW5ydHY4azNsZUFkcFZKMnkiLCJjcmVhdGVkQXQiOiIyMDI0LTA2LTE1VDExOjUyOjM3LjY4NFoiLCJyb2xlIjoiZGVmYXVsdCIsImlhdCI6MTcxODczODQzMiwiZXhwIjoxNzE4ODI0ODMyfQ.j854b1Uto1GJuiRoAVtrfMu3YRrVDa4ovzeGbWm802o",
-							"type": "string"
+				{
+					"name": "Logout [auth]",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"USER1\",\n    \"password\": \"password\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/auth/logout",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"auth",
+								"logout"
+							]
 						}
-					]
+					},
+					"response": []
 				},
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "localhost:3000/auth/magic/123",
-					"host": [
-						"localhost"
-					],
-					"port": "3000",
-					"path": [
-						"auth",
-						"magic",
-						"123"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "/reset-password",
-			"request": {
-				"auth": {
-					"type": "noauth"
-				},
-				"method": "POST",
-				"header": [],
-				"url": {
-					"raw": "localhost:3000/auth/reset-password",
-					"host": [
-						"localhost"
-					],
-					"port": "3000",
-					"path": [
-						"auth",
-						"reset-password"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "/reset-password/token",
-			"request": {
-				"auth": {
-					"type": "noauth"
-				},
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "localhost:3000/auth/reset-password/123",
-					"host": [
-						"localhost"
-					],
-					"port": "3000",
-					"path": [
-						"auth",
-						"reset-password",
-						"123"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "/users/id",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{JWT}}",
-							"type": "string"
+				{
+					"name": "Magic login trigger [auth]",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZmlyc3ROYW1lIjoiZmlyc3ROYW1lIiwibGFzdE5hbWUiOiJsYXN0TmFtZSIsImVtYWlsIjoiZW1haWwiLCJ1c2VybmFtZSI6IlVTRVIxIiwicGFzc3dvcmQiOiIkMmIkMTAkdm1ua2ZwWlJMUFdQdEkwN3ZqUzY2dTZrRmRQRzFkbHl6b0hmdW5ydHY4azNsZUFkcFZKMnkiLCJjcmVhdGVkQXQiOiIyMDI0LTA2LTE1VDExOjUyOjM3LjY4NFoiLCJyb2xlIjoiZGVmYXVsdCIsImlhdCI6MTcxODczODQzMiwiZXhwIjoxNzE4ODI0ODMyfQ.j854b1Uto1GJuiRoAVtrfMu3YRrVDa4ovzeGbWm802o",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"conorluddy@gmail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/auth/magic-login",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"auth",
+								"magic-login"
+							]
 						}
-					]
+					},
+					"response": []
 				},
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "localhost:3000/users/24",
-					"host": [
-						"localhost"
-					],
-					"port": "3000",
-					"path": [
-						"users",
-						"24"
-					]
+				{
+					"name": "Magic login token [auth]",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZmlyc3ROYW1lIjoiZmlyc3ROYW1lIiwibGFzdE5hbWUiOiJsYXN0TmFtZSIsImVtYWlsIjoiZW1haWwiLCJ1c2VybmFtZSI6IlVTRVIxIiwicGFzc3dvcmQiOiIkMmIkMTAkdm1ua2ZwWlJMUFdQdEkwN3ZqUzY2dTZrRmRQRzFkbHl6b0hmdW5ydHY4azNsZUFkcFZKMnkiLCJjcmVhdGVkQXQiOiIyMDI0LTA2LTE1VDExOjUyOjM3LjY4NFoiLCJyb2xlIjoiZGVmYXVsdCIsImlhdCI6MTcxODczODQzMiwiZXhwIjoxNzE4ODI0ODMyfQ.j854b1Uto1GJuiRoAVtrfMu3YRrVDa4ovzeGbWm802o",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/auth/magic-login/123",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"auth",
+								"magic-login",
+								"123"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reset password trigger [auth]",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"email\": \"Emile_Metz@hotmail.com\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/auth/reset-password",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"auth",
+								"reset-password"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reset password token [auth]",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"password\": \"mt!@vbSFSDFn3__dbbxhyxnzy0zltfxn9\" }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/auth/reset-password/pk9ctoc0cu4ompfle4doukti",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"auth",
+								"reset-password",
+								"pk9ctoc0cu4ompfle4doukti"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Validate user account [auth]",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/auth/validate/:token/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"auth",
+								"validate",
+								":token",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "token",
+									"value": ""
+								},
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "/auth/validate",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{JWT}}",
-							"type": "string"
+			"name": "USER",
+			"item": [
+				{
+					"name": "Create/Register [user]",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"firstName\",\n    \"lastName\": \"lastName\",\n    \"email\": \"email5\",\n    \"username\": \"USER5\",\n    \"password\": \"password\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/users/register",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users",
+								"register"
+							]
 						}
-					]
+					},
+					"response": []
 				},
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "localhost:3000/auth/validate",
-					"host": [
-						"localhost"
-					],
-					"port": "3000",
-					"path": [
-						"auth",
-						"validate"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "/users/self",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{JWT}}",
-							"type": "string"
+				{
+					"name": "Update User [user]",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"bansana\",\n    \"lastName\": \"rama\",\n    \"email\": \"email@gmaei.cam\",\n    \"username\": \"XXXX\",\n    \"password\": \"asdfasdf\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/users/e6os0az2mqtnt7yynmnuhbzl",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users",
+								"e6os0az2mqtnt7yynmnuhbzl"
+							]
 						}
-					]
+					},
+					"response": []
 				},
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "localhost:3000/users/self",
-					"host": [
-						"localhost"
-					],
-					"port": "3000",
-					"path": [
-						"users",
-						"self"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "/users/id",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{JWT}}",
-							"type": "string"
+				{
+					"name": "Get all Users [user]",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/users",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users"
+							]
 						}
-					]
+					},
+					"response": []
 				},
-				"method": "DELETE",
-				"header": [],
-				"url": {
-					"raw": "localhost:3000/users/ru04uszr1voxnxjjvsbcmof",
-					"host": [
-						"localhost"
-					],
-					"port": "3000",
-					"path": [
-						"users",
-						"ru04uszr1voxnxjjvsbcmof"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "/auth/google",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "",
-					"options": {
-						"raw": {
-							"language": "json"
+				{
+					"name": "Get User by ID [user]",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/users/e6os0az2mqtnt7yynmnuhbzl",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users",
+								"e6os0az2mqtnt7yynmnuhbzl"
+							]
 						}
-					}
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "localhost:3000/auth/google",
-					"host": [
-						"localhost"
-					],
-					"port": "3000",
-					"path": [
-						"auth",
-						"google"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "/auth/google/callback",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"username\": \"USER1\",\n    \"password\": \"password\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+				{
+					"name": "Get own User [user]",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/users/self",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users",
+								"self"
+							]
 						}
-					}
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "http://localhost:3000/auth/google/callback",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "3000",
-					"path": [
-						"auth",
-						"google",
-						"callback"
-					]
+				{
+					"name": "Delete a User [user]",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/users/yc92thpsc31l68wxa5d5c30l",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users",
+								"yc92thpsc31l68wxa5d5c30l"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		}
 	],
 	"variable": [

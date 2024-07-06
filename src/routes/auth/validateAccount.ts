@@ -4,6 +4,6 @@ import CONTROLLERS from "../../controllers"
 
 const router = Router()
 
-router.get("/validate/:token", authenticateToken, CONTROLLERS.AUTH.validateAccount)
+router.patch("/validate/:token/:userId", authenticateToken, CONTROLLERS.AUTH.validateAccount)
 
 export default router
