@@ -8,11 +8,11 @@ import getSelf from "./getSelf"
 
 const router = Router()
 
-router.use(getSelf)
-router.use(getUser)
-router.use(getAllUsers)
 router.use(createUser)
 router.use(updateUser)
+router.use(getAllUsers)
+router.use(getUser)
+router.use(getSelf)
 router.use(deleteUser)
 
 export default router
