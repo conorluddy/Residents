@@ -3,6 +3,8 @@ import { createHash } from "../utils/crypt"
 import { ROLES_ARRAY, STATUS_ARRAY } from "../constants/database"
 import { User } from "../db/schema"
 
+faker.seed(123)
+
 const makeAFakeUser = ({
   deletedAt,
   email,
@@ -40,7 +42,7 @@ const makeAFakeUserWithHashedPassword = async ({
   email: email ?? faker.internet.email(),
   firstName: firstName ?? faker.person.firstName(),
   lastName: lastName ?? faker.person.lastName(),
-  password: password ?? (await createHash(username)),
+  password: await createHash(password ?? username), // default password is username
   rank: rank ?? faker.number.float({ multipleOf: 0.2, min: 0, max: 50 }),
   role: role ?? faker.helpers.arrayElement(ROLES_ARRAY),
   status: status ?? faker.helpers.arrayElement(STATUS_ARRAY),
