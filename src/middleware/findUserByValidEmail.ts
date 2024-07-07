@@ -23,7 +23,7 @@ const findUserByValidEmail: RequestHandler = async (req: Request, res: Response,
     if (!user) {
       logger.error(`User not found: ${validatedEmail}`)
       // Don't reveal if the user exists or not, this is a public endpoint.
-      return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).send("We can't do that right now")
+      return res.status(HTTP_CLIENT_ERROR.NOT_FOUND).send("User not found")
     }
 
     req.userNoPW = user
