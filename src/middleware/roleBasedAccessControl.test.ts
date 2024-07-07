@@ -10,11 +10,11 @@ let mockUser: Partial<User>
 
 jest.mock("../utils/logger")
 
-const dbMock = jest.mock("../db", () => ({
+jest.mock("../db", () => ({
   // Move this to own mocks file
   select: jest.fn().mockReturnValue({
     from: jest.fn().mockReturnValue({
-      where: jest.fn().mockReturnValue({}),
+      where: jest.fn().mockResolvedValue({}),
     }),
   }),
 }))
