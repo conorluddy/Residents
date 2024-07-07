@@ -16,7 +16,7 @@ export const authenticateToken = (req: Request, res: Response, next: NextFunctio
     return res.status(HTTP_CLIENT_ERROR.UNAUTHORIZED).json({ message: "Token is required" })
   }
 
-  if (secret == null) {
+  if (!secret || secret === "") {
     logger.warn("JWT token secret is not defined in your environment variables")
     return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Internal server error" })
   }
@@ -24,7 +24,7 @@ export const authenticateToken = (req: Request, res: Response, next: NextFunctio
   jwt.verify(token, secret, (err, user) => {
     if (err) {
       logger.warn("JWT token is invalid or expired")
-      return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Token is invalid or expired" })
+      return res.status(HTTP_CLIENT_ERROR.UNAUTHORIZED).json({ message: "Token is invalid or expired" })
     }
     req.user = user
     next()
