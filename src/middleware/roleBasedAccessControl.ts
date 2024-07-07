@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express"
 import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from "../constants/http"
 import { JWTUserPayload } from "../utils/generateJwt"
 import { ACL, PERMISSIONS } from "../constants/accessControlList"
-import { tableUsers } from "../db/schema"
+import { tableUsers, User } from "../db/schema"
 import { eq } from "drizzle-orm"
 import { logger } from "../utils/logger"
 import { ROLES, ROLES_ARRAY } from "../constants/database"
@@ -53,10 +53,21 @@ async function checkRoleSuperiority(req: Request, res: Response, next: NextFunct
   try {
     if (!user.role) {
       logger.warn(`User ${user.id} is missing a role`)
-      return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "User has no role" })
+      return res.status(HTTP_CLIENT_ERROR.UNAUTHORIZED).json({ message: "User has no role" })
     }
 
-    const targetUsers = await db.select().from(tableUsers).where(eq(tableUsers.id, targetUserId))
+    if (user.role === ROLES.LOCKED) {
+      logger.warn(`User ${user.id} account is locked`)
+      return res.status(HTTP_CLIENT_ERROR.UNAUTHORIZED).json({ message: "User account is locked" })
+    }
+
+    // User has no role
+    if (!!user.deletedAt) {
+      logger.warn(`User ${user.id} account is deleted`)
+      return res.status(HTTP_CLIENT_ERROR.UNAUTHORIZED).json({ message: "User account is deleted" })
+    }
+
+    const targetUsers: User[] = await db.select().from(tableUsers).where(eq(tableUsers.id, targetUserId))
     const targetUser = targetUsers[0]
 
     // No user found
@@ -74,7 +85,7 @@ async function checkRoleSuperiority(req: Request, res: Response, next: NextFunct
     // Target user is locked and can only be edited by Admin or Owner. (Improve this later / make configurable)
     if (targetUser?.role === ROLES.LOCKED && ![ROLES.ADMIN, ROLES.OWNER].includes(user.role)) {
       logger.warn(`User ${targetUserId} is locked`)
-      return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Target is locked" })
+      return res.status(HTTP_CLIENT_ERROR.UNAUTHORIZED).json({ message: "Target user account is locked" })
     }
 
     // Get the Role rankings
@@ -91,7 +102,7 @@ async function checkRoleSuperiority(req: Request, res: Response, next: NextFunct
     if (targetRoleIndex <= userRoleIndex) {
       logger.warn(`User ${user.id} lacks role superiority over target ${targetUserId}`)
       return res
-        .status(HTTP_CLIENT_ERROR.FORBIDDEN)
+        .status(HTTP_CLIENT_ERROR.UNAUTHORIZED)
         .json({ message: "Role superiority is required for this operation" })
     }
 
