@@ -1,12 +1,10 @@
 import { NextFunction, Request, Response } from "express"
 import { ROLES } from "../constants/database"
-import { HTTP_CLIENT_ERROR, HTTP_SUCCESS } from "../constants/http"
+import { HTTP_CLIENT_ERROR } from "../constants/http"
 import { User } from "../db/types"
 import { makeAFakeUser } from "../test-utils/mockUsers"
 import { JWTUserPayload } from "../utils/generateJwt"
 import { RBAC } from "./roleBasedAccessControl"
-
-let mockUser: Partial<User>
 
 jest.mock("../utils/logger")
 
@@ -17,8 +15,11 @@ jest.mock("../db", () => ({
       where: jest
         .fn()
         .mockResolvedValueOnce([makeAFakeUser({ role: ROLES.DEFAULT })])
-        .mockResolvedValueOnce([makeAFakeUser({ role: null })])
-        .mockResolvedValueOnce([{ id: "3" }]),
+        .mockResolvedValueOnce([makeAFakeUser({ role: ROLES.ADMIN })])
+        .mockResolvedValueOnce([makeAFakeUser({ role: ROLES.ADMIN })])
+        .mockResolvedValueOnce([makeAFakeUser({ role: ROLES.LOCKED })])
+        .mockResolvedValueOnce([makeAFakeUser({ role: ROLES.LOCKED })])
+        .mockResolvedValueOnce([{}]),
     }),
   }),
 }))
@@ -39,8 +40,6 @@ describe("Middleware:RBAC:checkPermission", () => {
     mockLockedUser = makeAFakeUser({ role: ROLES.LOCKED })
     mockDeletedAdminUser = makeAFakeUser({ role: ROLES.ADMIN, deletedAt: new Date() })
     mockDeletedDefaultUser = makeAFakeUser({ role: ROLES.DEFAULT, deletedAt: new Date() })
-    // mockOwnerUser = await makeAFakeUser({ role: ROLES.OWNER })
-    // mockModeratorUser = await makeAFakeUser({ role: ROLES.MODERATOR })
   })
 
   beforeEach(() => {
@@ -356,19 +355,19 @@ describe("Middleware:RBAC:checkRoleSuperiority", () => {
   let mockDefaultUser: Partial<User>
   let mockLockedUser: Partial<User>
   let mockDeletedAdminUser: Partial<User>
-  let mockDeletedDefaultUser: Partial<User>
-  let mockOwnerUser: Partial<User>
-  let mockModeratorUser: Partial<User>
   let mockUserNoRole: Partial<User>
+  // let mockDeletedDefaultUser: Partial<User>
+  // let mockOwnerUser: Partial<User>
+  // let mockModeratorUser: Partial<User>
 
   beforeAll(() => {
     mockAdminUser = makeAFakeUser({ role: ROLES.ADMIN })
     mockDefaultUser = makeAFakeUser({ role: ROLES.DEFAULT })
     mockLockedUser = makeAFakeUser({ role: ROLES.LOCKED })
     mockDeletedAdminUser = makeAFakeUser({ role: ROLES.ADMIN, deletedAt: new Date() })
-    mockDeletedDefaultUser = makeAFakeUser({ role: ROLES.DEFAULT, deletedAt: new Date() })
-    mockOwnerUser = makeAFakeUser({ role: ROLES.OWNER })
-    mockModeratorUser = makeAFakeUser({ role: ROLES.MODERATOR })
+    // mockDeletedDefaultUser = makeAFakeUser({ role: ROLES.DEFAULT, deletedAt: new Date() })
+    // mockOwnerUser = makeAFakeUser({ role: ROLES.OWNER })
+    // mockModeratorUser = makeAFakeUser({ role: ROLES.MODERATOR })
 
     mockUserNoRole = makeAFakeUser({ role: ROLES.DEFAULT })
     delete mockUserNoRole.role
@@ -392,10 +391,56 @@ describe("Middleware:RBAC:checkRoleSuperiority", () => {
     expect(nextFunction).toHaveBeenCalled()
   })
 
-  it("Missing Role: If user role is missing, forbid action", async () => {
+  it("User has same role as target, forbid action", async () => {
+    mockRequest.user = mockAdminUser
+    await RBAC.checkRoleSuperiority(mockRequest as Request, mockResponse as Response, nextFunction)
+    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.UNAUTHORIZED)
+    expect(mockResponse.json).toHaveBeenCalledWith({ message: "Role superiority is required for this operation" })
+    expect(nextFunction).not.toHaveBeenCalled()
+  })
+
+  it("User has lower role than target, forbid action", async () => {
+    mockRequest.user = mockDefaultUser
+    await RBAC.checkRoleSuperiority(mockRequest as Request, mockResponse as Response, nextFunction)
+    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.UNAUTHORIZED)
+    expect(mockResponse.json).toHaveBeenCalledWith({ message: "Role superiority is required for this operation" })
+    expect(nextFunction).not.toHaveBeenCalled()
+  })
+
+  it("User role is LOCKED, forbid action", async () => {
+    mockRequest.user = mockLockedUser
+    await RBAC.checkRoleSuperiority(mockRequest as Request, mockResponse as Response, nextFunction)
+    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.UNAUTHORIZED)
+    expect(mockResponse.json).toHaveBeenCalledWith({ message: "User account is locked" })
+    expect(nextFunction).not.toHaveBeenCalled()
+  })
+
+  it("Target User role is LOCKED, can not be mutated by less than Admin", async () => {
+    mockRequest.user = mockDefaultUser
+    await RBAC.checkRoleSuperiority(mockRequest as Request, mockResponse as Response, nextFunction)
+    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.UNAUTHORIZED)
+    expect(mockResponse.json).toHaveBeenCalledWith({ message: "Target user account is locked" })
+    expect(nextFunction).not.toHaveBeenCalled()
+  })
+
+  it("Target User role is LOCKED, can still be mutated by Admin+", async () => {
+    mockRequest.user = mockAdminUser
+    await RBAC.checkRoleSuperiority(mockRequest as Request, mockResponse as Response, nextFunction)
+    expect(nextFunction).toHaveBeenCalled()
+  })
+
+  it("Admin account in deleted state should be forbidden from acting", async () => {
+    mockRequest.user = mockDeletedAdminUser
+    await RBAC.checkRoleSuperiority(mockRequest as Request, mockResponse as Response, nextFunction)
+    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.UNAUTHORIZED)
+    expect(mockResponse.json).toHaveBeenCalledWith({ message: "User account is deleted" })
+    expect(nextFunction).not.toHaveBeenCalled()
+  })
+
+  it("If user role is missing, forbid action", async () => {
     mockRequest.user = mockUserNoRole
     await RBAC.checkRoleSuperiority(mockRequest as Request, mockResponse as Response, nextFunction)
-    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)
+    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.UNAUTHORIZED)
     expect(mockResponse.json).toHaveBeenCalledWith({ message: "User has no role" })
     expect(nextFunction).not.toHaveBeenCalled()
   })
