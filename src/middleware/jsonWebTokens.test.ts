@@ -15,6 +15,7 @@ describe("Middleware:JWT", () => {
   let mockDefaultUser: Partial<User>
 
   beforeAll(() => {
+    process.env.JWT_TOKEN_SECRET = "TESTSECRET"
     mockDefaultUser = makeAFakeUser({ role: ROLES.DEFAULT })
   })
 
