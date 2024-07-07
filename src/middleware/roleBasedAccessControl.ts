@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express"
 import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from "../constants/http"
 import { JWTUserPayload } from "../utils/generateJwt"
 import { ACL, PERMISSIONS } from "../constants/accessControlList"
-import { tableUsers } from "../db/schema"
+import { tableUsers, User } from "../db/schema"
 import { eq } from "drizzle-orm"
 import { logger } from "../utils/logger"
 import { ROLES, ROLES_ARRAY } from "../constants/database"
@@ -56,7 +56,7 @@ async function checkRoleSuperiority(req: Request, res: Response, next: NextFunct
       return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "User has no role" })
     }
 
-    const targetUsers = await db.select().from(tableUsers).where(eq(tableUsers.id, targetUserId))
+    const targetUsers: User[] = await db.select().from(tableUsers).where(eq(tableUsers.id, targetUserId))
     const targetUser = targetUsers[0]
 
     // No user found

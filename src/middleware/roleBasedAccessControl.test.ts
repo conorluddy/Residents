@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express"
 import { ROLES } from "../constants/database"
-import { HTTP_CLIENT_ERROR } from "../constants/http"
+import { HTTP_CLIENT_ERROR, HTTP_SUCCESS } from "../constants/http"
 import { User } from "../db/types"
 import { makeAFakeUser } from "../test-utils/mockUsers"
 import { JWTUserPayload } from "../utils/generateJwt"
@@ -14,7 +14,11 @@ jest.mock("../db", () => ({
   // Move this to own mocks file
   select: jest.fn().mockReturnValue({
     from: jest.fn().mockReturnValue({
-      where: jest.fn().mockResolvedValue({}),
+      where: jest
+        .fn()
+        .mockResolvedValueOnce([makeAFakeUser({ role: ROLES.DEFAULT })])
+        .mockResolvedValueOnce([makeAFakeUser({ role: null })])
+        .mockResolvedValueOnce([{ id: "3" }]),
     }),
   }),
 }))
@@ -29,12 +33,12 @@ describe("Middleware:RBAC:checkPermission", () => {
   let mockDeletedAdminUser: Partial<User>
   let mockDeletedDefaultUser: Partial<User>
 
-  beforeAll(async () => {
-    mockAdminUser = await makeAFakeUser({ role: ROLES.ADMIN })
-    mockDefaultUser = await makeAFakeUser({ role: ROLES.DEFAULT })
-    mockLockedUser = await makeAFakeUser({ role: ROLES.LOCKED })
-    mockDeletedAdminUser = await makeAFakeUser({ role: ROLES.ADMIN, deletedAt: new Date() })
-    mockDeletedDefaultUser = await makeAFakeUser({ role: ROLES.DEFAULT, deletedAt: new Date() })
+  beforeAll(() => {
+    mockAdminUser = makeAFakeUser({ role: ROLES.ADMIN })
+    mockDefaultUser = makeAFakeUser({ role: ROLES.DEFAULT })
+    mockLockedUser = makeAFakeUser({ role: ROLES.LOCKED })
+    mockDeletedAdminUser = makeAFakeUser({ role: ROLES.ADMIN, deletedAt: new Date() })
+    mockDeletedDefaultUser = makeAFakeUser({ role: ROLES.DEFAULT, deletedAt: new Date() })
     // mockOwnerUser = await makeAFakeUser({ role: ROLES.OWNER })
     // mockModeratorUser = await makeAFakeUser({ role: ROLES.MODERATOR })
   })
@@ -357,16 +361,16 @@ describe("Middleware:RBAC:checkRoleSuperiority", () => {
   let mockModeratorUser: Partial<User>
   let mockUserNoRole: Partial<User>
 
-  beforeAll(async () => {
-    mockAdminUser = await makeAFakeUser({ role: ROLES.ADMIN })
-    mockDefaultUser = await makeAFakeUser({ role: ROLES.DEFAULT })
-    mockLockedUser = await makeAFakeUser({ role: ROLES.LOCKED })
-    mockDeletedAdminUser = await makeAFakeUser({ role: ROLES.ADMIN, deletedAt: new Date() })
-    mockDeletedDefaultUser = await makeAFakeUser({ role: ROLES.DEFAULT, deletedAt: new Date() })
-    mockOwnerUser = await makeAFakeUser({ role: ROLES.OWNER })
-    mockModeratorUser = await makeAFakeUser({ role: ROLES.MODERATOR })
+  beforeAll(() => {
+    mockAdminUser = makeAFakeUser({ role: ROLES.ADMIN })
+    mockDefaultUser = makeAFakeUser({ role: ROLES.DEFAULT })
+    mockLockedUser = makeAFakeUser({ role: ROLES.LOCKED })
+    mockDeletedAdminUser = makeAFakeUser({ role: ROLES.ADMIN, deletedAt: new Date() })
+    mockDeletedDefaultUser = makeAFakeUser({ role: ROLES.DEFAULT, deletedAt: new Date() })
+    mockOwnerUser = makeAFakeUser({ role: ROLES.OWNER })
+    mockModeratorUser = makeAFakeUser({ role: ROLES.MODERATOR })
 
-    mockUserNoRole = await makeAFakeUser({ role: ROLES.DEFAULT })
+    mockUserNoRole = makeAFakeUser({ role: ROLES.DEFAULT })
     delete mockUserNoRole.role
   })
 
@@ -382,6 +386,12 @@ describe("Middleware:RBAC:checkRoleSuperiority", () => {
     nextFunction = jest.fn()
   })
 
+  it("Happy path: User has more seniority than target, next() is called", async () => {
+    mockRequest.user = mockAdminUser
+    await RBAC.checkRoleSuperiority(mockRequest as Request, mockResponse as Response, nextFunction)
+    expect(nextFunction).toHaveBeenCalled()
+  })
+
   it("Missing Role: If user role is missing, forbid action", async () => {
     mockRequest.user = mockUserNoRole
     await RBAC.checkRoleSuperiority(mockRequest as Request, mockResponse as Response, nextFunction)
@@ -390,7 +400,7 @@ describe("Middleware:RBAC:checkRoleSuperiority", () => {
     expect(nextFunction).not.toHaveBeenCalled()
   })
 
-  it("Missing Role: If subject user role is missing, forbid action", async () => {
+  it("Missing Subject: If subject/target user is not found, forbid action", async () => {
     mockRequest.user = mockDefaultUser
     await RBAC.checkRoleSuperiority(mockRequest as Request, mockResponse as Response, nextFunction)
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.NOT_FOUND)
