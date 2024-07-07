@@ -6,9 +6,17 @@ import { makeAFakeUser } from "../test-utils/mockUsers"
 import { JWTUserPayload } from "../utils/generateJwt"
 import { RBAC } from "./roleBasedAccessControl"
 
+let mockUser: Partial<User>
+
 jest.mock("../utils/logger")
-jest.mock("../db", () => ({
-  select: jest.fn(),
+
+const dbMock = jest.mock("../db", () => ({
+  // Move this to own mocks file
+  select: jest.fn().mockReturnValue({
+    from: jest.fn().mockReturnValue({
+      where: jest.fn().mockReturnValue({}),
+    }),
+  }),
 }))
 
 describe("Middleware:RBAC:checkPermission", () => {
@@ -333,5 +341,60 @@ describe("Middleware:RBAC:checkPermission", () => {
       expect(mockResponse.json).toHaveBeenCalledWith({ message: "Forbidden" })
       expect(nextFunction).not.toHaveBeenCalled()
     })
+  })
+})
+
+describe("Middleware:RBAC:checkRoleSuperiority", () => {
+  let mockRequest: Partial<Request>
+  let mockResponse: Partial<Response>
+  let nextFunction: NextFunction
+  let mockAdminUser: Partial<User>
+  let mockDefaultUser: Partial<User>
+  let mockLockedUser: Partial<User>
+  let mockDeletedAdminUser: Partial<User>
+  let mockDeletedDefaultUser: Partial<User>
+  let mockOwnerUser: Partial<User>
+  let mockModeratorUser: Partial<User>
+  let mockUserNoRole: Partial<User>
+
+  beforeAll(async () => {
+    mockAdminUser = await makeAFakeUser({ role: ROLES.ADMIN })
+    mockDefaultUser = await makeAFakeUser({ role: ROLES.DEFAULT })
+    mockLockedUser = await makeAFakeUser({ role: ROLES.LOCKED })
+    mockDeletedAdminUser = await makeAFakeUser({ role: ROLES.ADMIN, deletedAt: new Date() })
+    mockDeletedDefaultUser = await makeAFakeUser({ role: ROLES.DEFAULT, deletedAt: new Date() })
+    mockOwnerUser = await makeAFakeUser({ role: ROLES.OWNER })
+    mockModeratorUser = await makeAFakeUser({ role: ROLES.MODERATOR })
+
+    mockUserNoRole = await makeAFakeUser({ role: ROLES.DEFAULT })
+    delete mockUserNoRole.role
+  })
+
+  beforeEach(() => {
+    mockRequest = {
+      user: { role: ROLES.ADMIN, id: "TestUser" } as JWTUserPayload,
+      params: { id: "TestUserTarget", role: ROLES.DEFAULT },
+    }
+    mockResponse = {
+      status: jest.fn().mockImplementation(() => mockResponse),
+      json: jest.fn().mockImplementation(() => mockResponse),
+    }
+    nextFunction = jest.fn()
+  })
+
+  it("Missing Role: If user role is missing, forbid action", async () => {
+    mockRequest.user = mockUserNoRole
+    await RBAC.checkRoleSuperiority(mockRequest as Request, mockResponse as Response, nextFunction)
+    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)
+    expect(mockResponse.json).toHaveBeenCalledWith({ message: "User has no role" })
+    expect(nextFunction).not.toHaveBeenCalled()
+  })
+
+  it("Missing Role: If subject user role is missing, forbid action", async () => {
+    mockRequest.user = mockDefaultUser
+    await RBAC.checkRoleSuperiority(mockRequest as Request, mockResponse as Response, nextFunction)
+    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.NOT_FOUND)
+    expect(mockResponse.json).toHaveBeenCalledWith({ message: "Target user not found" })
+    expect(nextFunction).not.toHaveBeenCalled()
   })
 })
