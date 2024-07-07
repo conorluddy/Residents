@@ -27,9 +27,14 @@ const findUserByValidToken: RequestHandler = async (req: Request, res: Response,
       return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).send("Token expired")
     }
 
-    if (tokenWithUser.used || tokenWithUser.expires_at < new Date()) {
-      logger.error(`Attempt to use expired or used token: ${validatedToken}`)
-      return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).send("Token expired")
+    if (tokenWithUser.used) {
+      logger.error(`Attempt to use a used token: ${validatedToken}`)
+      return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).send("Token has already been used")
+    }
+
+    if (tokenWithUser.expires_at < new Date()) {
+      logger.error(`Attempt to use an expired token: ${validatedToken}`)
+      return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).send("Token has expired")
     }
 
     // Should probably compare the token.type here too with the URL to ensure reset password token is used for reset password etc
