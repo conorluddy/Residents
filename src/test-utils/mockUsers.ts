@@ -2,10 +2,12 @@ import { faker } from "@faker-js/faker"
 import { createHash } from "../utils/crypt"
 import { ROLES_ARRAY, STATUS_ARRAY } from "../constants/database"
 import { User } from "../db/schema"
+import { createId } from "@paralleldrive/cuid2"
 
 faker.seed(123)
 
 const makeAFakeUser = ({
+  id,
   deletedAt,
   email,
   firstName,
@@ -16,6 +18,7 @@ const makeAFakeUser = ({
   status,
   username = "U53rn4m3",
 }: Partial<User>) => ({
+  id: id ?? createId(),
   deletedAt: deletedAt ?? null,
   email: email ?? faker.internet.email(),
   firstName: firstName ?? faker.person.firstName(),
