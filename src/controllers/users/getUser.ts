@@ -13,20 +13,21 @@ export const getUser = async (req: Request, res: Response) => {
     const userId = req.params.id
 
     if (!userId) {
-      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).send("ID is missing in the request.")
+      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "ID is missing in the request." })
     }
 
     const user = await db.select().from(tableUsers).where(eq(tableUsers.id, userId))
 
     if (!user) {
-      return res.status(HTTP_CLIENT_ERROR.NOT_FOUND).send("User not found")
+      return res.status(HTTP_CLIENT_ERROR.NOT_FOUND).json({ message: "User not found" })
     }
 
     return res.status(HTTP_SUCCESS.OK).json(user)
   } catch (error) {
+    console.error("error", error)
     logger.error(error)
-    {
-      return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).send("Error getting users")
-    }
+    return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Error getting user" })
   }
 }
+
+export default getUser

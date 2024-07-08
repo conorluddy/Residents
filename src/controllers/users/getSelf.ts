@@ -14,19 +14,21 @@ export const getSelf = async (req: Request, res: Response) => {
     const userId = (req.user as JWTUserPayload)?.id
 
     if (!userId) {
-      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).send("User ID is missing in the request.")
+      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "User ID is missing in the request." })
     }
 
     const user = await db.select().from(tableUsers).where(eq(tableUsers.id, userId))
 
     if (user.length === 0) {
-      return res.status(HTTP_CLIENT_ERROR.NOT_FOUND).send("User not found.")
+      return res.status(HTTP_CLIENT_ERROR.NOT_FOUND).json({ message: "User not found." })
     }
 
-    return res.status(HTTP_SUCCESS.OK).json(user[0])
+    return res.status(HTTP_SUCCESS.OK).json(user[0]) // Make this use query and findFirst rather than using arrays
   } catch (error) {
     logger.error(error)
-    return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).send("Internal server error while getting user.")
+    return res
+      .status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR)
+      .json({ message: "Internal server error while getting user." })
   }
 }
 
