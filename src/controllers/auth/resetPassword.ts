@@ -20,7 +20,7 @@ dotenv.config()
 export const resetPassword = async ({ userNoPW }: Request, res: Response) => {
   try {
     if (!userNoPW) {
-      return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).send("Something went wrong")
+      return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Something went wrong" })
     }
 
     const newToken: NewToken = {
@@ -39,9 +39,9 @@ export const resetPassword = async ({ userNoPW }: Request, res: Response) => {
     })
 
     logger.info(`Reset email sent to ${userNoPW.email}, token id: ${tokenId}`)
-    return res.status(HTTP_SUCCESS.OK).send("Reset email sent")
+    return res.status(HTTP_SUCCESS.OK).json({ message: "Reset email sent" })
   } catch (error) {
     logger.error(error)
-    return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).send("Error resetting password")
+    return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR)
   }
 }

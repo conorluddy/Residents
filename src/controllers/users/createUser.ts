@@ -24,8 +24,9 @@ export const createUser = async ({ body }: Request, res: Response) => {
         returnScore: false,
       })
     ) {
-      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).send("Password not strong enough, try harder")
+      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "Password not strong enough, try harder" })
     }
+
     const password = await createHash(plainPassword)
     const email = normalizeEmail(plainEmail)
 
@@ -42,9 +43,10 @@ export const createUser = async ({ body }: Request, res: Response) => {
     }
     await db.insert(tableUsers).values(user).returning()
 
-    return res.status(HTTP_SUCCESS.CREATED).send("User registered")
+    return res.status(HTTP_SUCCESS.CREATED).json({ message: "User registered" })
   } catch (error) {
+    console.error(error)
     logger.error(error)
-    return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).send("Error registering user")
+    return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Error registering user" })
   }
 }

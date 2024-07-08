@@ -4,7 +4,6 @@ import { tableTokens } from "./schema/Tokens"
 
 export type User = InferSelectModel<typeof tableUsers>
 export type NewUser = InferInsertModel<typeof tableUsers>
-export type UserNoPW = Omit<User, "password">
 
 export type FederatedCredentials = InferSelectModel<typeof tfc>
 export type NewFederatedCredentials = InferInsertModel<typeof tfc>

@@ -1,6 +1,5 @@
 import { User } from "../db/schema"
 import jwt from "jsonwebtoken"
-import { UserNoPW } from "../db/types"
 
 const DEFAULT_JWT_TOKEN_EXPIRY = "1m"
 
@@ -13,4 +12,4 @@ export const generateJwt = (userPayload: JWTUserPayload, expiryOverride?: string
   })
 }
 
-export type JWTUserPayload = Partial<UserNoPW>
+export type JWTUserPayload = Partial<User>
