@@ -13,8 +13,6 @@ export const createUser = async ({ body }: Request, res: Response) => {
   try {
     const { username, firstName, lastName, email: plainEmail, password: plainPassword } = body
 
-    console.log("plainPassword", plainPassword)
-
     // Centralise configuration for this somewhere (MW)
     if (
       !isStrongPassword(plainPassword, {
