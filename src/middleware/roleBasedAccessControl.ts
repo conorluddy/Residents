@@ -27,19 +27,29 @@ export const RBAC = {
  */
 function checkPermission(permission: PERMISSIONS) {
   return (req: Request, res: Response, next: NextFunction) => {
-    const user = req.user as JWTUserPayload
+    try {
+      const user = req.user as JWTUserPayload
 
-    if (user.deletedAt !== null) {
-      logger.warn(`User ${user.id} lacks permission ${permission} because they are deleted`)
-      return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Forbidden" })
+      if (!user) {
+        logger.warn(`User data is missing from the request`)
+        return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "Forbidden" })
+      }
+
+      if (user.deletedAt !== null) {
+        logger.warn(`User ${user.id} lacks permission ${permission} because they are deleted`)
+        return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Forbidden" })
+      }
+
+      if (user.role && !ACL[user.role].includes(permission)) {
+        logger.warn(`User ${user.id} with role ${user.role} lacks permission ${permission}`)
+        return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Forbidden" })
+      }
+
+      next()
+    } catch (error) {
+      logger.error(`Error checking permissions for user: ${error}`)
+      return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Internal Server Error" })
     }
-
-    if (user.role && !ACL[user.role].includes(permission)) {
-      logger.warn(`User ${user.id} with role ${user.role} lacks permission ${permission}`)
-      return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Forbidden" })
-    }
-
-    next()
   }
 }
 
@@ -51,6 +61,11 @@ async function checkRoleSuperiority(req: Request, res: Response, next: NextFunct
   const targetUserId = req.params.id
 
   try {
+    if (!user) {
+      logger.warn(`User data is missing from the request`)
+      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "Forbidden" })
+    }
+
     if (!user.role) {
       logger.warn(`User ${user.id} is missing a role`)
       return res.status(HTTP_CLIENT_ERROR.UNAUTHORIZED).json({ message: "User has no role" })

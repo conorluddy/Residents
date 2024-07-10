@@ -29,14 +29,14 @@ describe("Middleware: validateRequestEmail", () => {
   it("should return 400 if the request email is missing", () => {
     validateRequestEmail(mockRequest as Request, mockResponse as Response, nextFunction)
     expect(mockResponse.status).toHaveBeenCalledWith(400)
-    expect(mockResponse.send).toHaveBeenCalledWith("Email is required")
+    expect(mockResponse.json).toHaveBeenCalledWith("Email is required")
   })
 
   it("should return 400 if the request email is invalid", () => {
     mockRequest.body.email = "thatsnotanemail"
     validateRequestEmail(mockRequest as Request, mockResponse as Response, nextFunction)
     expect(mockResponse.status).toHaveBeenCalledWith(400)
-    expect(mockResponse.send).toHaveBeenCalledWith("Invalid email address")
+    expect(mockResponse.json).toHaveBeenCalledWith("Invalid email address")
   })
 
   it("should call next function if email is valid", () => {
@@ -44,6 +44,6 @@ describe("Middleware: validateRequestEmail", () => {
     validateRequestEmail(mockRequest as Request, mockResponse as Response, nextFunction)
     expect(nextFunction).toHaveBeenCalled()
     expect(mockResponse.status).not.toHaveBeenCalled()
-    expect(mockResponse.send).not.toHaveBeenCalled()
+    expect(mockResponse.json).not.toHaveBeenCalled()
   })
 })
