@@ -1,10 +1,10 @@
 import { Request, Response } from "express"
+import { isStrongPassword, normalizeEmail } from "validator"
 import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constants/http"
+import db from "../../db"
 import { NewUser, tableUsers } from "../../db/schema"
 import { createHash } from "../../utils/crypt"
 import { logger } from "../../utils/logger"
-import db from "../../db"
-import { isStrongPassword, normalizeEmail } from "validator"
 
 /**
  * createUser
