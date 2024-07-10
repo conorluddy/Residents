@@ -11,12 +11,12 @@ export const magicLogin = async (req: Request, res: Response) => {
     const { email } = req.body
 
     if (!email) {
-      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).send("Email is required")
+      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "Email is required" })
     }
 
-    return res.status(HTTP_SERVER_ERROR.NOT_IMPLEMENTED).send("Not implemented yet")
+    return res.status(HTTP_SERVER_ERROR.NOT_IMPLEMENTED).json({ message: "Not implemented yet" })
   } catch (error) {
     logger.error(error)
-    return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).send("Error registering user")
+    return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Error with magic login" })
   }
 }
