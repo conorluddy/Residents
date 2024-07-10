@@ -69,7 +69,7 @@ describe("Controller: Login", () => {
     mockRequest.body.password = "testpassword"
     await login(mockRequest as Request, mockResponse as Response)
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.BAD_REQUEST)
-    expect(mockResponse.send).toHaveBeenCalledWith("Username or email is required")
+    expect(mockResponse.json).toHaveBeenCalledWith({ message: "Username or email is required" })
   })
 
   it("should reject login with missing password", async () => {
@@ -77,7 +77,7 @@ describe("Controller: Login", () => {
     mockRequest.body.password = null
     await login(mockRequest as Request, mockResponse as Response)
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.BAD_REQUEST)
-    expect(mockResponse.send).toHaveBeenCalledWith("Password is required")
+    expect(mockResponse.json).toHaveBeenCalledWith({ message: "Password is required" })
   })
 
   it("should reject login with invalid email address", async () => {
@@ -86,6 +86,6 @@ describe("Controller: Login", () => {
     mockRequest.body.password = "testpassword"
     await login(mockRequest as Request, mockResponse as Response)
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.BAD_REQUEST)
-    expect(mockResponse.send).toHaveBeenCalledWith("Invalid email address")
+    expect(mockResponse.json).toHaveBeenCalledWith({ message: "Invalid email address" })
   })
 })
