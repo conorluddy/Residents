@@ -3,14 +3,13 @@ import { HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constants/http"
 import { logger } from "../../utils/logger"
 
 /**
- * magicWithToken
- * GET
+ * GET: magicLoginWithToken
  */
-export const magicLoginWithToken = async ({ body }: Request, res: Response) => {
+export const magicLoginWithToken = async (_req: Request, res: Response) => {
   try {
-    return res.status(HTTP_SERVER_ERROR.NOT_IMPLEMENTED).send("Not implemented yet")
+    return res.status(HTTP_SERVER_ERROR.NOT_IMPLEMENTED).json({ message: "Not implemented yet" })
   } catch (error) {
     logger.error(error)
-    return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).send("Error registering user")
+    return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Error registering user" })
   }
 }

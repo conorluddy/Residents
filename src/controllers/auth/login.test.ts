@@ -1,9 +1,8 @@
-import { NextFunction, Request, Response } from "express"
-import { login } from "./login"
+import { Request, Response } from "express"
+import { HTTP_CLIENT_ERROR, HTTP_SUCCESS } from "../../constants/http"
 import { User } from "../../db/types"
 import { makeAFakeUserWithHashedPassword } from "../../test-utils/mockUsers"
-import { HTTP_CLIENT_ERROR, HTTP_SUCCESS } from "../../constants/http"
-import { faker } from "@faker-js/faker"
+import { login } from "./login"
 
 jest.mock("../../utils/logger")
 jest.mock("../../db", () => ({

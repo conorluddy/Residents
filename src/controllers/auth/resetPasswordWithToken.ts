@@ -40,7 +40,7 @@ export const resetPasswordWithToken = async (req: Request, res: Response, next: 
       })
     ) {
       // Note: Token is discarded here - so they'd need to start the whole flow again if they mess this up. Maybe it should be more forgiving?
-      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).send("Password not strong enough, try harder")
+      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "Password not strong enough, try harder" })
     }
 
     const password = await createHash(plainPassword)
@@ -52,14 +52,16 @@ export const resetPasswordWithToken = async (req: Request, res: Response, next: 
       .returning({ updatedId: tableUsers.id })
 
     if (result[0].updatedId !== tokenWithUser.user.id) {
-      logger.error(`Error updating password for user: ${tokenWithUser.user.id}, db-update result: ${result[0]}`)
-      return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).send("Error updating password")
+      logger.error(
+        `Error updating password for user: ${tokenWithUser.user.id}, db-update result: ${JSON.stringify(result[0])}`
+      )
+      return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Error updating password" })
     }
 
     logger.info(`Password successfully reset for ${tokenWithUser.user.email}`)
-    return res.status(HTTP_SUCCESS.OK).send("Password changed successfully")
+    return res.status(HTTP_SUCCESS.OK).json({ message: "Password successfully updated" })
   } catch (error) {
     logger.error(error)
-    return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).send("Error registering user")
+    return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Error registering user" })
   }
 }

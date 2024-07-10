@@ -15,14 +15,14 @@ export const deleteUser = async (req: Request, res: Response) => {
     const { targetUserId } = req
 
     if (!id) {
-      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).send("ID is missing in the request.")
+      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "ID is missing in the request." })
     }
 
     // Possibly redundant, but the RBAC middleware will have found
     // the user and set the targetUserId on the request object, so we
     // can double check it here for additionaly security.
     if (id !== targetUserId) {
-      return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).send("You are not allowed to delete this user.")
+      return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "You are not allowed to delete this user." })
     }
 
     const result = await db
@@ -34,6 +34,6 @@ export const deleteUser = async (req: Request, res: Response) => {
     return res.status(HTTP_SUCCESS.OK).json({ message: `User ${result[0].updatedId} deleted` })
   } catch (error) {
     logger.error(error)
-    return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).send("Error getting users")
+    return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Error getting users" })
   }
 }
