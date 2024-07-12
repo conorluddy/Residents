@@ -44,8 +44,7 @@ const seedUsers = async (amount: number) => {
   } catch (error) {
     console.log(error)
   } finally {
-    // The timeout is a workaround to let the tests finish
-    setTimeout(process.exit, 500)
+    if (process.env.NODE_ENV !== "test") process.exit()
   }
 }
 
