@@ -44,7 +44,7 @@ const seedUsers = async (amount: number) => {
   } catch (error) {
     console.log(error)
   } finally {
-    process.exit()
+    if (process.env.NODE_ENV !== "test") process.exit()
   }
 }
 
@@ -53,3 +53,5 @@ const args = process.argv.slice(2)
 const amount = args.length > 0 ? parseInt(args[0], 10) : 10
 
 seedUsers(amount)
+
+export { createRandomUsers, seedUsers }

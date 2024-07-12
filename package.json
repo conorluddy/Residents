@@ -26,7 +26,7 @@
     "introspect": "drizzle-kit introspect",
     "studio": "drizzle-kit studio",
     "dockerup": "docker-compose up -d",
-    "seed": "ts-node --transpile-only src/db/utils/seed-users.ts"
+    "seed": "ts-node --transpile-only src/db/utils/seedUsers.ts"
   },
   "dependencies": {
     "@paralleldrive/cuid2": "^2.2.2",
