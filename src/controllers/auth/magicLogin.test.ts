@@ -3,8 +3,6 @@ import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from "../../constants/http"
 import { User } from "../../db/types"
 import { magicLogin } from "./magicLogin"
 
-jest.mock("../../utils/logger")
-
 describe("Controller: Magic Login", () => {
   let mockRequest: Partial<Request> & { body: Partial<User> }
   let mockResponse: Partial<Response>

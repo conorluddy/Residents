@@ -4,7 +4,6 @@ import { User } from "../../db/types"
 import { makeAFakeUserWithHashedPassword } from "../../test-utils/mockUsers"
 import { login } from "./login"
 
-jest.mock("../../utils/logger")
 jest.mock("../../db", () => ({
   select: jest.fn().mockReturnValue({
     from: jest.fn().mockReturnValue({
