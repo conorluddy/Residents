@@ -44,7 +44,8 @@ const seedUsers = async (amount: number) => {
   } catch (error) {
     console.log(error)
   } finally {
-    process.exit()
+    // The timeout is a workaround to let the tests finish
+    setTimeout(process.exit, 500)
   }
 }
 
@@ -53,3 +54,5 @@ const args = process.argv.slice(2)
 const amount = args.length > 0 ? parseInt(args[0], 10) : 10
 
 seedUsers(amount)
+
+export { createRandomUsers, seedUsers }
