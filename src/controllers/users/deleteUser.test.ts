@@ -13,7 +13,7 @@ jest.mock("../../db", () => ({
       where: jest.fn().mockReturnValue({
         returning: jest.fn().mockImplementationOnce(async () => {
           fakeUser = makeAFakeUser({})
-          return [{ updatedId: fakeUser.id }]
+          return [{ deletedUserId: fakeUser.id }]
         }),
       }),
     }),

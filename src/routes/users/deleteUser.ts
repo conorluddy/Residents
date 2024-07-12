@@ -8,7 +8,7 @@ const router = Router()
 router.delete(
   "/:id",
   authenticateToken,
-  RBAC.checkCanDeleteUser,
+  RBAC.checkCanDeleteUsers,
   RBAC.checkRoleSuperiority,
   CONTROLLERS.USER.deleteUser
 )

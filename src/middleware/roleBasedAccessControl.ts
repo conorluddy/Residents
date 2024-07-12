@@ -14,10 +14,10 @@ export const RBAC = {
   checkCanGetUsers: checkPermission(PERMISSIONS.CAN_GET_ALL_USERS),
   checkCanUpdateUsers: checkPermission(PERMISSIONS.CAN_UPDATE_ANY_USER),
   checkCanUpdateOwnUser: checkPermission(PERMISSIONS.CAN_UPDATE_OWN_USER),
-  checkCanDeleteUser: checkPermission(PERMISSIONS.CAN_DELETE_ANY_USER),
+  checkCanDeleteUsers: checkPermission(PERMISSIONS.CAN_DELETE_ANY_USER),
   checkCanUpdateAnyUserStatus: checkPermission(PERMISSIONS.CAN_UPDATE_ANY_USER_STATUS),
   checkCanUpdateOwnProfile: checkPermission(PERMISSIONS.CAN_UPDATE_OWN_USER),
-  checkRoleSuperiority,
+  checkRoleSuperiority: checkRoleSuperiority,
 }
 
 /**

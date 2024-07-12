@@ -96,7 +96,7 @@ describe("Middleware:RBAC:checkPermission", () => {
     })
     it("can DeleteUser", () => {
       mockRequest.user = mockAdminUser
-      RBAC.checkCanDeleteUser(mockRequest as Request, mockResponse as Response, nextFunction)
+      RBAC.checkCanDeleteUsers(mockRequest as Request, mockResponse as Response, nextFunction)
       expect(nextFunction).toHaveBeenCalled()
     })
     it("can UpdateAnyUserStatus", () => {
@@ -159,7 +159,7 @@ describe("Middleware:RBAC:checkPermission", () => {
 
     it("can't DELETE users", () => {
       mockRequest.user = mockDefaultUser
-      RBAC.checkCanDeleteUser(mockRequest as Request, mockResponse as Response, nextFunction)
+      RBAC.checkCanDeleteUsers(mockRequest as Request, mockResponse as Response, nextFunction)
       expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)
       expect(mockResponse.json).toHaveBeenCalledWith({ message: "Forbidden" })
       expect(nextFunction).not.toHaveBeenCalled()
@@ -204,7 +204,7 @@ describe("Middleware:RBAC:checkPermission", () => {
 
     it("can't DELETE users", () => {
       mockRequest.user = mockLockedUser
-      RBAC.checkCanDeleteUser(mockRequest as Request, mockResponse as Response, nextFunction)
+      RBAC.checkCanDeleteUsers(mockRequest as Request, mockResponse as Response, nextFunction)
       expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)
       expect(mockResponse.json).toHaveBeenCalledWith({ message: "Forbidden" })
       expect(nextFunction).not.toHaveBeenCalled()
@@ -249,7 +249,7 @@ describe("Middleware:RBAC:checkPermission", () => {
 
     it("can't DELETE users", () => {
       mockRequest.user = mockLockedUser
-      RBAC.checkCanDeleteUser(mockRequest as Request, mockResponse as Response, nextFunction)
+      RBAC.checkCanDeleteUsers(mockRequest as Request, mockResponse as Response, nextFunction)
       expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)
       expect(mockResponse.json).toHaveBeenCalledWith({ message: "Forbidden" })
       expect(nextFunction).not.toHaveBeenCalled()
@@ -294,7 +294,7 @@ describe("Middleware:RBAC:checkPermission", () => {
     })
     it("can't DELETE users", () => {
       mockRequest.user = mockDeletedDefaultUser
-      RBAC.checkCanDeleteUser(mockRequest as Request, mockResponse as Response, nextFunction)
+      RBAC.checkCanDeleteUsers(mockRequest as Request, mockResponse as Response, nextFunction)
       expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)
       expect(mockResponse.json).toHaveBeenCalledWith({ message: "Forbidden" })
       expect(nextFunction).not.toHaveBeenCalled()
@@ -339,7 +339,7 @@ describe("Middleware:RBAC:checkPermission", () => {
     })
     it("can't DELETE users", () => {
       mockRequest.user = mockDeletedAdminUser
-      RBAC.checkCanDeleteUser(mockRequest as Request, mockResponse as Response, nextFunction)
+      RBAC.checkCanDeleteUsers(mockRequest as Request, mockResponse as Response, nextFunction)
       expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)
       expect(mockResponse.json).toHaveBeenCalledWith({ message: "Forbidden" })
       expect(nextFunction).not.toHaveBeenCalled()

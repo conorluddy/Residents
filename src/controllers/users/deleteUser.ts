@@ -12,28 +12,29 @@ import { STATUS } from "../../constants/database"
 export const deleteUser = async (req: Request, res: Response) => {
   try {
     const { id } = req.params
-    const { targetUserId } = req
+    const { targetUserId } = req // Note, This gets added to the req by checkRoleSuperiority MW
 
-    if (!id) {
+    if (!id || !targetUserId) {
       return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "ID is missing in the request." })
     }
 
     // Possibly redundant, but the RBAC middleware will have found
     // the user and set the targetUserId on the request object, so we
     // can double check it here for additionaly security.
+
     if (id !== targetUserId) {
       return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "You are not allowed to delete this user." })
     }
 
-    const result = await db
+    const deletedUsers = await db
       .update(tableUsers)
       .set({ status: STATUS.DELETED, deletedAt: new Date() })
       .where(eq(tableUsers.id, id))
-      .returning({ updatedId: tableUsers.id })
+      .returning({ deletedUserId: tableUsers.id })
 
-    return res.status(HTTP_SUCCESS.OK).json({ message: `User ${result[0].updatedId} deleted` })
+    return res.status(HTTP_SUCCESS.OK).json({ message: `User ${deletedUsers[0]?.deletedUserId} deleted` })
   } catch (error) {
     logger.error(error)
-    return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Error getting users" })
+    return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Error deleting user" })
   }
 }
