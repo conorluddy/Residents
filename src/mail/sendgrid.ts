@@ -15,10 +15,10 @@ interface MailProps {
 }
 
 export const sendMail = async ({ to, subject, body }: MailProps): Promise<[ClientResponse, {}] | undefined> => {
-  try {
-    if (!process.env.SENDGRID_API_KEY) throw new Error("Set the SENDGRID_API_KEY in your .env file")
-    if (!process.env.SENDGRID_VERIFIED_EMAIL) throw new Error("Set SENDGRID_VERIFIED_EMAIL in your .env file")
+  if (!process.env.SENDGRID_API_KEY) throw new Error("Set the SENDGRID_API_KEY in your .env file")
+  if (!process.env.SENDGRID_VERIFIED_EMAIL) throw new Error("Set SENDGRID_VERIFIED_EMAIL in your .env file")
 
+  try {
     const msg = {
       to,
       from: process.env.SENDGRID_VERIFIED_EMAIL,
