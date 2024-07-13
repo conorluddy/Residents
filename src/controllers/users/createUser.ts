@@ -45,7 +45,6 @@ export const createUser = async ({ body }: Request, res: Response) => {
 
     return res.status(HTTP_SUCCESS.CREATED).json({ message: "User registered" })
   } catch (error) {
-    console.error(error)
     logger.error(error)
     return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Error registering user" })
   }

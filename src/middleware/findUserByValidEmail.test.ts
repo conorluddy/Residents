@@ -34,7 +34,7 @@ describe("Middleware:findUserByValidEmail", () => {
     }
     mockResponse = {
       status: jest.fn().mockImplementation(() => mockResponse),
-      send: jest.fn().mockImplementation(() => mockResponse),
+      json: jest.fn().mockImplementation(() => mockResponse),
     }
     nextFunction = jest.fn()
   })
@@ -51,13 +51,13 @@ describe("Middleware:findUserByValidEmail", () => {
     mockRequest.validatedEmail = undefined
     await findUserByValidEmail(mockRequest as Request, mockResponse as Response, nextFunction)
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.BAD_REQUEST)
-    expect(mockResponse.send).toHaveBeenCalledWith("Invalid email")
+    expect(mockResponse.json).toHaveBeenCalledWith({ message: "Invalid email" })
     expect(nextFunction).not.toHaveBeenCalled()
   })
   it("user not found when searching by validated email", async () => {
     await findUserByValidEmail(mockRequest as Request, mockResponse as Response, nextFunction)
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.NOT_FOUND)
-    expect(mockResponse.send).toHaveBeenCalledWith("User not found")
+    expect(mockResponse.json).toHaveBeenCalledWith({ message: "User not found" })
     expect(nextFunction).not.toHaveBeenCalled()
   })
 })

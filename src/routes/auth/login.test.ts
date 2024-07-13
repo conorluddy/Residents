@@ -2,7 +2,6 @@ import request from "supertest"
 import express from "express"
 import loginRoute from "./login"
 import CONTROLLERS from "../../controllers"
-import { logger } from "../../utils/logger"
 import { HTTP_CLIENT_ERROR } from "../../constants/http"
 
 CONTROLLERS.AUTH.login = jest.fn(async (req, res) => {

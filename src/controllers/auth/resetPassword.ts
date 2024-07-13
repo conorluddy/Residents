@@ -20,6 +20,7 @@ dotenv.config()
 export const resetPassword = async ({ userNoPW }: Request, res: Response) => {
   try {
     if (!userNoPW) {
+      logger.error("ResetPassword controller: No user data.")
       return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Something went wrong" })
     }
 

@@ -37,7 +37,7 @@ export const sendMail = async ({ to, subject, body }: MailProps): Promise<[Clien
         logger.error("Help:", err.help)
       })
     } else {
-      console.error("An unknown error occurred", error)
+      logger.error("An unknown error occurred", error)
     }
   }
 }
