@@ -34,7 +34,7 @@ describe("POST /register", () => {
       email: "testuser@gmail.com",
     }
     const response = await request(app).post("/register").send(requestBody)
-    expect(response.body.message).toBe("User registered")
+    expect(response.body.message).toBe("User registered.")
     expect(response.status).toBe(HTTP_SUCCESS.CREATED)
   })
 
