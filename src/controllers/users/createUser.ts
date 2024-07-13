@@ -11,7 +11,7 @@ import { logger } from "../../utils/logger"
  */
 export const createUser = async ({ body }: Request, res: Response) => {
   try {
-    const { username, firstName, lastName, email: plainEmail, password: plainPassword } = body
+    const { username, firstName, lastName, email: plainEmail, password: plainPassword }: Record<string, string> = body
 
     // Centralise configuration for this somewhere (MW)
     if (

@@ -9,6 +9,7 @@ yarn-error.log
 
 # Testing
 /coverage
+/coverage-ts
 
 # Build output
 /build

@@ -4,7 +4,7 @@ import { HTTP_SERVER_ERROR } from "../../constants/http"
 /**
  * logout
  */
-export const logout = async ({ body }: Request, res: Response) => {
+export const logout = async (_req: Request, res: Response) => {
   try {
     // One does not simply log-out with JWTs.
     // Need to implement refresh tokens and shoft-lived access tokens

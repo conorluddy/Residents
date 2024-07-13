@@ -13,7 +13,7 @@ export const updateUser = async (req: Request, res: Response) => {
   try {
     const { id } = req.params
     const { targetUserId } = req
-    const { username, firstName, lastName, email } = req.body
+    const { username, firstName, lastName, email }: Record<string, string> = req.body
 
     if (!id) {
       return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json("User ID is missing in the request.")

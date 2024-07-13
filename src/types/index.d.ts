@@ -5,6 +5,9 @@ import { User } from "../db/types"
 
 declare module "express-serve-static-core" {
   interface Request {
+    body: Record<string, string>
+    query: Record<string, string>
+    params: Record<string, string>
     db: NodePgDatabase<Record<string, never>>
     user?: JWTUserPayload | JwtPayload | string
     userNoPW?: User
