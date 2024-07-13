@@ -9,7 +9,7 @@ router.delete(
   "/:id",
   authenticateToken,
   RBAC.checkCanDeleteUsers,
-  RBAC.checkRoleSuperiority,
+  RBAC.getTargetUserAndCheckSuperiority,
   CONTROLLERS.USER.deleteUser
 )
 

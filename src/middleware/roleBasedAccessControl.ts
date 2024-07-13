@@ -17,7 +17,7 @@ export const RBAC = {
   checkCanDeleteUsers: checkPermission(PERMISSIONS.CAN_DELETE_ANY_USER),
   checkCanUpdateAnyUserStatus: checkPermission(PERMISSIONS.CAN_UPDATE_ANY_USER_STATUS),
   checkCanUpdateOwnProfile: checkPermission(PERMISSIONS.CAN_UPDATE_OWN_USER),
-  checkRoleSuperiority: checkRoleSuperiority,
+  getTargetUserAndCheckSuperiority: getTargetUserAndCheckSuperiority,
 }
 
 /**
@@ -56,7 +56,7 @@ function checkPermission(permission: PERMISSIONS) {
 /**
  * Check if the user has role superiority over the target user
  */
-async function checkRoleSuperiority(req: Request, res: Response, next: NextFunction) {
+async function getTargetUserAndCheckSuperiority(req: Request, res: Response, next: NextFunction) {
   const user = req.user as JWTUserPayload
   const targetUserId = req.params.id
 

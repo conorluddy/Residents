@@ -12,7 +12,7 @@ import { STATUS } from "../../constants/database"
 export const deleteUser = async (req: Request, res: Response) => {
   try {
     const { id } = req.params
-    const { targetUserId } = req // Note, This gets added to the req by checkRoleSuperiority MW
+    const { targetUserId } = req // Note, This gets added to the req by getTargetUserAndCheckSuperiority MW
 
     if (!id || !targetUserId) {
       return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "ID is missing in the request." })
