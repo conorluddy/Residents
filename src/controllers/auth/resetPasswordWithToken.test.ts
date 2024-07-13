@@ -14,7 +14,7 @@ jest.mock("../../db", () => ({
   update: jest.fn().mockReturnValue({
     set: jest.fn().mockReturnValue({
       where: jest.fn().mockReturnValue({
-        returning: jest.fn().mockImplementationOnce(async () => [{ updatedId: "UID123" }]),
+        returning: jest.fn().mockImplementationOnce(async () => [{ updatedUserId: "UID123" }]),
       }),
     }),
   }),
