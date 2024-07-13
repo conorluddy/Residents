@@ -38,10 +38,10 @@ const findUserByValidToken: RequestHandler = async (req: Request, res: Response,
     }
 
     // Should probably compare the token.type here too with the URL to ensure reset password token is used for reset password etc
-
     req.tokenWithUser = tokenWithUser
     next()
   } catch (error) {
+    logger.error(`Error finding user by valid token: ${error}`)
     return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).send("Error")
   }
 }

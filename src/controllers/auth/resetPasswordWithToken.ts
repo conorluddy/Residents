@@ -21,12 +21,12 @@ export const resetPasswordWithToken = async (req: Request, res: Response, next: 
 
     if (!tokenWithUser || !tokenWithUser.user.id) {
       logger.error(`Missing tokenWithUser data in resetPasswordWithToken controller`)
-      return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).send("Token expired")
+      return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Token expired" })
     }
 
     if (tokenWithUser.type !== TOKEN_TYPE.RESET) {
       logger.error(`Invalid token type for reset password: ${tokenWithUser.id}`)
-      return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).send("Invalid token type")
+      return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Invalid token type" })
     }
 
     // Centralise configuration for this somewhere - can use it for registration too
@@ -50,9 +50,9 @@ export const resetPasswordWithToken = async (req: Request, res: Response, next: 
       .update(tableUsers)
       .set({ password })
       .where(eq(tableUsers.id, tokenWithUser.user.id))
-      .returning({ updatedId: tableUsers.id })
+      .returning({ updatedUserId: tableUsers.id })
 
-    if (result[0].updatedId !== tokenWithUser.user.id) {
+    if (result[0].updatedUserId !== tokenWithUser.user.id) {
       logger.error(
         `Error updating password for user: ${tokenWithUser.user.id}, db-update result: ${JSON.stringify(result[0])}`
       )

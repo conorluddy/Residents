@@ -15,7 +15,7 @@ const findUserByValidEmail: RequestHandler = async (req: Request, res: Response,
 
     if (!validatedEmail) {
       logger.error(`Email not validated: ${validatedEmail}`)
-      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).send("Invalid email")
+      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "Invalid email" })
     }
 
     const user = await db.query.tableUsers.findFirst({ where: eq(tableUsers.email, validatedEmail) })
@@ -23,13 +23,14 @@ const findUserByValidEmail: RequestHandler = async (req: Request, res: Response,
     if (!user) {
       logger.error(`User not found: ${validatedEmail}`)
       // Don't reveal if the user exists or not, this is a public endpoint.
-      return res.status(HTTP_CLIENT_ERROR.NOT_FOUND).send("User not found")
+      return res.status(HTTP_CLIENT_ERROR.NOT_FOUND).json({ message: "User not found" })
     }
 
     req.userNoPW = { ...user, password: null }
     next()
   } catch (error) {
-    return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).send("Error")
+    logger.error("findUserByValidEmail error: ", error)
+    return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Error" })
   }
 }
 

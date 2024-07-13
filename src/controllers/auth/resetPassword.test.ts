@@ -6,8 +6,6 @@ import { User } from "../../db/schema"
 import { sendMail } from "../../mail/sendgrid"
 import { logger } from "../../utils/logger"
 
-let fakeUser: Partial<User>
-
 jest.mock("../../mail/sendgrid", () => ({
   sendMail: jest.fn(),
 }))

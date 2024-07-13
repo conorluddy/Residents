@@ -4,7 +4,6 @@ import { ROLES } from "../../constants/database"
 import { HTTP_SUCCESS } from "../../constants/http"
 import updateUserRouter from "../../routes/users/updateUser"
 import { makeAFakeUser } from "../../test-utils/mockUsers"
-import { logger } from "../../utils/logger"
 
 let fakeUser = makeAFakeUser({ password: "$TR0ngP@$$W0rDz123!", role: ROLES.DEFAULT })
 
