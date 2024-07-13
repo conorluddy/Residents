@@ -1,3 +1,4 @@
 #!/bin/sh
+echo "Running type coverage check..."
 npx type-coverage --json-output > .github/type-coverage.json
 git add .github/type-coverage.json
