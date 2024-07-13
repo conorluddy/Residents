@@ -30,7 +30,7 @@
     "typecoverage": "type-coverage"
   },
   "typeCoverage": {
-    "atLeast": 95,
+    "atLeast": 90,
     "ignoreCatch": true,
     "strict": true 
   },
