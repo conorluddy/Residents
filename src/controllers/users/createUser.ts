@@ -1,50 +1,49 @@
 import { Request, Response } from "express"
-import { isStrongPassword, normalizeEmail } from "validator"
+import { isEmail, isStrongPassword, normalizeEmail } from "validator"
 import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constants/http"
 import db from "../../db"
 import { NewUser, tableUsers } from "../../db/schema"
 import { createHash } from "../../utils/crypt"
 import { logger } from "../../utils/logger"
+import { PASSWORD_STRENGTH_CONFIG } from "../../constants/password"
 
 /**
- * createUser
+ * createUser - Controller to handle user creation.
  */
 export const createUser = async ({ body }: Request, res: Response) => {
   try {
     const { username, firstName, lastName, email: plainEmail, password: plainPassword }: Record<string, string> = body
 
-    // Centralise configuration for this somewhere (MW)
-    if (
-      !isStrongPassword(plainPassword, {
-        minLength: 6,
-        minLowercase: 1,
-        minUppercase: 1,
-        minNumbers: 1,
-        minSymbols: 1,
-        returnScore: false,
-      })
-    ) {
-      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "Password not strong enough, try harder" })
+    // Validate email
+    if (!isEmail(plainEmail)) {
+      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "Email needs to be a valid email." })
     }
 
+    // Validate password strength
+    if (!isStrongPassword(plainPassword, PASSWORD_STRENGTH_CONFIG)) {
+      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "Password not strong enough, try harder." })
+    }
+
+    // Hash the password
     const password = await createHash(plainPassword)
+
+    // Normalize the email
     const email = normalizeEmail(plainEmail)
 
     if (!email) {
       throw new Error(`Problem with email normalization for ${plainEmail}`)
     }
 
-    const user: NewUser = {
-      firstName,
-      lastName,
-      email,
-      username,
-      password,
-    }
-    await db.insert(tableUsers).values(user).returning()
+    // Create a new user object
+    const newUser: NewUser = { firstName, lastName, email, username, password }
 
-    return res.status(HTTP_SUCCESS.CREATED).json({ message: "User registered" })
+    // Insert the user into the database
+    await db.insert(tableUsers).values(newUser).returning()
+
+    // Respond with success
+    return res.status(HTTP_SUCCESS.CREATED).json({ message: "User registered." })
   } catch (error) {
+    // Log the error and respond with an error message
     logger.error(error)
     return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Error registering user" })
   }

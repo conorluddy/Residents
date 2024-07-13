@@ -8,6 +8,7 @@ import { TOKEN_TYPE } from "../../constants/database"
 import { isStrongPassword } from "validator"
 import db from "../../db"
 import { TokenWithUser } from "../../db/types"
+import { PASSWORD_STRENGTH_CONFIG } from "../../constants/password"
 
 /**
  * resetPasswordWithToken
@@ -30,16 +31,7 @@ export const resetPasswordWithToken = async (req: Request, res: Response, next: 
     }
 
     // Centralise configuration for this somewhere - can use it for registration too
-    if (
-      !isStrongPassword(plainPassword, {
-        minLength: 6,
-        minLowercase: 1,
-        minUppercase: 1,
-        minNumbers: 1,
-        minSymbols: 1,
-        returnScore: false,
-      })
-    ) {
+    if (!isStrongPassword(plainPassword, PASSWORD_STRENGTH_CONFIG)) {
       // Note: Token is discarded here - so they'd need to start the whole flow again if they mess this up. Maybe it should be more forgiving?
       return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "Password not strong enough, try harder" })
     }
