@@ -5,6 +5,12 @@ import CONTROLLERS from "../../controllers"
 
 const router = Router()
 
-router.get("/:id", authenticateToken, RBAC.checkCanGetUsers, RBAC.checkRoleSuperiority, CONTROLLERS.USER.getUser)
+router.get(
+  "/:id",
+  authenticateToken,
+  RBAC.checkCanGetUsers,
+  RBAC.getTargetUserAndCheckSuperiority,
+  CONTROLLERS.USER.getUser
+)
 
 export default router
