@@ -42,17 +42,14 @@ export const sendMail = async ({ to, subject, body }: MailProps): Promise<[Clien
   }
 }
 
-const isSendGridError = (error: any): error is SendGridError => {
-  return (
-    typeof error === "object" &&
-    error !== null &&
-    "message" in error &&
-    "code" in error &&
-    "response" in error &&
-    "body" in error.response &&
-    Array.isArray(error.response.body.errors)
-  )
-}
+const isSendGridError = (error: any): error is SendGridError =>
+  typeof error === "object" &&
+  error !== null &&
+  "message" in error &&
+  "code" in error &&
+  "response" in error &&
+  "body" in error.response &&
+  Array.isArray(error.response.body.errors)
 
 interface SendGridError {
   message: string

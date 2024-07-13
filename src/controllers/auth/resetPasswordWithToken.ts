@@ -7,6 +7,7 @@ import { eq } from "drizzle-orm"
 import { TOKEN_TYPE } from "../../constants/database"
 import { isStrongPassword } from "validator"
 import db from "../../db"
+import { TokenWithUser } from "../../db/types"
 
 /**
  * resetPasswordWithToken
@@ -14,8 +15,8 @@ import db from "../../db"
  */
 export const resetPasswordWithToken = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { tokenWithUser } = req
-    const { password: plainPassword } = req.body
+    const tokenWithUser: TokenWithUser = req.tokenWithUser
+    const plainPassword: string = req.body.password
     // Alternatively here we can generate a temporary PW and email it to the user, and make that configurable for the app
 
     if (!tokenWithUser || !tokenWithUser.user.id) {

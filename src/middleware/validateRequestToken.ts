@@ -5,7 +5,7 @@ import { isCuid } from "@paralleldrive/cuid2"
 
 const validateRequestToken: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const token = req.params?.token || req.body?.token || req.query?.token || null
+    const token: string | undefined = req.params?.token || req.body?.token || req.query?.token
 
     if (!token) {
       return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).send("A token is required")

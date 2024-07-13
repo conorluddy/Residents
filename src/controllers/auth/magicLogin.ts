@@ -8,7 +8,7 @@ import { logger } from "../../utils/logger"
  */
 export const magicLogin = async (req: Request, res: Response) => {
   try {
-    const { email } = req.body
+    const { email }: Record<string, string> = req.body
 
     if (!email) {
       return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "Email is required" })

@@ -5,7 +5,7 @@ import { logger } from "../utils/logger"
 
 const validateRequestEmail: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const email = req.params?.email || req.body?.email || req.query?.email || null
+    const email: string | undefined = req.params?.email || req.body?.email || req.query?.email
 
     if (!email) {
       return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json("Email is required")
