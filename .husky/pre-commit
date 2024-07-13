@@ -1,3 +1,3 @@
 #!/bin/sh
-npx type-coverage --json > .github/type-coverage.json
-git add type-coverage.json
+npx type-coverage --json-output > .github/type-coverage.json
+git add .github/type-coverage.json
