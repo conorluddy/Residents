@@ -1,6 +1,7 @@
 import db from ".."
 import { ROLES_ARRAY, STATUS_ARRAY } from "../../constants/database"
 import { createHash } from "../../utils/crypt"
+import { logger } from "../../utils/logger"
 import { tableUsers } from "../schema"
 import { NewUser } from "../types"
 import { faker } from "@faker-js/faker"
@@ -14,7 +15,7 @@ import { faker } from "@faker-js/faker"
  */
 async function createRandomUsers(amount: number): Promise<NewUser[]> {
   const users: NewUser[] = []
-  console.log("Creating users...")
+  logger.info("Creating users...")
   for (let i = 0; i < amount; i++) {
     const username = faker.internet.userName()
     const password = await createHash(username)
@@ -37,12 +38,12 @@ const seedUsers = async (amount: number) => {
   try {
     const users = await createRandomUsers(amount)
     for (const user of users) {
-      console.log(`${user.firstName} ${user.lastName} [${user.role} / ${user.status}]`)
+      logger.info(`${user.firstName} ${user.lastName} [${user.role} / ${user.status}]`)
       const newUser = await db.insert(tableUsers).values(user).returning().execute()
     }
-    console.log(`${amount} user(s) seeded`)
+    logger.info(`${amount} user(s) seeded`)
   } catch (error) {
-    console.log(error)
+    logger.error(error)
   } finally {
     if (process.env.NODE_ENV !== "test") process.exit()
   }
