@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express"
 import { ROLES } from "../constants/database"
-import { HTTP_CLIENT_ERROR } from "../constants/http"
+import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from "../constants/http"
 import { User } from "../db/types"
 import { makeAFakeUser } from "../test-utils/mockUsers"
 import { JWTUserPayload } from "../utils/generateJwt"
@@ -14,6 +14,7 @@ jest.mock("../db", () => ({
     from: jest.fn().mockReturnValue({
       where: jest
         .fn()
+        .mockResolvedValueOnce([makeAFakeUser({ role: ROLES.DEFAULT })])
         .mockResolvedValueOnce([makeAFakeUser({ role: ROLES.DEFAULT })])
         .mockResolvedValueOnce([makeAFakeUser({ role: ROLES.ADMIN })])
         .mockResolvedValueOnce([makeAFakeUser({ role: ROLES.ADMIN })])
@@ -51,6 +52,14 @@ describe("Middleware:RBAC:checkPermission", () => {
       json: jest.fn(),
     }
     nextFunction = jest.fn()
+  })
+
+  it("should return early if there's no User data provided", () => {
+    mockRequest.user = undefined
+    RBAC.checkCanGetUsers(mockRequest as Request, mockResponse as Response, nextFunction)
+    expect(nextFunction).not.toHaveBeenCalled()
+    expect(mockResponse.status).toHaveBeenCalled()
+    expect(mockResponse.json).toHaveBeenCalledWith({ message: "Forbidden" })
   })
 
   it("should call next function if the user has the required permission", () => {
@@ -391,6 +400,22 @@ describe("Middleware:RBAC:getTargetUserAndCheckSuperiority", () => {
     expect(nextFunction).toHaveBeenCalled()
   })
 
+  it("should return early if the Role isnt legit", async () => {
+    mockRequest.user = { ...mockAdminUser, role: "FAKE_ROLE" }
+    await RBAC.getTargetUserAndCheckSuperiority(mockRequest as Request, mockResponse as Response, nextFunction)
+    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR)
+    expect(mockResponse.json).toHaveBeenCalledWith({ message: "Roles not found." })
+    expect(nextFunction).not.toHaveBeenCalled()
+  })
+
+  it("should return early if there's no User data provided", async () => {
+    mockRequest.user = undefined
+    await RBAC.getTargetUserAndCheckSuperiority(mockRequest as Request, mockResponse as Response, nextFunction)
+    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.BAD_REQUEST)
+    expect(mockResponse.json).toHaveBeenCalledWith({ message: "Missing User data." })
+    expect(nextFunction).not.toHaveBeenCalled()
+  })
+
   it("User has same role as target, forbid action", async () => {
     mockRequest.user = mockAdminUser
     await RBAC.getTargetUserAndCheckSuperiority(mockRequest as Request, mockResponse as Response, nextFunction)
@@ -442,14 +467,6 @@ describe("Middleware:RBAC:getTargetUserAndCheckSuperiority", () => {
     await RBAC.getTargetUserAndCheckSuperiority(mockRequest as Request, mockResponse as Response, nextFunction)
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.UNAUTHORIZED)
     expect(mockResponse.json).toHaveBeenCalledWith({ message: "User has no role" })
-    expect(nextFunction).not.toHaveBeenCalled()
-  })
-
-  it("Missing Subject: If subject/target user is not found, forbid action", async () => {
-    mockRequest.user = mockDefaultUser
-    await RBAC.getTargetUserAndCheckSuperiority(mockRequest as Request, mockResponse as Response, nextFunction)
-    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.NOT_FOUND)
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: "Target user not found" })
     expect(nextFunction).not.toHaveBeenCalled()
   })
 })

@@ -21,7 +21,7 @@ export const resetPassword = async ({ userNoPW }: Request, res: Response) => {
   try {
     if (!userNoPW) {
       logger.error("ResetPassword controller: No user data.")
-      return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Something went wrong" })
+      return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "User data missing." })
     }
 
     const newToken: NewToken = {
@@ -43,6 +43,6 @@ export const resetPassword = async ({ userNoPW }: Request, res: Response) => {
     return res.status(HTTP_SUCCESS.OK).json({ message: "Reset email sent" })
   } catch (error) {
     logger.error(error)
-    return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR)
+    return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Something went kaput." })
   }
 }
