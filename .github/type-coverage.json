@@ -1,9 +1,6 @@
-{
-  "succeeded": true,
-  "atLeast": 90,
-  "atLeastFailed": false,
-  "correctCount": 2670,
-  "percent": 92.93,
-  "percentString": "92.93",
-  "totalCount": 2873
-}
+
+> residents@0.0.2 typecov
+> type-coverage
+
+(2670 / 2873) 92.93%
+type-coverage success.

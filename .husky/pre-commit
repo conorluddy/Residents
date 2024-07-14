@@ -1,4 +1,5 @@
 #!/bin/sh
-echo "Running type coverage check..."
-npx type-coverage --json-output > .github/type-coverage.json
+echo "Running type coverage check... 🕵🏼‍♀️"
+npm run typecov --json-output > .github/type-coverage.json
 git add .github/type-coverage.json
+echo "Done ✅"
