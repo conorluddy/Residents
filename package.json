@@ -27,18 +27,19 @@
     "studio": "drizzle-kit studio",
     "dockerup": "docker-compose up -d",
     "seed": "ts-node --transpile-only src/db/utils/seedUsers.ts",
-    "typecoverage": "type-coverage",
+    "typecov": "type-coverage",
+    "typecov:detail": "type-coverage --detail",
     "prepare": "husky"
   },
   "typeCoverage": {
     "atLeast": 90,
     "ignoreCatch": true,
-    "strict": true
+    "strict": true,
+    "ignore": ["node_modules/**/*"]
   },
   "dependencies": {
     "@paralleldrive/cuid2": "^2.2.2",
     "@sendgrid/mail": "^8.1.3",
-    "@types/jsonwebtoken": "^9.0.6",
     "bcrypt": "^5.1.1",
     "dotenv": "^16.4.5",
     "drizzle-orm": "^0.31.2",
@@ -60,6 +61,7 @@
     "@types/bcrypt": "^5.0.2",
     "@types/express": "^4.17.21",
     "@types/jest": "^29.5.12",
+    "@types/jsonwebtoken": "^9.0.6",
     "@types/node": "^20.14.2",
     "@types/passport": "^1.0.16",
     "@types/passport-google-oauth20": "^2.0.16",
