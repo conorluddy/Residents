@@ -61,7 +61,7 @@ describe("Route: POST:resetPasswordWithToken", () => {
       .post(`/reset-password/${validTokenId}`)
       .send({ password: "the.NEWpassword_is-$3cuRE" })
 
-    expect(response.body).toStrictEqual({ message: "Password successfully updated" })
+    expect(response.body).toStrictEqual({ message: "Password successfully updated." })
     expect(response.status).toBe(HTTP_SUCCESS.OK)
     expect(logger.error).not.toHaveBeenCalled()
   })

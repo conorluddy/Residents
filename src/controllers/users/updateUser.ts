@@ -4,7 +4,7 @@ import { logger } from "../../utils/logger"
 import { eq } from "drizzle-orm"
 import db from "../../db"
 import { tableUsers } from "../../db/schema"
-import { normalizeEmail } from "validator"
+import { isEmail, normalizeEmail } from "validator"
 
 /**
  * updateUser
@@ -14,8 +14,8 @@ export const updateUser = async (req: Request, res: Response) => {
     const { id } = req.params
     const { targetUserId } = req
 
-    if (!id) {
-      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json("User ID is missing in the request.")
+    if (!id || !targetUserId) {
+      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "User ID is missing in the request." })
     }
 
     // Possibly redundant, but the RBAC middleware will have found
@@ -23,15 +23,25 @@ export const updateUser = async (req: Request, res: Response) => {
     // can double check it here for additionaly security.
     if (id !== targetUserId) {
       logger.error(`ID in params doesnt match targetUserId in request.`)
-      return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json("You are not allowed to update this user.")
+      return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "You are not allowed to update this user." })
     }
-    if (!req.body) {
+
+    // This is another check that should be done before even looking up the target user
+    if (!req.body || Object.keys(req.body).length === 0) {
       logger.error(`Missing body data for updating user in request.`)
-      return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json("You are not allowed to update this user.")
+      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "No data provided to update the user with." })
     }
 
     const { username, firstName, lastName, email }: Record<string, string> = req.body ?? {}
     const updateFields: Record<string, string | false> = {}
+
+    if (email && !isEmail(email)) {
+      return res
+        .status(HTTP_CLIENT_ERROR.BAD_REQUEST)
+        .json({
+          message: `You need to use a valid email address if you want to update an email. ${email} is not valid.`,
+        })
+    }
 
     if (username) updateFields.username = username
     if (firstName) updateFields.firstName = firstName
@@ -51,12 +61,12 @@ export const updateUser = async (req: Request, res: Response) => {
       .returning({ updatedId: tableUsers.id })
 
     if (result.length === 0) {
-      return res.status(HTTP_CLIENT_ERROR.NOT_FOUND).json("User not found.")
+      return res.status(HTTP_CLIENT_ERROR.NOT_FOUND).json({ message: "User not found." })
     }
 
     return res.status(HTTP_SUCCESS.OK).json({ message: `User ${result[0].updatedId} updated successfully` })
   } catch (error) {
     logger.error(error)
-    return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json("Error updating user")
+    return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Error updating user" })
   }
 }

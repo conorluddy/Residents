@@ -22,18 +22,21 @@ export const resetPasswordWithToken = async (req: Request, res: Response, next: 
 
     if (!tokenWithUser || !tokenWithUser.user.id) {
       logger.error(`Missing tokenWithUser data in resetPasswordWithToken controller`)
-      return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Token expired" })
+      return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Token missing." })
     }
 
     if (tokenWithUser.type !== TOKEN_TYPE.RESET) {
-      logger.error(`Invalid token type for reset password: ${tokenWithUser.id}`)
-      return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Invalid token type" })
+      logger.error(`An incorrect token type was used in an attempt to reset a password: TID:${tokenWithUser.id}`)
+      return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Invalid token type." })
     }
 
     // Centralise configuration for this somewhere - can use it for registration too
     if (!isStrongPassword(plainPassword, PASSWORD_STRENGTH_CONFIG)) {
-      // Note: Token is discarded here - so they'd need to start the whole flow again if they mess this up. Maybe it should be more forgiving?
-      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "Password not strong enough, try harder" })
+      // Note: Token is discarded in the MW before it gets here,
+      // so they'd need to start the whole flow again if they mess this up.
+      // Maybe it should be more forgiving or autogenerate a new token and redirect to a new link?
+      logger.error("Password reset attempt failed with weak password.")
+      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "Password not strong enough, try harder." })
     }
 
     const password = await createHash(plainPassword)
@@ -44,17 +47,20 @@ export const resetPasswordWithToken = async (req: Request, res: Response, next: 
       .where(eq(tableUsers.id, tokenWithUser.user.id))
       .returning({ updatedUserId: tableUsers.id })
 
+    // This case should never happen but will leave it here for now
     if (result[0].updatedUserId !== tokenWithUser.user.id) {
       logger.error(
-        `Error updating password for user: ${tokenWithUser.user.id}, db-update result: ${JSON.stringify(result[0])}`
+        `Error updating password for user: ${
+          tokenWithUser.user.id
+        }, db-update result (should be empty or same as request ID): ${JSON.stringify(result[0])}`
       )
-      return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Error updating password" })
+      return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Error updating password." })
     }
 
     logger.info(`Password successfully reset for ${tokenWithUser.user.email}`)
-    return res.status(HTTP_SUCCESS.OK).json({ message: "Password successfully updated" })
+    return res.status(HTTP_SUCCESS.OK).json({ message: "Password successfully updated." })
   } catch (error) {
     logger.error(error)
-    return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Error registering user" })
+    return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Error updating password." })
   }
 }
