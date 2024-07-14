@@ -28,7 +28,7 @@
     "dockerup": "docker-compose up -d",
     "seed": "ts-node --transpile-only src/db/utils/seedUsers.ts",
     "typecoverage": "type-coverage",
-    "typecov:detail": "type-coverage --detail",
+    "typecoverage:detail": "type-coverage --detail",
     "prepare": "husky"
   },
   "typeCoverage": {
