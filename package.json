@@ -27,7 +27,7 @@
     "studio": "drizzle-kit studio",
     "dockerup": "docker-compose up -d",
     "seed": "ts-node --transpile-only src/db/utils/seedUsers.ts",
-    "typecov": "type-coverage",
+    "typecoverage": "type-coverage",
     "typecov:detail": "type-coverage --detail",
     "prepare": "husky"
   },
