@@ -63,7 +63,7 @@ async function getTargetUserAndCheckSuperiority(req: Request, res: Response, nex
   try {
     if (!user) {
       logger.warn(`User data is missing from the request`)
-      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "Forbidden" })
+      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "Missing User data." })
     }
 
     if (!user.role) {
@@ -94,7 +94,7 @@ async function getTargetUserAndCheckSuperiority(req: Request, res: Response, nex
     // User has no role
     if (!targetUser.role) {
       logger.error(`Target user ${targetUserId} has no role`)
-      return res.status(HTTP_CLIENT_ERROR.NOT_FOUND).json({ message: "Target user not found" })
+      return res.status(HTTP_CLIENT_ERROR.NOT_FOUND).json({ message: "Target user role not found" })
     }
 
     // Target user is locked and can only be edited by Admin or Owner. (Improve this later / make configurable)
@@ -110,7 +110,7 @@ async function getTargetUserAndCheckSuperiority(req: Request, res: Response, nex
     // Fail early if no roles found
     if (userRoleIndex === -1 || targetRoleIndex === -1) {
       logger.error(`User roles not found for user ${user.id} or target ${targetUserId}`)
-      return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Roles not found" })
+      return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Roles not found." })
     }
 
     // Check if the user has role superiority based on the role index

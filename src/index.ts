@@ -7,6 +7,7 @@ import helmet from "helmet"
 import dotenv from "dotenv"
 import swaggerSetup from "./swagger"
 import rateLimiter from "./middleware/rateLimiter"
+import { HTTP_SUCCESS } from "./constants/http"
 dotenv.config()
 
 const port = process.env.LOCAL_API_PORT
@@ -23,6 +24,9 @@ app.use(attachDb)
 app.use("/users", usersRouter)
 app.use("/auth", authRouter)
 
+// Health check
+app.get("/health", (req, res) => res.status(HTTP_SUCCESS.OK).json({ status: "👌" }))
+
 // Run
 const server = app.listen(port, () => {
   logger.info(`Running: http://localhost:${port}`)
@@ -36,3 +40,5 @@ process.on("SIGTERM", () => {
   logger.info("SIGTERM signal received: closing HTTP server")
   server.close(() => logger.info("HTTP server closed"))
 })
+
+export { app, server }

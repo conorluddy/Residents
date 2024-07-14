@@ -50,6 +50,8 @@ export const login = async (req: Request, res: Response) => {
 
     return res.sendStatus(HTTP_CLIENT_ERROR.FORBIDDEN)
   } catch (error) {
+    console.log("\n\nerror", error)
+
     logger.error(error)
     return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Error logging in" })
   }

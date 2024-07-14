@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express"
 import validateRequestToken from "./validateRequestToken"
 import { createId } from "@paralleldrive/cuid2"
+import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from "../constants/http"
 
 describe("Middleware: validateRequestToken", () => {
   let mockRequest: Partial<Request>
@@ -26,14 +27,14 @@ describe("Middleware: validateRequestToken", () => {
 
   it("should return 400 if the request token is missing", () => {
     validateRequestToken(mockRequest as Request, mockResponse as Response, nextFunction)
-    expect(mockResponse.status).toHaveBeenCalledWith(400)
+    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.BAD_REQUEST)
     expect(mockResponse.send).toHaveBeenCalledWith("A token is required")
   })
 
   it("should return 400 if the request token is invalid", () => {
     mockRequest.body.token = "invalid_token"
     validateRequestToken(mockRequest as Request, mockResponse as Response, nextFunction)
-    expect(mockResponse.status).toHaveBeenCalledWith(400)
+    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.BAD_REQUEST)
     expect(mockResponse.send).toHaveBeenCalledWith("Invalid token provided")
   })
 
