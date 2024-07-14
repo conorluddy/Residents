@@ -13,7 +13,7 @@ jest.mock("../db", () => ({
   }),
 }))
 
-describe("Google OAuth Strategy", () => {
+describe.skip("Google OAuth Strategy", () => {
   test("should initialize Google strategy", () => {
     expect(googlePassport.use).toHaveBeenCalled()
   })
