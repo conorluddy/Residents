@@ -5,7 +5,7 @@ import { User, tableUsers } from "../../db/schema"
 import { logger } from "../../utils/logger"
 
 /**
- * getAllUsers - This will need pagination and filtering
+ * getAllUsers - This will need pagination and filtering/searching
  */
 export const getAllUsers = async (req: Request, res: Response) => {
   try {
@@ -13,7 +13,7 @@ export const getAllUsers = async (req: Request, res: Response) => {
     return res.status(HTTP_SUCCESS.OK).json(result)
   } catch (error) {
     logger.error(error)
-    res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).send("Error getting users")
+    res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Error getting users" })
   }
 }
 

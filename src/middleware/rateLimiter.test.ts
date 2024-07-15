@@ -1,19 +1,20 @@
 import request from "supertest"
 import express from "express"
 import rateLimiter from "./rateLimiter"
+import { HTTP_SUCCESS } from "../constants/http"
 
 const app = express()
 app.use(rateLimiter)
 app.get("/", (_req, res) => {
-  res.send("Test response")
+  res.json({ message: "Test response" })
 })
 
 describe("Rate Limiter Middleware", () => {
   it("should allow requests under the rate limit", async () => {
     for (let i = 0; i < 100; i++) {
       const response = await request(app).get("/")
-      expect(response.status).toBe(200)
-      expect(response.text).toBe("Test response")
+      expect(response.status).toBe(HTTP_SUCCESS.OK)
+      expect(response.text).toBe('{"message":"Test response"}')
     }
   })
 

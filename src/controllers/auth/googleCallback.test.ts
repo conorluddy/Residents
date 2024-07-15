@@ -25,7 +25,7 @@ describe("Controller: GoogleCallback", () => {
     mockRequest = { user: makeAFakeUser({ username: "Hackerman" }) }
     mockResponse = {
       status: jest.fn().mockReturnThis(),
-      json: jest.fn().mockReturnThis(),
+      json: jest.fn(),
     }
   })
 

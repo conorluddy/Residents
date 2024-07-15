@@ -36,7 +36,7 @@ describe("Controller: Login", () => {
     }
     mockResponse = {
       status: jest.fn().mockReturnThis(),
-      json: jest.fn().mockReturnThis(),
+      json: jest.fn(),
     }
   })
 

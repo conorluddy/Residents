@@ -25,7 +25,7 @@ jest.mock("../../middleware/roleBasedAccessControl", () => ({
 }))
 
 CONTROLLERS.USER.getSelf = jest.fn(async (req, res) => {
-  return res.status(200).send(fakeUser)
+  return res.status(HTTP_SUCCESS.OK).json(fakeUser)
 })
 
 jest.mock("../../db", () => ({

@@ -13,7 +13,7 @@ describe("Controller: MagicLoginWithToken", () => {
     mockRequest = { body: { token: "123" } }
     mockResponse = {
       status: jest.fn().mockReturnThis(),
-      json: jest.fn().mockReturnThis(),
+      json: jest.fn(),
     }
   })
 

@@ -23,7 +23,7 @@ jest.mock("../../middleware/roleBasedAccessControl", () => ({
 }))
 
 CONTROLLERS.USER.getAllUsers = jest.fn(async (req, res) => {
-  return res.status(200).send({ message: "Users retrieved successfully" })
+  return res.status(HTTP_SUCCESS.OK).json({ message: "Users retrieved successfully" })
 })
 
 let fakeUser: User

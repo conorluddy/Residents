@@ -1,6 +1,6 @@
 import dotenv from "dotenv"
 import request from "supertest"
-import { HTTP_CLIENT_ERROR, HTTP_REDIRECTION } from "./constants/http"
+import { HTTP_CLIENT_ERROR, HTTP_REDIRECTION, HTTP_SUCCESS } from "./constants/http"
 import { app, server } from "./index"
 import { logger } from "./utils/logger"
 dotenv.config()
@@ -11,7 +11,7 @@ jest.mock("./db", () => ({}))
 describe("Test the health check route", () => {
   test('It should respond with a status of "👌"', async () => {
     const response = await request(app).get("/health")
-    expect(response.statusCode).toBe(200)
+    expect(response.statusCode).toBe(HTTP_SUCCESS.OK)
     expect(response.body).toEqual({ status: "👌" })
   })
 })

@@ -16,7 +16,7 @@ describe("Controller: Magic Login", () => {
     }
     mockResponse = {
       status: jest.fn().mockReturnThis(),
-      json: jest.fn().mockReturnThis(),
+      json: jest.fn(),
     }
   })
 

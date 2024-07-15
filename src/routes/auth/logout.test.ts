@@ -2,10 +2,10 @@ import request from "supertest"
 import express from "express"
 import logoutRoute from "./logout"
 import CONTROLLERS from "../../controllers"
-import { HTTP_SERVER_ERROR } from "../../constants/http"
+import { HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constants/http"
 
 CONTROLLERS.AUTH.logout = jest.fn(async (req, res) => {
-  return res.status(200).send({ message: "Logged in successfully" })
+  return res.status(HTTP_SUCCESS.OK).json({ message: "Logged in successfully" })
 })
 
 jest.mock("../../db", () => ({

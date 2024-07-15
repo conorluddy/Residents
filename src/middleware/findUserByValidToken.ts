@@ -14,7 +14,7 @@ const findUserByValidToken: RequestHandler = async (req: Request, res: Response,
 
     if (!validatedToken) {
       logger.error(`Valid token required`)
-      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).send(`Valid token required`)
+      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: `Valid token required` })
     }
 
     const tokenWithUser = await db.query.tableTokens.findFirst({
@@ -24,17 +24,17 @@ const findUserByValidToken: RequestHandler = async (req: Request, res: Response,
 
     if (!tokenWithUser) {
       logger.error(`Token not found: ${validatedToken}`)
-      return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).send("Token expired")
+      return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Token expired" })
     }
 
     if (tokenWithUser.used) {
       logger.error(`Attempt to use a used token: ${validatedToken}`)
-      return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).send("Token has already been used")
+      return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Token has already been used" })
     }
 
     if (tokenWithUser.expires_at < new Date()) {
       logger.error(`Attempt to use an expired token: ${validatedToken}`)
-      return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).send("Token has expired")
+      return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Token has expired" })
     }
 
     // Should probably compare the token.type here too with the URL to ensure reset password token is used for reset password etc
@@ -42,7 +42,7 @@ const findUserByValidToken: RequestHandler = async (req: Request, res: Response,
     next()
   } catch (error) {
     logger.error(`Error finding user by valid token: ${error}`)
-    return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).send("Error")
+    return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Error" })
   }
 }
 

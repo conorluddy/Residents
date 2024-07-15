@@ -37,8 +37,8 @@ describe("Controller: Reset Password", () => {
       userNoPW: makeAFakeUser({ email: "bananaman@ireland.ie" }),
     }
     mockResponse = {
-      status: jest.fn().mockImplementation(() => mockResponse),
-      json: jest.fn().mockImplementation(() => mockResponse),
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
     }
   })
 
