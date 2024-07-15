@@ -7,7 +7,7 @@ import createUserRoute from "../../routes/users/createUser"
 import { makeAFakeUser } from "../../test-utils/mockUsers"
 
 CONTROLLERS.USER.createUser = jest.fn(async (req, res) => {
-  return res.status(200).send({ message: "User created successfully" })
+  return res.status(HTTP_SUCCESS.OK).json({ message: "User created successfully" })
 })
 
 let fakeUser: User

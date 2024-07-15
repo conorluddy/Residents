@@ -33,8 +33,8 @@ describe("Middleware:findUserByValidEmail", () => {
       validatedEmail: "validated@email.com",
     }
     mockResponse = {
-      status: jest.fn().mockImplementation(() => mockResponse),
-      json: jest.fn().mockImplementation(() => mockResponse),
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
     }
     nextFunction = jest.fn()
   })

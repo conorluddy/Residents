@@ -33,7 +33,7 @@ export const login = async (req: Request, res: Response) => {
       .where(or(eq(tableUsers.username, username), eq(tableUsers.email, email)))
 
     if (!users || users.length === 0) {
-      return res.sendStatus(HTTP_CLIENT_ERROR.FORBIDDEN)
+      return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Nope." })
     }
 
     const user = users[0]
@@ -48,7 +48,7 @@ export const login = async (req: Request, res: Response) => {
       return res.status(HTTP_SUCCESS.OK).json({ accessToken })
     }
 
-    return res.sendStatus(HTTP_CLIENT_ERROR.FORBIDDEN)
+    return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Nope." })
   } catch (error) {
     console.log("\n\nerror", error)
 

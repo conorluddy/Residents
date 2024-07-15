@@ -56,8 +56,8 @@ describe("Middleware:findUserByValidToken", () => {
       tokenWithUser: {},
     }
     mockResponse = {
-      status: jest.fn().mockImplementation(() => mockResponse),
-      send: jest.fn().mockImplementation(() => mockResponse),
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
     }
     nextFunction = jest.fn()
   })
@@ -73,21 +73,21 @@ describe("Middleware:findUserByValidToken", () => {
     mockRequest.validatedToken = undefined
     await findUserByValidToken(mockRequest as Request, mockResponse as Response, nextFunction)
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.BAD_REQUEST)
-    expect(mockResponse.send).toHaveBeenCalledWith(`Valid token required`)
+    expect(mockResponse.json).toHaveBeenCalledWith({ message: `Valid token required` })
     expect(nextFunction).not.toHaveBeenCalled()
   })
 
   it("Token is flagged as used, return forbidden", async () => {
     await findUserByValidToken(mockRequest as Request, mockResponse as Response, nextFunction)
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)
-    expect(mockResponse.send).toHaveBeenCalledWith("Token has already been used")
+    expect(mockResponse.json).toHaveBeenCalledWith({ message: "Token has already been used" })
     expect(nextFunction).not.toHaveBeenCalled()
   })
 
   it("Token has expired, return forbidden", async () => {
     await findUserByValidToken(mockRequest as Request, mockResponse as Response, nextFunction)
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)
-    expect(mockResponse.send).toHaveBeenCalledWith("Token has expired")
+    expect(mockResponse.json).toHaveBeenCalledWith({ message: "Token has expired" })
     expect(nextFunction).not.toHaveBeenCalled()
   })
 })

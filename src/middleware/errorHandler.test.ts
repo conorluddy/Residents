@@ -20,7 +20,7 @@ describe("Middleware: errorHandler", () => {
     mockErr = new Error("Test error")
     mockResponse = {
       status: jest.fn().mockReturnThis(),
-      json: jest.fn().mockReturnThis(),
+      json: jest.fn(),
     } as Partial<Response>
   })
 

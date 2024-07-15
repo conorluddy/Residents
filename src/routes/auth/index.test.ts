@@ -1,16 +1,17 @@
 import express from "express"
 import request from "supertest"
 import router from "./index"
+import { HTTP_SUCCESS } from "../../constants/http"
 
-jest.mock("./login", () => jest.fn((req, res) => res.status(200).send("updateUser")))
-jest.mock("./logout", () => jest.fn((req, res) => res.status(200).send("updateUser")))
-jest.mock("./magicLogin", () => jest.fn((req, res) => res.status(200).send("updateUser")))
-jest.mock("./magicLoginWithToken", () => jest.fn((req, res) => res.status(200).send("updateUser")))
-jest.mock("./resetPassword", () => jest.fn((req, res) => res.status(200).send("updateUser")))
-jest.mock("./resetPasswordWithToken", () => jest.fn((req, res) => res.status(200).send("updateUser")))
-jest.mock("./validateAccount", () => jest.fn((req, res) => res.status(200).send("updateUser")))
-jest.mock("./googleLogin", () => jest.fn((req, res) => res.status(200).send("updateUser")))
-jest.mock("./googleLoginCallback", () => jest.fn((req, res) => res.status(200).send("updateUser")))
+jest.mock("./login", () => jest.fn((_req, res) => res.sendStatus(HTTP_SUCCESS.OK)))
+jest.mock("./logout", () => jest.fn((_req, res) => res.sendStatus(HTTP_SUCCESS.OK)))
+jest.mock("./magicLogin", () => jest.fn((_req, res) => res.sendStatus(HTTP_SUCCESS.OK)))
+jest.mock("./magicLoginWithToken", () => jest.fn((_req, res) => res.sendStatus(HTTP_SUCCESS.OK)))
+jest.mock("./resetPassword", () => jest.fn((_req, res) => res.sendStatus(HTTP_SUCCESS.OK)))
+jest.mock("./resetPasswordWithToken", () => jest.fn((_req, res) => res.sendStatus(HTTP_SUCCESS.OK)))
+jest.mock("./validateAccount", () => jest.fn((_req, res) => res.sendStatus(HTTP_SUCCESS.OK)))
+jest.mock("./googleLogin", () => jest.fn((_req, res) => res.sendStatus(HTTP_SUCCESS.OK)))
+jest.mock("./googleLoginCallback", () => jest.fn((_req, res) => res.sendStatus(HTTP_SUCCESS.OK)))
 jest.mock("../../db", jest.fn())
 
 describe("Router", () => {
@@ -27,25 +28,22 @@ describe("Router", () => {
       path: string
       method: "get" | "post" | "patch"
       handler: string
-      expectedResonse: number
+      expectedResponse: number
     }[] = [
-      { path: "/", method: "post", handler: "login", expectedResonse: 200 },
-      { path: "/", method: "get", handler: "logout", expectedResonse: 200 },
-      { path: "/", method: "post", handler: "magicLogin", expectedResonse: 200 },
-      { path: "/", method: "post", handler: "magicLoginWithToken", expectedResonse: 200 },
-      { path: "/", method: "post", handler: "resetPassword", expectedResonse: 200 },
-      { path: "/", method: "post", handler: "resetPasswordWithToken", expectedResonse: 200 },
-      { path: "/", method: "patch", handler: "validateAccount", expectedResonse: 200 },
-      { path: "/", method: "get", handler: "googleLogin", expectedResonse: 200 },
-      { path: "/", method: "get", handler: "googleLoginCallback", expectedResonse: 200 },
+      { path: "/", method: "post", handler: "login", expectedResponse: HTTP_SUCCESS.OK },
+      { path: "/", method: "get", handler: "logout", expectedResponse: HTTP_SUCCESS.OK },
+      { path: "/", method: "post", handler: "magicLogin", expectedResponse: HTTP_SUCCESS.OK },
+      { path: "/", method: "post", handler: "magicLoginWithToken", expectedResponse: HTTP_SUCCESS.OK },
+      { path: "/", method: "post", handler: "resetPassword", expectedResponse: HTTP_SUCCESS.OK },
+      { path: "/", method: "post", handler: "resetPasswordWithToken", expectedResponse: HTTP_SUCCESS.OK },
+      { path: "/", method: "patch", handler: "validateAccount", expectedResponse: HTTP_SUCCESS.OK },
+      { path: "/", method: "get", handler: "googleLogin", expectedResponse: HTTP_SUCCESS.OK },
+      { path: "/", method: "get", handler: "googleLoginCallback", expectedResponse: HTTP_SUCCESS.OK },
     ]
 
     for (const route of routes) {
       const response = await request(app)[route.method](route.path)
       expect(response.status).toBeDefined()
-
-      // These aren't working correctly, come back and fix em
-      //   expect(response.status).toBe(route.expectedResonse)
     }
   })
 })

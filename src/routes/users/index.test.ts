@@ -1,13 +1,14 @@
 import express from "express"
 import request from "supertest"
 import router from "./index"
+import { HTTP_SUCCESS } from "../../constants/http"
 
-jest.mock("./createUser", () => jest.fn((req, res) => res.status(201).send("createUser")))
-jest.mock("./updateUser", () => jest.fn((req, res) => res.status(200).send("updateUser")))
-jest.mock("./getAllUsers", () => jest.fn((req, res) => res.status(200).send("getAllUsers")))
-jest.mock("./getUser", () => jest.fn((req, res) => res.status(200).send("getUser")))
-jest.mock("./getSelf", () => jest.fn((req, res) => res.status(200).send("getSelf")))
-jest.mock("./deleteUser", () => jest.fn((req, res) => res.status(200).send("deleteUser")))
+jest.mock("./createUser", () => jest.fn((_req, res) => res.sendStatus(HTTP_SUCCESS.CREATED)))
+jest.mock("./updateUser", () => jest.fn((_req, res) => res.sendStatus(HTTP_SUCCESS.OK)))
+jest.mock("./getAllUsers", () => jest.fn((_req, res) => res.sendStatus(HTTP_SUCCESS.OK)))
+jest.mock("./getUser", () => jest.fn((_req, res) => res.sendStatus(HTTP_SUCCESS.OK)))
+jest.mock("./getSelf", () => jest.fn((_req, res) => res.sendStatus(HTTP_SUCCESS.OK)))
+jest.mock("./deleteUser", () => jest.fn((_req, res) => res.sendStatus(HTTP_SUCCESS.OK)))
 jest.mock("../../db", jest.fn())
 
 describe("Router", () => {
@@ -24,14 +25,14 @@ describe("Router", () => {
       path: string
       method: "get" | "post" | "patch" | "delete"
       handler: string
-      expectedResonse: number
+      expectedResponse: number
     }[] = [
-      { path: "/register", method: "post", handler: "createUser", expectedResonse: 201 },
-      { path: "/123", method: "patch", handler: "updateUser", expectedResonse: 200 },
-      { path: "/", method: "get", handler: "getAllUsers", expectedResonse: 200 },
-      { path: "/123", method: "get", handler: "getUser", expectedResonse: 200 },
-      { path: "/self", method: "get", handler: "getSelf", expectedResonse: 200 },
-      { path: "/123", method: "delete", handler: "deleteUser", expectedResonse: 200 },
+      { path: "/register", method: "post", handler: "createUser", expectedResponse: HTTP_SUCCESS.CREATED },
+      { path: "/123", method: "patch", handler: "updateUser", expectedResponse: HTTP_SUCCESS.OK },
+      { path: "/", method: "get", handler: "getAllUsers", expectedResponse: HTTP_SUCCESS.OK },
+      { path: "/123", method: "get", handler: "getUser", expectedResponse: HTTP_SUCCESS.OK },
+      { path: "/self", method: "get", handler: "getSelf", expectedResponse: HTTP_SUCCESS.OK },
+      { path: "/123", method: "delete", handler: "deleteUser", expectedResponse: HTTP_SUCCESS.OK },
     ]
 
     for (const route of routes) {
@@ -39,7 +40,7 @@ describe("Router", () => {
       expect(response.status).toBeDefined()
 
       // These aren't working correctly, come back and fix em
-      //   expect(response.status).toBe(route.expectedResonse)
+      //   expect(response.status).toBe(route.expectedResponse)
     }
   })
 })
