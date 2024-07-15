@@ -36,9 +36,7 @@ describe("Controller: Login", () => {
     }
     mockResponse = {
       status: jest.fn().mockReturnThis(),
-      sendStatus: jest.fn(),
-      send: jest.fn(),
-      json: jest.fn(),
+      json: jest.fn().mockReturnThis(),
     }
   })
 
@@ -52,14 +50,16 @@ describe("Controller: Login", () => {
     mockRequest.body.username = "MrsFake"
     mockRequest.body.password = "testpassword"
     await login(mockRequest as Request, mockResponse as Response)
-    expect(mockResponse.sendStatus).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)
+    expect(mockResponse.json).toHaveBeenCalledWith({ message: "Nope." })
+    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)
   })
 
   it("should reject login with incorrect password", async () => {
     mockRequest.body.username = "MrFake"
     mockRequest.body.password = "wrongpassword"
     await login(mockRequest as Request, mockResponse as Response)
-    expect(mockResponse.sendStatus).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)
+    expect(mockResponse.json).toHaveBeenCalledWith({ message: "Nope." })
+    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)
   })
 
   it("should reject login with missing username/password", async () => {
