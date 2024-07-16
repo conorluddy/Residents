@@ -6,7 +6,8 @@
 
 The goal of this project is to build out a repo that I can reuse as a jump-off point for other applications, where it would provide an initial backend API providing the core components that most apps would need - users, authentication and authorization. Feel free to fork it if it provides you any value, and see details below for a loose roadmap.
 
-![readme-hero](https://github.com/conorluddy/Residents/assets/846373/3da967a0-00dc-419b-9cc5-e668e090582e)
+![Residents](https://github.com/user-attachments/assets/7da7ff38-0406-4a07-b2f0-62671213868a)
+
 
 ## Tech Stack
 
