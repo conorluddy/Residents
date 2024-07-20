@@ -16,6 +16,8 @@ export const getUser = async (req: Request, res: Response) => {
       return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "ID is missing in the request." })
     }
 
+    // Add a WITHMETA flag to include the user meta data
+
     const user = await db.select().from(tableUsers).where(eq(tableUsers.id, userId))
 
     if (!user) {

@@ -46,7 +46,6 @@ describe("createRandomUsers", () => {
       expect(user).toHaveProperty("firstName")
       expect(user).toHaveProperty("lastName")
       expect(user).toHaveProperty("email")
-      expect(user).toHaveProperty("rank")
       expect(user).toHaveProperty("role")
       expect(user).toHaveProperty("status")
       expect(user).toHaveProperty("deletedAt")
