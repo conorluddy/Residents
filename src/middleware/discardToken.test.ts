@@ -9,12 +9,12 @@ import { HTTP_CLIENT_ERROR } from "../constants/http"
 
 let tokenWithUser: TokenWithUser = {
   id: "XXX",
-  user_id: "123",
+  userId: "123",
   used: false,
   user: makeAFakeUser({ id: "123" }),
   type: TOKEN_TYPE.RESET,
-  created_at: new Date(),
-  expires_at: new Date(Date.now() + 1 * 60 * 60 * 1000), // Add 1 hour
+  createdAt: new Date(),
+  expiresAt: new Date(Date.now() + 1 * 60 * 60 * 1000), // Add 1 hour
 }
 
 jest.mock("../db", () => ({

@@ -3,10 +3,11 @@ import Google from "passport-google-oauth20"
 import dotenv from "dotenv"
 import { logger } from "../utils/logger"
 import db from "../db"
-import { tableFederatedCredentials, tableUsers } from "../db/schema/Users"
+import { tableUsers } from "../db/schema/Users"
 import { and, eq } from "drizzle-orm"
 import { JWTUserPayload } from "../utils/generateJwt"
 import { NewUser } from "../db/types"
+import { tableFederatedCredentials } from "../db/schema"
 
 dotenv.config()
 const GoogleStrategy = Google.Strategy
@@ -28,7 +29,7 @@ if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET || !GOOGLE_CALLBACK_URL) {
       },
       async (_accessToken, _refreshToken, profile, done) => {
         const fedCreds = await db
-          .select({ user_id: tableFederatedCredentials.user_id })
+          .select({ userId: tableFederatedCredentials.userId })
           .from(tableFederatedCredentials)
           .where(
             and(eq(tableFederatedCredentials.provider, PROVIDER), eq(tableFederatedCredentials.subject, profile.id))
@@ -47,7 +48,7 @@ if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET || !GOOGLE_CALLBACK_URL) {
               role: tableUsers.role,
             })
             .from(tableUsers)
-            .where(eq(tableUsers.id, fedCreds[0].user_id))
+            .where(eq(tableUsers.id, fedCreds[0].userId))
 
           if (!users[0]) throw new Error("User not found")
 
@@ -72,7 +73,7 @@ if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET || !GOOGLE_CALLBACK_URL) {
             const { id } = newUsers[0]
 
             const fedCreds = {
-              user_id: id,
+              userId: id,
               provider: PROVIDER,
               subject: profile.id,
             }
@@ -81,7 +82,7 @@ if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET || !GOOGLE_CALLBACK_URL) {
               .insert(tableFederatedCredentials)
               .values(fedCreds)
               .onConflictDoNothing({
-                target: tableFederatedCredentials.user_id,
+                target: tableFederatedCredentials.userId,
               })
               .returning()
 

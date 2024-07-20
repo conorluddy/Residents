@@ -1,7 +1,6 @@
-// import db from ".."
 import db from ".."
-import { NewUser, User } from "../types"
-import { seedUsers, createRandomUsers } from "./seedUsers"
+import { User } from "../types"
+import { createRandomUsers, seedUsers } from "./seedUsers"
 
 jest.mock("../../utils/crypt", () => ({
   createHash: jest.fn().mockResolvedValue("hashed_password"),

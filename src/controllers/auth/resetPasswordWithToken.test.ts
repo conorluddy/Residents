@@ -40,11 +40,11 @@ describe("Controller: Reset Password With Token", () => {
       },
       tokenWithUser: {
         id: "123",
-        created_at: new Date(),
-        user_id: "UID123",
+        createdAt: new Date(),
+        userId: "UID123",
         type: TOKEN_TYPE.RESET,
         used: false,
-        expires_at: new Date(),
+        expiresAt: new Date(),
         user: makeAFakeUser({ email: "bananaman@ireland.ie", id: "UID123" }),
       },
     }
@@ -95,7 +95,7 @@ describe("Controller: Reset Password With Token", () => {
     mockRequest.tokenWithUser = {
       ...mockRequest.tokenWithUser!,
       user: makeAFakeUser({ id: "DIFFERENT_ID" }),
-      user_id: "DIFFERENT_ID",
+      userId: "DIFFERENT_ID",
     }
     await resetPasswordWithToken(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR)

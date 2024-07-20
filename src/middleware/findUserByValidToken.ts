@@ -32,7 +32,7 @@ const findUserByValidToken: RequestHandler = async (req: Request, res: Response,
       return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Token has already been used" })
     }
 
-    if (tokenWithUser.expires_at < new Date()) {
+    if (tokenWithUser.expiresAt < new Date()) {
       logger.error(`Attempt to use an expired token: ${validatedToken}`)
       return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Token has expired" })
     }

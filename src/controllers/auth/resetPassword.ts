@@ -25,9 +25,9 @@ export const resetPassword = async ({ userNoPW }: Request, res: Response) => {
     }
 
     const newToken: NewToken = {
-      user_id: userNoPW.id,
+      userId: userNoPW.id,
       type: TOKEN_TYPE.RESET,
-      expires_at: new Date(Date.now() + 1000 * 60 * 60 * 24), // TODO: Make configurable
+      expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24), // TODO: Make configurable
     }
 
     const tokens = await db.insert(tableTokens).values(newToken).returning() // see if we can get this to not return an array

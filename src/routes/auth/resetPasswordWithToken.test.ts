@@ -17,11 +17,11 @@ jest.mock("../../db", () => ({
     tableTokens: {
       findFirst: jest.fn().mockImplementation(() => ({
         id: validTokenId,
-        created_at: new Date(),
-        user_id: "UID123",
+        createdAt: new Date(),
+        userId: "UID123",
         type: TOKEN_TYPE.RESET,
         used: false,
-        expires_at: new Date(Date.now() + 60 * 60 * 1000), // Add one hour
+        expiresAt: new Date(Date.now() + 60 * 60 * 1000), // Add one hour
         user: makeAFakeUser({ email: "bananaman@ireland.ie", id: "UID123" }),
       })),
     },
