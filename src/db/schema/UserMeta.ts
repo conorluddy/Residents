@@ -3,6 +3,10 @@ import { relations } from "drizzle-orm"
 import { pgTable, real, text } from "drizzle-orm/pg-core"
 import { tableUsers } from "./Users"
 
+/**
+ * This table is used to store additional user information depending on the
+ * application's needs. This keeps the main users table clean and simple.
+ */
 const tableUserMeta = pgTable("userMeta", {
   id: text("id")
     .$defaultFn(() => createId())

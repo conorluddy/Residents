@@ -25,7 +25,6 @@ async function createRandomUsers(amount: number): Promise<NewUser[]> {
       firstName: faker.person.firstName(),
       lastName: faker.person.lastName(),
       email: faker.internet.email(),
-      rank: faker.number.float({ multipleOf: 0.2, min: 0, max: 50 }),
       role: faker.helpers.arrayElement(ROLES_ARRAY),
       status: faker.helpers.arrayElement(STATUS_ARRAY),
       deletedAt: faker.helpers.arrayElement([faker.date.past(), null, null, null]),
