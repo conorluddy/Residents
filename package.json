@@ -35,7 +35,9 @@
     "atLeast": 90,
     "ignoreCatch": true,
     "strict": true,
-    "ignore": ["node_modules/**/*"]
+    "ignore": [
+      "node_modules/**/*"
+    ]
   },
   "dependencies": {
     "@paralleldrive/cuid2": "^2.2.2",
@@ -57,6 +59,7 @@
     "winston": "^3.13.0"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.24.8",
     "@faker-js/faker": "^9.0.0-alpha.1",
     "@types/bcrypt": "^5.0.2",
     "@types/express": "^4.17.21",
