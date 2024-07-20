@@ -7,44 +7,34 @@ on:
     branches: [main]
 
 jobs:
-  initialise:
-
+  build-test-and-report-coverage:
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
         node-version: [16.x, 18.x, 20.x]
-
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-    - name: Set up Node
-      uses: actions/setup-node@v2
-      with:
-        node-version: ${{ matrix.node-version }}
+      - name: Set up Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
 
-  install:
+      - name: Install dependencies
+        run: npm install
 
-    - name: Install dependencies
-      run: npm install
+      - name: Run build
+        run: npm run build
 
-  test:
+      - name: Run tests
+        run: npm test
 
-    - name: Run tests
-      run: npm test
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4.0.1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
 
-  build:
-
-    - name: Run build
-      run: npm run build
-
-  report:
-
-    - name: Upload coverage reports to Codecov
-      uses: codecov/codecov-action@v4.0.1
-      with:
-        token: ${{ secrets.CODECOV_TOKEN }}
-
-    - name: Run Typescript coverage report
-      run: npm run typecoverage
+      - name: Run Typescript coverage report
+        run: npm run typecoverage
+        
