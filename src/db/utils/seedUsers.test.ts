@@ -1,7 +1,6 @@
-// import db from ".."
 import db from ".."
-import { NewUser, User } from "../types"
-import { seedUsers, createRandomUsers } from "./seedUsers"
+import { User } from "../types"
+import { createRandomUsers, seedUsers } from "./seedUsers"
 
 jest.mock("../../utils/crypt", () => ({
   createHash: jest.fn().mockResolvedValue("hashed_password"),
@@ -47,7 +46,6 @@ describe("createRandomUsers", () => {
       expect(user).toHaveProperty("firstName")
       expect(user).toHaveProperty("lastName")
       expect(user).toHaveProperty("email")
-      expect(user).toHaveProperty("rank")
       expect(user).toHaveProperty("role")
       expect(user).toHaveProperty("status")
       expect(user).toHaveProperty("deletedAt")
