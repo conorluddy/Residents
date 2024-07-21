@@ -8,18 +8,6 @@ import { logger } from "../utils/logger"
 import { ROLES, ROLES_ARRAY } from "../constants/database"
 import db from "../db"
 
-export const RBAC = {
-  canGetOwnUser: checkPermission(PERMISSIONS.CAN_GET_OWN_USER),
-  checkCanCreateUsers: checkPermission(PERMISSIONS.CAN_CREATE_USERS),
-  checkCanGetUsers: checkPermission(PERMISSIONS.CAN_GET_ALL_USERS),
-  checkCanUpdateUsers: checkPermission(PERMISSIONS.CAN_UPDATE_ANY_USER),
-  checkCanUpdateOwnUser: checkPermission(PERMISSIONS.CAN_UPDATE_OWN_USER),
-  checkCanDeleteUsers: checkPermission(PERMISSIONS.CAN_DELETE_ANY_USER),
-  checkCanUpdateAnyUserStatus: checkPermission(PERMISSIONS.CAN_UPDATE_ANY_USER_STATUS),
-  checkCanUpdateOwnProfile: checkPermission(PERMISSIONS.CAN_UPDATE_OWN_USER),
-  getTargetUserAndCheckSuperiority: getTargetUserAndCheckSuperiority,
-}
-
 /**
  * Check if the user has the required permission to access the resource
  * @param permission PERMISSIONS
@@ -128,3 +116,17 @@ async function getTargetUserAndCheckSuperiority(req: Request, res: Response, nex
     return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Internal Server Error" })
   }
 }
+
+const RBAC = {
+  canGetOwnUser: checkPermission(PERMISSIONS.CAN_GET_OWN_USER),
+  checkCanCreateUsers: checkPermission(PERMISSIONS.CAN_CREATE_USERS),
+  checkCanGetUsers: checkPermission(PERMISSIONS.CAN_GET_ALL_USERS),
+  checkCanUpdateUsers: checkPermission(PERMISSIONS.CAN_UPDATE_ANY_USER),
+  checkCanUpdateOwnUser: checkPermission(PERMISSIONS.CAN_UPDATE_OWN_USER),
+  checkCanDeleteUsers: checkPermission(PERMISSIONS.CAN_DELETE_ANY_USER),
+  checkCanUpdateAnyUserStatus: checkPermission(PERMISSIONS.CAN_UPDATE_ANY_USER_STATUS),
+  checkCanUpdateOwnProfile: checkPermission(PERMISSIONS.CAN_UPDATE_OWN_USER),
+  getTargetUserAndCheckSuperiority: getTargetUserAndCheckSuperiority,
+}
+
+export default RBAC

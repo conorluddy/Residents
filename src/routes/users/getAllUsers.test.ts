@@ -17,9 +17,7 @@ jest.mock("../../middleware/jsonWebTokens", () => ({
 }))
 
 jest.mock("../../middleware/roleBasedAccessControl", () => ({
-  RBAC: {
-    checkCanGetUsers: jest.fn((req, res, next) => next()),
-  },
+  checkCanGetUsers: jest.fn((req, res, next) => next()),
 }))
 
 CONTROLLERS.USER.getAllUsers = jest.fn(async (req, res) => {

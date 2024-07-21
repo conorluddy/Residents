@@ -1,22 +1,25 @@
+// Util
 import { attachDb } from "./database"
-import { authenticateToken } from "./jsonWebTokens"
-import { RBAC } from "./roleBasedAccessControl"
 import errorHandler from "./errorHandler"
-import findUserByValidEmail from "./findUserByValidEmail"
-import validateRequestEmail from "./validateRequestEmail"
-import validateRequestToken from "./validateRequestToken"
-import findUserByValidToken from "./findUserByValidToken"
 import discardToken from "./discardToken"
 
+// Validate
+import RBAC from "./roleBasedAccessControl"
+import VALIDATE from "./validation"
+import { authenticateToken } from "./jsonWebTokens"
+
+// Find
+import findUserByValidEmail from "./findUserByValidEmail"
+import findUserByValidToken from "./findUserByValidToken"
+
 const MW = {
+  RBAC,
+  VALIDATE,
   attachDb,
   authenticateToken,
-  RBAC,
   errorHandler,
   findUserByValidEmail,
   findUserByValidToken,
-  validateRequestEmail,
-  validateRequestToken,
   discardToken,
 }
 

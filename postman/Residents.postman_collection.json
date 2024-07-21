@@ -416,6 +416,45 @@
 					"response": []
 				},
 				{
+					"name": "Update User Meta [user]",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"metaItem\": \"bansana\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/users/meta/kwwmlz57qlf8afkkd6p8r0q4",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users",
+								"meta",
+								"kwwmlz57qlf8afkkd6p8r0q4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Get all Users [user]",
 					"request": {
 						"auth": {

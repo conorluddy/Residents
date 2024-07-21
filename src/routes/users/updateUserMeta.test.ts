@@ -2,7 +2,7 @@ import express from "express"
 import request from "supertest"
 import { ROLES } from "../../constants/database"
 import { HTTP_SUCCESS } from "../../constants/http"
-import deleteUserRouter from "../../routes/users/deleteUser"
+import updateUserMetaRouter from "../../routes/users/updateUserMeta"
 import { makeAFakeUser } from "../../test-utils/mockUsers"
 
 let fakeUser = makeAFakeUser({ password: "$TR0ngP@$$W0rDz123!", role: ROLES.DEFAULT })
@@ -15,7 +15,7 @@ jest.mock("../../middleware/jsonWebTokens", () => ({
 }))
 
 jest.mock("../../middleware/roleBasedAccessControl", () => ({
-  checkCanDeleteUsers: jest.fn((_req, _res, next) => next()),
+  checkCanUpdateUsers: jest.fn((_req, _res, next) => next()),
   getTargetUserAndCheckSuperiority: jest.fn((req, _res, next) => {
     req.targetUserId = fakeUser.id
     next()
@@ -26,19 +26,20 @@ jest.mock("../../db", () => ({
   update: jest.fn().mockReturnValue({
     set: jest.fn().mockReturnValue({
       where: jest.fn().mockReturnValue({
-        returning: jest.fn().mockImplementation(() => [{ deletedUserId: fakeUser.id }]),
+        returning: jest.fn().mockImplementation(() => [{ updatedId: fakeUser.id }]),
       }),
     }),
   }),
 }))
 
 const app = express()
-app.use(deleteUserRouter)
+app.use(express.json())
+app.use(updateUserMetaRouter)
 
-describe("Route: Delete User", () => {
-  it("successfully deletes a user", async () => {
-    const response = await request(app).delete(`/${fakeUser.id}`)
-    expect(response.body.message).toBe(`User ${fakeUser.id} deleted`)
+describe("Route: Update User Meta", () => {
+  it("successfully updates user meta", async () => {
+    const response = await request(app).patch(`/meta/${fakeUser.id}`).send({ metaItem: "Meta Update" })
+    expect(response.body.message).toBe(`User ${fakeUser.id} updated successfully`)
     expect(response.status).toBe(HTTP_SUCCESS.OK)
   })
 })

@@ -15,13 +15,11 @@ jest.mock("../../middleware/jsonWebTokens", () => ({
 }))
 
 jest.mock("../../middleware/roleBasedAccessControl", () => ({
-  RBAC: {
-    checkCanUpdateUsers: jest.fn((_req, _res, next) => next()),
-    getTargetUserAndCheckSuperiority: jest.fn((req, _res, next) => {
-      req.targetUserId = fakeUser.id
-      next()
-    }),
-  },
+  checkCanUpdateUsers: jest.fn((_req, _res, next) => next()),
+  getTargetUserAndCheckSuperiority: jest.fn((req, _res, next) => {
+    req.targetUserId = fakeUser.id
+    next()
+  }),
 }))
 
 jest.mock("../../db", () => ({

@@ -11,9 +11,16 @@ const tableUserMeta = pgTable("userMeta", {
   id: text("id")
     .$defaultFn(() => createId())
     .primaryKey(),
-  userId: text("user_id").notNull().unique(),
-  rank: real("rank").default(1.0),
-  referredBy: text("referred_by"),
+  userId: text("user_id").notNull().unique(), // FKey to users table
+
+  // Add fields that would be specific to your user needs.
+  // "Rank" could be used for anything from martial arts to reddit-style karma.
+  // "ReferredBy" could be used to track who referred a user to your app.
+  // DOB etc. could be added here too.
+
+  metaItem: text("meta_item"), //   Sample
+  // rank: real("rank").default(1.0), // Sample
+  // referredBy: text("referred_by"), // Sample
 })
 
 const usersMetaRelations = relations(tableUserMeta, ({ one }) => ({
