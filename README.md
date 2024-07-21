@@ -9,6 +9,27 @@ The goal of this project is to build out a repo that I can reuse as a jump-off p
 ![Residents](https://github.com/user-attachments/assets/7da7ff38-0406-4a07-b2f0-62671213868a)
 
 
+## Table of Contents
+
+- [Residents](#residents)
+  - [Tech Stack](#tech-stack)
+  - [Main goals](#main-goals)
+    - [Functional](#functional)
+    - [Developer Experience](#developer-experience)
+      - [Documentation](#documentation)
+      - [Containers](#containers)
+      - [Postman](#postman)
+      - [CI/CD](#cicd)
+    - [Robustness](#robustness)
+      - [Typing](#typing)
+      - [Tests](#tests)
+      - [Express Middleware](#express-middleware)
+  - [Installation and development](#installation-and-development)
+    - [Initialising the Database](#initialising-the-database)
+  - [Feature Matrix](#feature-matrix)
+  - [Future ideas](#future-ideas)
+
+
 ## Tech Stack
 
 - Server: `Express [V5 - beta]`
