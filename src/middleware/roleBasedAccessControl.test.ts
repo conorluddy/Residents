@@ -4,7 +4,7 @@ import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from "../constants/http"
 import { User } from "../db/types"
 import { makeAFakeUser } from "../test-utils/mockUsers"
 import { JWTUserPayload } from "../utils/generateJwt"
-import { RBAC } from "./roleBasedAccessControl"
+import RBAC from "./roleBasedAccessControl"
 
 jest.mock("../utils/logger")
 

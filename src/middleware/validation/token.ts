@@ -1,9 +1,9 @@
 import { NextFunction, Request, RequestHandler, Response } from "express"
-import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from "../constants/http"
-import { logger } from "../utils/logger"
+import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from "../../constants/http"
+import { logger } from "../../utils/logger"
 import { isCuid } from "@paralleldrive/cuid2"
 
-const validateRequestToken: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
+const validateToken: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const token: string | undefined = req.params?.token || req.body?.token || req.query?.token
 
@@ -23,4 +23,4 @@ const validateRequestToken: RequestHandler = async (req: Request, res: Response,
   }
 }
 
-export default validateRequestToken
+export default validateToken

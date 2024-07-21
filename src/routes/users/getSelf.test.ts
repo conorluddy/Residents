@@ -19,9 +19,7 @@ jest.mock("../../middleware/jsonWebTokens", () => ({
 }))
 
 jest.mock("../../middleware/roleBasedAccessControl", () => ({
-  RBAC: {
-    canGetOwnUser: jest.fn((req, res, next) => next()),
-  },
+  canGetOwnUser: jest.fn((req, res, next) => next()),
 }))
 
 CONTROLLERS.USER.getSelf = jest.fn(async (req, res) => {

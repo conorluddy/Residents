@@ -6,7 +6,7 @@ const router = Router()
 
 router.post(
   "/reset-password/:token",
-  MW.validateRequestToken,
+  MW.VALIDATE.token,
   MW.findUserByValidToken,
   MW.discardToken,
   CONTROLLERS.AUTH.resetPasswordWithToken

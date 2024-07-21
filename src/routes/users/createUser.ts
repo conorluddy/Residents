@@ -1,11 +1,11 @@
 import { Router } from "express"
-import { RBAC } from "../../middleware/roleBasedAccessControl"
+import RBAC from "../../middleware/roleBasedAccessControl"
 import CONTROLLERS from "../../controllers"
 import MW from "../../middleware"
 
 const router = Router()
 
-router.post("/register", MW.validateRequestEmail, CONTROLLERS.USER.createUser)
+router.post("/register", MW.VALIDATE.email, CONTROLLERS.USER.createUser)
 //                      ^
 //                      RBAC.checkCanCreateUsers
 //                      We can lock this down if we don't

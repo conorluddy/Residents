@@ -11,6 +11,7 @@ import { magicLoginWithToken } from "./auth/magicLoginWithToken"
 import { resetPassword } from "./auth/resetPassword"
 import { resetPasswordWithToken } from "./auth/resetPasswordWithToken"
 import { updateUser } from "./users/updateUser"
+import { updateUserMeta } from "./users/updateUserMeta"
 import { validateAccount } from "./auth/validateAccount"
 
 const CONTROLLERS = {
@@ -31,6 +32,7 @@ const CONTROLLERS = {
     getSelf,
     getUser,
     updateUser,
+    updateUserMeta,
   },
 }
 
