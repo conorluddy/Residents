@@ -9,14 +9,14 @@ import { makeAFakeUser } from "../../test-utils/mockUsers"
 import { generateJwt } from "../../utils/generateJwt"
 
 // Mock the middlewares
-jest.mock("../../middleware/jsonWebTokens", () => ({
+jest.mock("../../middleware/auth/jsonWebTokens", () => ({
   authenticateToken: jest.fn((req, res, next) => {
     req.user = { id: "123", role: "admin" }
     next()
   }),
 }))
 
-jest.mock("../../middleware/roleBasedAccessControl", () => ({
+jest.mock("../../middleware/auth/roleBasedAccessControl", () => ({
   checkCanGetUsers: jest.fn((req, res, next) => next()),
   getTargetUserAndCheckSuperiority: jest.fn((req, res, next) => next()),
 }))

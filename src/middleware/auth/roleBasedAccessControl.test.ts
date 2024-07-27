@@ -1,14 +1,13 @@
 import { NextFunction, Request, Response } from "express"
-import { ROLES } from "../constants/database"
-import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from "../constants/http"
-import { User } from "../db/types"
-import { makeAFakeUser } from "../test-utils/mockUsers"
-import { JWTUserPayload } from "../utils/generateJwt"
+import { ROLES } from "../../constants/database"
+import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from "../../constants/http"
+import { User } from "../../db/types"
+import { makeAFakeUser } from "../../test-utils/mockUsers"
+import { JWTUserPayload } from "../../utils/generateJwt"
 import RBAC from "./roleBasedAccessControl"
 
-jest.mock("../utils/logger")
-
-jest.mock("../db", () => ({
+jest.mock("../../utils/logger")
+jest.mock("../../db", () => ({
   // Move this to own mocks file
   select: jest.fn().mockReturnValue({
     from: jest.fn().mockReturnValue({

@@ -1,5 +1,5 @@
 import { Router } from "express"
-import { authenticateToken } from "../../middleware/jsonWebTokens"
+import { authenticateToken } from "../../middleware/auth/jsonWebTokens"
 import CONTROLLERS from "../../controllers"
 
 const router = Router()

@@ -1,12 +1,12 @@
 import { NextFunction, Request, Response } from "express"
-import { ROLES, TOKEN_TYPE } from "../constants/database"
-import { Token, User } from "../db/types"
-import { makeAFakeUser } from "../test-utils/mockUsers"
+import { ROLES, TOKEN_TYPE } from "../../constants/database"
+import { Token, User } from "../../db/types"
+import { makeAFakeUser } from "../../test-utils/mockUsers"
 import findUserByValidToken from "./findUserByValidToken"
-import { HTTP_CLIENT_ERROR } from "../constants/http"
+import { HTTP_CLIENT_ERROR } from "../../constants/http"
 
-jest.mock("../utils/logger")
-jest.mock("../db", () => ({
+jest.mock("../../utils/logger")
+jest.mock("../../db", () => ({
   query: {
     tableTokens: {
       findFirst: jest

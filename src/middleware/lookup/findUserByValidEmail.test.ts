@@ -1,12 +1,12 @@
 import { NextFunction, Request, Response } from "express"
-import { ROLES } from "../constants/database"
-import { HTTP_CLIENT_ERROR } from "../constants/http"
-import { User } from "../db/types"
-import { makeAFakeUser } from "../test-utils/mockUsers"
+import { ROLES } from "../../constants/database"
+import { HTTP_CLIENT_ERROR } from "../../constants/http"
+import { User } from "../../db/types"
+import { makeAFakeUser } from "../../test-utils/mockUsers"
 import findUserByValidEmail from "./findUserByValidEmail"
 
-jest.mock("../utils/logger")
-jest.mock("../db", () => ({
+jest.mock("../../utils/logger")
+jest.mock("../../db", () => ({
   query: {
     tableUsers: {
       findFirst: jest

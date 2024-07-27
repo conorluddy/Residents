@@ -1,10 +1,10 @@
 import { NextFunction, Request, RequestHandler, Response } from "express"
-import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from "../constants/http"
-import { logger } from "../utils/logger"
+import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from "../../constants/http"
+import { logger } from "../../utils/logger"
 import { eq } from "drizzle-orm"
-import db from "../db"
-import { tableTokens } from "../db/schema"
-import { TokenWithUser } from "../db/types"
+import db from "../../db"
+import { tableTokens } from "../../db/schema"
+import { TokenWithUser } from "../../db/types"
 
 /**
  * Middleware for discarding a token after it has been used.

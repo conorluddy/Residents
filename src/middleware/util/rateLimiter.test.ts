@@ -1,7 +1,7 @@
 import request from "supertest"
 import express from "express"
 import rateLimiter from "./rateLimiter"
-import { HTTP_SUCCESS } from "../constants/http"
+import { HTTP_SUCCESS } from "../../constants/http"
 
 const app = express()
 app.use(rateLimiter)

@@ -1,11 +1,11 @@
-import { Request, Response, NextFunction } from "express"
+import { Request, Response } from "express"
+import { TOKEN_TYPE } from "../../constants/database"
+import { HTTP_CLIENT_ERROR } from "../../constants/http"
+import db from "../../db"
+import { TokenWithUser } from "../../db/types"
+import { makeAFakeUser } from "../../test-utils/mockUsers"
+import { logger } from "../../utils/logger"
 import discardToken from "./discardToken"
-import { makeAFakeUser } from "../test-utils/mockUsers"
-import { logger } from "../utils/logger"
-import db from "../db"
-import { TokenWithUser } from "../db/types"
-import { TOKEN_TYPE } from "../constants/database"
-import { HTTP_CLIENT_ERROR } from "../constants/http"
 
 let tokenWithUser: TokenWithUser = {
   id: "XXX",
@@ -17,7 +17,7 @@ let tokenWithUser: TokenWithUser = {
   expiresAt: new Date(Date.now() + 1 * 60 * 60 * 1000), // Add 1 hour
 }
 
-jest.mock("../db", () => ({
+jest.mock("../../db", () => ({
   update: jest.fn().mockReturnValue({
     set: jest.fn().mockReturnValue({
       where: jest.fn().mockReturnValue({
@@ -27,7 +27,7 @@ jest.mock("../db", () => ({
   }),
 }))
 
-jest.mock("../utils/logger", () => ({
+jest.mock("../../utils/logger", () => ({
   logger: {
     info: jest.fn(),
     error: jest.fn(),

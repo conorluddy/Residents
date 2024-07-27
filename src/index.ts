@@ -1,12 +1,12 @@
 import express from "express"
 import usersRouter from "./routes/users/index"
 import authRouter from "./routes/auth"
-import { attachDb } from "./middleware/database"
+import { attachDb } from "./middleware/util/database"
 import { logger } from "./utils/logger"
 import helmet from "helmet"
 import dotenv from "dotenv"
 import swaggerSetup from "./swagger"
-import rateLimiter from "./middleware/rateLimiter"
+import rateLimiter from "./middleware/util/rateLimiter"
 import { HTTP_SUCCESS } from "./constants/http"
 dotenv.config()
 

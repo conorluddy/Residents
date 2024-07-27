@@ -1,5 +1,4 @@
 import { Router } from "express"
-import RBAC from "../../middleware/roleBasedAccessControl"
 import CONTROLLERS from "../../controllers"
 import MW from "../../middleware"
 

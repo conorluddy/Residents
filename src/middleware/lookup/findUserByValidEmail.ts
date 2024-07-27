@@ -1,9 +1,9 @@
 import { NextFunction, Request, RequestHandler, Response } from "express"
-import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from "../constants/http"
-import { logger } from "../utils/logger"
+import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from "../../constants/http"
+import { logger } from "../../utils/logger"
 import { eq } from "drizzle-orm"
-import db from "../db"
-import { tableUsers } from "../db/schema"
+import db from "../../db"
+import { tableUsers } from "../../db/schema"
 
 /**
  * Middleware for finding a user by their email address.
