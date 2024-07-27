@@ -20,7 +20,7 @@ describe("Controller: Magic Login", () => {
     }
   })
 
-  it("should allow magicLogin when implemented", async () => {
+  it("NOT IMPLEMENTED YET: TODO", async () => {
     await magicLogin(mockRequest as Request, mockResponse as Response)
     expect(mockResponse.json).toHaveBeenCalledWith({ message: "Not implemented yet" })
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SERVER_ERROR.NOT_IMPLEMENTED)
