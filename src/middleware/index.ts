@@ -10,6 +10,8 @@ import VALIDATE from "./validation"
 const MW = {
   RBAC,
   VALIDATE,
+
+  // Move these into groups
   attachDb,
   authenticateToken,
   errorHandler,
