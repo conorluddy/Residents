@@ -9,6 +9,7 @@ import dotenv from "dotenv"
 import swaggerSetup from "./swagger"
 import rateLimiter from "./middleware/util/rateLimiter"
 import { HTTP_SUCCESS } from "./constants/http"
+import noforgery from "./middleware/auth/noforgery"
 dotenv.config()
 
 const port = process.env.LOCAL_API_PORT
@@ -20,6 +21,7 @@ app.use(helmet())
 app.use(rateLimiter)
 app.use(express.json())
 app.use(cookieParser())
+app.use(noforgery)
 
 // Routers
 app.use("/users", usersRouter)

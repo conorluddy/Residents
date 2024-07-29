@@ -2,6 +2,7 @@ import dotenv from "dotenv"
 import request from "supertest"
 import { HTTP_CLIENT_ERROR, HTTP_REDIRECTION, HTTP_SUCCESS } from "./constants/http"
 import { app, server } from "./index"
+import jwt from "jsonwebtoken"
 import { logger } from "./utils/logger"
 dotenv.config()
 
@@ -44,7 +45,15 @@ describe("Test the root path", () => {
 
 describe("Test the /auth/login path", () => {
   test("It should throw a bad request because of the email format.", async () => {
-    const response = await request(app).post("/auth").send({ email: "email", password: "lemme-in" })
+    // Generate CSRF token
+    const csrfToken = jwt.sign({}, process.env.JWT_TOKEN_SECRET ?? "", { expiresIn: "1h" })
+
+    const response = await request(app)
+      .post("/auth")
+      .set("Cookie", `XSRF-TOKEN=${csrfToken}`)
+      .set("x-csrf-token", csrfToken)
+      .send({ email: "email", password: "lemme-in" })
+
     expect(response.statusCode).toBe(HTTP_CLIENT_ERROR.BAD_REQUEST)
   })
 })
