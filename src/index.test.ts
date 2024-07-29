@@ -45,13 +45,13 @@ describe("Test the root path", () => {
 
 describe("Test the /auth/login path", () => {
   test("It should throw a bad request because of the email format.", async () => {
-    // Generate CSRF token
-    const csrfToken = jwt.sign({}, process.env.JWT_TOKEN_SECRET ?? "", { expiresIn: "1h" })
+    // Generate XSRF token
+    const xsrfToken = jwt.sign({}, process.env.JWT_TOKEN_SECRET ?? "", { expiresIn: "1h" })
 
     const response = await request(app)
       .post("/auth")
-      .set("Cookie", `XSRF-TOKEN=${csrfToken}`)
-      .set("x-csrf-token", csrfToken)
+      .set("Cookie", `XSRF-TOKEN=${xsrfToken}`)
+      .set("x-xsrf-token", xsrfToken)
       .send({ email: "email", password: "lemme-in" })
 
     expect(response.statusCode).toBe(HTTP_CLIENT_ERROR.BAD_REQUEST)
