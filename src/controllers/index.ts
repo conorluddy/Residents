@@ -13,6 +13,7 @@ import { resetPasswordWithToken } from "./auth/resetPasswordWithToken"
 import { updateUser } from "./users/updateUser"
 import { updateUserMeta } from "./users/updateUserMeta"
 import { validateAccount } from "./auth/validateAccount"
+import { refreshToken } from "./auth/refreshToken"
 
 const CONTROLLERS = {
   AUTH: {
@@ -21,6 +22,7 @@ const CONTROLLERS = {
     logout,
     magicLogin,
     magicLoginWithToken,
+    refreshToken,
     resetPasswordWithToken,
     resetPassword,
     validateAccount,

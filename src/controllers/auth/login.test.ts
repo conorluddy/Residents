@@ -3,6 +3,7 @@ import { HTTP_CLIENT_ERROR, HTTP_SUCCESS } from "../../constants/http"
 import { User } from "../../db/types"
 import { makeAFakeUserWithHashedPassword } from "../../test-utils/mockUsers"
 import { login } from "./login"
+import { TOKEN_TYPE } from "../../constants/database"
 
 jest.mock("../../db", () => ({
   select: jest.fn().mockReturnValue({
@@ -11,6 +12,20 @@ jest.mock("../../db", () => ({
         const fakeUser = await makeAFakeUserWithHashedPassword({ password: "testpassword" })
         return [fakeUser]
       }),
+    }),
+  }),
+  insert: jest.fn().mockReturnValue({
+    values: jest.fn().mockReturnValue({
+      returning: jest.fn().mockImplementationOnce(async () => [
+        {
+          userId: "123",
+          id: "token123",
+          type: TOKEN_TYPE.REFRESH,
+          used: false,
+          createdAt: new Date(),
+          expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
+        },
+      ]),
     }),
   }),
 }))
@@ -37,6 +52,7 @@ describe("Controller: Login", () => {
     mockResponse = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn(),
+      cookie: jest.fn(),
     }
   })
 
@@ -44,6 +60,12 @@ describe("Controller: Login", () => {
     await login(mockRequest as Request, mockResponse as Response)
     expect(mockResponse.json).toHaveBeenCalledWith({ accessToken: "fakeToken" })
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.OK)
+    expect(mockResponse.cookie).toHaveBeenCalledWith("refreshToken", "token123", {
+      httpOnly: true,
+      maxAge: 604800000,
+      sameSite: "strict",
+      secure: false,
+    })
   })
 
   it("should reject login with incorrect username", async () => {

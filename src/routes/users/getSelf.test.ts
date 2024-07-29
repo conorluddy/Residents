@@ -11,14 +11,14 @@ import { generateJwt } from "../../utils/generateJwt"
 let fakeUser: User = makeAFakeUser({ role: ROLES.DEFAULT })
 
 // Mock the middlewares
-jest.mock("../../middleware/jsonWebTokens", () => ({
+jest.mock("../../middleware/auth/jsonWebTokens", () => ({
   authenticateToken: jest.fn((req, res, next) => {
     req.user = { id: "123", role: "admin" }
     next()
   }),
 }))
 
-jest.mock("../../middleware/roleBasedAccessControl", () => ({
+jest.mock("../../middleware/auth/roleBasedAccessControl", () => ({
   canGetOwnUser: jest.fn((req, res, next) => next()),
 }))
 

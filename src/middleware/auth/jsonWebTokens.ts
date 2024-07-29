@@ -1,8 +1,8 @@
 import jwt from "jsonwebtoken"
 import dotenv from "dotenv"
 import { Request, Response, NextFunction } from "express"
-import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from "../constants/http"
-import { logger } from "../utils/logger"
+import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from "../../constants/http"
+import { logger } from "../../utils/logger"
 
 dotenv.config()
 

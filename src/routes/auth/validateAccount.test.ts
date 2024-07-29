@@ -8,7 +8,7 @@ jest.mock("../../db", () => ({
   select: jest.fn().mockResolvedValue([]),
 }))
 
-jest.mock("../../middleware/jsonWebTokens", () => ({
+jest.mock("../../middleware/auth/jsonWebTokens", () => ({
   authenticateToken: jest.fn((req, _res, next) => {
     req.user = { id: "123", role: "admin" }
     next()

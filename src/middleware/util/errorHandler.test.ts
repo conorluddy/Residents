@@ -1,9 +1,9 @@
 import { Request, Response } from "express"
-import { HTTP_SERVER_ERROR } from "../constants/http"
-import { logger } from "../utils/logger"
+import { HTTP_SERVER_ERROR } from "../../constants/http"
+import { logger } from "../../utils/logger"
 import errorHandler from "./errorHandler"
 
-jest.mock("../utils/logger", () => ({
+jest.mock("../../utils/logger", () => ({
   logger: {
     info: jest.fn(),
     error: jest.fn(),

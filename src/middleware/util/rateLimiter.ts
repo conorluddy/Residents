@@ -10,4 +10,16 @@ const rateLimiter = rateLimit({
   // store: ... , // Redis, Memcached, etc.
 })
 
+// https://www.npmjs.com/package/express-rate-limit
+// TODO - Configure rate limiter in .env
+const rateLimiterSensitive = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  limit: 5, // 5 tries per hour
+  standardHeaders: "draft-7", // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
+  // store: ... , // Redis, Memcached, etc.
+})
+
 export default rateLimiter
+
+export { rateLimiter, rateLimiterSensitive }

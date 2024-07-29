@@ -1,12 +1,12 @@
 import { NextFunction, Request, Response } from "express"
-import { ROLES } from "../constants/database"
-import { User } from "../db/types"
-import { generateJwt, JWTUserPayload } from "../utils/generateJwt"
+import { ROLES } from "../../constants/database"
+import { User } from "../../db/types"
+import { generateJwt, JWTUserPayload } from "../../utils/generateJwt"
 import { authenticateToken } from "./jsonWebTokens"
-import { makeAFakeUser } from "../test-utils/mockUsers"
-import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from "../constants/http"
+import { makeAFakeUser } from "../../test-utils/mockUsers"
+import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from "../../constants/http"
 
-jest.mock("../utils/logger")
+jest.mock("../../utils/logger")
 
 describe("Middleware:JWT", () => {
   let mockRequest: Partial<Request>

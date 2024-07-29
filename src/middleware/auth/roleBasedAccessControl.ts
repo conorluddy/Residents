@@ -1,12 +1,12 @@
 import { Request, Response, NextFunction } from "express"
-import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from "../constants/http"
-import { JWTUserPayload } from "../utils/generateJwt"
-import { ACL, PERMISSIONS } from "../constants/accessControlList"
-import { tableUsers, User } from "../db/schema"
+import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from "../../constants/http"
+import { JWTUserPayload } from "../../utils/generateJwt"
+import { ACL, PERMISSIONS } from "../../constants/accessControlList"
+import { tableUsers, User } from "../../db/schema"
 import { eq } from "drizzle-orm"
-import { logger } from "../utils/logger"
-import { ROLES, ROLES_ARRAY } from "../constants/database"
-import db from "../db"
+import { logger } from "../../utils/logger"
+import { ROLES, ROLES_ARRAY } from "../../constants/database"
+import db from "../../db"
 
 /**
  * Check if the user has the required permission to access the resource

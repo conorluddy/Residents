@@ -1,9 +1,9 @@
 import { NextFunction, Request, RequestHandler, Response } from "express"
-import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from "../constants/http"
-import { logger } from "../utils/logger"
+import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from "../../constants/http"
+import { logger } from "../../utils/logger"
 import { eq } from "drizzle-orm"
-import db from "../db"
-import { tableTokens } from "../db/schema"
+import db from "../../db"
+import { tableTokens } from "../../db/schema"
 
 /**
  * Middleware for finding a token and the user it belongs to.

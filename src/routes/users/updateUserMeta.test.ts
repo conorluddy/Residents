@@ -7,14 +7,14 @@ import { makeAFakeUser } from "../../test-utils/mockUsers"
 
 let fakeUser = makeAFakeUser({ password: "$TR0ngP@$$W0rDz123!", role: ROLES.DEFAULT })
 
-jest.mock("../../middleware/jsonWebTokens", () => ({
+jest.mock("../../middleware/auth/jsonWebTokens", () => ({
   authenticateToken: jest.fn((req, _res, next) => {
     req.user = { id: "XX", role: ROLES.MODERATOR }
     next()
   }),
 }))
 
-jest.mock("../../middleware/roleBasedAccessControl", () => ({
+jest.mock("../../middleware/auth/roleBasedAccessControl", () => ({
   checkCanUpdateUsers: jest.fn((_req, _res, next) => next()),
   getTargetUserAndCheckSuperiority: jest.fn((req, _res, next) => {
     req.targetUserId = fakeUser.id
