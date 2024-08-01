@@ -3,6 +3,7 @@ import express from "express"
 import refreshTokenRoute from "./refreshToken"
 import CONTROLLERS from "../../controllers"
 import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constants/http"
+import { refreshToken } from "../../controllers/auth/refreshToken"
 
 CONTROLLERS.AUTH.refreshToken = jest.fn(async (req, res) => {
   return res.status(HTTP_SUCCESS.OK).json({ message: "Logged in successfully" })
@@ -17,8 +18,8 @@ app.use(express.json())
 app.use(refreshTokenRoute)
 
 describe("POST /refresh", () => {
-  it("should call the refreshToken controller and get rejected by default", async () => {
-    const response = await request(app).post("/refresh")
+  it("should call the refreshToken controller", async () => {
+    const response = await request(app).post("/refresh").send({ refreshToken: "REFRESHME" })
     expect(response.status).toBe(HTTP_CLIENT_ERROR.BAD_REQUEST)
   })
 })
