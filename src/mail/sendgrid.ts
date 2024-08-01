@@ -5,8 +5,9 @@ dotenv.config()
 
 // using Twilio SendGrid's v3 Node.js Library
 // https://github.com/sendgrid/sendgrid-nodejs
-
-sgMail.setApiKey(process.env.SENDGRID_API_KEY ?? "API key needed in your .env file")
+if (process.env.NODE_ENV === "production") {
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY ?? "API key needed in your .env file")
+}
 
 interface MailProps {
   to: string
