@@ -19,24 +19,28 @@ dotenv.config()
 export const refreshToken = async (req: Request, res: Response) => {
   try {
     const secret = process.env.JWT_TOKEN_SECRET
-    const refreshToken = req.cookies["refreshToken"]
-    const jwToken = req.headers["authorization"]?.split(" ")[1]
-
-    if (refreshToken == null) {
-      logger.warn("Refresh token token is not provided in the request headers")
-      return res.status(HTTP_CLIENT_ERROR.UNAUTHORIZED).json({ message: "Refresh token is required" })
-    }
-
-    if (jwToken == null) {
-      logger.warn("JWT token is not provided in the request headers")
-      return res.status(HTTP_CLIENT_ERROR.UNAUTHORIZED).json({ message: "Token is required" })
-    }
 
     if (!secret || secret === "") {
+      // Probably do this on startup instead of every request
       logger.warn("JWT token secret is not defined in your environment variables")
       return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Internal server error" })
     }
 
+    const authHeader = req.headers["authorization"]
+    const jwToken = authHeader && authHeader.split(" ")[1] // Bearer[ ]TOKEN...
+    const refreshToken = req.body?.refreshToken
+
+    if (!refreshToken) {
+      logger.warn("Refresh token token was not provided in the request body")
+      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "Refresh token is required" })
+    }
+
+    if (jwToken == null) {
+      logger.warn("JWT token was not provided in the request headers")
+      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "JWT token is required" })
+    }
+
+    // JWT is likely expired, so we don't need to verify it, just get the user ID from it
     const jwtUserData = jwt.decode(jwToken)
 
     const tokenWithUser = await db.query.tableTokens.findFirst({
@@ -46,17 +50,18 @@ export const refreshToken = async (req: Request, res: Response) => {
 
     if (tokenWithUser && jwtUserData && tokenWithUser?.userId !== (jwtUserData as User).id) {
       logger.error(`Token user mismatch: ${tokenWithUser?.userId}`)
-      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "Token not found." })
+      return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Token not valid." })
     }
 
     if (!tokenWithUser) {
       logger.error(`Refresh token not found: ${refreshToken}`)
-      return res.status(HTTP_CLIENT_ERROR.NOT_FOUND).json({ message: "Token not found." })
+      return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Token not valid." })
     }
 
     if (tokenWithUser.used) {
-      logger.error(`Attempt to use a used refresh token: ${refreshToken}`)
-      return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Token has already been used." })
+      // We delete them after they're used, so this is redundant unless we wanna keep them
+      logger.error(`Attempt to use a used refresh token for ${tokenWithUser.user.email}`)
+      return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Token not valid." })
     }
 
     if (tokenWithUser.expiresAt < new Date()) {
@@ -69,7 +74,7 @@ export const refreshToken = async (req: Request, res: Response) => {
     const newRefreshToken: NewToken = {
       userId: tokenWithUser.userId,
       type: TOKEN_TYPE.REFRESH,
-      expiresAt: new Date(Date.now() + TIMESPAN.WEEK), // TODO: Make configurable
+      expiresAt: new Date(Date.now() + TIMESPAN.WEEK), // Make configurable
     }
 
     // New tokens, who dis?
@@ -98,6 +103,9 @@ export const refreshToken = async (req: Request, res: Response) => {
     return res.status(HTTP_SUCCESS.OK).json({ accessToken })
   } catch (error) {
     logger.error(error)
-    return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Error registering user" })
+
+    console.log("error", error)
+
+    return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Error refreshing access token." })
   }
 }

@@ -98,6 +98,13 @@
 									"    pm.environment.set(\"XSRF-TOKEN\", xsrfToken);",
 									"} else {",
 									"    console.error(\"XSRF token not found in cookies.\");",
+									"}",
+									"",
+									"const refreshToken = pm.cookies.get(\"refreshToken\");",
+									"if (refreshToken) {",
+									"    pm.environment.set(\"REFRESH-TOKEN\", refreshToken)",
+									"} else {",
+									"    console.error(\"Refresh token not found in cookies.\");",
 									"}"
 								],
 								"type": "text/javascript",
@@ -368,6 +375,57 @@
 								{
 									"key": "id",
 									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh Token [auth]",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "xsrf-token",
+								"value": "{{XSRF-TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"refreshToken\": \"{{REFRESH-TOKEN}}\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/auth/refresh",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"auth",
+								"refresh"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
 								}
 							]
 						}
