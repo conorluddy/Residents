@@ -3,19 +3,17 @@ import dotenv from "dotenv"
 import { Request, Response, NextFunction } from "express"
 import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from "../../constants/http"
 import { logger } from "../../utils/logger"
+import generateXsrfToken from "../util/xsrfToken"
 dotenv.config()
 
-const ROUTE_WHITELIST = ["/auth"]
+/**
+ * Don't check these routes for XSRF token
+ */
+const ROUTE_WHITELIST = ["/auth", "/users/register"]
+/**
+ * Check these types of requests for XSRF token
+ */
 const VERBS_BLACKLIST = ["POST", "PUT", "PATCH", "DELETE"]
-const JWT_XSRF_TOKEN_EXPIRY = "1d" // Make me configurable - should probably match refresh token expiry
-
-const generateXsrfToken = () => {
-  const secret = process.env.JWT_TOKEN_SECRET
-  if (secret == null) throw new Error("JWT secret not found")
-  return jwt.sign({ XSRF_TOKEN: "🔒" }, secret, {
-    expiresIn: JWT_XSRF_TOKEN_EXPIRY,
-  })
-}
 
 const noforgery = (req: Request, res: Response, next: NextFunction) => {
   if (!VERBS_BLACKLIST.includes(req.method) || ROUTE_WHITELIST.includes(req.path)) {
@@ -26,32 +24,33 @@ const noforgery = (req: Request, res: Response, next: NextFunction) => {
     const secret = process.env.JWT_TOKEN_SECRET
     if (!secret) throw new Error("JWT secret not found")
 
-    let xsrfToken = req.cookies["XSRF-TOKEN"]
-
+    // Look for token in cookies, if not found, generate a new one
+    let xsrfToken = req.cookies["xsrfToken"]
     if (!xsrfToken) {
       xsrfToken = generateXsrfToken()
-      res.cookie("XSRF-TOKEN", xsrfToken, { httpOnly: true, secure: process.env.NODE_ENV === "production" })
+      res.cookie("xsrfToken", xsrfToken, { httpOnly: true, secure: process.env.NODE_ENV === "production" })
     }
 
-    const requestXsrfToken = req.headers["XSRF-TOKEN"]
+    // XSRF-Token should actually be checked in the headers.
+    // Client should take it from cookie and add it to headers.
+    const requestHeadersXsrfToken = req.headers["xsrf-token"]
 
-    if (!requestXsrfToken) {
+    if (!requestHeadersXsrfToken) {
       throw new Error("XSRF token required.")
     } else {
-      jwt.verify(String(requestXsrfToken), secret, (err, user) => {
+      jwt.verify(String(requestHeadersXsrfToken), secret, (err, user) => {
         if (err) {
-          logger.warn("JWT token is invalid or expired")
-          return res.status(HTTP_CLIENT_ERROR.UNAUTHORIZED).json({ message: "XSRF token is invalid or expired." })
+          logger.warn("XSRF token is invalid.")
+          return res.status(HTTP_CLIENT_ERROR.UNAUTHORIZED).json({ message: "XSRF token is invalid." })
         }
         req.user = user
         next()
       })
     }
   } catch (err) {
+    console.error(err)
     return res.status(403).json({ message: "Invalid XSRF token." })
   }
-
-  next()
 }
 
 export default noforgery
