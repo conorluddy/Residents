@@ -48,9 +48,6 @@ export const login = async (req: Request, res: Response) => {
       user.password.length > 0 &&
       (await validateHash(password, user.password))
     ) {
-      const accessToken = generateJwt(user)
-      const xsrfToken = generateXsrfToken()
-
       const newRefreshToken: NewToken = {
         userId: user.id,
         type: TOKEN_TYPE.REFRESH,
@@ -58,8 +55,10 @@ export const login = async (req: Request, res: Response) => {
       }
 
       const [refreshToken] = await db.insert(tableTokens).values(newRefreshToken).returning()
-      // Set the refresh token ID in an HTTP-only secure cookie
+      const accessToken = generateJwt(user)
+      const xsrfToken = generateXsrfToken()
 
+      // Set the tokens in a HTTP-only secure cookies
       res.cookie("refreshToken", refreshToken.id, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",

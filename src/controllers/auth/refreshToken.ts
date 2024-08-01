@@ -6,6 +6,11 @@ import dotenv from "dotenv"
 import { tableTokens, User } from "../../db/schema"
 import db from "../../db"
 import { eq } from "drizzle-orm"
+import { NewToken } from "../../db/types"
+import { TOKEN_TYPE } from "../../constants/database"
+import { TIMESPAN } from "../../constants/time"
+import { generateJwt } from "../../utils/generateJwt"
+import generateXsrfToken from "../../middleware/util/xsrfToken"
 dotenv.config()
 
 /**
@@ -39,28 +44,57 @@ export const refreshToken = async (req: Request, res: Response) => {
       with: { user: true },
     })
 
-    console.log("tokenWithUser", tokenWithUser)
-    console.log("tokenWithUser", tokenWithUser?.userId === jwtUserData?.id)
+    if (tokenWithUser && jwtUserData && tokenWithUser?.userId !== (jwtUserData as User).id) {
+      logger.error(`Token user mismatch: ${tokenWithUser?.userId}`)
+      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "Token not found." })
+    }
 
     if (!tokenWithUser) {
-      logger.error(`Token not found: ${refreshToken}`)
-      return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Token expired" })
+      logger.error(`Refresh token not found: ${refreshToken}`)
+      return res.status(HTTP_CLIENT_ERROR.NOT_FOUND).json({ message: "Token not found." })
     }
 
     if (tokenWithUser.used) {
-      logger.error(`Attempt to use a used token: ${refreshToken}`)
-      return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Token has already been used" })
+      logger.error(`Attempt to use a used refresh token: ${refreshToken}`)
+      return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Token has already been used." })
     }
 
     if (tokenWithUser.expiresAt < new Date()) {
-      logger.error(`Attempt to use an expired token: ${refreshToken}`)
-      return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Token has expired" })
+      logger.error(`Attempt to use an expired refresh token: ${refreshToken}`)
+      return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Token has expired." })
     }
 
     // Create new JWT and RefreshToken and return them
     // Delete old RefreshToken
+    const newRefreshToken: NewToken = {
+      userId: tokenWithUser.userId,
+      type: TOKEN_TYPE.REFRESH,
+      expiresAt: new Date(Date.now() + TIMESPAN.WEEK), // TODO: Make configurable
+    }
 
-    return res.status(HTTP_SERVER_ERROR.NOT_IMPLEMENTED).json({ message: "Not implemented yet" })
+    // New tokens, who dis?
+    const [freshRefreshToken] = await db.insert(tableTokens).values(newRefreshToken).returning()
+    const accessToken = generateJwt(tokenWithUser.user)
+    const xsrfToken = generateXsrfToken()
+
+    // Set the tokens in a HTTP-only secure cookies
+    res.cookie("refreshToken", refreshToken.id, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: TIMESPAN.WEEK,
+    })
+
+    res.cookie("xsrfToken", xsrfToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: TIMESPAN.WEEK,
+    })
+
+    return res.status(HTTP_SUCCESS.OK).json({ accessToken })
+
+    // return res.status(HTTP_SERVER_ERROR.NOT_IMPLEMENTED).json({ message: "Not implemented yet" })
   } catch (error) {
     logger.error(error)
     return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Error registering user" })
