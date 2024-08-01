@@ -78,7 +78,7 @@ export const refreshToken = async (req: Request, res: Response) => {
     const xsrfToken = generateXsrfToken()
 
     // Set the tokens in a HTTP-only secure cookies
-    res.cookie("refreshToken", refreshToken.id, {
+    res.cookie("refreshToken", freshRefreshToken.id, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
@@ -92,9 +92,10 @@ export const refreshToken = async (req: Request, res: Response) => {
       maxAge: TIMESPAN.WEEK,
     })
 
-    return res.status(HTTP_SUCCESS.OK).json({ accessToken })
+    // Delete the old token...
+    await db.delete(tableTokens).where(eq(tableTokens.id, tokenWithUser.id))
 
-    // return res.status(HTTP_SERVER_ERROR.NOT_IMPLEMENTED).json({ message: "Not implemented yet" })
+    return res.status(HTTP_SUCCESS.OK).json({ accessToken })
   } catch (error) {
     logger.error(error)
     return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Error registering user" })
