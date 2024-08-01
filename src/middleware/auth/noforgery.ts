@@ -15,7 +15,7 @@ const ROUTE_WHITELIST = ["/auth", "/users/register"]
  */
 const VERBS_BLACKLIST = ["POST", "PUT", "PATCH", "DELETE"]
 
-const noforgery = (req: Request, res: Response, next: NextFunction) => {
+const noForgery = (req: Request, res: Response, next: NextFunction) => {
   if (!VERBS_BLACKLIST.includes(req.method) || ROUTE_WHITELIST.includes(req.path)) {
     return next()
   }
@@ -53,4 +53,4 @@ const noforgery = (req: Request, res: Response, next: NextFunction) => {
   }
 }
 
-export default noforgery
+export default noForgery
