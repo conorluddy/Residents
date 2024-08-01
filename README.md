@@ -165,6 +165,7 @@ For production you'd want to do a `build` and then a `start`, but do so at your 
 | `POST /auth/magic-login`      | ⛔️    | ⛔️    | ⛔️          |
 | `POST /auth/magic-login-token`| ⛔️    | ⛔️    | ⛔️          |
 | `POST /auth/reset-password`   | ✅    | ✅    | ⛔️          |
+| `POST /auth/refresh`          | ✅    | ✅    | ⛔️          |
 | `POST /auth/reset-password-token` | ✅ | ✅    | ⛔️          |
 | `POST /auth/validate-account` | ⛔️    | ⛔️    | ⛔️          |
 | `GET /auth/google`            | ✅    | ✅    | ⛔️          |
