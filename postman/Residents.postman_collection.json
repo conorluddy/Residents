@@ -92,7 +92,20 @@
 									"} else {",
 									"    console.error(\"JWT not found in response.\");",
 									"}",
-									""
+									"",
+									"const xsrfToken = pm.cookies.get(\"xsrfToken\");",
+									"if (xsrfToken) {",
+									"    pm.environment.set(\"XSRF-TOKEN\", xsrfToken);",
+									"} else {",
+									"    console.error(\"XSRF token not found in cookies.\");",
+									"}",
+									"",
+									"const refreshToken = pm.cookies.get(\"refreshToken\");",
+									"if (refreshToken) {",
+									"    pm.environment.set(\"REFRESH-TOKEN\", refreshToken)",
+									"} else {",
+									"    console.error(\"Refresh token not found in cookies.\");",
+									"}"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -179,7 +192,13 @@
 							]
 						},
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "xsrf-token",
+								"value": "{{XSRF-TOKEN}}",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "{\n    \"email\": \"conorluddy@gmail.com\"\n}",
@@ -240,7 +259,13 @@
 							"type": "noauth"
 						},
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "xsrf-token",
+								"value": "{{XSRF-TOKEN}}",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "{ \"email\": \"Emile_Metz@hotmail.com\"}",
@@ -278,7 +303,13 @@
 							"type": "noauth"
 						},
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "xsrf-token",
+								"value": "{{XSRF-TOKEN}}",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "{ \"password\": \"mt!@vbSFSDFn3__dbbxhyxnzy0zltfxn9\" }",
@@ -317,7 +348,13 @@
 							]
 						},
 						"method": "PATCH",
-						"header": [],
+						"header": [
+							{
+								"key": "xsrf-token",
+								"value": "{{XSRF-TOKEN}}",
+								"type": "text"
+							}
+						],
 						"url": {
 							"raw": "localhost:3000/auth/validate/:token/:id",
 							"host": [
@@ -338,6 +375,57 @@
 								{
 									"key": "id",
 									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh Token [auth]",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "xsrf-token",
+								"value": "{{XSRF-TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"refreshToken\": \"{{REFRESH-TOKEN}}\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/auth/refresh",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"auth",
+								"refresh"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
 								}
 							]
 						}
@@ -391,7 +479,13 @@
 							]
 						},
 						"method": "PATCH",
-						"header": [],
+						"header": [
+							{
+								"key": "xsrf-token",
+								"value": "{{XSRF-TOKEN}}",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "{\n    \"firstName\": \"bansana\",\n    \"lastName\": \"rama\",\n    \"email\": \"email@gmaei.cam\",\n    \"username\": \"XXXX\",\n    \"password\": \"asdfasdf\"\n}",
@@ -429,7 +523,13 @@
 							]
 						},
 						"method": "PATCH",
-						"header": [],
+						"header": [
+							{
+								"key": "xsrf-token",
+								"value": "{{XSRF-TOKEN}}",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "{\n    \"metaItem\": \"bansana\"\n}",
@@ -554,7 +654,13 @@
 							]
 						},
 						"method": "DELETE",
-						"header": [],
+						"header": [
+							{
+								"key": "xsrf-token",
+								"value": "{{XSRF-TOKEN}}",
+								"type": "text"
+							}
+						],
 						"url": {
 							"raw": "localhost:3000/users/yc92thpsc31l68wxa5d5c30l",
 							"host": [

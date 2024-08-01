@@ -53,7 +53,7 @@ describe("Test the /auth/login path", () => {
 
     const response = await request(app)
       .post("/auth")
-      .set("Cookie", `XSRF-TOKEN=${csrfToken}`)
+      .set("Cookie", `xsrfToken=${csrfToken}`)
       .set("x-csrf-token", csrfToken)
       .send({ email: "email", password: "lemme-in" })
 

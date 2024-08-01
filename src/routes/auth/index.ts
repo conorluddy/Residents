@@ -5,6 +5,7 @@ import magicLogin from "./magicLogin"
 import magicLoginWithToken from "./magicLoginWithToken"
 import resetPassword from "./resetPassword"
 import resetPasswordWithToken from "./resetPasswordWithToken"
+import refreshToken from "./refreshToken"
 import googleLogin from "./googleLogin"
 import logout from "./logout"
 import validateAccount from "./validateAccount"
@@ -23,6 +24,7 @@ router.use(magicLoginWithToken)
 router.use(resetPassword)
 router.use(resetPasswordWithToken)
 router.use(validateAccount)
+router.use(refreshToken)
 
 // Passport Strategies
 router.use(googleLogin)

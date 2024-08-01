@@ -10,6 +10,7 @@ import { logger } from "../../utils/logger"
 import { NewToken } from "../../db/types"
 import { TOKEN_TYPE } from "../../constants/database"
 import { TIMESPAN } from "../../constants/time"
+import generateXsrfToken from "../../middleware/util/xsrfToken"
 
 /**
  * login
@@ -47,22 +48,29 @@ export const login = async (req: Request, res: Response) => {
       user.password.length > 0 &&
       (await validateHash(password, user.password))
     ) {
-      const accessToken = generateJwt(user)
-
       const newRefreshToken: NewToken = {
         userId: user.id,
         type: TOKEN_TYPE.REFRESH,
         expiresAt: new Date(Date.now() + TIMESPAN.WEEK), // TODO: Make configurable
       }
 
-      const [refreshToken] = await db.insert(tableTokens).values(newRefreshToken).returning() // see if we can get this to not return an array
-      // Set the refresh token ID in an HTTP-only secure cookie
+      const [refreshToken] = await db.insert(tableTokens).values(newRefreshToken).returning()
+      const accessToken = generateJwt(user)
+      const xsrfToken = generateXsrfToken()
 
+      // Set the tokens in a HTTP-only secure cookies
       res.cookie("refreshToken", refreshToken.id, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "strict",
-        maxAge: TIMESPAN.WEEK, // 1 week
+        maxAge: TIMESPAN.WEEK,
+      })
+
+      res.cookie("xsrfToken", xsrfToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: TIMESPAN.WEEK,
       })
 
       return res.status(HTTP_SUCCESS.OK).json({ accessToken })

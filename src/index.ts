@@ -21,7 +21,7 @@ app.use(helmet())
 app.use(rateLimiter)
 app.use(express.json())
 app.use(cookieParser())
-app.use(noforgery)
+app.use(noforgery) // Maybe move this to specific endpoints
 
 // Routers
 app.use("/users", usersRouter)
