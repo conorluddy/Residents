@@ -1,9 +1,14 @@
 import { Request, Response } from "express"
-import { HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constants/http"
+import { HTTP_SUCCESS } from "../../constants/http"
 import { User } from "../../db/types"
 import { logout } from "./logout"
 
 jest.mock("../../utils/logger")
+jest.mock("../../db", () => ({
+  delete: jest.fn().mockReturnValue({
+    where: jest.fn().mockImplementation(),
+  }),
+}))
 
 describe("Controller: Logout", () => {
   let mockRequest: Partial<Request> & { user: Partial<User> }
