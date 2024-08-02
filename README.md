@@ -161,7 +161,7 @@ For production you'd want to do a `build` and then a `start`, but do so at your 
 | Endpoint                      | Built | Tests | SwaggerDocs |
 |-------------------------------|-------|-------|-------------|
 | `POST /auth/login`            | ✅    | ✅    | ⛔️          |
-| `POST /auth/logout`           | ⛔️    | ⛔️    | ⛔️          |
+| `POST /auth/logout`           | ✅    | ⛔️    | ⛔️          |
 | `POST /auth/magic-login`      | ⛔️    | ⛔️    | ⛔️          |
 | `POST /auth/magic-login-token`| ⛔️    | ⛔️    | ⛔️          |
 | `POST /auth/reset-password`   | ✅    | ✅    | ⛔️          |
