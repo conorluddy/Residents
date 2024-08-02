@@ -21,6 +21,22 @@ export const logout = async (req: Request, res: Response) => {
       return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "User ID not found" })
     }
 
+    // Clear the refreshToken and xsrfToken cookies
+
+    res.cookie("refreshToken", "", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      expires: new Date(),
+    })
+
+    res.cookie("xsrfToken", "", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      expires: new Date(),
+    })
+
     await db.delete(tableTokens).where(
       and(
         //
@@ -29,25 +45,9 @@ export const logout = async (req: Request, res: Response) => {
       )
     )
 
-    // Clear the refreshToken and xsrfToken cookies
-    res.cookie("refreshToken", "", {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      expires: new Date(0),
-    })
-
-    res.cookie("xsrfToken", "", {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      expires: new Date(0),
-    })
-
     return res.status(HTTP_SUCCESS.OK).json({ message: "Logged out - Come back soon!" })
   } catch (error) {
     logger.error("Error logging out", { error })
-    console.log("error", error)
     return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Error logging out" })
   }
 }

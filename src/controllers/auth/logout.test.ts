@@ -23,7 +23,7 @@ describe("Controller: Logout", () => {
     }
   })
 
-  it("is not implemented yet", async () => {
+  it("logges out a user by deleting any of their refresh tokens", async () => {
     await logout(mockRequest as Request, mockResponse as Response)
     expect(mockResponse.json).toHaveBeenCalledWith({ message: "Logged out - Come back soon!" })
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.OK)
