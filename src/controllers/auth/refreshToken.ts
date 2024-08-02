@@ -22,7 +22,7 @@ export const refreshToken = async (req: Request, res: Response) => {
 
     if (!secret || secret === "") {
       // Probably do this on startup instead of every request
-      logger.warn("JWT token secret is not defined in your environment variables")
+      logger.error("JWT token secret is not defined in your environment variables")
       return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Internal server error" })
     }
 
@@ -103,9 +103,6 @@ export const refreshToken = async (req: Request, res: Response) => {
     return res.status(HTTP_SUCCESS.OK).json({ accessToken })
   } catch (error) {
     logger.error(error)
-
-    console.log("error", error)
-
     return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Error refreshing access token." })
   }
 }
