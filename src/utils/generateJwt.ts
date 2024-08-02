@@ -17,6 +17,7 @@ export const generateJwt = (userPayload: JWTUserPayload, expiryOverride?: string
       email: userPayload.email,
       role: userPayload.role,
       status: userPayload.status,
+      deletedAt: userPayload.deletedAt,
     },
     secret,
     {

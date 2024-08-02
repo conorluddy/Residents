@@ -2,7 +2,7 @@ import { refreshToken } from "./refreshToken"
 import { Request, Response } from "express"
 import { HTTP_SUCCESS } from "../../constants/http"
 import { makeAFakeUser } from "../../test-utils/mockUsers"
-import { ROLES, TOKEN_TYPE } from "../../constants/database"
+import { ROLES } from "../../constants/database"
 import { generateJwt } from "../../utils/generateJwt"
 import { User } from "../../db/types"
 

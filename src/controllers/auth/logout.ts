@@ -1,15 +1,53 @@
 import { Request, Response } from "express"
-import { HTTP_SERVER_ERROR } from "../../constants/http"
+import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constants/http"
+import { tableTokens, User } from "../../db/schema"
+import { logger } from "../../utils/logger"
+import db from "../../db"
+import { and, eq } from "drizzle-orm"
+import { TOKEN_TYPE } from "../../constants/database"
 
 /**
  * logout
  */
-export const logout = async (_req: Request, res: Response) => {
+export const logout = async (req: Request, res: Response) => {
+  // authenticateToken middleware should have added the user to the request
+
   try {
-    // One does not simply log-out with JWTs.
-    // Need to implement refresh tokens and shoft-lived access tokens
-    return res.status(HTTP_SERVER_ERROR.NOT_IMPLEMENTED).json({ message: "Not implemented yet" })
+    // need to type the req better
+    const userId = req?.user ? (req.user as User).id : null
+
+    if (!userId) {
+      logger.error("User ID not found", { userId })
+      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "User ID not found" })
+    }
+
+    await db.delete(tableTokens).where(
+      and(
+        //
+        eq(tableTokens.userId, userId),
+        eq(tableTokens.type, TOKEN_TYPE.REFRESH)
+      )
+    )
+
+    // Clear the refreshToken and xsrfToken cookies
+    res.cookie("refreshToken", "", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      expires: new Date(0),
+    })
+
+    res.cookie("xsrfToken", "", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      expires: new Date(0),
+    })
+
+    return res.status(HTTP_SUCCESS.OK).json({ message: "Logged out - Come back soon!" })
   } catch (error) {
+    logger.error("Error logging out", { error })
+    console.log("error", error)
     return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Error logging out" })
   }
 }
