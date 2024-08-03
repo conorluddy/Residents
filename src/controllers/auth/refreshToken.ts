@@ -49,7 +49,7 @@ export const refreshToken = async (req: Request, res: Response) => {
     })
 
     if (tokenWithUser && jwtUserData && tokenWithUser?.userId !== (jwtUserData as User).id) {
-      logger.error(`Token user mismatch: ${tokenWithUser?.userId}`)
+      logger.error(`Token x user mismatch: ${tokenWithUser?.userId}`)
       return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Token not valid." })
     }
 

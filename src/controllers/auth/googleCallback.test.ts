@@ -1,17 +1,8 @@
 import { Request, Response } from "express"
-import { HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constants/http"
+import { HTTP_SUCCESS } from "../../constants/http"
 import { User } from "../../db/types"
 import { googleCallback } from "./googleCallback"
-import { logger } from "../../utils/logger"
 import { makeAFakeUser } from "../../test-utils/mockUsers"
-
-jest.mock("../../utils/logger")
-jest.mock("../../utils/logger", () => ({
-  logger: {
-    info: jest.fn(),
-    error: jest.fn(),
-  },
-}))
 
 describe("Controller: GoogleCallback", () => {
   let mockRequest: Partial<Request> & { user: Partial<User> }
