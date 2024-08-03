@@ -86,6 +86,9 @@ Docker is included in the repo and it will spin up a container with a Postgres d
 
 There's a Postman collection in the postman directory that I've been trying to keep in sync. You can import it into Postman to get set up quickly for playing with the API. Once you register and log in it should save your JWT in the environment and use it for authorising with all of the other endpoints.
 
+<img width="1512" alt="Screenshot 2024-08-04 at 00 09 58" src="https://github.com/user-attachments/assets/1897bf3f-1d1e-4cd1-94a0-e6078f1c436b">
+
+
 #### CI/CD
 
 There's a Github Action that installs, tests and builds this on Node versions 16, 18, 20 and 22 on each commit. It also runs a code coverage report with CodeCov. It doesn't get deployed anywhere at the moment. 
