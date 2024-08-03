@@ -39,7 +39,7 @@ app.use(updateUserMetaRouter)
 describe("Route: Update User Meta", () => {
   it("successfully updates user meta", async () => {
     const response = await request(app).patch(`/meta/${fakeUser.id}`).send({ metaItem: "Meta Update" })
-    expect(response.body.message).toBe(`User ${fakeUser.id} updated successfully`)
+    expect(response.body.message).toBe(`User meta for ${fakeUser.id} updated successfully`)
     expect(response.status).toBe(HTTP_SUCCESS.OK)
   })
 })

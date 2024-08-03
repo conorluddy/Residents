@@ -41,6 +41,12 @@ export const updateUserMeta = async (req: Request, res: Response) => {
     // Sanitise and validate the data (ideally in a middleware before we ever get to this controller)
     if (metaItem) updateFields.metaItem = metaItem
 
+    if (Object.values(updateFields).length === 0) {
+      return res
+        .status(HTTP_CLIENT_ERROR.BAD_REQUEST)
+        .json({ message: "No valid fields were passed for updating the user meta." })
+    }
+
     const [result] = await db
       .update(tableUserMeta)
       .set(updateFields)
@@ -52,9 +58,8 @@ export const updateUserMeta = async (req: Request, res: Response) => {
       return res.status(HTTP_CLIENT_ERROR.NOT_FOUND).json({ message: "User meta data not found." })
     }
 
-    return res.status(HTTP_SUCCESS.OK).json({ message: `User ${result.updatedId} updated successfully` })
+    return res.status(HTTP_SUCCESS.OK).json({ message: `User meta for ${result.updatedId} updated successfully` })
   } catch (error) {
-    console.log("error", error)
     logger.error(error)
     return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Error updating user metadata" })
   }
