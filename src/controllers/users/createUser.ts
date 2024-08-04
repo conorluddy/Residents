@@ -9,6 +9,8 @@ import { PASSWORD_STRENGTH_CONFIG } from "../../constants/password"
 import { NewToken } from "../../db/types"
 import { TOKEN_TYPE } from "../../constants/database"
 import { TIMESPAN } from "../../constants/time"
+import { sendMail } from "../../mail/sendgrid"
+import { SENDGRID_TEST_EMAIL } from "../../config"
 
 /**
  * createUser - Controller to handle user creation.
@@ -47,7 +49,7 @@ export const createUser = async ({ body }: Request, res: Response) => {
     await db.insert(tableUserMeta).values({ userId: createdUser.id }).returning()
 
     // Create a validation token for the user
-    await db
+    const [token] = await db
       .insert(tableTokens)
       .values({
         userId: createdUser.id,
@@ -55,6 +57,12 @@ export const createUser = async ({ body }: Request, res: Response) => {
         expiresAt: new Date(Date.now() + TIMESPAN.WEEK), // Make configurable
       })
       .returning()
+
+    sendMail({
+      to: SENDGRID_TEST_EMAIL ?? "", //userNoPW.email, - Faker might seed with real emails, be careful not to spam people
+      subject: "Validate your account",
+      body: `Click here to validate your account: http://localhost:3000/auth/validate/${token.id}.${createdUser.id}`,
+    })
 
     // Respond with success
     return res.status(HTTP_SUCCESS.CREATED).json({ message: "User registered." })
