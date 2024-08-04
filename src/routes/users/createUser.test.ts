@@ -14,10 +14,17 @@ let fakeUser: User
 jest.mock("../../db", () => ({
   insert: jest.fn().mockReturnValue({
     values: jest.fn().mockReturnValue({
-      returning: jest.fn().mockImplementationOnce(async () => {
-        fakeUser = await makeAFakeUser({ password: "$TR0ngP@$$W0rDz123!" })
-        return [fakeUser]
-      }),
+      returning: jest
+        .fn()
+        // Insert User
+        .mockImplementationOnce(async () => {
+          fakeUser = await makeAFakeUser({ password: "$TR0ngP@$$W0rDz123!" })
+          return [fakeUser]
+        })
+        // Insert Token
+        .mockImplementationOnce(async () => {
+          return { id: "TOKEN_ID" }
+        }),
     }),
   }),
 }))
