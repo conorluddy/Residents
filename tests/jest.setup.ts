@@ -31,3 +31,11 @@ jest.mock("../src/config", () => {
     SENDGRID_TEST_EMAIL: process.env.SENDGRID_TEST_EMAIL,
   }
 })
+
+jest.mock("../src/utils/logger", () => ({
+  logger: {
+    info: jest.fn(),
+    error: jest.fn(),
+    warn: jest.fn(),
+  },
+}))

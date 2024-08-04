@@ -37,8 +37,9 @@ export const STATUS_ARRAY = getEnumValues(STATUS)
  * Token types will be set as an Enum in PostGres
  */
 export enum TOKEN_TYPE {
-  REFRESH = "refresh",
-  MAGIC = "magic",
-  RESET = "reset",
+  REFRESH = "refresh", // For refresh tokens
+  MAGIC = "magic", // For magic login links
+  RESET = "reset", // For password resets
+  VALIDATE = "validate", // For email/account validation
 }
 export const TOKEN_TYPE_ARRAY = getEnumValues(TOKEN_TYPE)

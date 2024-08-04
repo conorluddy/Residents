@@ -11,6 +11,7 @@ The goal of this project is to build out a repo that I can reuse as a jump-off p
 ## Table of Contents
 
 - [Residents](#residents)
+  - [Table of Contents](#table-of-contents)
   - [Tech Stack](#tech-stack)
   - [Main goals](#main-goals)
     - [Functional](#functional)
@@ -169,7 +170,7 @@ For production you'd want to do a `build` and then a `start`, but do so at your 
 | `POST /auth/reset-password`   | ✅    | ✅    | ⛔️          |
 | `POST /auth/refresh`          | ✅    | ✅    | ⛔️          |
 | `POST /auth/reset-password-token` | ✅ | ✅    | ⛔️          |
-| `POST /auth/validate-account` | ⛔️    | ⛔️    | ⛔️          |
+| `POST /auth/validate-account` | ✅    | ⚠️    | ⛔️          |
 | `GET /auth/google`            | ✅    | ✅    | ⛔️          |
 | `GET /auth/google/callback`   | ✅    | ✅    | ⛔️          |
 | `GET /users`                  | ✅    | ✅    | ⛔️          |
