@@ -115,7 +115,6 @@ describe("Should return errors if", () => {
   let mockRequest: Partial<Request> & { body: Partial<User> }
   let mockResponse: Partial<Response>
   let jwToken: string
-  let xsrf: string
   let jwtDecodeSpy: jest.MockedFunction<typeof jwt.decode>
   const otherMockDefaultUser = makeAFakeUser({ role: ROLES.MODERATOR })
 
@@ -127,8 +126,7 @@ describe("Should return errors if", () => {
 
   beforeEach(() => {
     process.env.JWT_TOKEN_SECRET = "TESTSECRET"
-    // jwToken = generateJwt(otherMockDefaultUser)
-    // xsrf = generateXsrfToken()
+    jwToken = generateJwt(otherMockDefaultUser)
     mockRequest = {
       body: {
         refreshToken: "REFRESHME",

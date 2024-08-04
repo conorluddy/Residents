@@ -10,7 +10,6 @@ import { logger } from "../../utils/logger"
 export const getAllUsers = async (req: Request, res: Response) => {
   try {
     // Add a WITHMETA flag to include the user meta data
-
     const result: User[] = await db.select().from(tableUsers)
     return res.status(HTTP_SUCCESS.OK).json(result)
   } catch (error) {

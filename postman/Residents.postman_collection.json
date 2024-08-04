@@ -335,53 +335,6 @@
 					"response": []
 				},
 				{
-					"name": "Validate user account [auth]",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{JWT}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "PATCH",
-						"header": [
-							{
-								"key": "xsrf-token",
-								"value": "{{XSRF-TOKEN}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "localhost:3000/auth/validate/:token/:id",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"auth",
-								"validate",
-								":token",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "token",
-									"value": ""
-								},
-								{
-									"key": "id",
-									"value": ""
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "Refresh Token [auth]",
 					"request": {
 						"auth": {
@@ -427,6 +380,42 @@
 									"value": "",
 									"disabled": true
 								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Validate user account [auth]",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "xsrf-token",
+								"value": "{{XSRF-TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:3000/auth/validate/tokenid.userid",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"auth",
+								"validate",
+								"tokenid.userid"
 							]
 						}
 					},
