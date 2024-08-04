@@ -1,15 +1,13 @@
 import jwt from "jsonwebtoken"
-import dotenv from "dotenv"
 import { Request, Response, NextFunction } from "express"
 import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from "../../constants/http"
 import { logger } from "../../utils/logger"
-
-dotenv.config()
+import { JWT_TOKEN_SECRET } from "../../config"
 
 export const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers["authorization"]
   const token = authHeader && authHeader.split(" ")[1] // Bearer[ ]TOKEN...
-  const secret = process.env.JWT_TOKEN_SECRET
+  const secret = JWT_TOKEN_SECRET
 
   if (token == null) {
     logger.warn("JWT token is not provided in the request headers")

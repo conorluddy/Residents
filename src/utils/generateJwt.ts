@@ -1,10 +1,9 @@
+import { EXPIRATION_JWT_TOKEN, JWT_TOKEN_SECRET } from "../config"
 import { User } from "../db/schema"
 import jwt from "jsonwebtoken"
 
-const DEFAULT_JWT_TOKEN_EXPIRY = "1m"
-
 export const generateJwt = (userPayload: JWTUserPayload, expiryOverride?: string) => {
-  const secret = process.env.JWT_TOKEN_SECRET
+  const secret = JWT_TOKEN_SECRET
   if (secret == null) throw new Error("JWT secret not found")
 
   return jwt.sign(
@@ -21,7 +20,7 @@ export const generateJwt = (userPayload: JWTUserPayload, expiryOverride?: string
     },
     secret,
     {
-      expiresIn: expiryOverride ?? process.env.JWT_TOKEN_EXPIRY ?? DEFAULT_JWT_TOKEN_EXPIRY,
+      expiresIn: expiryOverride ?? EXPIRATION_JWT_TOKEN,
     }
   )
 }

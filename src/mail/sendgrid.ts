@@ -1,12 +1,11 @@
-import dotenv from "dotenv"
 import sgMail, { ClientResponse } from "@sendgrid/mail"
 import { logger } from "../utils/logger"
-dotenv.config()
+import { SENDGRID_API_KEY, SENDGRID_VERIFIED_EMAIL } from "../config"
 
 // using Twilio SendGrid's v3 Node.js Library
 // https://github.com/sendgrid/sendgrid-nodejs
-if (process.env.NODE_ENV === "production") {
-  sgMail.setApiKey(process.env.SENDGRID_API_KEY ?? "API key needed in your .env file")
+if (process.env.NODE_ENV !== "test") {
+  sgMail.setApiKey(SENDGRID_API_KEY)
 }
 
 interface MailProps {
@@ -16,13 +15,10 @@ interface MailProps {
 }
 
 export const sendMail = async ({ to, subject, body }: MailProps): Promise<[ClientResponse, {}] | undefined> => {
-  if (!process.env.SENDGRID_API_KEY) throw new Error("Set the SENDGRID_API_KEY in your .env file")
-  if (!process.env.SENDGRID_VERIFIED_EMAIL) throw new Error("Set SENDGRID_VERIFIED_EMAIL in your .env file")
-
   try {
     const msg = {
       to,
-      from: process.env.SENDGRID_VERIFIED_EMAIL,
+      from: SENDGRID_VERIFIED_EMAIL,
       subject,
       text: body,
       // html: "<strong>Test</strong>",

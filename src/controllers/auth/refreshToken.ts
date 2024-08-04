@@ -2,7 +2,6 @@ import { Request, Response } from "express"
 import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constants/http"
 import { logger } from "../../utils/logger"
 import jwt from "jsonwebtoken"
-import dotenv from "dotenv"
 import { tableTokens, User } from "../../db/schema"
 import db from "../../db"
 import { eq } from "drizzle-orm"
@@ -11,21 +10,12 @@ import { TOKEN_TYPE } from "../../constants/database"
 import { TIMESPAN } from "../../constants/time"
 import { generateJwt } from "../../utils/generateJwt"
 import generateXsrfToken from "../../middleware/util/xsrfToken"
-dotenv.config()
 
 /**
  * POST: refreshToken
  */
 export const refreshToken = async (req: Request, res: Response) => {
   try {
-    const secret = process.env.JWT_TOKEN_SECRET
-
-    if (!secret || secret === "") {
-      // Probably do this on startup instead of every request
-      logger.error("JWT token secret is not defined in your environment variables")
-      return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Internal server error" })
-    }
-
     const authHeader = req.headers["authorization"]
     const jwToken = authHeader && authHeader.split(" ")[1] // Bearer[ ]TOKEN...
     const refreshToken = req.body?.refreshToken
