@@ -1,10 +1,9 @@
-import dotenv from "dotenv"
 import request from "supertest"
 import { HTTP_CLIENT_ERROR, HTTP_REDIRECTION, HTTP_SUCCESS } from "./constants/http"
 import { app, server } from "./index"
 import jwt from "jsonwebtoken"
 import { logger } from "./utils/logger"
-dotenv.config()
+import { JWT_TOKEN_SECRET } from "./config"
 
 jest.mock("./utils/logger")
 jest.mock("./db", () => ({}))
@@ -49,7 +48,7 @@ describe("Test the /auth/login path", () => {
   })
 
   test("It should throw a bad request because of the email format.", async () => {
-    const csrfToken = jwt.sign({}, process.env.JWT_TOKEN_SECRET!, { expiresIn: "1h" })
+    const csrfToken = jwt.sign({}, JWT_TOKEN_SECRET!, { expiresIn: "1h" })
 
     const response = await request(app)
       .post("/auth")

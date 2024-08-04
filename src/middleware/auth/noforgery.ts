@@ -1,10 +1,10 @@
 import jwt from "jsonwebtoken"
-import dotenv from "dotenv"
+
 import { Request, Response, NextFunction } from "express"
 import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from "../../constants/http"
 import { logger } from "../../utils/logger"
 import generateXsrfToken from "../util/xsrfToken"
-dotenv.config()
+import { JWT_TOKEN_SECRET } from "../../config"
 
 /**
  * Don't check these routes for XSRF token
@@ -21,7 +21,7 @@ const noForgery = (req: Request, res: Response, next: NextFunction) => {
   }
 
   try {
-    const secret = process.env.JWT_TOKEN_SECRET
+    const secret = JWT_TOKEN_SECRET
     if (!secret) throw new Error("JWT secret not found")
 
     // Look for token in cookies, if not found, generate a new one

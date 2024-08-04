@@ -144,14 +144,6 @@ describe("Should return errors if", () => {
     }
   })
 
-  it("there's no JWT secret defined (todo check this on startup instead)", async () => {
-    delete process.env.JWT_TOKEN_SECRET
-    await refreshToken(mockRequest as Request, mockResponse as Response)
-    expect(logger.error).toHaveBeenCalledWith("JWT token secret is not defined in your environment variables")
-    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR)
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: "Internal server error" })
-  })
-
   it("there's no refresh token in the request body", async () => {
     delete mockRequest.body?.refreshToken
     await refreshToken(mockRequest as Request, mockResponse as Response)
@@ -179,7 +171,7 @@ describe("Should return errors if", () => {
   })
   it("the token has a USED flag set", async () => {
     await refreshToken(mockRequest as Request, mockResponse as Response)
-    expect(logger.error).toHaveBeenNthCalledWith(4, `Attempt to use a used refresh token for ${mockDefaultUser.email}`)
+    expect(logger.error).toHaveBeenNthCalledWith(3, `Attempt to use a used refresh token for ${mockDefaultUser.email}`)
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)
     expect(mockResponse.json).toHaveBeenCalledWith({ message: "Token not valid." })
   })

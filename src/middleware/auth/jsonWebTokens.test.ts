@@ -13,17 +13,18 @@ describe("Middleware:JWT", () => {
   let mockResponse: Partial<Response>
   let nextFunction: NextFunction
   let mockDefaultUser: Partial<User>
+  let jwt
 
   beforeAll(() => {
-    process.env.JWT_TOKEN_SECRET = "TESTSECRET"
     mockDefaultUser = makeAFakeUser({ role: ROLES.DEFAULT })
   })
 
   beforeEach(() => {
+    jwt = generateJwt(mockDefaultUser)
     mockRequest = {
       user: { role: ROLES.ADMIN, id: "AdminTestUser1" } as JWTUserPayload,
       headers: {
-        authorization: `Bearer ${generateJwt(mockDefaultUser)}`,
+        authorization: `Bearer ${jwt}`,
       },
     }
     mockResponse = {
@@ -60,11 +61,12 @@ describe("Middleware:JWT", () => {
   })
 
   it("Should reject as unauthorized if the token has expired", () => {
-    process.env.JWT_TOKEN_SECRET = ""
+    jwt = generateJwt(mockDefaultUser, "0ms")
     mockRequest.user = mockDefaultUser
+    mockRequest.headers!.authorization = `Bearer ${jwt}`
     authenticateToken(mockRequest as Request, mockResponse as Response, nextFunction)
-    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR)
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: "Internal server error" })
     expect(nextFunction).not.toHaveBeenCalled()
+    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.UNAUTHORIZED)
+    expect(mockResponse.json).toHaveBeenCalledWith({ message: "Token is invalid or expired" })
   })
 })
