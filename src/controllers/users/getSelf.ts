@@ -12,18 +12,13 @@ import db from "../../db"
 export const getSelf = async (req: Request, res: Response) => {
   try {
     const userId = (req.user as JWTUserPayload)?.id
-
-    if (!userId) {
+    if (!userId)
       return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "User ID is missing in the request." })
-    }
 
-    const user = await db.select().from(tableUsers).where(eq(tableUsers.id, userId))
+    const [user] = await db.select().from(tableUsers).where(eq(tableUsers.id, userId))
+    if (!user) return res.status(HTTP_CLIENT_ERROR.NOT_FOUND).json({ message: "User not found." })
 
-    if (user.length === 0) {
-      return res.status(HTTP_CLIENT_ERROR.NOT_FOUND).json({ message: "User not found." })
-    }
-
-    return res.status(HTTP_SUCCESS.OK).json(user[0]) // Make this use query and findFirst rather than using arrays
+    return res.status(HTTP_SUCCESS.OK).json(user)
   } catch (error) {
     logger.error(error)
     return res

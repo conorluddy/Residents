@@ -50,9 +50,7 @@ export const resetPasswordWithToken = async (req: Request, res: Response, next: 
     // This case should never happen but will leave it here for now
     if (result[0].updatedUserId !== tokenWithUser.user.id) {
       logger.error(
-        `Error updating password for user: ${
-          tokenWithUser.user.id
-        }, db-update result (should be empty or same as request ID): ${JSON.stringify(result[0])}`
+        `Error updating password for user: ${tokenWithUser.user.id}, db-update result (should be empty or same as request ID): ${result[0].updatedUserId}`
       )
       return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Error updating password." })
     }
