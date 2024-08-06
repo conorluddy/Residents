@@ -14,7 +14,10 @@ jest.mock("../../db", () => ({
   update: jest.fn().mockReturnValue({
     set: jest.fn().mockReturnValue({
       where: jest.fn().mockReturnValue({
-        returning: jest.fn().mockImplementationOnce(async () => [{ updatedUserId: "UID123" }]),
+        returning: jest
+          .fn()
+          .mockImplementationOnce(async () => [{ updatedUserId: "UID123" }])
+          .mockImplementationOnce(async () => [{ updatedUserId: "NOT_SAME" }]),
       }),
     }),
   }),
@@ -60,6 +63,15 @@ describe("Controller: Reset Password With Token", () => {
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.OK)
     expect(mockResponse.json).toHaveBeenCalledWith({ message: "Password successfully updated." })
     expect(logger.info).toHaveBeenCalledWith("Password successfully reset for bananaman@ireland.ie")
+  })
+
+  it("Unhappy path: Reset Password With Token", async () => {
+    await resetPasswordWithToken(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
+    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR)
+    expect(mockResponse.json).toHaveBeenCalledWith({ message: "Error updating password." })
+    expect(logger.error).toHaveBeenCalledWith(
+      "Error updating password for user: UID123, db-update result (should be empty or same as request ID): NOT_SAME"
+    )
   })
 
   it(`Returns forbidden when missing token`, async () => {
