@@ -118,7 +118,7 @@ async function getTargetUserAndCheckSuperiority(req: Request, res: Response, nex
 }
 
 const RBAC = {
-  canGetOwnUser: checkPermission(PERMISSIONS.CAN_GET_OWN_USER),
+  checkCanGetOwnUser: checkPermission(PERMISSIONS.CAN_GET_OWN_USER),
   checkCanCreateUsers: checkPermission(PERMISSIONS.CAN_CREATE_USERS),
   checkCanGetUsers: checkPermission(PERMISSIONS.CAN_GET_ALL_USERS),
   checkCanUpdateUsers: checkPermission(PERMISSIONS.CAN_UPDATE_ANY_USER),
