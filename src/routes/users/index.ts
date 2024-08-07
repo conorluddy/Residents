@@ -18,8 +18,12 @@ router.use(createUser)
 router.use(updateUser)
 router.use(updateUserMeta)
 router.use(getAllUsers)
-router.use(getUser)
-router.use(getSelf)
 router.use(deleteUser)
+
+// Order matters for getSelf and getUser
+// because the routes are the same, and we
+// don't want "self" to be treated as an ID
+router.use(getSelf)
+router.use(getUser)
 
 export default router

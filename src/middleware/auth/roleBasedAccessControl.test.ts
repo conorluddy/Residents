@@ -79,7 +79,7 @@ describe("Middleware:RBAC:checkPermission", () => {
   describe("Users with ADMIN role", () => {
     it("can GetOwnUser", () => {
       mockRequest.user = mockAdminUser
-      RBAC.canGetOwnUser(mockRequest as Request, mockResponse as Response, nextFunction)
+      RBAC.checkCanGetOwnUser(mockRequest as Request, mockResponse as Response, nextFunction)
       expect(nextFunction).toHaveBeenCalled()
     })
     it("can CreateUsers", () => {
@@ -122,7 +122,7 @@ describe("Middleware:RBAC:checkPermission", () => {
   describe("Users with DEFAULT role", () => {
     it("can GET OWN/SELF user", () => {
       mockRequest.user = mockDefaultUser
-      RBAC.canGetOwnUser(mockRequest as Request, mockResponse as Response, nextFunction)
+      RBAC.checkCanGetOwnUser(mockRequest as Request, mockResponse as Response, nextFunction)
       expect(nextFunction).toHaveBeenCalled()
     })
     it("can UPDATE OWN/SELF user", () => {
@@ -177,7 +177,7 @@ describe("Middleware:RBAC:checkPermission", () => {
   describe("Users with LOCKED role", () => {
     it("can GET OWN/SELF user", () => {
       mockRequest.user = mockLockedUser
-      RBAC.canGetOwnUser(mockRequest as Request, mockResponse as Response, nextFunction)
+      RBAC.checkCanGetOwnUser(mockRequest as Request, mockResponse as Response, nextFunction)
       expect(nextFunction).toHaveBeenCalled()
     })
     it("can't UPDATE OWN/SELF user", () => {
@@ -222,7 +222,7 @@ describe("Middleware:RBAC:checkPermission", () => {
   describe("Users with LOCKED role", () => {
     it("can GET OWN/SELF user", () => {
       mockRequest.user = mockLockedUser
-      RBAC.canGetOwnUser(mockRequest as Request, mockResponse as Response, nextFunction)
+      RBAC.checkCanGetOwnUser(mockRequest as Request, mockResponse as Response, nextFunction)
       expect(nextFunction).toHaveBeenCalled()
     })
     it("can't UPDATE OWN/SELF user", () => {
@@ -267,7 +267,7 @@ describe("Middleware:RBAC:checkPermission", () => {
   describe("DELETED Users", () => {
     it("can't GET OWN/SELF user", () => {
       mockRequest.user = mockDeletedDefaultUser
-      RBAC.canGetOwnUser(mockRequest as Request, mockResponse as Response, nextFunction)
+      RBAC.checkCanGetOwnUser(mockRequest as Request, mockResponse as Response, nextFunction)
       expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)
       expect(mockResponse.json).toHaveBeenCalledWith({ message: "Forbidden" })
       expect(nextFunction).not.toHaveBeenCalled()
@@ -312,7 +312,7 @@ describe("Middleware:RBAC:checkPermission", () => {
   describe("DELETED ADMIN Users", () => {
     it("can't GET OWN/SELF user", () => {
       mockRequest.user = mockDeletedAdminUser
-      RBAC.canGetOwnUser(mockRequest as Request, mockResponse as Response, nextFunction)
+      RBAC.checkCanGetOwnUser(mockRequest as Request, mockResponse as Response, nextFunction)
       expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)
       expect(mockResponse.json).toHaveBeenCalledWith({ message: "Forbidden" })
       expect(nextFunction).not.toHaveBeenCalled()

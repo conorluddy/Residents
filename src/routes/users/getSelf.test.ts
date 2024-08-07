@@ -19,7 +19,7 @@ jest.mock("../../middleware/auth/jsonWebTokens", () => ({
 }))
 
 jest.mock("../../middleware/auth/roleBasedAccessControl", () => ({
-  canGetOwnUser: jest.fn((req, res, next) => next()),
+  checkCanGetOwnUser: jest.fn((req, res, next) => next()),
 }))
 
 CONTROLLERS.USER.getSelf = jest.fn(async (req, res) => {
