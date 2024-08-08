@@ -9,9 +9,26 @@ on:
 jobs:
   build-test-and-report-coverage:
     runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:latest
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: testdb
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     strategy:
       matrix:
         node-version: [16.x, 18.x, 20.x]
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -27,8 +44,6 @@ jobs:
       - name: Run build
         run: npm run build
 
-      - name: Run tests
-        run: npm test
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4.0.1
@@ -37,4 +52,46 @@ jobs:
 
       - name: Run Typescript coverage report
         run: npm run typecoverage
-        
+
+      # - name: Debug environment variables
+      #   run: |
+      #     echo "POSTGRES_USER: $POSTGRES_USER"
+      #     echo "POSTGRES_PASSWORD: $POSTGRES_PASSWORD"
+      #     echo "POSTGRES_URL: $POSTGRES_URL"
+      #     echo "POSTGRES_DB: $POSTGRES_DB"
+
+      #   env:
+      #     POSTGRES_USER: postgres
+      #     POSTGRES_PASSWORD: password
+      #     POSTGRES_URL: localhost
+      #     POSTGRES_DB: testdb
+          
+      - name: Wait for PostgreSQL to be ready
+        run: |
+          until pg_isready --host=localhost --port=5432 --username=postgres; do
+            sleep 1
+          done
+
+      - name: Initialise the database
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+          POSTGRES_URL: localhost
+          POSTGRES_DB: testdb
+        run: npm run push
+
+      - name: Seed the database
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+          POSTGRES_URL: localhost
+          POSTGRES_DB: testdb
+        run: npm run seed
+
+      - name: Run tests
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+          POSTGRES_URL: localhost
+          POSTGRES_DB: testdb
+        run: npm test
