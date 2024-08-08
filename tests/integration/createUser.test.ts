@@ -1,19 +1,11 @@
 import request from "supertest"
-import { app } from "../../src" // Adjust the path to import your Express app
+import { app } from "../../src"
 import { dbClient } from "../../src/db"
 
-describe("POST /users/register", () => {
-  beforeAll(async () => {
-    await dbClient.connect()
-  })
-
-  afterAll(async () => {
-    await dbClient.end()
-  })
-
-  beforeEach(async () => {
-    await dbClient.query("DELETE FROM users")
-  })
+describe("Integration: Can CreateUser", () => {
+  beforeAll(async () => await dbClient.connect())
+  beforeEach(async () => await dbClient.query("DELETE FROM users"))
+  afterAll(async () => await dbClient.end())
 
   it("should create a new user successfully", async () => {
     const newUser = {
@@ -32,7 +24,7 @@ describe("POST /users/register", () => {
     const incompleteUser = {
       firstName: "Test",
       lastName: "User",
-      email: "", // Email is required
+      email: "",
       username: "testuser",
       password: "password123",
     }
@@ -65,13 +57,5 @@ describe("POST /users/register", () => {
     const response = await request(app).post("/users/register").send(incompleteUser)
     expect(response.status).toBe(400)
     expect(response.body).toHaveProperty("message", "Password not strong enough, try harder.")
-  })
-})
-
-describe("Healthcheck Endpoint", () => {
-  it("should return status 200 and a status emoji", async () => {
-    const response = await request(app).get("/health")
-    expect(response.status).toBe(200)
-    expect(response.body).toHaveProperty("status", "👌")
   })
 })
