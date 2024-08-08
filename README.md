@@ -161,24 +161,25 @@ For production you'd want to do a `build` and then a `start`, but do so at your 
 
 ## Feature Matrix
 
-| Endpoint                      | Built | Tests | SwaggerDocs |
-|-------------------------------|-------|-------|-------------|
-| `POST /auth/login`            | ✅    | ✅    | ⛔️          |
-| `POST /auth/logout`           | ✅    | ⛔️    | ⛔️          |
-| `POST /auth/magic-login`      | ⛔️    | ⛔️    | ⛔️          |
-| `POST /auth/magic-login-token`| ⛔️    | ⛔️    | ⛔️          |
-| `POST /auth/reset-password`   | ✅    | ✅    | ⛔️          |
-| `POST /auth/refresh`          | ✅    | ✅    | ⛔️          |
-| `POST /auth/reset-password-token` | ✅ | ✅    | ⛔️          |
-| `POST /auth/validate-account` | ✅    | ⚠️    | ⛔️          |
-| `GET /auth/google`            | ✅    | ✅    | ⛔️          |
-| `GET /auth/google/callback`   | ✅    | ✅    | ⛔️          |
-| `GET /users`                  | ✅    | ✅    | ⛔️          |
-| `GET /users/:id`              | ✅    | ✅    | ⛔️          |
-| `POST /users`                 | ✅    | ✅    | ⛔️          |
-| `PUT /users/:id`              | ✅    | ✅    | ⛔️          |
-| `DELETE /users/:id`           | ✅    | ✅    | ⛔️          |
-| `GET /users/self`             | ✅    | ✅    | ⛔️          |
+| Endpoint                      | Built | Unit Tests | Integration Tests | SwaggerDocs |
+|-------------------------------|-------|------------|-------------------|-------------|
+| `POST /auth/login`            | ✅    | ✅         | ⛔️                | ⛔️          |
+| `POST /auth/logout`           | ✅    | ⛔️         | ⛔️                | ⛔️          |
+| `POST /auth/magic-login`      | ⛔️    | ⛔️         | ⛔️                | ⛔️          |
+| `POST /auth/magic-login-token`| ⛔️    | ⛔️         | ⛔️                | ⛔️          |
+| `POST /auth/reset-password`   | ✅    | ✅         | ⛔️                | ⛔️          |
+| `POST /auth/refresh`          | ✅    | ✅         | ⛔️                | ⛔️          |
+| `POST /auth/reset-password-token` | ✅ | ✅         | ⛔️                | ⛔️          |
+| `POST /auth/validate-account` | ✅    | ⚠️         | ⛔️                | ⛔️          |
+| `GET /auth/google`            | ✅    | ✅         | ⛔️                | ⛔️          |
+| `GET /auth/google/callback`   | ✅    | ✅         | ⛔️                | ⛔️          |
+| `GET /users`                  | ✅    | ✅         | ⛔️                | ⛔️          |
+| `GET /users/:id`              | ✅    | ✅         | ⛔️                | ⛔️          |
+| `POST /users`                 | ✅    | ✅         | ⛔️                | ⛔️          |
+| `PUT /users/:id`              | ✅    | ✅         | ⛔️                | ⛔️          |
+| `DELETE /users/:id`           | ✅    | ✅         | ⛔️                | ⛔️          |
+| `GET /users/self`             | ✅    | ✅         | ⛔️                | ⛔️          |
+
 
 ---
 
