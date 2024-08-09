@@ -1,5 +1,5 @@
 import db from ".."
-import { ROLES_ARRAY, STATUS_ARRAY } from "../../constants/database"
+import { ROLES, ROLES_ARRAY, STATUS_ARRAY } from "../../constants/database"
 import { createHash } from "../../utils/crypt"
 import { logger } from "../../utils/logger"
 import { tableUsers } from "../schema"
@@ -25,7 +25,7 @@ async function createRandomUsers(amount: number): Promise<NewUser[]> {
       firstName: faker.person.firstName(),
       lastName: faker.person.lastName(),
       email: faker.internet.email(),
-      role: faker.helpers.arrayElement(ROLES_ARRAY),
+      role: faker.helpers.arrayElement([ROLES.ADMIN, ROLES.DEFAULT, ROLES.LOCKED, ROLES.MODERATOR]), // Omit OWNER
       status: faker.helpers.arrayElement(STATUS_ARRAY),
       deletedAt: faker.helpers.arrayElement([faker.date.past(), null, null, null]),
     })
