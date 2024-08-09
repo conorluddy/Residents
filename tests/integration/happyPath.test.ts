@@ -43,4 +43,15 @@ describe("Integration: Test flow", () => {
     expect(response.body).toHaveProperty("accessToken")
     jwt = response.body.accessToken
   })
+
+  it("Hit the /self endpoint once logged in and get own user object", async () => {
+    const response = await request(app).get("/users/self").set("Authorization", `Bearer ${jwt}`)
+    expect(response.status).toBe(200)
+    expect(response.body).toMatchObject({
+      username: "mrhappy",
+      email: "mrhappy@resi.dents",
+      firstName: "mrhappy",
+      lastName: "mrhappy",
+    })
+  })
 })

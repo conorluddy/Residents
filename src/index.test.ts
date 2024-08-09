@@ -8,27 +8,16 @@ import { JWT_TOKEN_SECRET } from "./config"
 jest.mock("./utils/logger")
 jest.mock("./db", () => ({}))
 
-describe("Test the health check route", () => {
-  test('It should respond with a status of "👌"', async () => {
-    const response = await request(app).get("/health")
-    expect(response.statusCode).toBe(HTTP_SUCCESS.OK)
-    expect(response.body).toEqual({ status: "👌" })
-  })
-})
-
 describe("Test SIGTERM handling", () => {
   test("should log messages on SIGTERM", (done) => {
-    const logSpy = jest.spyOn(logger, "info")
     process.emit("SIGTERM")
     setTimeout(() => {
-      expect(logSpy).toHaveBeenCalledWith("SIGTERM signal received: closing HTTP server")
-      expect(logSpy).toHaveBeenCalledWith("HTTP server closed")
+      expect(logger.info).toHaveBeenCalledWith("SIGTERM signal received: closing HTTP server")
+      expect(logger.info).toHaveBeenCalledWith("HTTP server closed")
       done()
     }, 500)
   })
 })
-
-// Spot tests to cover the app index.ts file. Routes are tested in their own files.
 
 describe("Test the root path", () => {
   test("It should respond unauthorized to the GET method", async () => {
@@ -57,6 +46,14 @@ describe("Test the /auth/login path", () => {
       .send({ email: "email", password: "lemme-in" })
 
     expect(response.statusCode).toBe(HTTP_CLIENT_ERROR.BAD_REQUEST)
+  })
+})
+
+describe("Test the health check route", () => {
+  test('It should respond with a status of "👌"', async () => {
+    const response = await request(app).get("/health")
+    expect(response.statusCode).toBe(HTTP_SUCCESS.OK)
+    expect(response.body).toEqual({ status: "👌" })
   })
 })
 
