@@ -10,8 +10,8 @@ import { logger } from "../../utils/logger"
 export const getAllUsers = async (req: Request, res: Response) => {
   try {
     // Add a WITHMETA flag to include the user meta data
-    const result: User[] = await db.select().from(tableUsers)
-    return res.status(HTTP_SUCCESS.OK).json(result)
+    const users: User[] = await db.select().from(tableUsers)
+    return res.status(HTTP_SUCCESS.OK).json(users)
   } catch (error) {
     logger.error(error)
     res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Error getting users" })
