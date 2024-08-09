@@ -46,8 +46,7 @@ describe("Controller: GetSelf", () => {
   it("Happy path", async () => {
     await getSelf(mockRequest as Request, mockResponse as Response)
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.OK)
-    const { password, ...shareableUser } = fakeUser
-    expect(mockResponse.json).toHaveBeenCalledWith(shareableUser)
+    expect(mockResponse.json).toHaveBeenCalledWith(fakeUser)
   })
 
   it("Missing ID is handled", async () => {

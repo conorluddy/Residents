@@ -37,6 +37,7 @@ export const resetPassword = async ({ userNoPW }: Request, res: Response) => {
       to: SENDGRID_TEST_EMAIL ?? "", //userNoPW.email, - Faker might seed with real emails, be careful not to spam people
       subject: "Reset your password",
       body: `Click here to reset your password: http://localhost:3000/auth/reset-password/${tokenId}`,
+      // Obviously this is a test link, in production you'd want to use a real domain
     })
 
     logger.info(`Reset email sent to ${userNoPW.email}, token id: ${tokenId}`)

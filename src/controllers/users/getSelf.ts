@@ -18,10 +18,7 @@ export const getSelf = async (req: Request, res: Response) => {
     const [user] = await db.select().from(tableUsers).where(eq(tableUsers.id, userId))
     if (!user) return res.status(HTTP_CLIENT_ERROR.NOT_FOUND).json({ message: "User not found." })
 
-    // Don't return PW
-    const { password, ...shareableUser } = user
-
-    return res.status(HTTP_SUCCESS.OK).json(shareableUser)
+    return res.status(HTTP_SUCCESS.OK).json(user)
   } catch (error) {
     logger.error(error)
     return res

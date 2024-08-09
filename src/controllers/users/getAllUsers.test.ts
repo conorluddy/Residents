@@ -30,8 +30,7 @@ describe("Controller: GetAllUsers", () => {
 
   it("Get All Users - Happy path", async () => {
     await getAllUsers(mockRequest as Request, mockResponse as Response)
-    const { password, ...shareableUser } = fakeUser
-    expect(mockResponse.json).toHaveBeenCalledWith([shareableUser, shareableUser, shareableUser])
+    expect(mockResponse.json).toHaveBeenCalledWith([fakeUser, fakeUser, fakeUser])
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.OK)
   })
 })

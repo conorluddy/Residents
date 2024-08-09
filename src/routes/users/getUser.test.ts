@@ -55,6 +55,6 @@ describe("GET /user/:id", () => {
       .get(`/user/${userId}`)
       .set("Authorization", `Bearer ${generateJwt(mockDefaultUser)}`)
     expect(response.status).toBe(HTTP_SUCCESS.OK)
-    expect(response.body.id).toBe("ABC123")
+    expect(response.body[0].id).toBe("ABC123")
   })
 })

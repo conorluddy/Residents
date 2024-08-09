@@ -5,7 +5,11 @@ import { dbClient } from "../../src/db"
 describe("Integration: Test flow", () => {
   let jwt: string
 
-  beforeAll(async () => await dbClient.connect())
+  beforeAll(async () => {
+    await dbClient.connect()
+    await dbClient.query("DELETE FROM users where username = 'mrhappy'")
+  })
+
   afterAll(async () => await dbClient.end())
 
   it("Create a new user", async () => {
@@ -46,8 +50,8 @@ describe("Integration: Test flow", () => {
     expect(response.body).toMatchObject({
       username: "mrhappy",
       email: "mrhappy@resi.dents",
-      firstName: "Test",
-      lastName: "User",
+      firstName: "mrhappy",
+      lastName: "mrhappy",
     })
   })
 })
