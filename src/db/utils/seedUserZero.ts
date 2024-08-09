@@ -12,7 +12,7 @@ import { NewUser } from "../types"
  *
  * @param {string} password - The password to use for the first user
  */
-const seedUserZero = async (password: string) => {
+const seedUserZero = async (password: string = "resident") => {
   try {
     const userCountResult = await db.select({ count: count() }).from(tableUsers)
 
@@ -52,3 +52,4 @@ const password = args.length > 0 ? args[0] : "resident"
 seedUserZero(password)
 
 export { seedUserZero }
+export default seedUserZero
