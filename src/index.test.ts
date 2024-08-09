@@ -1,6 +1,6 @@
 import request from "supertest"
 import { HTTP_CLIENT_ERROR, HTTP_REDIRECTION, HTTP_SUCCESS } from "./constants/http"
-import { app, server } from "./index"
+import { app } from "./index"
 import jwt from "jsonwebtoken"
 import { logger } from "./utils/logger"
 import { JWT_TOKEN_SECRET } from "./config"
