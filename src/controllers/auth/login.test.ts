@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import { HTTP_CLIENT_ERROR, HTTP_SUCCESS } from "../../constants/http"
+import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constants/http"
 import { User } from "../../db/types"
 import { makeAFakeUserWithHashedPassword } from "../../test-utils/mockUsers"
 import { login } from "./login"
@@ -8,15 +8,20 @@ import { TOKEN_TYPE } from "../../constants/database"
 jest.mock("../../db", () => ({
   select: jest.fn().mockReturnValue({
     from: jest.fn().mockReturnValue({
-      where: jest.fn().mockImplementationOnce(async () => {
-        const fakeUser = await makeAFakeUserWithHashedPassword({ password: "testpassword" })
-        return [fakeUser]
-      }),
+      where: jest
+        .fn()
+        .mockImplementationOnce(async () => {
+          throw new Error("Test error")
+        })
+        .mockImplementationOnce(async () => {
+          const fakeUser = await makeAFakeUserWithHashedPassword({ password: "testpassword" })
+          return [fakeUser]
+        }),
     }),
   }),
   insert: jest.fn().mockReturnValue({
     values: jest.fn().mockReturnValue({
-      returning: jest.fn().mockImplementationOnce(async () => [
+      returning: jest.fn().mockImplementation(async () => [
         {
           userId: "123",
           id: "token123",
@@ -54,6 +59,14 @@ describe("Controller: Login", () => {
       json: jest.fn(),
       cookie: jest.fn(),
     }
+  })
+
+  it("should catch errors", async () => {
+    delete mockRequest.cookies
+    await login(mockRequest as Request, mockResponse as Response)
+
+    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR)
+    expect(mockResponse.json).toHaveBeenCalledWith({ message: "Error logging in." })
   })
 
   it("should allow login with correct username and password", async () => {
