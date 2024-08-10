@@ -2,15 +2,23 @@ import request from "supertest"
 import { app } from "../../src"
 import { dbClient } from "../../src/db"
 
-describe("Integration: Test flow", () => {
+/**
+ * - Create/Register a new user
+ * - Attempt to get data while not authorised
+ * - Log in with the new user
+ * - Reattempt to get data while authorised
+ */
+describe("Integration: Default User flow", () => {
   let jwt: string
 
   beforeAll(async () => {
     await dbClient.connect()
-    await dbClient.query("DELETE FROM users where username = 'mrhappy'")
+    await dbClient.query("DELETE FROM users")
   })
-
-  afterAll(async () => await dbClient.end())
+  afterAll(async () => {
+    await dbClient.query("DELETE FROM users")
+    await dbClient.end()
+  })
 
   it("Create a new user", async () => {
     const newUser = {
@@ -42,5 +50,16 @@ describe("Integration: Test flow", () => {
     expect(response.status).toBe(200)
     expect(response.body).toHaveProperty("accessToken")
     jwt = response.body.accessToken
+  })
+
+  it("Hit the /self endpoint once logged in and get own user object", async () => {
+    const response = await request(app).get("/users/self").set("Authorization", `Bearer ${jwt}`)
+    expect(response.status).toBe(200)
+    expect(response.body).toMatchObject({
+      username: "mrhappy",
+      email: "mrhappy@resi.dents",
+      firstName: "mrhappy",
+      lastName: "mrhappy",
+    })
   })
 })

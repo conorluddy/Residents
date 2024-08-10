@@ -56,19 +56,14 @@ export const createUser = async ({ body }: Request, res: Response) => {
 
     // Create a validation token for the user
     // const [token] = await db.insert(tableTokens).values(newToken).returning()
-    // console.log("token", { token })
     // await sendMail({
     //   to: SENDGRID_TEST_EMAIL ?? "", //userNoPW.email, - Faker might seed with real emails, be careful not to spam people
     //   subject: "Validate your account",
     //   body: `Click here to validate your account: http://localhost:3000/auth/validate/${token.id}.${createdUser.id}`,
     // })
 
-    // Respond with success
     return res.status(HTTP_SUCCESS.CREATED).json({ message: "User registered." })
   } catch (error) {
-    console.log(error)
-
-    // Log the error and respond with an error message
     logger.error(error)
     return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Error registering user" })
   }

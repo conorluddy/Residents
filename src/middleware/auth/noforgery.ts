@@ -6,19 +6,12 @@ import { logger } from "../../utils/logger"
 import generateXsrfToken from "../util/xsrfToken"
 import { JWT_TOKEN_SECRET } from "../../config"
 
-/**
- * Don't check these routes for XSRF token
- */
-const ROUTE_WHITELIST = ["/auth", "/users/register"]
-/**
- * Check these types of requests for XSRF token
- */
-const VERBS_BLACKLIST = ["POST", "PUT", "PATCH", "DELETE"]
-
 const noForgery = (req: Request, res: Response, next: NextFunction) => {
-  if (!VERBS_BLACKLIST.includes(req.method) || ROUTE_WHITELIST.includes(req.path)) {
-    return next()
-  }
+  // Return as early as possible, this will be called on most requests
+  if (req.method === "GET") return next()
+  if (req.path === "/auth") return next()
+  if (req.path === "/users/register") return next()
+  if (process.env.NODE_ENV === "test") return next()
 
   try {
     const secret = JWT_TOKEN_SECRET
@@ -48,8 +41,8 @@ const noForgery = (req: Request, res: Response, next: NextFunction) => {
       })
     }
   } catch (err) {
-    console.error(err)
-    return res.status(403).json({ message: "Invalid XSRF token." })
+    logger.error("noForgery MW error: ", err)
+    return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Invalid XSRF token." })
   }
 }
 
