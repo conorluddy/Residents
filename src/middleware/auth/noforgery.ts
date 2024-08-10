@@ -29,7 +29,7 @@ const noForgery = (req: Request, res: Response, next: NextFunction) => {
     const requestHeadersXsrfToken = req.headers["xsrf-token"]
 
     if (!requestHeadersXsrfToken) {
-      throw new Error("XSRF token required.")
+      return res.status(HTTP_CLIENT_ERROR.UNAUTHORIZED).json({ message: "XSRF token is required." })
     } else {
       jwt.verify(String(requestHeadersXsrfToken), secret, (err, user) => {
         if (err) {
@@ -41,8 +41,8 @@ const noForgery = (req: Request, res: Response, next: NextFunction) => {
       })
     }
   } catch (err) {
-    logger.error("noForgery MW error: ", err)
-    return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Invalid XSRF token." })
+    logger.error("noForgery MW error")
+    return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Error validating request." })
   }
 }
 
