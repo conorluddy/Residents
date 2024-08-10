@@ -3,7 +3,6 @@ import { app } from "../../src"
 import { dbClient } from "../../src/db"
 import seedUserZero from "../../src/db/utils/seedUserZero"
 import { seedUsers } from "../../src/db/utils/seedUsers"
-import { logger } from "../../src/utils/logger"
 
 /**
  * - Seed the default owner user into the DB
@@ -13,18 +12,17 @@ import { logger } from "../../src/utils/logger"
  * - Delete a user
  * - Get a specific user
  */
+
 describe("Integration: Owner flow from seeded default owner", () => {
   let jwt: string
-  let userTwoId: string
+
   beforeAll(async () => {
     await dbClient.connect()
     await dbClient.query("DELETE FROM users")
-  })
-  beforeEach(async () => {
-    await dbClient.query("DELETE FROM users WHERE role != 'owner'")
     await seedUserZero("resident")
-    await seedUsers(10)
+    await seedUsers(50)
   })
+
   afterAll(async () => {
     await dbClient.query("DELETE FROM users")
     await dbClient.end()
@@ -54,7 +52,7 @@ describe("Integration: Owner flow from seeded default owner", () => {
   it("Hit the /getAllUsers endpoint once logged in and get all of the users back", async () => {
     const response = await request(app).get("/users").set("Authorization", `Bearer ${jwt}`)
     expect(response.status).toBe(200)
-    expect(response.body).toHaveLength(11) // 10 seeded users + the owner
+    expect(response.body).toHaveLength(61) // 10 seeded users + the owner
   })
 
   it("Call getAllUsers again and delete one of them", async () => {

@@ -17,7 +17,7 @@ const seedUserZero = async (password: string = "resident") => {
     const userCountResult = await db.select({ count: count() }).from(tableUsers)
 
     if (userCountResult && userCountResult[0]?.count > 0) {
-      logger.error(
+      logger.warn(
         "This seeding script is only for setting the first user in an empty database, but the database already has users."
       )
       throw new Error("Database already has users.")

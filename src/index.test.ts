@@ -8,16 +8,16 @@ import { JWT_TOKEN_SECRET } from "./config"
 jest.mock("./utils/logger")
 jest.mock("./db", () => ({}))
 
-// describe("Test SIGTERM handling", () => {
-//   test("should log messages on SIGTERM", (done) => {
-//     process.emit("SIGTERM")
-//     setTimeout(() => {
-//       expect(logger.info).toHaveBeenCalledWith("SIGTERM signal received: closing HTTP server")
-//       expect(logger.info).toHaveBeenCalledWith("HTTP server closed")
-//       done()
-//     }, 500)
-//   })
-// })
+describe("Test SIGTERM handling", () => {
+  test("should log messages on SIGTERM", (done) => {
+    process.emit("SIGTERM")
+    setTimeout(() => {
+      expect(logger.info).toHaveBeenCalledWith("SIGTERM signal received: closing HTTP server")
+      expect(logger.info).toHaveBeenCalledWith("HTTP server closed")
+      done()
+    }, 500)
+  })
+})
 
 describe("Test the root path", () => {
   test("It should respond unauthorized to the GET method", async () => {

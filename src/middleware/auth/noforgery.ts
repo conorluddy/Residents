@@ -42,7 +42,7 @@ const noForgery = (req: Request, res: Response, next: NextFunction) => {
     }
   } catch (err) {
     logger.error("noForgery MW error: ", err)
-    return res.status(403).json({ message: "Invalid XSRF token." })
+    return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Invalid XSRF token." })
   }
 }
 
