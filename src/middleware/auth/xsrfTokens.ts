@@ -1,12 +1,11 @@
 import jwt from "jsonwebtoken"
-
 import { Request, Response, NextFunction } from "express"
 import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from "../../constants/http"
 import { logger } from "../../utils/logger"
 import generateXsrfToken from "../util/xsrfToken"
 import { JWT_TOKEN_SECRET } from "../../config"
 
-const noForgery = (req: Request, res: Response, next: NextFunction) => {
+const xsrfTokens = (req: Request, res: Response, next: NextFunction) => {
   // Return as early as possible, this will be called on most requests
   if (req.method === "GET") return next()
   if (req.path === "/auth") return next()
@@ -41,9 +40,9 @@ const noForgery = (req: Request, res: Response, next: NextFunction) => {
       })
     }
   } catch (err) {
-    logger.error("noForgery MW error")
+    logger.error("xsrfTokens MW error")
     return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Error validating request." })
   }
 }
 
-export default noForgery
+export default xsrfTokens
