@@ -14,7 +14,7 @@ export const getAllUsers = async (req: Request, res: Response) => {
     return res.status(HTTP_SUCCESS.OK).json(users)
   } catch (error) {
     logger.error(error)
-    res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Error getting users" })
+    res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Error getting users." })
   }
 }
 

@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 import { makeAFakeUser } from "../../test-utils/mockUsers"
-import { HTTP_SUCCESS } from "../../constants/http"
+import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constants/http"
 import { getUser } from "./getUser"
 import { User } from "../../db/types"
 
@@ -10,10 +10,18 @@ jest.mock("../../utils/logger")
 jest.mock("../../db", () => ({
   select: jest.fn().mockReturnValue({
     from: jest.fn().mockReturnValue({
-      where: jest.fn().mockImplementationOnce(async () => {
-        fakeUser = makeAFakeUser({})
-        return fakeUser
-      }),
+      where: jest
+        .fn()
+        .mockImplementationOnce(async () => {
+          fakeUser = makeAFakeUser({})
+          return fakeUser
+        })
+        .mockImplementationOnce(async () => {
+          return undefined
+        })
+        .mockImplementationOnce(async () => {
+          throw new Error("DB error")
+        }),
     }),
   }),
 }))
@@ -34,9 +42,29 @@ describe("Controller: GetUser", () => {
     }
   })
 
-  it("Get User - Happy path", async () => {
+  it("Happy path", async () => {
     await getUser(mockRequest as Request, mockResponse as Response)
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.OK)
     expect(mockResponse.json).toHaveBeenCalledWith(fakeUser)
+  })
+
+  it("Missing User ID", async () => {
+    mockRequest.params = {}
+    // Can't really happen because of the route definition, but just for cov
+    await getUser(mockRequest as Request, mockResponse as Response)
+    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.BAD_REQUEST)
+    expect(mockResponse.json).toHaveBeenCalledWith({ message: "ID is missing in the request." })
+  })
+
+  it("User not found", async () => {
+    await getUser(mockRequest as Request, mockResponse as Response)
+    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.NOT_FOUND)
+    expect(mockResponse.json).toHaveBeenCalledWith({ message: "User not found." })
+  })
+
+  it("Error handling", async () => {
+    await getUser(mockRequest as Request, mockResponse as Response)
+    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR)
+    expect(mockResponse.json).toHaveBeenCalledWith({ message: "Error getting user." })
   })
 })
