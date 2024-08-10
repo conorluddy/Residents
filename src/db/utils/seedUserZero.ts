@@ -20,7 +20,7 @@ const seedUserZero = async (password: string = "resident") => {
       logger.warn(
         "This seeding script is only for setting the first user in an empty database, but the database already has users."
       )
-      throw new Error("Database already has users.")
+      throw new Error("Cannot create owner/root user when the database already has users.")
     }
 
     const userZero: NewUser = {

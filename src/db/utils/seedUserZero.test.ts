@@ -6,19 +6,19 @@ jest.mock("../../utils/crypt", () => ({
   createHash: jest.fn().mockResolvedValue("hashed_password"),
 }))
 jest.mock("../../db", () => ({
+  insert: jest.fn().mockReturnValue({
+    values: jest.fn().mockReturnValue({
+      returning: jest.fn().mockReturnValue({
+        execute: jest.fn().mockImplementationOnce(async () => []),
+      }),
+    }),
+  }),
   select: jest.fn().mockReturnValue({
     from: jest.fn().mockReturnValue({
       execute: jest
         .fn()
         .mockImplementationOnce(async () => [{ count: 0 }])
         .mockImplementationOnce(async () => [{ count: 1 }]),
-    }),
-  }),
-  insert: jest.fn().mockReturnValue({
-    values: jest.fn().mockReturnValue({
-      returning: jest.fn().mockReturnValue({
-        execute: jest.fn().mockImplementationOnce(async () => []),
-      }),
     }),
   }),
 }))
