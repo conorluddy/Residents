@@ -3,6 +3,7 @@ import { app } from "../../src"
 import { dbClient } from "../../src/db"
 import seedUserZero from "../../src/db/utils/seedUserZero"
 import { seedUsers } from "../../src/db/utils/seedUsers"
+import { logger } from "../../src/utils/logger"
 
 /**
  * - Seed the default owner user into the DB
@@ -18,10 +19,10 @@ describe("Integration: Owner flow from seeded default owner", () => {
   beforeAll(async () => {
     await dbClient.connect()
     await dbClient.query("DELETE FROM users")
-    await seedUserZero("resident")
   })
   beforeEach(async () => {
     await dbClient.query("DELETE FROM users WHERE role != 'owner'")
+    await seedUserZero("resident")
     await seedUsers(10)
   })
   afterAll(async () => {
@@ -42,12 +43,12 @@ describe("Integration: Owner flow from seeded default owner", () => {
 
   it("Hit the /self endpoint once logged in and get own user object", async () => {
     const response = await request(app).get("/users/self").set("Authorization", `Bearer ${jwt}`)
-    expect(response.status).toBe(200)
     expect(response.body).toMatchObject({
       firstName: "Resident",
       lastName: "Zero",
       username: "resident",
     })
+    expect(response.status).toBe(200)
   })
 
   it("Hit the /getAllUsers endpoint once logged in and get all of the users back", async () => {
@@ -72,7 +73,6 @@ describe("Integration: Owner flow from seeded default owner", () => {
     const userResponse = await request(app)
       .get("/users/" + userIdToGet)
       .set("Authorization", `Bearer ${jwt}`)
-
     expect(userResponse.status).toBe(200)
     expect(userResponse.body).toMatchObject([
       {
