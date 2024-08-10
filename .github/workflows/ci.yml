@@ -53,13 +53,6 @@ jobs:
           POSTGRES_URL: localhost
           POSTGRES_DB: testdb
         run: npm run push
-      - name: Seed the database with owner and some users
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: password
-          POSTGRES_URL: localhost
-          POSTGRES_DB: testdb
-        run: npm run seed:owner && npm run seed
       - name: Run tests
         env:
           POSTGRES_USER: postgres
