@@ -2,15 +2,23 @@ import request from "supertest"
 import { app } from "../../src"
 import { dbClient } from "../../src/db"
 
-describe("Integration: Test flow", () => {
+/**
+ * - Create/Register a new user
+ * - Attempt to get data while not authorised
+ * - Log in with the new user
+ * - Reattempt to get data while authorised
+ */
+describe("Integration: Default User flow", () => {
   let jwt: string
 
   beforeAll(async () => {
     await dbClient.connect()
     await dbClient.query("DELETE FROM users where username = 'mrhappy'")
   })
-
-  afterAll(async () => await dbClient.end())
+  afterAll(async () => {
+    await dbClient.query("DELETE FROM users")
+    await dbClient.end()
+  })
 
   it("Create a new user", async () => {
     const newUser = {

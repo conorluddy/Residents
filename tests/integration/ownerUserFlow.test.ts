@@ -4,6 +4,14 @@ import { dbClient } from "../../src/db"
 import seedUserZero from "../../src/db/utils/seedUserZero"
 import { seedUsers } from "../../src/db/utils/seedUsers"
 
+/**
+ * - Seed the default owner user into the DB
+ * - Log in as the Owner
+ * - Get self/own user data
+ * - Get all users
+ * - Delete a user
+ * - Get a specific user
+ */
 describe("Integration: Owner flow from seeded default owner", () => {
   let jwt: string
   let userTwoId: string
@@ -13,12 +21,12 @@ describe("Integration: Owner flow from seeded default owner", () => {
     await seedUserZero("resident")
   })
   beforeEach(async () => {
-    await dbClient.query("DELETE FROM users WHERE username != 'resident'")
+    await dbClient.query("DELETE FROM users WHERE role != 'owner'")
     await seedUsers(10)
   })
   afterAll(async () => {
-    await dbClient.end()
     await dbClient.query("DELETE FROM users")
+    await dbClient.end()
   })
 
   it("Log in as the owner - Resident Zero", async () => {
