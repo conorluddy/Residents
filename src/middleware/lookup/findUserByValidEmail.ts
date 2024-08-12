@@ -26,7 +26,7 @@ const findUserByValidEmail: RequestHandler = async (req: Request, res: Response,
       return res.status(HTTP_CLIENT_ERROR.NOT_FOUND).json({ message: "User not found" })
     }
 
-    req.userNoPW = { ...user, password: null }
+    req.userNoPW = { ...user }
     next()
   } catch (error) {
     logger.error("findUserByValidEmail error: ", error)

@@ -18,7 +18,7 @@ const tableUsers = pgTable("users", {
   lastName: text("last_name"),
   email: text("email").unique().notNull(),
   role: enumUserRole("role").default(ROLES.DEFAULT),
-  password: text("password"),
+  password: text("password").notNull(),
   status: enumUserStatus("status").default(STATUS.UNVERIFIED),
   createdAt: timestamp("created_at").default(sql`now()`),
   deletedAt: timestamp("deleted_at"),
