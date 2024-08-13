@@ -62,6 +62,7 @@ if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET || !GOOGLE_CALLBACK_URL) {
               lastName: profile.name?.givenName,
               email: profile.emails?.[0].value ?? "",
               username: profile.displayName,
+              // create a default random strong password if none is provided
             }
 
             const newUsers = await db

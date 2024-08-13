@@ -4,6 +4,7 @@ import { User } from "../../db/types"
 import { makeAFakeUserWithHashedPassword } from "../../test-utils/mockUsers"
 import { login } from "./login"
 import { TOKEN_TYPE } from "../../constants/database"
+import { logger } from "../../utils/logger"
 
 jest.mock("../../db", () => ({
   select: jest.fn().mockReturnValue({
@@ -65,12 +66,14 @@ describe("Controller: Login", () => {
     delete mockRequest.cookies
     await login(mockRequest as Request, mockResponse as Response)
 
+    expect(logger.error).toHaveBeenCalledWith(new Error("Test error"))
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR)
     expect(mockResponse.json).toHaveBeenCalledWith({ message: "Error logging in." })
   })
 
   it("should allow login with correct username and password", async () => {
     await login(mockRequest as Request, mockResponse as Response)
+
     expect(mockResponse.json).toHaveBeenCalledWith({ accessToken: "fakeToken" })
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.OK)
     expect(mockResponse.cookie).toHaveBeenCalledWith("refreshToken", "token123", {
