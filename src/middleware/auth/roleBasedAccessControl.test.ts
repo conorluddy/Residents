@@ -55,7 +55,7 @@ describe("Middleware:RBAC:checkPermission", () => {
   })
 
   it("should return early if there's no User data provided", () => {
-    mockRequest[REQUEST_USER] = {} as SafeUser
+    mockRequest[REQUEST_USER] = null as unknown as SafeUser
     RBAC.checkCanGetUsers(mockRequest as Request, mockResponse as Response, nextFunction)
     expect(nextFunction).not.toHaveBeenCalled()
     expect(mockResponse.status).toHaveBeenCalled()

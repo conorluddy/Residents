@@ -23,7 +23,7 @@ function checkPermission(permission: PERMISSIONS) {
         return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "Forbidden" })
       }
 
-      if (user.deletedAt !== null) {
+      if (!!user.deletedAt) {
         logger.warn(`User ${user.id} lacks permission ${permission} because they are deleted`)
         return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Forbidden" })
       }

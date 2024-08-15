@@ -16,6 +16,7 @@ describe("Integration: Default User flow", () => {
     await dbClient.connect()
     await dbClient.query("DELETE FROM users")
   })
+
   afterAll(async () => {
     await dbClient.query("DELETE FROM users")
     await dbClient.end()

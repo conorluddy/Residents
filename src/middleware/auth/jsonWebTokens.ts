@@ -11,7 +11,7 @@ export const authenticateToken = (req: Request, res: Response, next: NextFunctio
   const token = authHeader && authHeader.split(" ")[1] // Bearer[ ]TOKEN...
   const secret = JWT_TOKEN_SECRET
 
-  if (token == null) {
+  if (!token) {
     logger.warn("JWT token is not provided in the request headers")
     return res.status(HTTP_CLIENT_ERROR.UNAUTHORIZED).json({ message: "Token is required" })
   }
