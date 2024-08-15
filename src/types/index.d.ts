@@ -1,6 +1,6 @@
 import "express"
 import { JwtPayload } from "jsonwebtoken"
-import { User, SafeUser } from "../db/types"
+import { User, SafeUser, PublicUser } from "../db/types"
 import { REQUEST_USER } from "../types/requestSymbols"
 
 declare module "express-serve-static-core" {
@@ -21,5 +21,6 @@ declare module "express-serve-static-core" {
     // Symbols let us ensure that the key is unique
     // and won't clash with anything else
     [REQUEST_USER]?: SafeUser | null
+    //                 ^^^ Need to update this to just use PublicUser
   }
 }

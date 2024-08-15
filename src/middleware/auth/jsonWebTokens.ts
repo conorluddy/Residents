@@ -26,10 +26,11 @@ export const authenticateToken = (req: Request, res: Response, next: NextFunctio
       logger.warn("JWT token is invalid or expired")
       return res.status(HTTP_CLIENT_ERROR.UNAUTHORIZED).json({ message: "Token is invalid or expired" })
     }
-    if (!TYPEGUARD.isSafeUser(user)) {
+    if (!TYPEGUARD.isJwtUser(user)) {
       logger.warn("JWT contains invalid user data:", JSON.stringify(user, null, 2))
       return res.status(HTTP_CLIENT_ERROR.UNAUTHORIZED).json({ message: "Token is invalid" })
     }
+
     req[REQUEST_USER] = user
     next()
   })

@@ -46,13 +46,6 @@ function checkPermission(permission: PERMISSIONS) {
  */
 async function getTargetUserAndCheckSuperiority(req: Request, res: Response, next: NextFunction) {
   const user = req[REQUEST_USER]
-
-  console.log("\n\n\n\n----------------------\n\n\n\n")
-  console.log("\n\n\n\n----------------------\n\n\n\n")
-  console.log({ user })
-  console.log("\n\n\n\n----------------------\n\n\n\n")
-  console.log("\n\n\n\n----------------------\n\n\n\n")
-
   const targetUserId = req.params.id
 
   try {

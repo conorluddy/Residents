@@ -1,4 +1,19 @@
-import { SafeUser } from "../db/types"
+import { PublicUser, SafeUser } from "../db/types"
+
+function isJwtUser(jwt: any): jwt is SafeUser {
+  return (
+    typeof jwt === "object" &&
+    jwt !== null &&
+    typeof jwt.iat === "number" &&
+    typeof jwt.exp === "number" &&
+    typeof jwt.id === "string" &&
+    typeof jwt.username === "string" &&
+    typeof jwt.email === "string" &&
+    typeof jwt.role === "string" &&
+    (typeof jwt.firstName === "string" || jwt.firstName === undefined) &&
+    (typeof jwt.lastName === "string" || jwt.lastName === undefined)
+  )
+}
 
 function isSafeUser(user: any): user is SafeUser {
   return (
@@ -16,6 +31,19 @@ function isSafeUser(user: any): user is SafeUser {
   )
 }
 
-const TYPEGUARD = { isSafeUser }
+function isPublicUser(user: any): user is PublicUser {
+  return (
+    typeof user === "object" &&
+    user !== null &&
+    typeof user.id === "string" &&
+    typeof user.username === "string" &&
+    typeof user.email === "string" &&
+    typeof user.role === "string" &&
+    (typeof user.firstName === "string" || user.firstName === undefined) &&
+    (typeof user.lastName === "string" || user.lastName === undefined)
+  )
+}
+
+const TYPEGUARD = { isSafeUser, isPublicUser, isJwtUser }
 
 export default TYPEGUARD
