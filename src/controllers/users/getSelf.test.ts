@@ -1,9 +1,10 @@
 import { Request, Response } from "express"
-import { makeAFakeUser } from "../../test-utils/mockUsers"
+import { makeAFakeSafeUser, makeAFakeUser } from "../../test-utils/mockUsers"
 import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constants/http"
 import { getSelf } from "./getSelf"
-import { User } from "../../db/types"
+import { SafeUser, User } from "../../db/types"
 import { logger } from "../../utils/logger"
+import { REQUEST_USER } from "../../types/requestSymbols"
 
 let fakeUser: Partial<User>
 
@@ -28,14 +29,12 @@ jest.mock("../../db", () => ({
 }))
 
 describe("Controller: GetSelf", () => {
-  let mockRequest: Partial<Request>
+  let mockRequest: Partial<Request> & { [REQUEST_USER]?: SafeUser }
   let mockResponse: Partial<Response>
 
   beforeEach(() => {
     mockRequest = {
-      user: {
-        id: "SELF_ID",
-      },
+      [REQUEST_USER]: makeAFakeSafeUser({ id: "SELF_ID" }),
     }
     mockResponse = {
       status: jest.fn().mockReturnThis(),
@@ -50,7 +49,7 @@ describe("Controller: GetSelf", () => {
   })
 
   it("Missing ID is handled", async () => {
-    mockRequest.user = {}
+    mockRequest[REQUEST_USER] = undefined
     await getSelf(mockRequest as Request, mockResponse as Response)
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.BAD_REQUEST)
     expect(mockResponse.json).toHaveBeenCalledWith({ message: "User ID is missing in the request." })

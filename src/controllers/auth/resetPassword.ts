@@ -8,6 +8,7 @@ import { sendMail } from "../../mail/sendgrid"
 import { logger } from "../../utils/logger"
 import { TIMESPAN } from "../../constants/time"
 import { SENDGRID_TEST_EMAIL } from "../../config"
+import { REQUEST_USER } from "../../types/requestSymbols"
 
 /**
  * resetPassword
@@ -17,15 +18,15 @@ import { SENDGRID_TEST_EMAIL } from "../../config"
  *
  * POST
  */
-export const resetPassword = async ({ userNoPW }: Request, res: Response) => {
+export const resetPassword = async (req: Request, res: Response) => {
   try {
-    if (!userNoPW) {
+    if (!req[REQUEST_USER]) {
       logger.error("ResetPassword controller: No user data.")
       return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "User data missing." })
     }
 
     const newToken: NewToken = {
-      userId: userNoPW.id,
+      userId: req[REQUEST_USER]?.id,
       type: TOKEN_TYPE.RESET,
       expiresAt: new Date(Date.now() + TIMESPAN.HOUR), // TODO: Make configurable
     }
@@ -40,7 +41,7 @@ export const resetPassword = async ({ userNoPW }: Request, res: Response) => {
       // Obviously this is a test link, in production you'd want to use a real domain
     })
 
-    logger.info(`Reset email sent to ${userNoPW.email}, token id: ${tokenId}`)
+    logger.info(`Reset email sent to ${req[REQUEST_USER].email}, token id: ${tokenId}`)
     return res.status(HTTP_SUCCESS.OK).json({ message: "Reset email sent" })
   } catch (error) {
     logger.error(error)

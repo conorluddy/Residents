@@ -3,7 +3,9 @@ import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from "../../constants/http"
 import { logger } from "../../utils/logger"
 import { eq } from "drizzle-orm"
 import db from "../../db"
-import { tableUsers } from "../../db/schema"
+import { tableUsers, User } from "../../db/schema"
+import { userToSafeUser } from "../../utils/user"
+import { REQUEST_USER } from "../../types/requestSymbols"
 
 /**
  * Middleware for finding a user by their email address.
@@ -18,6 +20,7 @@ const findUserByValidEmail: RequestHandler = async (req: Request, res: Response,
       return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "Invalid email" })
     }
 
+    // Update these user queries to only return SafeUser objects in a data access layer rather than in the mw or controller
     const user = await db.query.tableUsers.findFirst({ where: eq(tableUsers.email, validatedEmail) })
 
     if (!user) {
@@ -26,7 +29,7 @@ const findUserByValidEmail: RequestHandler = async (req: Request, res: Response,
       return res.status(HTTP_CLIENT_ERROR.NOT_FOUND).json({ message: "User not found" })
     }
 
-    req.userNoPW = { ...user, password: null }
+    req[REQUEST_USER] = userToSafeUser(user)
     next()
   } catch (error) {
     logger.error("findUserByValidEmail error: ", error)

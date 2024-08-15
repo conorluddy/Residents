@@ -3,6 +3,7 @@ import { createHash } from "../utils/crypt"
 import { ROLES, ROLES_ARRAY, STATUS, STATUS_ARRAY } from "../constants/database"
 import { User } from "../db/schema"
 import { createId } from "@paralleldrive/cuid2"
+import { PublicUser, SafeUser } from "../db/types"
 
 faker.seed(123)
 
@@ -29,9 +30,7 @@ const makeAFakeUser = ({
   firstName,
   lastName,
   password,
-  rank,
   role,
-  referredBy,
   status,
   username = "U53rn4m3",
 }: Params): User => ({
@@ -73,4 +72,34 @@ const makeAFakeUserWithHashedPassword = async ({
   createdAt: createdAt ?? new Date(),
 })
 
-export { makeAFakeUser, makeAFakeUserWithHashedPassword }
+const makeAFakeSafeUser = ({
+  id,
+  createdAt,
+  deletedAt,
+  email,
+  firstName,
+  lastName,
+  role,
+  status,
+  username = "U53rn4m3",
+}: Params): SafeUser => ({
+  id: id ?? createId(),
+  deletedAt: deletedAt ?? null,
+  email: email ?? faker.internet.email(),
+  firstName: firstName ?? faker.person.firstName(),
+  lastName: lastName ?? faker.person.lastName(),
+  role: role === null ? null : role ?? faker.helpers.arrayElement(ROLES_ARRAY),
+  status: status ?? faker.helpers.arrayElement(STATUS_ARRAY),
+  username: username ?? faker.internet.userName(),
+  createdAt: createdAt ?? new Date(),
+})
+
+const makeAFakePublicUser = ({ id, email, firstName, lastName, role, username = "U53rn4m3" }: Params): PublicUser => ({
+  id: id ?? createId(),
+  username: username ?? faker.internet.userName(),
+  email: email ?? faker.internet.email(),
+  firstName: firstName ?? faker.person.firstName(),
+  lastName: lastName ?? faker.person.lastName(),
+  role: role === null ? null : role ?? faker.helpers.arrayElement(ROLES_ARRAY),
+})
+export { makeAFakeUser, makeAFakeUserWithHashedPassword, makeAFakeSafeUser, makeAFakePublicUser }

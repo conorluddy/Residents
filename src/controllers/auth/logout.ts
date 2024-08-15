@@ -5,6 +5,7 @@ import { logger } from "../../utils/logger"
 import db from "../../db"
 import { and, eq } from "drizzle-orm"
 import { TOKEN_TYPE } from "../../constants/database"
+import { REQUEST_USER } from "../../types/requestSymbols"
 
 /**
  * logout
@@ -14,7 +15,7 @@ export const logout = async (req: Request, res: Response) => {
 
   try {
     // need to type the req better
-    const userId = req?.user ? (req.user as User).id : null
+    const userId = req[REQUEST_USER]?.id
 
     if (!userId) {
       logger.error("User ID not found", { userId })

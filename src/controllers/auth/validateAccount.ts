@@ -5,6 +5,7 @@ import { eq, and } from "drizzle-orm"
 import { logger } from "../../utils/logger"
 import { tableTokens, tableUsers, User } from "../../db/schema"
 import { STATUS, TOKEN_TYPE } from "../../constants/database"
+import { REQUEST_USER } from "../../types/requestSymbols"
 
 /**
  * validateAccount
@@ -15,7 +16,7 @@ export const validateAccount = async (req: Request, res: Response) => {
     // if you're logged in though you could just
     // use the userId from the JWT
     const { tokenId, userId } = req.params
-    const jwtUserId = (req.user as User)?.id
+    const jwtUserId = req[REQUEST_USER]?.id
 
     const tokenWithUser = await db.query.tableTokens.findFirst({
       where: and(eq(tableTokens.id, tokenId), eq(tableTokens.type, TOKEN_TYPE.VALIDATE)),

@@ -2,9 +2,9 @@ import { NextFunction, Request, Response } from "express"
 import { ROLES } from "../../constants/database"
 import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from "../../constants/http"
 import { User } from "../../db/types"
-import { makeAFakeUser } from "../../test-utils/mockUsers"
-import { JWTUserPayload } from "../../utils/generateJwt"
+import { makeAFakeSafeUser, makeAFakeUser } from "../../test-utils/mockUsers"
 import RBAC from "./roleBasedAccessControl"
+import { logger } from "../../utils/logger"
 
 jest.mock("../../utils/logger")
 jest.mock("../../db", () => ({
@@ -35,16 +35,16 @@ describe("Middleware:RBAC:checkPermission", () => {
   let mockDeletedDefaultUser: Partial<User>
 
   beforeAll(() => {
-    mockAdminUser = makeAFakeUser({ role: ROLES.ADMIN })
-    mockDefaultUser = makeAFakeUser({ role: ROLES.DEFAULT })
-    mockLockedUser = makeAFakeUser({ role: ROLES.LOCKED })
-    mockDeletedAdminUser = makeAFakeUser({ role: ROLES.ADMIN, deletedAt: new Date() })
-    mockDeletedDefaultUser = makeAFakeUser({ role: ROLES.DEFAULT, deletedAt: new Date() })
+    mockAdminUser = makeAFakeSafeUser({ role: ROLES.ADMIN })
+    mockDefaultUser = makeAFakeSafeUser({ role: ROLES.DEFAULT })
+    mockLockedUser = makeAFakeSafeUser({ role: ROLES.LOCKED })
+    mockDeletedAdminUser = makeAFakeSafeUser({ role: ROLES.ADMIN, deletedAt: new Date() })
+    mockDeletedDefaultUser = makeAFakeSafeUser({ role: ROLES.DEFAULT, deletedAt: new Date() })
   })
 
   beforeEach(() => {
     mockRequest = {
-      user: { role: ROLES.ADMIN, id: "AdminTestUser1" } as JWTUserPayload,
+      user: mockAdminUser,
     }
     mockResponse = {
       status: jest.fn().mockReturnThis(),
@@ -383,7 +383,7 @@ describe("Middleware:RBAC:getTargetUserAndCheckSuperiority", () => {
 
   beforeEach(() => {
     mockRequest = {
-      user: { role: ROLES.ADMIN, id: "TestUser" } as JWTUserPayload,
+      user: { role: ROLES.ADMIN, id: "TestUser" },
       params: { id: "TestUserTarget", role: ROLES.DEFAULT },
     }
     mockResponse = {

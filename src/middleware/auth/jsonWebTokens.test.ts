@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express"
 import { ROLES } from "../../constants/database"
-import { User } from "../../db/types"
-import { generateJwt, JWTUserPayload } from "../../utils/generateJwt"
+import { PublicUser, User } from "../../db/types"
+import { generateJwt } from "../../utils/generateJwt"
 import { authenticateToken } from "./jsonWebTokens"
 import { makeAFakeUser } from "../../test-utils/mockUsers"
 import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from "../../constants/http"
@@ -12,7 +12,7 @@ describe("Middleware:JWT", () => {
   let mockRequest: Partial<Request>
   let mockResponse: Partial<Response>
   let nextFunction: NextFunction
-  let mockDefaultUser: Partial<User>
+  let mockDefaultUser: PublicUser
   let jwt
 
   beforeAll(() => {
@@ -22,7 +22,7 @@ describe("Middleware:JWT", () => {
   beforeEach(() => {
     jwt = generateJwt(mockDefaultUser)
     mockRequest = {
-      user: { role: ROLES.ADMIN, id: "AdminTestUser1" } as JWTUserPayload,
+      user: { role: ROLES.ADMIN, id: "AdminTestUser1" },
       headers: {
         authorization: `Bearer ${jwt}`,
       },

@@ -30,12 +30,12 @@ const xsrfTokens = (req: Request, res: Response, next: NextFunction) => {
     if (!requestHeadersXsrfToken) {
       return res.status(HTTP_CLIENT_ERROR.UNAUTHORIZED).json({ message: "XSRF token is required." })
     } else {
-      jwt.verify(String(requestHeadersXsrfToken), secret, (err, user) => {
+      jwt.verify(String(requestHeadersXsrfToken), secret, (err, content) => {
         if (err) {
           logger.warn("XSRF token is invalid.")
           return res.status(HTTP_CLIENT_ERROR.UNAUTHORIZED).json({ message: "XSRF token is invalid." })
         }
-        req.user = user
+        // content here should be JWT_XSRF_TOKEN_DATA - check that too
         next()
       })
     }

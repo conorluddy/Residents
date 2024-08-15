@@ -1,9 +1,10 @@
 import { NextFunction, Request, Response } from "express"
 import { ROLES } from "../../constants/database"
 import { HTTP_CLIENT_ERROR } from "../../constants/http"
-import { User } from "../../db/types"
+import { SafeUser, User } from "../../db/types"
 import { makeAFakeUser } from "../../test-utils/mockUsers"
 import findUserByValidEmail from "./findUserByValidEmail"
+import { REQUEST_USER } from "../../types/requestSymbols"
 
 jest.mock("../../utils/logger")
 jest.mock("../../db", () => ({
@@ -18,10 +19,10 @@ jest.mock("../../db", () => ({
 }))
 
 describe("Middleware:findUserByValidEmail", () => {
-  let mockRequest: Partial<Request> & { validatedEmail?: string; userNoPW?: Partial<User> }
+  let mockRequest: Partial<Request> & { validatedEmail?: string; [REQUEST_USER]?: SafeUser }
   let mockResponse: Partial<Response>
   let nextFunction: NextFunction
-  let mockDefaultUser: Partial<User>
+  let mockDefaultUser: SafeUser
 
   beforeAll(() => {
     mockDefaultUser = makeAFakeUser({ role: ROLES.DEFAULT })
@@ -43,8 +44,8 @@ describe("Middleware:findUserByValidEmail", () => {
   // but the middleware should still wotk in isolation and not care about the user's role.
   it("Happy path: Valid email used to find valid user", async () => {
     await findUserByValidEmail(mockRequest as Request, mockResponse as Response, nextFunction)
-    expect(mockRequest.userNoPW).toHaveProperty("email", "validated@email.com")
-    expect(mockRequest.userNoPW).toHaveProperty("username", "MrFake")
+    expect(mockRequest[REQUEST_USER]).toHaveProperty("email", "validated@email.com")
+    expect(mockRequest[REQUEST_USER]).toHaveProperty("username", "MrFake")
     expect(nextFunction).toHaveBeenCalled()
   })
   it("validatedEmail doesn't exist in the request", async () => {

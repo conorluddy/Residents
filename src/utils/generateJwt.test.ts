@@ -1,11 +1,12 @@
-import { ROLES } from "../constants/database"
-import { generateJwt, JWTUserPayload } from "./generateJwt"
+import { ROLES, STATUS } from "../constants/database"
+import { PublicUser } from "../db/types"
+import { generateJwt } from "./generateJwt"
 import jwt from "jsonwebtoken"
 jest.mock("jsonwebtoken")
 
 describe("generateJwt", () => {
-  const userPayload: JWTUserPayload = {
-    id: "13",
+  const userPayload: PublicUser = {
+    id: "1",
     firstName: "John",
     lastName: "Dope",
     email: "john.dope@example.com",

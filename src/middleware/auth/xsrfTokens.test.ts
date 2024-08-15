@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from "express"
 import { ROLES } from "../../constants/database"
 import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from "../../constants/http"
-import { JWTUserPayload } from "../../utils/generateJwt"
 import xsrfTokens from "./xsrfTokens"
 
 jest.mock("../../utils/logger")
@@ -16,7 +15,7 @@ describe("Middleware: XSRF Tokens: ", () => {
     originalEnv = process.env.NODE_ENV
 
     mockRequest = {
-      user: { role: ROLES.ADMIN, id: "AdminTestUser1" } as JWTUserPayload,
+      user: { role: ROLES.ADMIN, id: "AdminTestUser1" },
       headers: {
         "xsrf-token": "123",
       },
