@@ -37,7 +37,6 @@ describe("GET /logout", () => {
       },
     }
     mockResponse = {
-      // status: jest.fn().mockReturnThis(),
       json: jest.fn(),
     }
   })

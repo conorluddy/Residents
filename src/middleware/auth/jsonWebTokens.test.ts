@@ -1,18 +1,19 @@
 import { NextFunction, Request, Response } from "express"
 import { ROLES } from "../../constants/database"
-import { User } from "../../db/types"
-import { generateJwt, JWTUserPayload } from "../../utils/generateJwt"
+import { HTTP_CLIENT_ERROR } from "../../constants/http"
+import { PublicUser, User } from "../../db/types"
+import { makeAFakeSafeUser, makeAFakeUser } from "../../test-utils/mockUsers"
+import { REQUEST_USER } from "../../types/requestSymbols"
+import { generateJwt } from "../../utils/generateJwt"
 import { authenticateToken } from "./jsonWebTokens"
-import { makeAFakeUser } from "../../test-utils/mockUsers"
-import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from "../../constants/http"
 
 jest.mock("../../utils/logger")
 
 describe("Middleware:JWT", () => {
-  let mockRequest: Partial<Request>
+  let mockRequest: Partial<Request> & { [REQUEST_USER]: PublicUser }
   let mockResponse: Partial<Response>
   let nextFunction: NextFunction
-  let mockDefaultUser: Partial<User>
+  let mockDefaultUser: User
   let jwt
 
   beforeAll(() => {
@@ -22,7 +23,7 @@ describe("Middleware:JWT", () => {
   beforeEach(() => {
     jwt = generateJwt(mockDefaultUser)
     mockRequest = {
-      user: { role: ROLES.ADMIN, id: "AdminTestUser1" } as JWTUserPayload,
+      [REQUEST_USER]: makeAFakeSafeUser({ id: "AdminTestUser1", role: ROLES.ADMIN }),
       headers: {
         authorization: `Bearer ${jwt}`,
       },
@@ -35,13 +36,15 @@ describe("Middleware:JWT", () => {
   })
 
   it("Happy Path: should allow passthrough if the JWT is verified", () => {
-    mockRequest.user = mockDefaultUser
+    mockRequest[REQUEST_USER] = makeAFakeSafeUser(mockDefaultUser)
     authenticateToken(mockRequest as Request, mockResponse as Response, nextFunction)
+    // expect(logger.warn).toHaveBeenCalledWith("")
+
     expect(nextFunction).toHaveBeenCalled()
   })
 
   it("Should reject as unauthorized if there's no token in the request", () => {
-    mockRequest.user = mockDefaultUser
+    mockRequest[REQUEST_USER] = makeAFakeSafeUser(mockDefaultUser)
     delete mockRequest?.headers?.authorization
     authenticateToken(mockRequest as Request, mockResponse as Response, nextFunction)
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.UNAUTHORIZED)
@@ -50,7 +53,7 @@ describe("Middleware:JWT", () => {
   })
 
   it("Should reject as unauthorized if the token has expired", () => {
-    mockRequest.user = mockDefaultUser
+    mockRequest[REQUEST_USER] = makeAFakeSafeUser(mockDefaultUser)
     mockRequest.headers = {
       authorization: `Bearer ${generateJwt(mockDefaultUser, "1ms")}`,
     }
@@ -62,7 +65,7 @@ describe("Middleware:JWT", () => {
 
   it("Should reject as unauthorized if the token has expired", () => {
     jwt = generateJwt(mockDefaultUser, "0ms")
-    mockRequest.user = mockDefaultUser
+    mockRequest[REQUEST_USER] = makeAFakeSafeUser(mockDefaultUser)
     mockRequest.headers!.authorization = `Bearer ${jwt}`
     authenticateToken(mockRequest as Request, mockResponse as Response, nextFunction)
     expect(nextFunction).not.toHaveBeenCalled()

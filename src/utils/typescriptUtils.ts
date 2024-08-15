@@ -3,9 +3,7 @@
  * @param enumObj
  * @returns
  */
-export const getEnumValues = <T extends string>(enumObj: {
-  [key: string]: T
-}): readonly [T, ...T[]] => {
+export const getEnumValues = <T extends string>(enumObj: { [key: string]: T }): readonly [T, ...T[]] => {
   const values = Object.values(enumObj) as T[]
   if (values.length === 0) {
     throw new Error("Enum has no values")

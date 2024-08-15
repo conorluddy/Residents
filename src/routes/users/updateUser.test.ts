@@ -4,12 +4,13 @@ import { ROLES } from "../../constants/database"
 import { HTTP_SUCCESS } from "../../constants/http"
 import updateUserRouter from "../../routes/users/updateUser"
 import { makeAFakeUser } from "../../test-utils/mockUsers"
+import { REQUEST_USER } from "../../types/requestSymbols"
 
 let fakeUser = makeAFakeUser({ password: "$TR0ngP@$$W0rDz123!", role: ROLES.DEFAULT })
 
 jest.mock("../../middleware/auth/jsonWebTokens", () => ({
   authenticateToken: jest.fn((req, _res, next) => {
-    req.user = { id: "XX", role: ROLES.MODERATOR }
+    req[REQUEST_USER] = { id: "XX", role: ROLES.MODERATOR }
     next()
   }),
 }))

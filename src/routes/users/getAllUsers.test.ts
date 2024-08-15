@@ -3,15 +3,16 @@ import request from "supertest"
 import { ROLES } from "../../constants/database"
 import { HTTP_SUCCESS } from "../../constants/http"
 import CONTROLLERS from "../../controllers"
-import { User } from "../../db/types"
+import { PublicUser, User } from "../../db/types"
 import getAllUsersRoute from "../../routes/users/getAllUsers"
 import { makeAFakeUser } from "../../test-utils/mockUsers"
 import { generateJwt } from "../../utils/generateJwt"
+import { REQUEST_USER } from "../../types/requestSymbols"
 
 // Mock the middlewares
 jest.mock("../../middleware/auth/jsonWebTokens", () => ({
-  authenticateToken: jest.fn((req, res, next) => {
-    req.user = { id: "123", role: "admin" }
+  authenticateToken: jest.fn((req, _res, next) => {
+    req[REQUEST_USER] = { id: "123", role: "admin" }
     next()
   }),
 }))
@@ -20,7 +21,7 @@ jest.mock("../../middleware/auth/roleBasedAccessControl", () => ({
   checkCanGetUsers: jest.fn((req, res, next) => next()),
 }))
 
-CONTROLLERS.USER.getAllUsers = jest.fn(async (req, res) => {
+CONTROLLERS.USER.getAllUsers = jest.fn(async (_req, res) => {
   return res.status(HTTP_SUCCESS.OK).json({ message: "Users retrieved successfully" })
 })
 
@@ -39,7 +40,7 @@ app.use(express.json())
 app.use("/", getAllUsersRoute)
 
 describe("GET /users", () => {
-  let mockDefaultUser: Partial<User>
+  let mockDefaultUser: PublicUser
 
   beforeAll(() => {
     process.env.JWT_TOKEN_SECRET = "TESTSECRET"

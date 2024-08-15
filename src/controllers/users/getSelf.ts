@@ -2,16 +2,17 @@ import { eq } from "drizzle-orm"
 import { Request, Response } from "express"
 import { HTTP_CLIENT_ERROR, HTTP_SUCCESS, HTTP_SERVER_ERROR } from "../../constants/http"
 import { tableUsers } from "../../db/schema"
-import { JWTUserPayload } from "../../utils/generateJwt"
 import { logger } from "../../utils/logger"
 import db from "../../db"
+import { REQUEST_USER } from "../../types/requestSymbols"
 
 /**
  * getSelf - gets own user record
  */
 export const getSelf = async (req: Request, res: Response) => {
   try {
-    const userId = (req.user as JWTUserPayload)?.id
+    const userId = req[REQUEST_USER]?.id
+
     if (!userId)
       return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "User ID is missing in the request." })
 

@@ -1,11 +1,12 @@
 import { Request, Response } from "express"
 import { HTTP_SUCCESS } from "../../constants/http"
-import { User } from "../../db/types"
+import { PublicUser } from "../../db/types"
+import { makeAFakeSafeUser } from "../../test-utils/mockUsers"
+import { REQUEST_USER } from "../../types/requestSymbols"
 import { googleCallback } from "./googleCallback"
-import { makeAFakeUser } from "../../test-utils/mockUsers"
 
 describe("Controller: GoogleCallback", () => {
-  let mockRequest: Partial<Request> & { user: Partial<User> }
+  let mockRequest: Partial<Request> & { [REQUEST_USER]: PublicUser }
   let mockResponse: Partial<Response>
 
   beforeAll(() => {
@@ -13,7 +14,7 @@ describe("Controller: GoogleCallback", () => {
   })
 
   beforeEach(() => {
-    mockRequest = { user: makeAFakeUser({ username: "Hackerman" }) }
+    mockRequest = { [REQUEST_USER]: makeAFakeSafeUser({ username: "Hackerman" }) }
     mockResponse = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn(),

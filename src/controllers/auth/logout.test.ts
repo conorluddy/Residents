@@ -1,7 +1,9 @@
 import { Request, Response } from "express"
 import { HTTP_SUCCESS } from "../../constants/http"
-import { User } from "../../db/types"
+import { SafeUser } from "../../db/types"
 import { logout } from "./logout"
+import { REQUEST_USER } from "../../types/requestSymbols"
+import { makeAFakeSafeUser } from "../../test-utils/mockUsers"
 
 jest.mock("../../utils/logger")
 jest.mock("../../db", () => ({
@@ -11,15 +13,15 @@ jest.mock("../../db", () => ({
 }))
 
 describe("Controller: Logout", () => {
-  let mockRequest: Partial<Request> & { user: Partial<User> }
+  let mockRequest: Partial<Request> & { [REQUEST_USER]?: SafeUser }
   let mockResponse: Partial<Response>
 
   beforeEach(() => {
     mockRequest = {
-      user: {
+      [REQUEST_USER]: makeAFakeSafeUser({
         id: "123",
         username: "MrFake",
-      },
+      }),
     }
     mockResponse = {
       status: jest.fn().mockReturnThis(),

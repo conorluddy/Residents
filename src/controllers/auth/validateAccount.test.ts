@@ -1,10 +1,11 @@
 import { Request, Response } from "express"
-import { HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constants/http"
-import { validateAccount } from "./validateAccount"
-import { makeAFakeUser } from "../../test-utils/mockUsers"
 import { ROLES } from "../../constants/database"
+import { HTTP_SUCCESS } from "../../constants/http"
+import { PublicUser } from "../../db/types"
+import { makeAFakeSafeUser, makeAFakeUser } from "../../test-utils/mockUsers"
+import { REQUEST_USER } from "../../types/requestSymbols"
 import { logger } from "../../utils/logger"
-import { generateJwt } from "../../utils/generateJwt"
+import { validateAccount } from "./validateAccount"
 
 const mockDefaultUser = makeAFakeUser({ role: ROLES.DEFAULT })
 
@@ -46,7 +47,7 @@ jest.mock("../../utils/generateJwt", () => ({
 }))
 
 describe("Controller: Validate Account", () => {
-  let mockRequest: Partial<Request>
+  let mockRequest: Partial<Request> & { [REQUEST_USER]: PublicUser }
   let mockResponse: Partial<Response>
 
   beforeEach(() => {
@@ -55,9 +56,7 @@ describe("Controller: Validate Account", () => {
         tokenId: "TOKEN001",
         userId: mockDefaultUser.id,
       },
-      user: {
-        id: mockDefaultUser.id,
-      },
+      [REQUEST_USER]: makeAFakeSafeUser({ id: mockDefaultUser.id }),
     }
     mockResponse = {
       status: jest.fn().mockReturnThis(),

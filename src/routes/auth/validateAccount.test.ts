@@ -1,8 +1,8 @@
 import request from "supertest"
 import express from "express"
 import validateAccountRoute from "./validateAccount"
-import CONTROLLERS from "../../controllers"
 import { HTTP_SERVER_ERROR } from "../../constants/http"
+import { REQUEST_USER } from "../../types/requestSymbols"
 
 jest.mock("../../db", () => ({
   select: jest.fn().mockResolvedValue([]),
@@ -10,7 +10,7 @@ jest.mock("../../db", () => ({
 
 jest.mock("../../middleware/auth/jsonWebTokens", () => ({
   authenticateToken: jest.fn((req, _res, next) => {
-    req.user = { id: "123", role: "admin" }
+    req[REQUEST_USER] = { id: "123", role: "admin" }
     next()
   }),
 }))

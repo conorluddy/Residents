@@ -1,12 +1,12 @@
 import { Request, Response, NextFunction } from "express"
 import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from "../../constants/http"
-import { JWTUserPayload } from "../../utils/generateJwt"
 import { ACL, PERMISSIONS } from "../../constants/accessControlList"
 import { tableUsers, User } from "../../db/schema"
 import { eq } from "drizzle-orm"
 import { logger } from "../../utils/logger"
 import { ROLES, ROLES_ARRAY } from "../../constants/database"
 import db from "../../db"
+import { REQUEST_USER } from "../../types/requestSymbols"
 
 /**
  * Check if the user has the required permission to access the resource
@@ -16,14 +16,14 @@ import db from "../../db"
 function checkPermission(permission: PERMISSIONS) {
   return (req: Request, res: Response, next: NextFunction) => {
     try {
-      const user = req.user as JWTUserPayload
+      const user = req[REQUEST_USER]
 
       if (!user) {
         logger.warn(`User data is missing from the request`)
         return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "Forbidden" })
       }
 
-      if (user.deletedAt !== null) {
+      if (!!user.deletedAt) {
         logger.warn(`User ${user.id} lacks permission ${permission} because they are deleted`)
         return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Forbidden" })
       }
@@ -45,7 +45,7 @@ function checkPermission(permission: PERMISSIONS) {
  * Check if the user has role superiority over the target user
  */
 async function getTargetUserAndCheckSuperiority(req: Request, res: Response, next: NextFunction) {
-  const user = req.user as JWTUserPayload
+  const user = req[REQUEST_USER]
   const targetUserId = req.params.id
 
   try {
@@ -112,7 +112,9 @@ async function getTargetUserAndCheckSuperiority(req: Request, res: Response, nex
     req.targetUserId = targetUser.id
     next()
   } catch (error) {
-    logger.error(`Error checking role superiority for user ${user.id} and target ${targetUserId}: ${error}`)
+    logger.error(
+      `Error checking role superiority for user ${user?.id ?? "<missing userID>"} and target ${targetUserId}: ${error}`
+    )
     return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Internal Server Error" })
   }
 }

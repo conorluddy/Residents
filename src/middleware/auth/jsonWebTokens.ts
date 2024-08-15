@@ -3,13 +3,15 @@ import { Request, Response, NextFunction } from "express"
 import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from "../../constants/http"
 import { logger } from "../../utils/logger"
 import { JWT_TOKEN_SECRET } from "../../config"
+import TYPEGUARD from "../../types/typeguards"
+import { REQUEST_USER } from "../../types/requestSymbols"
 
 export const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers["authorization"]
   const token = authHeader && authHeader.split(" ")[1] // Bearer[ ]TOKEN...
   const secret = JWT_TOKEN_SECRET
 
-  if (token == null) {
+  if (!token) {
     logger.warn("JWT token is not provided in the request headers")
     return res.status(HTTP_CLIENT_ERROR.UNAUTHORIZED).json({ message: "Token is required" })
   }
@@ -24,7 +26,12 @@ export const authenticateToken = (req: Request, res: Response, next: NextFunctio
       logger.warn("JWT token is invalid or expired")
       return res.status(HTTP_CLIENT_ERROR.UNAUTHORIZED).json({ message: "Token is invalid or expired" })
     }
-    req.user = user
+    if (!TYPEGUARD.isJwtUser(user)) {
+      logger.warn("JWT contains invalid user data:", JSON.stringify(user, null, 2))
+      return res.status(HTTP_CLIENT_ERROR.UNAUTHORIZED).json({ message: "Token is invalid" })
+    }
+
+    req[REQUEST_USER] = user
     next()
   })
 }

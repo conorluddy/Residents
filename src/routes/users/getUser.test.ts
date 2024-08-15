@@ -3,15 +3,16 @@ import request from "supertest"
 import { ROLES } from "../../constants/database"
 import { HTTP_SUCCESS } from "../../constants/http"
 import CONTROLLERS from "../../controllers"
-import { User } from "../../db/types"
+import { PublicUser, User } from "../../db/types"
 import getUserRoute from "../../routes/users/getUser"
 import { makeAFakeUser } from "../../test-utils/mockUsers"
 import { generateJwt } from "../../utils/generateJwt"
+import { REQUEST_USER } from "../../types/requestSymbols"
 
 // Mock the middlewares
 jest.mock("../../middleware/auth/jsonWebTokens", () => ({
   authenticateToken: jest.fn((req, res, next) => {
-    req.user = { id: "123", role: "admin" }
+    req[REQUEST_USER] = { id: "123", role: "admin" }
     next()
   }),
 }))
@@ -42,7 +43,7 @@ app.use(express.json())
 app.use("/user", getUserRoute)
 
 describe("GET /user/:id", () => {
-  let mockDefaultUser: Partial<User>
+  let mockDefaultUser: PublicUser
 
   beforeAll(() => {
     process.env.JWT_TOKEN_SECRET = "TESTSECRET"

@@ -2,9 +2,10 @@ import { Request, Response } from "express"
 import { makeAFakeUser } from "../../test-utils/mockUsers"
 import { HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constants/http"
 import { resetPassword } from "./resetPassword"
-import { User } from "../../db/schema"
 import { sendMail } from "../../mail/sendgrid"
 import { logger } from "../../utils/logger"
+import { SafeUser } from "../../db/types"
+import { REQUEST_USER } from "../../types/requestSymbols"
 
 jest.mock("../../mail/sendgrid", () => ({
   sendMail: jest.fn(),
@@ -28,13 +29,13 @@ jest.mock("../../utils/logger", () => ({
 }))
 
 describe("Controller: Reset Password", () => {
-  let mockRequest: Partial<Request> & { userNoPW?: User }
+  let mockRequest: Partial<Request> & { [REQUEST_USER]?: SafeUser }
   let mockResponse: Partial<Response>
 
   beforeAll(() => {})
   beforeEach(() => {
     mockRequest = {
-      userNoPW: makeAFakeUser({ email: "bananaman@ireland.ie" }),
+      [REQUEST_USER]: makeAFakeUser({ email: "bananaman@ireland.ie" }),
     }
     mockResponse = {
       status: jest.fn().mockReturnThis(),
@@ -51,7 +52,7 @@ describe("Controller: Reset Password", () => {
   })
 
   it("missing user data", async () => {
-    mockRequest.userNoPW = undefined
+    mockRequest[REQUEST_USER] = undefined
     await resetPassword(mockRequest as Request, mockResponse as Response)
     expect(sendMail).toHaveBeenCalled()
     expect(logger.error).toHaveBeenCalledWith("ResetPassword controller: No user data.")
