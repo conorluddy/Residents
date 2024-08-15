@@ -1,11 +1,11 @@
 import { Request, Response } from "express"
-import { HTTP_SUCCESS } from "../../constants/http"
-import { validateAccount } from "./validateAccount"
-import { makeAFakeSafeUser, makeAFakeUser } from "../../test-utils/mockUsers"
 import { ROLES } from "../../constants/database"
-import { logger } from "../../utils/logger"
+import { HTTP_SUCCESS } from "../../constants/http"
+import { PublicUser } from "../../db/types"
+import { makeAFakeSafeUser, makeAFakeUser } from "../../test-utils/mockUsers"
 import { REQUEST_USER } from "../../types/requestSymbols"
-import { SafeUser } from "../../db/types"
+import { logger } from "../../utils/logger"
+import { validateAccount } from "./validateAccount"
 
 const mockDefaultUser = makeAFakeUser({ role: ROLES.DEFAULT })
 
@@ -47,7 +47,7 @@ jest.mock("../../utils/generateJwt", () => ({
 }))
 
 describe("Controller: Validate Account", () => {
-  let mockRequest: Partial<Request> & { [REQUEST_USER]: SafeUser }
+  let mockRequest: Partial<Request> & { [REQUEST_USER]: PublicUser }
   let mockResponse: Partial<Response>
 
   beforeEach(() => {

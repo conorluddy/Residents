@@ -1,7 +1,6 @@
 import request from "supertest"
 import { app } from "../../src"
 import { dbClient } from "../../src/db"
-import { logger } from "../../src/utils/logger"
 
 /**
  * - Create/Register a new user

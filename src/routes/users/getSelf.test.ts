@@ -3,13 +3,12 @@ import request from "supertest"
 import { ROLES } from "../../constants/database"
 import { HTTP_SUCCESS } from "../../constants/http"
 import CONTROLLERS from "../../controllers"
-import { User } from "../../db/types"
 import getSelfRoute from "./getSelf"
 import { makeAFakeUser } from "../../test-utils/mockUsers"
 import { generateJwt } from "../../utils/generateJwt"
 import { REQUEST_USER } from "../../types/requestSymbols"
 
-let fakeUser: User = makeAFakeUser({ role: ROLES.DEFAULT })
+let fakeUser = makeAFakeUser({ role: ROLES.DEFAULT })
 
 // Mock the middlewares
 jest.mock("../../middleware/auth/jsonWebTokens", () => ({

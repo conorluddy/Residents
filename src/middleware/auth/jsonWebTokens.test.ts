@@ -1,20 +1,19 @@
 import { NextFunction, Request, Response } from "express"
 import { ROLES } from "../../constants/database"
-import { PublicUser, SafeUser, User } from "../../db/types"
+import { HTTP_CLIENT_ERROR } from "../../constants/http"
+import { PublicUser, User } from "../../db/types"
+import { makeAFakeSafeUser, makeAFakeUser } from "../../test-utils/mockUsers"
+import { REQUEST_USER } from "../../types/requestSymbols"
 import { generateJwt } from "../../utils/generateJwt"
 import { authenticateToken } from "./jsonWebTokens"
-import { makeAFakeSafeUser, makeAFakeUser } from "../../test-utils/mockUsers"
-import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from "../../constants/http"
-import { REQUEST_USER } from "../../types/requestSymbols"
-import { logger } from "../../utils/logger"
 
 jest.mock("../../utils/logger")
 
 describe("Middleware:JWT", () => {
-  let mockRequest: Partial<Request> & { [REQUEST_USER]: SafeUser }
+  let mockRequest: Partial<Request> & { [REQUEST_USER]: PublicUser }
   let mockResponse: Partial<Response>
   let nextFunction: NextFunction
-  let mockDefaultUser: PublicUser
+  let mockDefaultUser: User
   let jwt
 
   beforeAll(() => {

@@ -1,5 +1,5 @@
 import { eq, or } from "drizzle-orm"
-import { Request, RequestHandler, Response } from "express"
+import { Request, Response } from "express"
 import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constants/http"
 import db from "../../db"
 import { User, tableTokens, tableUsers } from "../../db/schema"

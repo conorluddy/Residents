@@ -1,12 +1,12 @@
 import { Request, Response } from "express"
 import { HTTP_SUCCESS } from "../../constants/http"
-import { SafeUser, User } from "../../db/types"
-import { googleCallback } from "./googleCallback"
+import { PublicUser } from "../../db/types"
 import { makeAFakeSafeUser } from "../../test-utils/mockUsers"
 import { REQUEST_USER } from "../../types/requestSymbols"
+import { googleCallback } from "./googleCallback"
 
 describe("Controller: GoogleCallback", () => {
-  let mockRequest: Partial<Request> & { [REQUEST_USER]: SafeUser }
+  let mockRequest: Partial<Request> & { [REQUEST_USER]: PublicUser }
   let mockResponse: Partial<Response>
 
   beforeAll(() => {

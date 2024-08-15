@@ -28,7 +28,7 @@ const seedUserZero = async (password: string = "resident") => {
       password: await createHash(password),
       firstName: "Resident",
       lastName: "Zero",
-      email: "",
+      email: "resident@resident.resident",
       role: ROLES.OWNER,
       status: STATUS.VERIFIED,
       deletedAt: null,
