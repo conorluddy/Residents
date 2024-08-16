@@ -1,12 +1,10 @@
-import { Request, Response, NextFunction } from "express"
-import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from "../../constants/http"
+import { NextFunction, Request, Response } from "express"
 import { ACL, PERMISSIONS } from "../../constants/accessControlList"
-import { tableUsers, User } from "../../db/schema"
-import { eq } from "drizzle-orm"
-import { logger } from "../../utils/logger"
 import { ROLES, ROLES_ARRAY } from "../../constants/database"
-import db from "../../db"
-import { REQUEST_USER, REQUEST_TARGET_USER_ID } from "../../types/requestSymbols"
+import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from "../../constants/http"
+import { getUserByID } from "../../services/user/getUser"
+import { REQUEST_TARGET_USER_ID, REQUEST_USER } from "../../types/requestSymbols"
+import { logger } from "../../utils/logger"
 
 /**
  * Check if the user has the required permission to access the resource
@@ -70,8 +68,7 @@ async function getTargetUserAndCheckSuperiority(req: Request, res: Response, nex
       return res.status(HTTP_CLIENT_ERROR.UNAUTHORIZED).json({ message: "User account is deleted" })
     }
 
-    const targetUsers: User[] = await db.select().from(tableUsers).where(eq(tableUsers.id, targetUserId))
-    const targetUser = targetUsers[0]
+    const targetUser = await getUserByID(targetUserId)
 
     // No user found
     if (!targetUser) {

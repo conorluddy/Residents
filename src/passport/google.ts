@@ -7,6 +7,7 @@ import { tableUsers } from "../db/schema/Users"
 import { and, eq } from "drizzle-orm"
 import { NewUser, SafeUser } from "../db/types"
 import { tableFederatedCredentials } from "../db/schema"
+import { getUserByID } from "../services/user/getUser"
 
 dotenv.config()
 
@@ -36,27 +37,10 @@ if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET || !GOOGLE_CALLBACK_URL) {
             and(eq(tableFederatedCredentials.provider, PROVIDER), eq(tableFederatedCredentials.subject, profile.id))
           )
 
-        const exists = fedCreds.length > 0
-
-        if (exists) {
-          const users: SafeUser[] = await db
-            .select({
-              id: tableUsers.id,
-              firstName: tableUsers.firstName,
-              lastName: tableUsers.lastName,
-              email: tableUsers.email,
-              username: tableUsers.username,
-              role: tableUsers.role,
-              status: tableUsers.status,
-              createdAt: tableUsers.createdAt,
-              deletedAt: tableUsers.deletedAt,
-            })
-            .from(tableUsers)
-            .where(eq(tableUsers.id, fedCreds[0].userId))
-
-          if (!users[0]) throw new Error("User not found")
-
-          return done(null, users[0])
+        if (fedCreds[0].userId) {
+          const user = await getUserByID(fedCreds[0].userId)
+          if (!user) throw new Error("User not found")
+          return done(null, user)
         } else {
           try {
             const user: NewUser = {

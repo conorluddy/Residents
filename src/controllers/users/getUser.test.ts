@@ -7,23 +7,19 @@ import { User } from "../../db/types"
 let fakeUser: Partial<User>
 
 jest.mock("../../utils/logger")
-jest.mock("../../db", () => ({
-  select: jest.fn().mockReturnValue({
-    from: jest.fn().mockReturnValue({
-      where: jest
-        .fn()
-        .mockImplementationOnce(async () => {
-          fakeUser = makeAFakeUser({})
-          return fakeUser
-        })
-        .mockImplementationOnce(async () => {
-          return undefined
-        })
-        .mockImplementationOnce(async () => {
-          throw new Error("DB error")
-        }),
+jest.mock("../../services/user/getUser", () => ({
+  getUserByID: jest
+    .fn()
+    .mockImplementationOnce(async () => {
+      fakeUser = makeAFakeUser({})
+      return fakeUser
+    })
+    .mockImplementationOnce(async () => {
+      return undefined
+    })
+    .mockImplementationOnce(async () => {
+      throw new Error("DB error")
     }),
-  }),
 }))
 
 describe("Controller: GetUser", () => {

@@ -13,6 +13,8 @@ import xsrfTokens from "./middleware/auth/xsrfTokens"
 
 dotenv.config()
 
+const isTestEnv = process.env.NODE_ENV === "test"
+
 const port = process.env.LOCAL_API_PORT
 const app = express()
 
@@ -29,17 +31,20 @@ app.use("/users", usersRouter)
 app.use("/auth", authRouter)
 
 // Health check
-app.get("/health", (req, res) => res.status(HTTP_SUCCESS.OK).json({ status: "👌" }))
+app.get("/health", (_req, res) => res.status(HTTP_SUCCESS.OK).json({ status: "👌" }))
 
 //Not using this consistently at the moment - revisit
 app.use(attachDb)
 
 swaggerSetup(app)
 
+// Randomise ports in test environment
+const serverPort = isTestEnv ? 0 : port
+
 // Run
-const server = app.listen(port, () => {
-  logger.info(`Running: http://localhost:${port}`)
-  logger.info(`Swagger API docs are available at http://localhost:${port}/api-docs`)
+const server = app.listen(serverPort, () => {
+  logger.info(`Running: http://localhost:${serverPort}`)
+  logger.info(`Swagger API docs are available at http://localhost:${serverPort}/api-docs`)
 })
 
 // Graceful shutdown
