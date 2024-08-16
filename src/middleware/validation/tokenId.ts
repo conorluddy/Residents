@@ -2,20 +2,21 @@ import { NextFunction, Request, RequestHandler, Response } from "express"
 import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from "../../constants/http"
 import { logger } from "../../utils/logger"
 import { isCuid } from "@paralleldrive/cuid2"
+import { REQUEST_TOKEN_ID } from "../../types/requestSymbols"
 
-const validateToken: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
+const validateTokenId: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const token: string | undefined = req.params?.token || req.body?.token || req.query?.token
+    const tokenId: string | undefined = req.params?.token || req.body?.token || req.query?.token
 
-    if (!token) {
+    if (!tokenId) {
       return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "A token is required" })
     }
 
-    if (!isCuid(token)) {
+    if (!isCuid(tokenId)) {
       return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "Invalid token provided" })
     }
 
-    req.validatedToken = token
+    req[REQUEST_TOKEN_ID] = tokenId
     next()
   } catch (error) {
     logger.error("Token validation threw error: ", error)
@@ -23,4 +24,4 @@ const validateToken: RequestHandler = async (req: Request, res: Response, next: 
   }
 }
 
-export default validateToken
+export default validateTokenId

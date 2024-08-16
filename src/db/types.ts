@@ -18,4 +18,3 @@ export type NewFederatedCredentials = InferInsertModel<typeof tfc>
 export type Token = InferSelectModel<typeof tableTokens>
 export type NewToken = InferInsertModel<typeof tableTokens>
 export type TokenWithUser = Token & { user: User }
-export type TokenWithSafeUser = Token & { user: SafeUser }

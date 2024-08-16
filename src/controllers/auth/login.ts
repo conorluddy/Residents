@@ -4,7 +4,7 @@ import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../consta
 import db from "../../db"
 import { User, tableTokens, tableUsers } from "../../db/schema"
 import { validateHash } from "../../utils/crypt"
-import { generateJwt } from "../../utils/generateJwt"
+import { generateJwtFromUser } from "../../utils/generateJwt"
 import { isEmail } from "validator"
 import { logger } from "../../utils/logger"
 import { NewToken } from "../../db/types"
@@ -37,6 +37,7 @@ export const login = async (req: Request, res: Response) => {
       .where(or(eq(tableUsers.username, username), eq(tableUsers.email, email)))
 
     if (!users || users.length === 0) {
+      // Should probably clear any existing auth here
       return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Nope." })
     }
 
@@ -55,7 +56,7 @@ export const login = async (req: Request, res: Response) => {
       }
 
       const [refreshToken] = await db.insert(tableTokens).values(newRefreshToken).returning()
-      const accessToken = generateJwt(user)
+      const accessToken = generateJwtFromUser(user)
       const xsrfToken = generateXsrfToken()
 
       // Set the tokens in a HTTP-only secure cookies

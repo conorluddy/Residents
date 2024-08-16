@@ -4,7 +4,7 @@ import { HTTP_CLIENT_ERROR } from "../../constants/http"
 import { PublicUser, User } from "../../db/types"
 import { makeAFakeSafeUser, makeAFakeUser } from "../../test-utils/mockUsers"
 import { REQUEST_USER } from "../../types/requestSymbols"
-import { generateJwt } from "../../utils/generateJwt"
+import { generateJwtFromUser } from "../../utils/generateJwt"
 import { authenticateToken } from "./jsonWebTokens"
 
 jest.mock("../../utils/logger")
@@ -21,7 +21,7 @@ describe("Middleware:JWT", () => {
   })
 
   beforeEach(() => {
-    jwt = generateJwt(mockDefaultUser)
+    jwt = generateJwtFromUser(mockDefaultUser)
     mockRequest = {
       [REQUEST_USER]: makeAFakeSafeUser({ id: "AdminTestUser1", role: ROLES.ADMIN }),
       headers: {
@@ -55,7 +55,7 @@ describe("Middleware:JWT", () => {
   it("Should reject as unauthorized if the token has expired", () => {
     mockRequest[REQUEST_USER] = makeAFakeSafeUser(mockDefaultUser)
     mockRequest.headers = {
-      authorization: `Bearer ${generateJwt(mockDefaultUser, "1ms")}`,
+      authorization: `Bearer ${generateJwtFromUser(mockDefaultUser, "1ms")}`,
     }
     authenticateToken(mockRequest as Request, mockResponse as Response, nextFunction)
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.UNAUTHORIZED)
@@ -64,7 +64,7 @@ describe("Middleware:JWT", () => {
   })
 
   it("Should reject as unauthorized if the token has expired", () => {
-    jwt = generateJwt(mockDefaultUser, "0ms")
+    jwt = generateJwtFromUser(mockDefaultUser, "0ms")
     mockRequest[REQUEST_USER] = makeAFakeSafeUser(mockDefaultUser)
     mockRequest.headers!.authorization = `Bearer ${jwt}`
     authenticateToken(mockRequest as Request, mockResponse as Response, nextFunction)

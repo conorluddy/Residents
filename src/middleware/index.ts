@@ -3,9 +3,9 @@ import { authenticateToken } from "./auth/jsonWebTokens"
 import discardToken from "./auth/discardToken"
 import errorHandler from "./util/errorHandler"
 import findUserByValidEmail from "./lookup/findUserByValidEmail"
-import findUserByValidToken from "./lookup/findUserByValidToken"
 import RBAC from "./auth/roleBasedAccessControl"
 import VALIDATE from "./validation"
+import findValidTokenById from "./lookup/findValidTokenById"
 
 const MW = {
   RBAC,
@@ -16,7 +16,7 @@ const MW = {
   authenticateToken,
   errorHandler,
   findUserByValidEmail,
-  findUserByValidToken,
+  findValidTokenById,
   discardToken,
 }
 
