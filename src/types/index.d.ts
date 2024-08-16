@@ -15,9 +15,6 @@ declare module "express-serve-static-core" {
     validatedEmail?: string
     validatedToken?: string
 
-    // Get rid of this, user will have password
-    tokenWithUser?: TokenWithUser
-
     // Symbols let us ensure that the key is unique
     // and won't clash with anything else
     [REQUEST_TOKEN_ID]?: string

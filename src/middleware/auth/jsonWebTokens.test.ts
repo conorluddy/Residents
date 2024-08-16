@@ -66,7 +66,9 @@ describe("Middleware:JWT", () => {
   it("Should reject as unauthorized if the token has expired", () => {
     jwt = generateJwtFromUser(mockDefaultUser, "0ms")
     mockRequest[REQUEST_USER] = makeAFakeSafeUser(mockDefaultUser)
-    mockRequest.headers!.authorization = `Bearer ${jwt}`
+    if (mockRequest.headers?.authorization) {
+      mockRequest.headers.authorization = `Bearer ${jwt}`
+    }
     authenticateToken(mockRequest as Request, mockResponse as Response, nextFunction)
     expect(nextFunction).not.toHaveBeenCalled()
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.UNAUTHORIZED)
