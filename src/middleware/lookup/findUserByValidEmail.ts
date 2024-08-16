@@ -5,7 +5,7 @@ import { eq } from "drizzle-orm"
 import db from "../../db"
 import { tableUsers, User } from "../../db/schema"
 import { userToSafeUser } from "../../utils/user"
-import { REQUEST_USER } from "../../types/requestSymbols"
+import { REQUEST_EMAIL, REQUEST_USER } from "../../types/requestSymbols"
 
 /**
  * Middleware for finding a user by their email address.
@@ -13,18 +13,18 @@ import { REQUEST_USER } from "../../types/requestSymbols"
  */
 const findUserByValidEmail: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { validatedEmail } = req
+    const email = req[REQUEST_EMAIL]
 
-    if (!validatedEmail) {
-      logger.error(`Email not validated: ${validatedEmail}`)
+    if (!email) {
+      logger.error(`Email not validated: ${email}`)
       return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "Invalid email" })
     }
 
     // Update these user queries to only return SafeUser objects in a data access layer rather than in the mw or controller
-    const user = await db.query.tableUsers.findFirst({ where: eq(tableUsers.email, validatedEmail) })
+    const user = await db.query.tableUsers.findFirst({ where: eq(tableUsers.email, email) })
 
     if (!user) {
-      logger.error(`User not found: ${validatedEmail}`)
+      logger.error(`User not found: ${email}`)
       // Don't reveal if the user exists or not, this is a public endpoint.
       return res.status(HTTP_CLIENT_ERROR.NOT_FOUND).json({ message: "User not found" })
     }

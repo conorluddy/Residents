@@ -2,6 +2,7 @@ import { NextFunction, Request, RequestHandler, Response } from "express"
 import { isEmail } from "validator"
 import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from "../../constants/http"
 import { logger } from "../../utils/logger"
+import { REQUEST_EMAIL } from "../../types/requestSymbols"
 
 const validateEmail: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -15,7 +16,7 @@ const validateEmail: RequestHandler = async (req: Request, res: Response, next: 
       return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json("Invalid email address")
     }
 
-    req.validatedEmail = email
+    req[REQUEST_EMAIL] = email
     next()
   } catch (error) {
     logger.error("Posted email addresss was invalid", error)
