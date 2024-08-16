@@ -3,6 +3,7 @@ import { makeAFakeUser } from "../../test-utils/mockUsers"
 import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constants/http"
 import { deleteUser } from "./deleteUser"
 import { User } from "../../db/types"
+import { REQUEST_TARGET_USER_ID } from "../../types/requestSymbols"
 
 let fakeUser: Partial<User>
 
@@ -26,7 +27,7 @@ jest.mock("../../db", () => ({
 }))
 
 describe("Controller: Delete User", () => {
-  let mockRequest: Partial<Request> & { targetUserId: string }
+  let mockRequest: Partial<Request> & { [REQUEST_TARGET_USER_ID]: string }
   let mockResponse: Partial<Response>
   beforeAll(() => {})
   beforeEach(() => {
@@ -34,7 +35,7 @@ describe("Controller: Delete User", () => {
       params: {
         id: "ID",
       },
-      targetUserId: "ID",
+      [REQUEST_TARGET_USER_ID]: "ID",
       body: {
         username: "test",
         firstName: "updatedFName",
@@ -67,15 +68,15 @@ describe("Controller: Delete User", () => {
     expect(mockResponse.json).toHaveBeenCalledWith({ message: `ID is missing in the request.` })
   })
 
-  it("Missing targetUserId", async () => {
-    mockRequest.targetUserId = ""
+  it("Missing [REQUEST_TARGET_USER_ID]", async () => {
+    mockRequest[REQUEST_TARGET_USER_ID] = ""
     await deleteUser(mockRequest as Request, mockResponse as Response)
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.BAD_REQUEST)
     expect(mockResponse.json).toHaveBeenCalledWith({ message: `ID is missing in the request.` })
   })
 
   it("target user ID doesnt match url param user ID", async () => {
-    mockRequest.targetUserId = "PersonToDelete"
+    mockRequest[REQUEST_TARGET_USER_ID] = "PersonToDelete"
     mockRequest.params = { id: "OtherPersonInURL" }
     await deleteUser(mockRequest as Request, mockResponse as Response)
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)

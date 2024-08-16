@@ -6,6 +6,7 @@ import db from "../../db"
 import { tableUserMeta, tableUsers } from "../../db/schema"
 import { isEmail, normalizeEmail } from "validator"
 import { Meta } from "../../db/types"
+import { REQUEST_TARGET_USER_ID } from "../../types/requestSymbols"
 
 /**
  * updateUserMeta
@@ -13,17 +14,17 @@ import { Meta } from "../../db/types"
 export const updateUserMeta = async (req: Request, res: Response) => {
   try {
     const { id } = req.params
-    const { targetUserId } = req
+    const targetUserId = req[REQUEST_TARGET_USER_ID]
 
-    if (!id || !targetUserId) {
+    if (!id || ![REQUEST_TARGET_USER_ID]) {
       return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "User ID is missing in the request." })
     }
 
     // Possibly redundant, but the RBAC middleware will have found
-    // the user and set the targetUserId on the request object, so we
+    // the user and set the [REQUEST_TARGET_USER_ID] on the request object, so we
     // can double check it here for additionaly security.
     if (id !== targetUserId) {
-      logger.error(`ID in params doesnt match targetUserId in request.`)
+      logger.error(`ID in params doesnt match [REQUEST_TARGET_USER_ID] in request.`)
       return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "You are not allowed to update this user." })
     }
 

@@ -4,6 +4,7 @@ import { HTTP_CLIENT_ERROR, HTTP_SUCCESS } from "../../constants/http"
 import { updateUserMeta } from "./updateUserMeta"
 import { User } from "../../db/types"
 import { logger } from "../../utils/logger"
+import { REQUEST_TARGET_USER_ID } from "../../types/requestSymbols"
 
 let fakeUser: Partial<User>
 
@@ -22,7 +23,7 @@ jest.mock("../../db", () => ({
 }))
 
 describe("Controller: UpdateUserMeta", () => {
-  let mockRequest: Partial<Request> & { params: { id?: string }; targetUserId?: string }
+  let mockRequest: Partial<Request> & { params: { id?: string }; [REQUEST_TARGET_USER_ID]?: string }
   let mockResponse: Partial<Response>
   beforeAll(() => {})
   beforeEach(() => {
@@ -30,7 +31,7 @@ describe("Controller: UpdateUserMeta", () => {
       params: {
         id: "ID",
       },
-      targetUserId: "ID",
+      [REQUEST_TARGET_USER_ID]: "ID",
       body: {
         username: "test",
         firstName: "updatedFName",

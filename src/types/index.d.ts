@@ -12,8 +12,6 @@ import {
 
 declare module "express-serve-static-core" {
   interface Request {
-    targetUserId?: string
-
     // Symbols let us ensure that the key is unique
     // and won't clash with anything else
     [REQUEST_TOKEN_ID]?: string
