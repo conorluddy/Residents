@@ -5,6 +5,7 @@ import { eq } from "drizzle-orm"
 import db from "../../db"
 import { tableUsers } from "../../db/schema"
 import { STATUS } from "../../constants/database"
+import { REQUEST_TARGET_USER_ID } from "../../types/requestSymbols"
 
 /**
  * deleteUser
@@ -12,14 +13,14 @@ import { STATUS } from "../../constants/database"
 export const deleteUser = async (req: Request, res: Response) => {
   try {
     const { id } = req.params
-    const { targetUserId } = req // Note, This gets added to the req by getTargetUserAndCheckSuperiority MW
+    const targetUserId = req[REQUEST_TARGET_USER_ID] // Note, This gets added to the req by getTargetUserAndCheckSuperiority MW
 
     if (!id || !targetUserId) {
       return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "ID is missing in the request." })
     }
 
     // Possibly redundant, but the RBAC middleware will have found
-    // the user and set the targetUserId on the request object, so we
+    // the user and set the [REQUEST_TARGET_USER_ID] on the request object, so we
     // can double check it here for additionaly security.
 
     if (id !== targetUserId) {

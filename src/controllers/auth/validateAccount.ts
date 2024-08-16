@@ -18,19 +18,18 @@ export const validateAccount = async (req: Request, res: Response) => {
     const { tokenId, userId } = req.params
     const jwtUserId = req[REQUEST_USER]?.id
 
-    const tokenWithUser = await db.query.tableTokens.findFirst({
+    const token = await db.query.tableTokens.findFirst({
       where: and(eq(tableTokens.id, tokenId), eq(tableTokens.type, TOKEN_TYPE.VALIDATE)),
-      with: { user: true },
     })
 
     // Compare the UserId and TokenId from the URL to the UserId from the JWT - probably overkill - URL might be enough
-    if (!tokenWithUser || tokenWithUser?.userId !== userId || jwtUserId !== tokenWithUser?.userId) {
+    if (!token || token?.userId !== userId || jwtUserId !== token?.userId) {
       logger.error(`Token x user mismatch.`)
       return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Validation token invalid." })
     }
 
     // Validate the user
-    const validatedUser = await db
+    await db
       .update(tableUsers)
       .set({ status: STATUS.VERIFIED })
       .where(eq(tableUsers.id, userId))

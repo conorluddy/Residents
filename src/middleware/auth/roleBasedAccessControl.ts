@@ -6,7 +6,7 @@ import { eq } from "drizzle-orm"
 import { logger } from "../../utils/logger"
 import { ROLES, ROLES_ARRAY } from "../../constants/database"
 import db from "../../db"
-import { REQUEST_USER } from "../../types/requestSymbols"
+import { REQUEST_USER, REQUEST_TARGET_USER_ID } from "../../types/requestSymbols"
 
 /**
  * Check if the user has the required permission to access the resource
@@ -109,11 +109,13 @@ async function getTargetUserAndCheckSuperiority(req: Request, res: Response, nex
         .json({ message: "Role superiority is required for this operation" })
     }
 
-    req.targetUserId = targetUser.id
+    req[REQUEST_TARGET_USER_ID] = targetUser.id
     next()
   } catch (error) {
     logger.error(
-      `Error checking role superiority for user ${user?.id ?? "<missing userID>"} and target ${targetUserId}: ${error}`
+      `Error checking role superiority for user ${user?.id ?? "<missing userID>"} and target ${[
+        REQUEST_TARGET_USER_ID,
+      ]}: ${error}`
     )
     return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Internal Server Error" })
   }

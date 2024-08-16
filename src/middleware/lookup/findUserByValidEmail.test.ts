@@ -4,7 +4,7 @@ import { HTTP_CLIENT_ERROR } from "../../constants/http"
 import { SafeUser, User } from "../../db/types"
 import { makeAFakeUser } from "../../test-utils/mockUsers"
 import findUserByValidEmail from "./findUserByValidEmail"
-import { REQUEST_USER } from "../../types/requestSymbols"
+import { REQUEST_EMAIL, REQUEST_USER } from "../../types/requestSymbols"
 
 jest.mock("../../utils/logger")
 jest.mock("../../db", () => ({
@@ -19,7 +19,7 @@ jest.mock("../../db", () => ({
 }))
 
 describe("Middleware:findUserByValidEmail", () => {
-  let mockRequest: Partial<Request> & { validatedEmail?: string; [REQUEST_USER]?: SafeUser }
+  let mockRequest: Partial<Request> & { [REQUEST_EMAIL]?: string; [REQUEST_USER]?: SafeUser }
   let mockResponse: Partial<Response>
   let nextFunction: NextFunction
   let mockDefaultUser: SafeUser
@@ -31,7 +31,7 @@ describe("Middleware:findUserByValidEmail", () => {
   beforeEach(() => {
     mockRequest = {
       user: mockDefaultUser,
-      validatedEmail: "validated@email.com",
+      [REQUEST_EMAIL]: "validated@email.com",
     }
     mockResponse = {
       status: jest.fn().mockReturnThis(),
@@ -48,8 +48,8 @@ describe("Middleware:findUserByValidEmail", () => {
     expect(mockRequest[REQUEST_USER]).toHaveProperty("username", "MrFake")
     expect(nextFunction).toHaveBeenCalled()
   })
-  it("validatedEmail doesn't exist in the request", async () => {
-    mockRequest.validatedEmail = undefined
+  it("[REQUEST_EMAIL] doesn't exist in the request", async () => {
+    mockRequest[REQUEST_EMAIL] = undefined
     await findUserByValidEmail(mockRequest as Request, mockResponse as Response, nextFunction)
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.BAD_REQUEST)
     expect(mockResponse.json).toHaveBeenCalledWith({ message: "Invalid email" })

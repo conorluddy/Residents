@@ -4,7 +4,7 @@ import { ROLES } from "../../constants/database"
 import { HTTP_SUCCESS } from "../../constants/http"
 import deleteUserRouter from "../../routes/users/deleteUser"
 import { makeAFakeUser } from "../../test-utils/mockUsers"
-import { REQUEST_USER } from "../../types/requestSymbols"
+import { REQUEST_TARGET_USER_ID, REQUEST_USER } from "../../types/requestSymbols"
 
 let fakeUser = makeAFakeUser({ password: "$TR0ngP@$$W0rDz123!", role: ROLES.DEFAULT })
 
@@ -18,7 +18,7 @@ jest.mock("../../middleware/auth/jsonWebTokens", () => ({
 jest.mock("../../middleware/auth/roleBasedAccessControl", () => ({
   checkCanDeleteUsers: jest.fn((_req, _res, next) => next()),
   getTargetUserAndCheckSuperiority: jest.fn((req, _res, next) => {
-    req.targetUserId = fakeUser.id
+    req[REQUEST_TARGET_USER_ID] = fakeUser.id
     next()
   }),
 }))

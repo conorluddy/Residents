@@ -3,6 +3,7 @@ import { makeAFakeUser } from "../../test-utils/mockUsers"
 import { HTTP_CLIENT_ERROR, HTTP_SUCCESS } from "../../constants/http"
 import { updateUser } from "./updateUser"
 import { User } from "../../db/types"
+import { REQUEST_TARGET_USER_ID } from "../../types/requestSymbols"
 
 let fakeUser: Partial<User>
 
@@ -21,7 +22,7 @@ jest.mock("../../db", () => ({
 }))
 
 describe("Controller: UpdateUser", () => {
-  let mockRequest: Partial<Request> & { params: { id?: string }; targetUserId?: string }
+  let mockRequest: Partial<Request> & { params: { id?: string }; [REQUEST_TARGET_USER_ID]?: string }
   let mockResponse: Partial<Response>
   beforeAll(() => {})
   beforeEach(() => {
@@ -29,7 +30,7 @@ describe("Controller: UpdateUser", () => {
       params: {
         id: "ID",
       },
-      targetUserId: "ID",
+      [REQUEST_TARGET_USER_ID]: "ID",
       body: {
         username: "test",
         firstName: "updatedFName",
