@@ -6,9 +6,8 @@ import db from "../../db"
 
 const getUserByID = async (id: string): Promise<SafeUser | null> => {
   try {
-    if (!id) {
-      throw new Error("No ID provided")
-    }
+    if (!id) throw new Error("No ID provided")
+
     const users = await db
       .select({
         id: tableUsers.id,
