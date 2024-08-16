@@ -384,7 +384,7 @@ describe("Middleware:RBAC:getTargetUserAndCheckSuperiority", () => {
   beforeEach(() => {
     mockRequest = {
       user: { role: ROLES.ADMIN, id: "TestUser" },
-      params: { id: "TestUserTarget", role: ROLES.DEFAULT },
+      params: { id: "TestUserTargetID", role: ROLES.DEFAULT },
     }
     mockResponse = {
       status: jest.fn().mockReturnThis(),

@@ -63,7 +63,7 @@ describe("Controller: GetSelf", () => {
 
   it("Unhappy path", async () => {
     await getSelf(mockRequest as Request, mockResponse as Response)
-    expect(logger.error).toHaveBeenCalledWith(Error("DB error"))
+    expect(logger.error).toHaveBeenCalledWith("Error getting user by ID", Error("DB error"))
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR)
     expect(mockResponse.json).toHaveBeenCalledWith({ message: "Internal server error while getting user." })
   })

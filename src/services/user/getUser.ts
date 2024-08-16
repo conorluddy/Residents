@@ -6,7 +6,10 @@ import db from "../../db"
 
 const getUserByID = async (id: string): Promise<SafeUser | null> => {
   try {
-    const [user] = await db
+    if (!id) {
+      throw new Error("No ID provided")
+    }
+    const users = await db
       .select({
         id: tableUsers.id,
         username: tableUsers.username,
@@ -21,11 +24,10 @@ const getUserByID = async (id: string): Promise<SafeUser | null> => {
       .from(tableUsers)
       .where(eq(tableUsers.id, id))
 
-    return user
+    return users[0]
   } catch (error) {
-    console.log("error", error)
     logger.error("Error getting user by ID", error)
-    return null
+    throw new Error("Error getting user by ID")
   }
 }
 
