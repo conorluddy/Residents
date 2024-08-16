@@ -3,7 +3,7 @@ import request from "supertest"
 import { ROLES } from "../../constants/database"
 import { HTTP_SUCCESS } from "../../constants/http"
 import CONTROLLERS from "../../controllers"
-import { PublicUser, User } from "../../db/types"
+import { PublicUser, SafeUser } from "../../db/types"
 import getUserRoute from "../../routes/users/getUser"
 import { makeAFakeUser } from "../../test-utils/mockUsers"
 import { REQUEST_USER } from "../../types/requestSymbols"
@@ -26,15 +26,11 @@ CONTROLLERS.USER.getUser = jest.fn(async (req, res) => {
   return res.status(HTTP_SUCCESS.OK).json({ message: "User retrieved successfully" })
 })
 
-let fakeUser: User
-jest.mock("../../db", () => ({
-  select: jest.fn().mockReturnValue({
-    from: jest.fn().mockReturnValue({
-      where: jest.fn().mockImplementationOnce(async () => {
-        fakeUser = await makeAFakeUser({ password: "$TR0ngP@$$W0rDz123!", id: "ABC123" })
-        return [fakeUser]
-      }),
-    }),
+let fakeUser: SafeUser
+jest.mock("../../services/user/getUser", () => ({
+  getUserByID: jest.fn().mockImplementationOnce(async () => {
+    fakeUser = await makeAFakeUser({ password: "$TR0ngP@$$W0rDz123!", id: "ABC123" })
+    return [fakeUser]
   }),
 }))
 

@@ -1,8 +1,6 @@
-import { eq } from "drizzle-orm"
 import { Request, Response } from "express"
 import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constants/http"
-import db from "../../db"
-import { tableUsers } from "../../db/schema"
+import { getUserByID } from "../../services/user/getUser"
 import { logger } from "../../utils/logger"
 
 /**
@@ -16,8 +14,7 @@ export const getUser = async (req: Request, res: Response) => {
       return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "ID is missing in the request." })
     }
 
-    // Add a WITHMETA flag to include the user meta data
-    const user = await db.select().from(tableUsers).where(eq(tableUsers.id, userId))
+    const user = await getUserByID(userId)
 
     if (!user) {
       return res.status(HTTP_CLIENT_ERROR.NOT_FOUND).json({ message: "User not found." })
