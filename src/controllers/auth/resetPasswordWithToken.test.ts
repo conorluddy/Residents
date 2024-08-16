@@ -1,10 +1,11 @@
 import { NextFunction, Request, Response } from "express"
 import { TOKEN_TYPE } from "../../constants/database"
 import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constants/http"
-import { TokenWithUser } from "../../db/types"
+import { Token } from "../../db/types"
 import { makeAFakeUser } from "../../test-utils/mockUsers"
 import { logger } from "../../utils/logger"
 import { resetPasswordWithToken } from "./resetPasswordWithToken"
+import { REQUEST_TOKEN } from "../../types/requestSymbols"
 
 jest.mock("../../mail/sendgrid", () => ({
   sendMail: jest.fn(),
@@ -31,7 +32,7 @@ jest.mock("../../utils/logger", () => ({
 }))
 
 describe("Controller: Reset Password With Token", () => {
-  let mockRequest: Partial<Request> & { tokenWithUser?: TokenWithUser }
+  let mockRequest: Partial<Request> & { [REQUEST_TOKEN]?: Token }
   let mockResponse: Partial<Response>
   let mockNext: Partial<NextFunction>
 
@@ -41,17 +42,15 @@ describe("Controller: Reset Password With Token", () => {
       body: {
         password: "__sTR0nGP45$WRD___",
       },
-      tokenWithUser: {
+      [REQUEST_TOKEN]: {
         id: "123",
         createdAt: new Date(),
         userId: "UID123",
         type: TOKEN_TYPE.RESET,
         used: false,
         expiresAt: new Date(),
-        user: makeAFakeUser({ email: "bananaman@ireland.ie", id: "UID123" }),
       },
     }
-
     mockResponse = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn(),
@@ -62,7 +61,7 @@ describe("Controller: Reset Password With Token", () => {
     await resetPasswordWithToken(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.OK)
     expect(mockResponse.json).toHaveBeenCalledWith({ message: "Password successfully updated." })
-    expect(logger.info).toHaveBeenCalledWith("Password successfully reset for bananaman@ireland.ie")
+    expect(logger.info).toHaveBeenCalledWith("Password successfully reset for USERUID123")
   })
 
   it("Unhappy path: Reset Password With Token", async () => {
@@ -75,16 +74,16 @@ describe("Controller: Reset Password With Token", () => {
   })
 
   it(`Returns forbidden when missing token`, async () => {
-    mockRequest.tokenWithUser = undefined
+    mockRequest[REQUEST_TOKEN] = undefined
     await resetPasswordWithToken(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)
     expect(mockResponse.json).toHaveBeenCalledWith({ message: "Token missing." })
-    expect(logger.error).toHaveBeenCalledWith("Missing tokenWithUser data in resetPasswordWithToken controller")
+    expect(logger.error).toHaveBeenCalledWith("Missing token data in resetPasswordWithToken controller")
   })
 
   it(`Returns forbidden when an incorrect type of token is used`, async () => {
-    mockRequest.tokenWithUser = {
-      ...mockRequest.tokenWithUser!,
+    mockRequest[REQUEST_TOKEN] = {
+      ...mockRequest[REQUEST_TOKEN]!,
       type: TOKEN_TYPE.MAGIC,
     }
     await resetPasswordWithToken(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
@@ -104,9 +103,8 @@ describe("Controller: Reset Password With Token", () => {
   })
 
   it(`Returns a server error when IDs dont match.`, async () => {
-    mockRequest.tokenWithUser = {
-      ...mockRequest.tokenWithUser!,
-      user: makeAFakeUser({ id: "DIFFERENT_ID" }),
+    mockRequest[REQUEST_TOKEN] = {
+      ...mockRequest[REQUEST_TOKEN]!,
       userId: "DIFFERENT_ID",
     }
     await resetPasswordWithToken(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)

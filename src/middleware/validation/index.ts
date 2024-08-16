@@ -1,7 +1,7 @@
 import email from "./email"
-import token from "./token"
+import tokenId from "./tokenId"
 import userMeta from "./userMeta"
 
-const VALIDATE = { email, token, userMeta }
+const VALIDATE = { email, tokenId, userMeta }
 
 export default VALIDATE

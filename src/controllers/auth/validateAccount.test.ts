@@ -43,7 +43,7 @@ jest.mock("../../db", () => ({
 }))
 
 jest.mock("../../utils/generateJwt", () => ({
-  generateJwt: jest.fn().mockReturnValue({}),
+  generateJwtFromUser: jest.fn().mockReturnValue({}),
 }))
 
 describe("Controller: Validate Account", () => {

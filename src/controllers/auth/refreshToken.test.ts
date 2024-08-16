@@ -3,7 +3,7 @@ import { Request, Response } from "express"
 import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constants/http"
 import { makeAFakeUser } from "../../test-utils/mockUsers"
 import { ROLES } from "../../constants/database"
-import { generateJwt } from "../../utils/generateJwt"
+import { generateJwtFromUser } from "../../utils/generateJwt"
 import { User } from "../../db/types"
 import generateXsrfToken from "../../middleware/util/xsrfToken"
 import { logger } from "../../utils/logger"
@@ -14,7 +14,7 @@ const mockDefaultUser = makeAFakeUser({ role: ROLES.DEFAULT })
 jest.mock("jsonwebtoken")
 jest.mock("../../utils/logger")
 jest.mock("../../utils/generateJwt", () => ({
-  generateJwt: jest.fn().mockReturnValue("testAccessToken"),
+  generateJwtFromUser: jest.fn().mockReturnValue("testAccessToken"),
 }))
 
 jest.mock("../../db", () => ({
@@ -26,28 +26,31 @@ jest.mock("../../db", () => ({
         .mockImplementationOnce(() => ({
           id: "tok0",
           userId: mockDefaultUser.id,
-          user: mockDefaultUser,
         }))
         .mockImplementationOnce(() => undefined)
         .mockImplementationOnce(() => ({
           id: "tok1",
           userId: "456",
-          user: { ...mockDefaultUser, id: "456" },
         }))
         .mockImplementationOnce(() => ({
           id: "tok3",
           used: true,
           userId: mockDefaultUser.id,
-          user: mockDefaultUser,
         }))
         .mockImplementationOnce(() => ({
           id: "tok2",
           expiresAt: new Date(Date.now() - 1000),
           userId: mockDefaultUser.id,
-          user: mockDefaultUser,
         })),
     },
   },
+  select: jest.fn().mockReturnValue({
+    from: jest.fn().mockReturnValue({
+      where: jest.fn().mockImplementationOnce(async () => {
+        return [mockDefaultUser]
+      }),
+    }),
+  }),
   insert: jest.fn().mockReturnValue({
     values: jest.fn().mockReturnValue({
       returning: jest.fn().mockImplementationOnce(async () => {
@@ -74,7 +77,7 @@ describe("Controller: Refresh token: Happy path", () => {
 
   beforeEach(() => {
     process.env.JWT_TOKEN_SECRET = "TESTSECRET"
-    jwToken = generateJwt(mockDefaultUser)
+    jwToken = generateJwtFromUser(mockDefaultUser)
     xsrf = generateXsrfToken()
     mockRequest = {
       body: {
@@ -126,7 +129,7 @@ describe("Should return errors if", () => {
 
   beforeEach(() => {
     process.env.JWT_TOKEN_SECRET = "TESTSECRET"
-    jwToken = generateJwt(otherMockDefaultUser)
+    jwToken = generateJwtFromUser(otherMockDefaultUser)
     mockRequest = {
       body: {
         refreshToken: "REFRESHME",
@@ -169,7 +172,7 @@ describe("Should return errors if", () => {
   })
   it("the token has a USED flag set", async () => {
     await refreshToken(mockRequest as Request, mockResponse as Response)
-    expect(logger.error).toHaveBeenNthCalledWith(3, `Attempt to use a used refresh token for ${mockDefaultUser.email}`)
+    expect(logger.error).toHaveBeenNthCalledWith(3, `Attempt to use a used refresh token for USER${mockDefaultUser.id}`)
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)
     expect(mockResponse.json).toHaveBeenCalledWith({ message: "Token not valid." })
   })

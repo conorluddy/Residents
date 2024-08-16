@@ -4,41 +4,40 @@ import { logger } from "../../utils/logger"
 import { eq } from "drizzle-orm"
 import db from "../../db"
 import { tableTokens } from "../../db/schema"
+import { REQUEST_TOKEN, REQUEST_TOKEN_ID } from "../../types/requestSymbols"
 
 /**
  * Middleware for finding a token and the user it belongs to.
  */
-const findUserByValidToken: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
+const findValidTokenById: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { validatedToken } = req
+    const tokenId = req[REQUEST_TOKEN_ID]
 
-    if (!validatedToken) {
+    if (!tokenId) {
       logger.error(`Valid token required`)
       return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: `Valid token required` })
     }
 
-    const tokenWithUser = await db.query.tableTokens.findFirst({
-      where: eq(tableTokens.id, validatedToken),
-      with: { user: true },
-    })
+    const token = await db.query.tableTokens.findFirst({ where: eq(tableTokens.id, tokenId) })
 
-    if (!tokenWithUser) {
-      logger.error(`Token not found: ${validatedToken}`)
+    if (!token) {
+      logger.error(`Token not found: ${tokenId}`)
       return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Token expired" })
     }
 
-    if (tokenWithUser.used) {
-      logger.error(`Attempt to use a used token: ${validatedToken}`)
+    if (token.used) {
+      logger.error(`Attempt to use a used token: ${tokenId}`)
       return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Token has already been used" })
     }
 
-    if (tokenWithUser.expiresAt < new Date()) {
-      logger.error(`Attempt to use an expired token: ${validatedToken}`)
+    if (token.expiresAt < new Date()) {
+      logger.error(`Attempt to use an expired token: ${tokenId}`)
       return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Token has expired" })
     }
 
     // Should probably compare the token.type here too with the URL to ensure reset password token is used for reset password etc
-    req.tokenWithUser = tokenWithUser
+
+    req[REQUEST_TOKEN] = token
     next()
   } catch (error) {
     logger.error(`Error finding user by valid token: ${error}`)
@@ -46,4 +45,4 @@ const findUserByValidToken: RequestHandler = async (req: Request, res: Response,
   }
 }
 
-export default findUserByValidToken
+export default findValidTokenById

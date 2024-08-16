@@ -6,8 +6,8 @@ import CONTROLLERS from "../../controllers"
 import { PublicUser, User } from "../../db/types"
 import getUserRoute from "../../routes/users/getUser"
 import { makeAFakeUser } from "../../test-utils/mockUsers"
-import { generateJwt } from "../../utils/generateJwt"
 import { REQUEST_USER } from "../../types/requestSymbols"
+import { generateJwtFromUser } from "../../utils/generateJwt"
 
 // Mock the middlewares
 jest.mock("../../middleware/auth/jsonWebTokens", () => ({
@@ -54,7 +54,7 @@ describe("GET /user/:id", () => {
     const userId = "123"
     const response = await request(app)
       .get(`/user/${userId}`)
-      .set("Authorization", `Bearer ${generateJwt(mockDefaultUser)}`)
+      .set("Authorization", `Bearer ${generateJwtFromUser(mockDefaultUser)}`)
     expect(response.status).toBe(HTTP_SUCCESS.OK)
     expect(response.body[0].id).toBe("ABC123")
   })

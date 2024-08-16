@@ -1,9 +1,9 @@
+import db from "../../db"
 import { eq } from "drizzle-orm"
 import { Request, Response } from "express"
 import { HTTP_CLIENT_ERROR, HTTP_SUCCESS, HTTP_SERVER_ERROR } from "../../constants/http"
 import { tableUsers } from "../../db/schema"
 import { logger } from "../../utils/logger"
-import db from "../../db"
 import { REQUEST_USER } from "../../types/requestSymbols"
 
 /**

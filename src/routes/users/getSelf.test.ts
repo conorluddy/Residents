@@ -5,7 +5,7 @@ import { HTTP_SUCCESS } from "../../constants/http"
 import CONTROLLERS from "../../controllers"
 import getSelfRoute from "./getSelf"
 import { makeAFakeUser } from "../../test-utils/mockUsers"
-import { generateJwt } from "../../utils/generateJwt"
+import { generateJwtFromUser } from "../../utils/generateJwt"
 import { REQUEST_USER } from "../../types/requestSymbols"
 
 let fakeUser = makeAFakeUser({ role: ROLES.DEFAULT })
@@ -46,7 +46,7 @@ describe("GET /self", () => {
   it("should call the getSelf controller and get own user data", async () => {
     const response = await request(app)
       .get(`/self`)
-      .set("Authorization", `Bearer ${generateJwt(fakeUser)}`)
+      .set("Authorization", `Bearer ${generateJwtFromUser(fakeUser)}`)
     expect(response.body.email).toBe(fakeUser.email)
     expect(response.status).toBe(HTTP_SUCCESS.OK)
   })

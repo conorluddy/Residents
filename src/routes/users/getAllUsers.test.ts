@@ -6,7 +6,7 @@ import CONTROLLERS from "../../controllers"
 import { PublicUser, User } from "../../db/types"
 import getAllUsersRoute from "../../routes/users/getAllUsers"
 import { makeAFakeUser } from "../../test-utils/mockUsers"
-import { generateJwt } from "../../utils/generateJwt"
+import { generateJwtFromUser } from "../../utils/generateJwt"
 import { REQUEST_USER } from "../../types/requestSymbols"
 
 // Mock the middlewares
@@ -50,7 +50,7 @@ describe("GET /users", () => {
   it("should call the getAllUsers controller with valid data", async () => {
     const response = await request(app)
       .get(`/`)
-      .set("Authorization", `Bearer ${generateJwt(mockDefaultUser)}`)
+      .set("Authorization", `Bearer ${generateJwtFromUser(mockDefaultUser)}`)
     expect(response.status).toBe(HTTP_SUCCESS.OK)
     expect(response.body).toHaveLength(3)
   })
