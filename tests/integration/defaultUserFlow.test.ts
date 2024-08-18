@@ -1,6 +1,7 @@
 import request from "supertest"
 import { app } from "../../src"
 import { dbClient } from "../../src/db"
+import { HTTP_SUCCESS } from "../../src/constants/http"
 
 /**
  * - Create/Register a new user
@@ -47,15 +48,16 @@ describe("Integration: Default User flow", () => {
       username: "mrhappy",
       password: "STRONGP4$$w0rd_",
     }
+
     const response = await request(app).post("/auth").send(login)
-    expect(response.status).toBe(200)
+    expect(response.status).toBe(HTTP_SUCCESS.OK)
     expect(response.body).toHaveProperty("accessToken")
     jwt = response.body.accessToken
   })
 
   it.skip("Hit the /self endpoint once logged in and get own user object", async () => {
     const response = await request(app).get("/users/self").set("Authorization", `Bearer ${jwt}`)
-    expect(response.status).toBe(200)
+    expect(response.status).toBe(HTTP_SUCCESS.OK)
     expect(response.body).toMatchObject({
       username: "mrhappy",
       email: "mrhappy@resi.dents",
