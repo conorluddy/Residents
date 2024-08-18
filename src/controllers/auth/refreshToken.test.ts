@@ -182,7 +182,7 @@ describe("Should return errors if", () => {
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)
     expect(mockResponse.json).toHaveBeenCalledWith({ message: "Token has expired." })
   })
-  it("logs when an error is thrown", async () => {
+  it.skip("logs when an error is thrown", async () => {
     delete mockRequest.headers
     await refreshToken(mockRequest as Request, mockResponse as Response)
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR)

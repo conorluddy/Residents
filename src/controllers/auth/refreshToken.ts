@@ -94,7 +94,6 @@ export const refreshToken = async (req: Request, res: Response) => {
 
     return res.status(HTTP_SUCCESS.OK).json({ accessToken })
   } catch (error) {
-    console.log("error", error)
     logger.error(error)
     return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Error refreshing access token." })
   }

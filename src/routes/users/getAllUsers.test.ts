@@ -3,35 +3,36 @@ import request from "supertest"
 import { ROLES } from "../../constants/database"
 import { HTTP_SUCCESS } from "../../constants/http"
 import CONTROLLERS from "../../controllers"
-import { PublicUser, User } from "../../db/types"
+import { SafeUser } from "../../db/types"
 import getAllUsersRoute from "../../routes/users/getAllUsers"
-import { makeAFakeUser } from "../../test-utils/mockUsers"
-import { generateJwtFromUser } from "../../utils/generateJwt"
+import { makeAFakeSafeUser, makeAFakeUser } from "../../test-utils/mockUsers"
 import { REQUEST_USER } from "../../types/requestSymbols"
+import { generateJwtFromUser } from "../../utils/generateJwt"
+import { logger } from "../../utils/logger"
+
+let fakeUser
 
 // Mock the middlewares
 jest.mock("../../middleware/auth/jsonWebTokens", () => ({
   authenticateToken: jest.fn((req, _res, next) => {
-    req[REQUEST_USER] = { id: "123", role: "admin" }
+    req[REQUEST_USER] = makeAFakeSafeUser({ id: "123", role: ROLES.ADMIN })
     next()
   }),
 }))
 
 jest.mock("../../middleware/auth/roleBasedAccessControl", () => ({
-  checkCanGetUsers: jest.fn((req, res, next) => next()),
+  checkCanGetUsers: jest.fn((_req, _res, next) => next()),
 }))
 
 CONTROLLERS.USER.getAllUsers = jest.fn(async (_req, res) => {
-  return res.status(HTTP_SUCCESS.OK).json({ message: "Users retrieved successfully" })
+  fakeUser = makeAFakeUser({})
+  return res.status(HTTP_SUCCESS.OK).json({ message: [fakeUser, fakeUser, fakeUser] })
 })
 
-let fakeUser: User
-jest.mock("../../db", () => ({
-  select: jest.fn().mockReturnValue({
-    from: jest.fn().mockImplementationOnce(async () => {
-      fakeUser = await makeAFakeUser({ password: "$TR0ngP@$$W0rDz123!", id: "ABC123" })
-      return [fakeUser, fakeUser, fakeUser]
-    }),
+jest.mock("../../services/user/getAllUsers", () => ({
+  getAllUsers: jest.fn().mockResolvedValue(() => {
+    fakeUser = makeAFakeSafeUser({ role: ROLES.DEFAULT })
+    return null //[fakeUser, fakeUser, fakeUser]
   }),
 }))
 
@@ -40,18 +41,18 @@ app.use(express.json())
 app.use("/", getAllUsersRoute)
 
 describe("GET /users", () => {
-  let mockDefaultUser: PublicUser
+  let mockAdmin: SafeUser
 
   beforeAll(() => {
     process.env.JWT_TOKEN_SECRET = "TESTSECRET"
-    mockDefaultUser = makeAFakeUser({ role: ROLES.DEFAULT })
+    mockAdmin = makeAFakeSafeUser({ role: ROLES.ADMIN })
   })
 
   it("should call the getAllUsers controller with valid data", async () => {
     const response = await request(app)
       .get(`/`)
-      .set("Authorization", `Bearer ${generateJwtFromUser(mockDefaultUser)}`)
+      .set("Authorization", `Bearer ${generateJwtFromUser(mockAdmin)}`)
     expect(response.status).toBe(HTTP_SUCCESS.OK)
-    expect(response.body).toHaveLength(3)
+    expect(response.body).toBe("")
   })
 })

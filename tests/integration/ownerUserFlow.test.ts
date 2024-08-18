@@ -3,6 +3,7 @@ import { app } from "../../src"
 import { dbClient } from "../../src/db"
 import seedUserZero from "../../src/db/utils/seedUserZero"
 import { seedUsers } from "../../src/db/utils/seedUsers"
+import { HTTP_SUCCESS } from "../../src/constants/http"
 
 /**
  * - Seed the default owner user into the DB
@@ -35,7 +36,7 @@ describe.skip("Integration: Owner flow from seeded default owner", () => {
     }
     const response = await request(app).post("/auth").send(login)
     expect(response.body).toHaveProperty("accessToken")
-    expect(response.status).toBe(200)
+    expect(response.status).toBe(HTTP_SUCCESS.OK)
     jwt = response.body.accessToken
   })
 
@@ -46,12 +47,12 @@ describe.skip("Integration: Owner flow from seeded default owner", () => {
       lastName: "Zero",
       username: "resident",
     })
-    expect(response.status).toBe(200)
+    expect(response.status).toBe(HTTP_SUCCESS.OK)
   })
 
   it("Hit the /getAllUsers endpoint once logged in and get all of the users back", async () => {
     const response = await request(app).get("/users").set("Authorization", `Bearer ${jwt}`)
-    expect(response.status).toBe(200)
+    expect(response.status).toBe(HTTP_SUCCESS.OK)
     expect(response.body).toHaveLength(61) // 10 seeded users + the owner
   })
 
@@ -62,7 +63,7 @@ describe.skip("Integration: Owner flow from seeded default owner", () => {
       .delete("/users/" + userIdToDelete)
       .set("Authorization", `Bearer ${jwt}`)
     expect(deleteResponse.body).toMatchObject({ message: `User ${userIdToDelete} deleted` })
-    expect(deleteResponse.status).toBe(200)
+    expect(deleteResponse.status).toBe(HTTP_SUCCESS.OK)
   })
 
   it("Call getAllUsers again and then get a specific one", async () => {
@@ -72,7 +73,7 @@ describe.skip("Integration: Owner flow from seeded default owner", () => {
       .get("/users/" + userIdToGet)
       .set("Authorization", `Bearer ${jwt}`)
 
-    expect(userResponse.status).toBe(200)
+    expect(userResponse.status).toBe(HTTP_SUCCESS.OK)
     expect(userResponse.body).toMatchObject([
       {
         id: usersResponse.body[5]?.id,
