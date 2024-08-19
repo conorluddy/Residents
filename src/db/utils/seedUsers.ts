@@ -20,11 +20,11 @@ async function createRandomUsers(amount: number): Promise<NewUser[]> {
     const username = faker.internet.userName()
     const password = await createHash(username)
     users.push({
-      username,
+      username: username.toLowerCase(),
       password,
       firstName: faker.person.firstName(),
       lastName: faker.person.lastName(),
-      email: faker.internet.email(),
+      email: faker.internet.email().toLowerCase(),
       role: faker.helpers.arrayElement([ROLES.ADMIN, ROLES.DEFAULT, ROLES.LOCKED, ROLES.MODERATOR]), // Omit OWNER
       status: faker.helpers.arrayElement(STATUS_ARRAY),
       deletedAt: faker.helpers.arrayElement([faker.date.past(), null, null, null]),

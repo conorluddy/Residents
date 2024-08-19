@@ -55,7 +55,7 @@ describe("Integration: Default User flow", () => {
     jwt = response.body.accessToken
   })
 
-  it.skip("Hit the /self endpoint once logged in and get own user object", async () => {
+  it("Hit the /self endpoint once logged in and get own user object", async () => {
     const response = await request(app).get("/users/self").set("Authorization", `Bearer ${jwt}`)
     expect(response.status).toBe(HTTP_SUCCESS.OK)
     expect(response.body).toMatchObject({
