@@ -5,17 +5,19 @@ import { SafeUser, User } from "../../db/types"
 import { makeAFakeUser } from "../../test-utils/mockUsers"
 import findUserByValidEmail from "./findUserByValidEmail"
 import { REQUEST_EMAIL, REQUEST_USER } from "../../types/requestSymbols"
+import { logger } from "../../utils/logger"
 
 jest.mock("../../utils/logger")
 jest.mock("../../db", () => ({
-  query: {
-    tableUsers: {
-      findFirst: jest
+  select: jest.fn().mockReturnValue({
+    from: jest.fn().mockReturnValue({
+      where: jest
         .fn()
-        .mockReturnValueOnce(makeAFakeUser({ role: ROLES.DEFAULT, email: "validated@email.com", username: "MrFake" }))
+        .mockReturnValueOnce([makeAFakeUser({ role: ROLES.DEFAULT, email: "validated@email.com", username: "MrFake" })])
+        .mockReturnValueOnce(null)
         .mockReturnValueOnce(null),
-    },
-  },
+    }),
+  }),
 }))
 
 describe("Middleware:findUserByValidEmail", () => {
@@ -44,6 +46,7 @@ describe("Middleware:findUserByValidEmail", () => {
   // but the middleware should still wotk in isolation and not care about the user's role.
   it("Happy path: Valid email used to find valid user", async () => {
     await findUserByValidEmail(mockRequest as Request, mockResponse as Response, nextFunction)
+    // expect(logger.error).toHaveBeenCalledWith("xx")
     expect(mockRequest[REQUEST_USER]).toHaveProperty("email", "validated@email.com")
     expect(mockRequest[REQUEST_USER]).toHaveProperty("username", "MrFake")
     expect(nextFunction).toHaveBeenCalled()
@@ -55,10 +58,12 @@ describe("Middleware:findUserByValidEmail", () => {
     expect(mockResponse.json).toHaveBeenCalledWith({ message: "Invalid email" })
     expect(nextFunction).not.toHaveBeenCalled()
   })
-  it("user not found when searching by validated email", async () => {
+
+  it("[REQUEST_EMAIL] holds an invalid email address", async () => {
+    mockRequest[REQUEST_EMAIL] = "notAnEmail"
     await findUserByValidEmail(mockRequest as Request, mockResponse as Response, nextFunction)
-    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.NOT_FOUND)
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: "User not found" })
+    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.BAD_REQUEST)
+    expect(mockResponse.json).toHaveBeenCalledWith({ message: "Invalid email" })
     expect(nextFunction).not.toHaveBeenCalled()
   })
 })

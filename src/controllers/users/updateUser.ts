@@ -45,7 +45,7 @@ export const updateUser = async (req: Request, res: Response) => {
     if (username) updateFields.username = username
     if (firstName) updateFields.firstName = firstName
     if (lastName) updateFields.lastName = lastName
-    if (email) updateFields.email = normalizeEmail(email)
+    if (email) updateFields.email = normalizeEmail(email, { all_lowercase: true })
 
     // Add the rest of the user fields and check the password strength
     // if (password) updateFields.password = password

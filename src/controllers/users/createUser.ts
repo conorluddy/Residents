@@ -33,7 +33,7 @@ export const createUser = async ({ body }: Request, res: Response) => {
     const password = await createHash(plainPassword)
 
     // Normalize the email
-    const email = normalizeEmail(plainEmail)
+    const email = normalizeEmail(plainEmail, { all_lowercase: true })
 
     if (!email) {
       throw new Error(`Problem with email normalization for ${plainEmail}`)

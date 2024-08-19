@@ -18,6 +18,13 @@ jest.mock("../../db", () => ({
       }),
     }),
   }),
+  select: jest.fn().mockReturnValue({
+    from: jest.fn().mockReturnValue({
+      where: jest.fn().mockImplementationOnce(async () => {
+        return [makeAFakeUser({ role: ROLES.DEFAULT })]
+      }),
+    }),
+  }),
 }))
 
 jest.mock("../../mail/sendgrid", () => ({
@@ -30,7 +37,7 @@ app.use(resetPasswordRoute)
 
 describe("POST /resetPassword", () => {
   it("should call the resetPassword controller and respond with a 400 BAD_REQUEST status if no resetPassword data is sent", async () => {
-    const response = await request(app).post("/reset-password").send({ email: "Emile_Metz@hotmail.com" })
+    const response = await request(app).post("/reset-password").send({ email: "emile_metz@hotmail.com" })
     expect(response.body).toStrictEqual({ message: "Reset email sent" })
     expect(response.status).toBe(HTTP_SUCCESS.OK)
   })
