@@ -1,5 +1,5 @@
 import { eq } from "drizzle-orm"
-import { tableUsers } from "../../db/schema"
+import { tableUsers, User } from "../../db/schema"
 import { SafeUser } from "../../db/types"
 import { logger } from "../../utils/logger"
 import db from "../../db"
@@ -31,6 +31,17 @@ const getUserByID = async (id: string): Promise<SafeUser | null> => {
   }
 }
 
+const getUserPasswordHash = async (id: string): Promise<string | null> => {
+  try {
+    if (!id) throw new Error("No ID provided")
+    const [user] = await db.select({ password: tableUsers.password }).from(tableUsers).where(eq(tableUsers.id, id))
+    return user.password
+  } catch (error) {
+    logger.error("Error getting hashed user password by ID", error)
+    throw new Error("Error getting hashed user password by ID")
+  }
+}
+
 const getUserByEmail = async (email: string): Promise<SafeUser | null> => {
   try {
     if (!email) return null
@@ -58,4 +69,4 @@ const getUserByEmail = async (email: string): Promise<SafeUser | null> => {
   }
 }
 
-export { getUserByID, getUserByEmail }
+export { getUserByID, getUserByEmail, getUserPasswordHash }
