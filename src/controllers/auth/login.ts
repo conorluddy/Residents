@@ -1,16 +1,14 @@
-import { eq, or } from "drizzle-orm"
 import { Request, Response } from "express"
+import { isEmail } from "validator"
+import { TOKEN_TYPE } from "../../constants/database"
 import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constants/http"
-import db from "../../db"
-import { User, tableTokens, tableUsers } from "../../db/schema"
+import { TIMESPAN } from "../../constants/time"
+import { User } from "../../db/schema"
+import generateXsrfToken from "../../middleware/util/xsrfToken"
+import SERVICES from "../../services"
 import { validateHash } from "../../utils/crypt"
 import { generateJwtFromUser } from "../../utils/generateJwt"
-import { isEmail } from "validator"
 import { logger } from "../../utils/logger"
-import { NewToken } from "../../db/types"
-import { TOKEN_TYPE } from "../../constants/database"
-import { TIMESPAN } from "../../constants/time"
-import generateXsrfToken from "../../middleware/util/xsrfToken"
 
 /**
  * login
@@ -27,57 +25,61 @@ export const login = async (req: Request, res: Response) => {
       return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "Password is required" })
     }
 
-    if (!username && email && !isEmail(email)) {
+    if (email && !isEmail(email)) {
       return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "Invalid email address" })
     }
 
-    const users: User[] = await db
-      .select()
-      .from(tableUsers)
-      .where(or(eq(tableUsers.username, username), eq(tableUsers.email, email)))
+    const getUserByUsernameOrEmail = username ? SERVICES.getUserByUsername : SERVICES.getUserByEmail
+    const user = await getUserByUsernameOrEmail(username ?? email)
 
-    if (!users || users.length === 0) {
+    if (!user) {
+      // Should we throw here and then clear auth in the catch and res from there??
       // Should probably clear any existing auth here
+      // logger.error("No user found")
       return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Nope." })
     }
 
-    const user = users[0]
+    const passwordHash = await SERVICES.getUserPasswordHash(user.id)
 
-    if (
-      password.length > 0 &&
-      user?.password &&
-      user.password.length > 0 &&
-      (await validateHash(password, user.password))
-    ) {
-      const newRefreshToken: NewToken = {
-        userId: user.id,
-        type: TOKEN_TYPE.REFRESH,
-        expiresAt: new Date(Date.now() + TIMESPAN.WEEK), // TODO: Make configurable
-      }
-
-      const [refreshToken] = await db.insert(tableTokens).values(newRefreshToken).returning()
-      const accessToken = generateJwtFromUser(user)
-      const xsrfToken = generateXsrfToken()
-
-      // Set the tokens in a HTTP-only secure cookies
-      res.cookie("refreshToken", refreshToken.id, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
-        maxAge: TIMESPAN.WEEK,
-      })
-
-      res.cookie("xsrfToken", xsrfToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
-        maxAge: TIMESPAN.WEEK,
-      })
-
-      return res.status(HTTP_SUCCESS.OK).json({ accessToken })
+    if (!passwordHash) {
+      // logger.error("No password found")
+      return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Nope." })
     }
 
-    return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Nope." })
+    if (!(await validateHash(password, passwordHash))) {
+      // logger.error("Password validation failed", { password, passwordHash })
+      return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Nope." })
+    }
+
+    const refreshToken = await SERVICES.createToken({
+      userId: user.id,
+      type: TOKEN_TYPE.REFRESH,
+      expiry: TIMESPAN.WEEK,
+    })
+
+    if (!refreshToken) {
+      return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Nope." })
+    }
+
+    const accessToken = generateJwtFromUser(user)
+    const xsrfToken = generateXsrfToken()
+
+    // Set the tokens in a HTTP-only secure cookies
+    res.cookie("refreshToken", refreshToken.id, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: TIMESPAN.WEEK,
+    })
+
+    res.cookie("xsrfToken", xsrfToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: TIMESPAN.WEEK,
+    })
+
+    return res.status(HTTP_SUCCESS.OK).json({ accessToken })
   } catch (error) {
     logger.error(error)
     return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Error logging in." })
