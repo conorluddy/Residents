@@ -1,15 +1,13 @@
 import { NextFunction, Request, RequestHandler, Response } from "express"
 import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from "../../constants/http"
-import { logger } from "../../utils/logger"
-import { eq } from "drizzle-orm"
-import db from "../../db"
-import { tableUsers, User } from "../../db/schema"
-import { userToSafeUser } from "../../utils/user"
+import SERVICES from "../../services"
 import { REQUEST_EMAIL, REQUEST_USER } from "../../types/requestSymbols"
+import { logger } from "../../utils/logger"
 
 /**
  * Middleware for finding a user by their email address.
- * Ensure that the email is validated before using this middleware.
+ * Ensure that the email is validated before using this middleware -
+ * (req[REQUEST_EMAIL] should only ever have been set with a validated email)
  */
 const findUserByValidEmail: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -20,20 +18,18 @@ const findUserByValidEmail: RequestHandler = async (req: Request, res: Response,
       return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "Invalid email" })
     }
 
-    // Update these user queries to only return SafeUser objects in a data access layer rather than in the mw or controller
-    const user = await db.query.tableUsers.findFirst({ where: eq(tableUsers.email, email) })
+    const user = await SERVICES.getUserByEmail(email)
 
     if (!user) {
       logger.error(`User not found: ${email}`)
-      // Don't reveal if the user exists or not, this is a public endpoint.
-      return res.status(HTTP_CLIENT_ERROR.NOT_FOUND).json({ message: "User not found" })
+      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "Invalid email" })
     }
 
-    req[REQUEST_USER] = userToSafeUser(user)
+    req[REQUEST_USER] = user
     next()
   } catch (error) {
     logger.error("findUserByValidEmail error: ", error)
-    return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Error" })
+    return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Error finding user." })
   }
 }
 

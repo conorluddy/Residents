@@ -11,6 +11,7 @@ import { TIMESPAN } from "../../constants/time"
 import { generateJwtFromUser } from "../../utils/generateJwt"
 import generateXsrfToken from "../../middleware/util/xsrfToken"
 import { viewUsers } from "../../db/schema/Users"
+import SERVICES from "../../services"
 
 /**
  * POST: refreshToken
@@ -32,13 +33,13 @@ export const refreshToken = async (req: Request, res: Response) => {
     }
 
     // JWT is likely expired, so we don't need to verify it, just get the user ID from it
-    const jwtPublicUserData = jwt.decode(jwToken) as PublicUser
+    const jwtUserIncoming = jwt.decode(jwToken) as PublicUser
 
     const token = await db.query.tableTokens.findFirst({
       where: eq(tableTokens.id, refreshToken),
     })
 
-    if (token && jwtPublicUserData && token?.userId !== jwtPublicUserData.id) {
+    if (token && jwtUserIncoming && token?.userId !== jwtUserIncoming.id) {
       logger.error(`Token x user mismatch: ${token?.userId}`)
       return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Token not valid." })
     }
@@ -69,7 +70,12 @@ export const refreshToken = async (req: Request, res: Response) => {
 
     // Move to a data access layer
     const [freshRefreshToken] = await db.insert(tableTokens).values(newRefreshToken).returning()
-    const [user] = await db.select().from(viewUsers).where(eq(tableUsers.id, jwtPublicUserData.id))
+    const user = await SERVICES.getUserByID(jwtUserIncoming.id)
+
+    if (!user) {
+      logger.error(`User not found for refreshtoken: ${refreshToken}`)
+      return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "User not found." })
+    }
 
     const accessToken = generateJwtFromUser(user)
     const xsrfToken = generateXsrfToken()
