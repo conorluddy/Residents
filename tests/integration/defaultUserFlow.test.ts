@@ -55,10 +55,20 @@ describe("Integration: Default User flow", () => {
     jwt = response.body.accessToken
   })
 
-  it("Hit the /self endpoint once logged in and get own user object", async () => {
-    const response = await request(app).get("/users/self").set("Authorization", `Bearer ${jwt}`)
-    expect(response.status).toBe(HTTP_SUCCESS.OK)
-    expect(response.body).toMatchObject({
+  it("Log in and get own user object", async () => {
+    const login = {
+      username: "mrhappy",
+      password: "STRONGP4$$w0rd_",
+    }
+    // Log in
+    const {
+      body: { accessToken: jwt },
+    } = await request(app).post("/auth").send(login)
+    // Get Self
+    const { status, body } = await request(app).get("/users/self").set("Authorization", `Bearer ${jwt}`)
+
+    expect(status).toBe(HTTP_SUCCESS.OK)
+    expect(body).toMatchObject({
       username: "mrhappy",
       email: "mrhappy@resi.dents",
       firstName: "mrhappy",
