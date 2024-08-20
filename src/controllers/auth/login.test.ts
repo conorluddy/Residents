@@ -1,10 +1,10 @@
 import { Request, Response } from "express"
+import { TOKEN_TYPE } from "../../constants/database"
 import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constants/http"
 import { User } from "../../db/types"
 import { makeAFakeUserWithHashedPassword } from "../../test-utils/mockUsers"
-import { login } from "./login"
-import { TOKEN_TYPE } from "../../constants/database"
 import { logger } from "../../utils/logger"
+import { login } from "./login"
 
 jest.mock("../../services/index", () => ({
   getUserByUsername: jest

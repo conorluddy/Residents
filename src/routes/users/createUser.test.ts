@@ -20,8 +20,7 @@ jest.mock("../../db", () => ({
         .mockImplementationOnce(async () => {
           fakeUser = await makeAFakeUser({ password: "$TR0ngP@$$W0rDz123!" })
           return [fakeUser]
-        })
-        // Insert Meta
+        }) // Insert Meta
         .mockImplementationOnce(async () => {
           return [{ id: "META_ID", userId: fakeUser.id }]
         })

@@ -4,7 +4,6 @@ import { HTTP_SUCCESS, HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from "../../consta
 import { createUser } from "./createUser"
 import { User } from "../../db/types"
 import { TOKEN_TYPE } from "../../constants/database"
-import { logger } from "../../utils/logger"
 
 let fakeUser: Partial<User>
 
@@ -18,15 +17,13 @@ jest.mock("../../db", () => ({
           fakeUser = await makeAFakeUserWithHashedPassword({ password: "$TR0ngP@$$W0rDz123!" })
           return [fakeUser]
         })
-        .mockImplementationOnce(async () => {
-          return [
-            {
-              id: "MetaID",
-              userId: "UserID",
-              metaItem: "metaItem",
-            },
-          ]
-        }),
+        .mockImplementationOnce(async () => [
+          {
+            id: "MetaID",
+            userId: "UserID",
+            metaItem: "metaItem",
+          },
+        ]),
     }),
   }),
 }))
