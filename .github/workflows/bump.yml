@@ -22,8 +22,8 @@ jobs:
         id: bump_version
         run: |
           npm version patch
-          git config user.name "Conor Luddy"
-          git config user.email "conorluddy@gmail.com"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
           git push origin HEAD:main --follow-tags
 
       - name: Push Changes
