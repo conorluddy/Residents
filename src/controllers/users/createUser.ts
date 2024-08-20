@@ -15,39 +15,19 @@ import { logger } from "../../utils/logger"
  */
 export const createUser = async ({ body }: Request, res: Response) => {
   try {
-    const { username, firstName, lastName, email: plainEmail, password: plainPassword }: Record<string, string> = body
+    const { username, firstName, lastName, email, password }: Record<string, string> = body
 
-    // Validate email
-    if (!isEmail(plainEmail)) {
-      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "Email needs to be a valid email." })
-    }
-
-    // Validate password strength
-    if (!isStrongPassword(plainPassword, PASSWORD_STRENGTH_CONFIG)) {
-      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "Password not strong enough, try harder." })
-    }
-
-    // Hash the password
-    const password = await createHash(plainPassword)
-
-    // Normalize the email
-    const email = normalizeEmail(plainEmail, { all_lowercase: true })
-
-    if (!email) {
-      throw new Error(`Problem with email normalization for ${plainEmail}`)
-    }
-
-    // Create a new user object
-    const newUser: NewUser = {
-      username: username.toLowerCase(),
+    const createdUser = await SERVICES.createUser({
+      username,
       firstName,
       lastName,
       email,
       password,
-    }
+    })
 
-    // Insert the user into the database
-    const [createdUser] = await db.insert(tableUsers).values(newUser).returning()
+    if (!createdUser) {
+      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "Error creating user" })
+    }
 
     // Create a user meta object for the user for later use
     await db.insert(tableUserMeta).values({ userId: createdUser.id }).returning()
