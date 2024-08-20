@@ -1,13 +1,10 @@
 import { Request, Response } from "express"
-import { isEmail, isStrongPassword, normalizeEmail } from "validator"
 import { TOKEN_TYPE } from "../../constants/database"
 import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constants/http"
-import { PASSWORD_STRENGTH_CONFIG } from "../../constants/password"
 import { TIMESPAN } from "../../constants/time"
 import db from "../../db"
-import { NewUser, tableUserMeta, tableUsers } from "../../db/schema"
+import { tableUserMeta } from "../../db/schema"
 import SERVICES from "../../services"
-import { createHash } from "../../utils/crypt"
 import { logger } from "../../utils/logger"
 
 /**
@@ -17,7 +14,7 @@ export const createUser = async ({ body }: Request, res: Response) => {
   try {
     const { username, firstName, lastName, email, password }: Record<string, string> = body
 
-    const createdUser = await SERVICES.createUser({
+    const userId = await SERVICES.createUser({
       username,
       firstName,
       lastName,
@@ -25,16 +22,16 @@ export const createUser = async ({ body }: Request, res: Response) => {
       password,
     })
 
-    if (!createdUser) {
+    if (!userId) {
       return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "Error creating user" })
     }
 
     // Create a user meta object for the user for later use
-    await db.insert(tableUserMeta).values({ userId: createdUser.id }).returning()
+    await db.insert(tableUserMeta).values({ userId }).returning()
 
     // Create a validation token for the user
     const token = await SERVICES.createToken({
-      userId: createdUser.id,
+      userId,
       type: TOKEN_TYPE.VALIDATE,
       expiry: TIMESPAN.WEEK,
     })
