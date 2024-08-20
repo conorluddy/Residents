@@ -25,11 +25,12 @@ export const login = async (req: Request, res: Response) => {
       return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "Password is required" })
     }
 
-    if (!username && email && !isEmail(email)) {
+    if (email && !isEmail(email)) {
       return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "Invalid email address" })
     }
 
-    const user = await SERVICES.getUserByEmail(email)
+    const getUserFn = username ? SERVICES.getUserByUsername : SERVICES.getUserByEmail
+    const user = await getUserFn(username ?? email)
 
     if (!user) {
       // Should we throw here and then clear auth in the catch and res from there??

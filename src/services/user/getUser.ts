@@ -69,4 +69,30 @@ const getUserByEmail = async (email: string): Promise<SafeUser | null> => {
   }
 }
 
-export { getUserByID, getUserByEmail, getUserPasswordHash }
+const getUserByUsername = async (username: string): Promise<SafeUser | null> => {
+  try {
+    if (!username) return null
+
+    const [user] = await db
+      .select({
+        id: tableUsers.id,
+        username: tableUsers.username,
+        firstName: tableUsers.firstName,
+        lastName: tableUsers.lastName,
+        email: tableUsers.email,
+        role: tableUsers.role,
+        status: tableUsers.status,
+        createdAt: tableUsers.createdAt,
+        deletedAt: tableUsers.deletedAt,
+      })
+      .from(tableUsers)
+      .where(eq(tableUsers.username, username.toLowerCase()))
+
+    return user
+  } catch (error) {
+    logger.error("Error getting user by Email", error)
+    throw new Error("Error getting user by Email")
+  }
+}
+
+export { getUserByID, getUserByEmail, getUserByUsername, getUserPasswordHash }

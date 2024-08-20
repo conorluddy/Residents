@@ -7,7 +7,7 @@ import { logger } from "../../utils/logger"
 
 interface Props {
   userId: string
-  type?: TOKEN_TYPE
+  type: TOKEN_TYPE
   expiry: TIMESPAN
 }
 
