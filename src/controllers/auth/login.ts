@@ -29,22 +29,25 @@ export const login = async (req: Request, res: Response) => {
       return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "Invalid email address" })
     }
 
-    const getUserFn = username ? SERVICES.getUserByUsername : SERVICES.getUserByEmail
-    const user = await getUserFn(username ?? email)
+    const getUserByUsernameOrEmail = username ? SERVICES.getUserByUsername : SERVICES.getUserByEmail
+    const user = await getUserByUsernameOrEmail(username ?? email)
 
     if (!user) {
       // Should we throw here and then clear auth in the catch and res from there??
       // Should probably clear any existing auth here
+      // logger.error("No user found")
       return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Nope." })
     }
 
     const passwordHash = await SERVICES.getUserPasswordHash(user.id)
 
     if (!passwordHash) {
+      // logger.error("No password found")
       return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Nope." })
     }
 
     if (!(await validateHash(password, passwordHash))) {
+      // logger.error("Password validation failed", { password, passwordHash })
       return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Nope." })
     }
 

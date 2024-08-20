@@ -5,7 +5,6 @@ import CONTROLLERS from "../../controllers"
 import { User } from "../../db/types"
 import createUserRoute from "../../routes/users/createUser"
 import { makeAFakeUser } from "../../test-utils/mockUsers"
-import { logger } from "../../utils/logger"
 
 CONTROLLERS.USER.createUser = jest.fn(async (req, res) => {
   return res.status(HTTP_SUCCESS.OK).json({ message: "User created successfully" })
@@ -46,9 +45,6 @@ describe("POST /register", () => {
       email: "testuser@gmail.com",
     }
     const response = await request(app).post("/register").send(requestBody)
-
-    // expect(logger.error).toHaveBeenCalledWith("XX")
-
     expect(response.body.message).toBe("User registered.")
     expect(response.status).toBe(HTTP_SUCCESS.CREATED)
   })
