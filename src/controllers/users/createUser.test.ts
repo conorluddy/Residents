@@ -1,42 +1,11 @@
 import { Request, Response } from "express"
-import { makeAFakeUserWithHashedPassword } from "../../test-utils/mockUsers"
-import { HTTP_SUCCESS, HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from "../../constants/http"
+import { HTTP_SUCCESS } from "../../constants/http"
 import { createUser } from "./createUser"
-import { User } from "../../db/types"
-import { TOKEN_TYPE } from "../../constants/database"
-
-let fakeUser: Partial<User>
-
-jest.mock("../../utils/logger")
-jest.mock("../../db", () => ({
-  insert: jest.fn().mockReturnValue({
-    values: jest.fn().mockReturnValue({
-      returning: jest
-        .fn()
-        .mockImplementationOnce(async () => {
-          fakeUser = await makeAFakeUserWithHashedPassword({ password: "$TR0ngP@$$W0rDz123!" })
-          return [fakeUser]
-        })
-        .mockImplementationOnce(async () => [
-          {
-            id: "MetaID",
-            userId: "UserID",
-            metaItem: "metaItem",
-          },
-        ]),
-    }),
-  }),
-}))
 
 jest.mock("../../services/index", () => ({
-  createToken: jest.fn().mockImplementation(async () => ({
-    userId: "123",
-    id: "token123",
-    type: TOKEN_TYPE.REFRESH,
-    used: false,
-    createdAt: new Date(),
-    expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
-  })),
+  createToken: jest.fn(),
+  createUserMeta: jest.fn(),
+  createUser: jest.fn().mockImplementation(async () => "123"),
 }))
 
 describe("Controller: CreateUser", () => {
@@ -64,17 +33,18 @@ describe("Controller: CreateUser", () => {
     expect(mockResponse.json).toHaveBeenCalledWith({ message: "User registered." })
   })
 
-  it("Create User - Weak password", async () => {
-    mockRequest.body.password = "weak"
-    await createUser(mockRequest as Request, mockResponse as Response)
-    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.BAD_REQUEST)
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: "Password not strong enough, try harder." })
-  })
+  // Test these in the service tests
+  // it("Create User - Weak password", async () => {
+  //   mockRequest.body.password = "weak"
+  //   await createUser(mockRequest as Request, mockResponse as Response)
+  //   expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.BAD_REQUEST)
+  //   expect(mockResponse.json).toHaveBeenCalledWith({ message: "Password not strong enough, try harder." })
+  // })
 
-  it("Create User - Invalid email", async () => {
-    mockRequest.body.email = "invalid-email"
-    await createUser(mockRequest as Request, mockResponse as Response)
-    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.BAD_REQUEST)
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: "Email needs to be a valid email." })
-  })
+  // it("Create User - Invalid email", async () => {
+  //   mockRequest.body.email = "invalid-email"
+  //   await createUser(mockRequest as Request, mockResponse as Response)
+  //   expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.BAD_REQUEST)
+  //   expect(mockResponse.json).toHaveBeenCalledWith({ message: "Email needs to be a valid email." })
+  // })
 })
