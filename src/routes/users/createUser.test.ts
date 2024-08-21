@@ -2,34 +2,17 @@ import express from "express"
 import request from "supertest"
 import { HTTP_CLIENT_ERROR, HTTP_SUCCESS } from "../../constants/http"
 import CONTROLLERS from "../../controllers"
-import { User } from "../../db/types"
 import createUserRoute from "../../routes/users/createUser"
-import { makeAFakeUser } from "../../test-utils/mockUsers"
+import { logger } from "../../utils/logger"
 
 CONTROLLERS.USER.createUser = jest.fn(async (req, res) => {
   return res.status(HTTP_SUCCESS.OK).json({ message: "User created successfully" })
 })
 
-let fakeUser: User
-jest.mock("../../db", () => ({
-  insert: jest.fn().mockReturnValue({
-    values: jest.fn().mockReturnValue({
-      returning: jest
-        .fn()
-        // Insert User
-        .mockImplementationOnce(async () => {
-          fakeUser = await makeAFakeUser({ password: "$TR0ngP@$$W0rDz123!" })
-          return [fakeUser]
-        }) // Insert Meta
-        .mockImplementationOnce(async () => {
-          return [{ id: "META_ID", userId: fakeUser.id }]
-        })
-        // Insert Token
-        .mockImplementationOnce(async () => {
-          return [{ id: "TOKEN_ID" }]
-        }),
-    }),
-  }),
+jest.mock("../../services/index", () => ({
+  createToken: jest.fn(),
+  createUserMeta: jest.fn(),
+  createUser: jest.fn().mockImplementation(async () => "123"),
 }))
 
 const app = express()
@@ -44,6 +27,7 @@ describe("POST /register", () => {
       email: "testuser@gmail.com",
     }
     const response = await request(app).post("/register").send(requestBody)
+    expect(logger.error).not.toHaveBeenCalled()
     expect(response.body.message).toBe("User registered.")
     expect(response.status).toBe(HTTP_SUCCESS.CREATED)
   })

@@ -1,34 +1,38 @@
 import { isEmail, isStrongPassword, normalizeEmail } from "validator"
 import db from "../../db"
-import { NewUser, tableUsers, User } from "../../db/schema"
+import { NewUser, tableUserMeta, tableUsers, User } from "../../db/schema"
 import { logger } from "../../utils/logger"
 import { PASSWORD_STRENGTH_CONFIG } from "../../constants/password"
 import { createHash } from "../../utils/crypt"
 import { ROLES } from "../../constants/database"
+import { Meta } from "../../db/types"
+import { EmailError, PasswordError, ValidationError } from "../../utils/errors"
 
 /**
  * createUser - Service to create a new user.
  * @param {NewUser} user - The new user object.
- * @returns {Promise<SafeUser | null>} - The new user object.
+ * @returns {Promise<User["id"] | null>} - The new user object.
  */
-const createUser = async ({ username, firstName, lastName, email, password }: NewUser): Promise<User["id"] | null> => {
+const createUser = async (userProps: NewUser): Promise<User["id"] | null> => {
   try {
+    const { username, firstName, lastName, email, password } = userProps
+
     if (!username || !firstName || !lastName || !email || !password) {
-      throw new Error("Missing required fields.")
+      throw new ValidationError("Missing required fields.")
     }
 
     if (!isStrongPassword(password, PASSWORD_STRENGTH_CONFIG)) {
-      throw new Error("Password not strong enough, try harder.")
+      throw new PasswordError("Password not strong enough, try harder.")
     }
 
     if (!isEmail(email)) {
-      throw new Error("Email needs to be a valid email.")
+      throw new EmailError("Email needs to be a valid email.")
     }
 
     const normalisedEmail = normalizeEmail(email, { all_lowercase: true })
 
     if (!normalisedEmail) {
-      throw new Error(`Problem with email normalization for ${email}`)
+      throw new EmailError(`Problem with email normalization for ${email}`)
     }
 
     const hashedPassword = await createHash(password)
@@ -47,9 +51,24 @@ const createUser = async ({ username, firstName, lastName, email, password }: Ne
 
     return user.id
   } catch (error) {
-    logger.error("Error creating new user", error)
-    throw new Error("Error creating new user")
+    logger.error("Error creating new user.", error)
+    throw error
   }
 }
 
-export { createUser }
+/**
+ * createUserMeta - Service to create a user meta record.
+ * @param {userId} userId - The userId to create meta for
+ * @returns {Promise<User["id"] | null>} - The new user object.
+ */
+const createUserMeta = async (userId: string): Promise<Meta["id"] | null> => {
+  try {
+    const [userMeta] = await db.insert(tableUserMeta).values({ userId }).returning()
+    return userMeta.id
+  } catch (error) {
+    logger.error("Error creating user meta.", error)
+    throw new Error("Error creating user meta.")
+  }
+}
+
+export { createUser, createUserMeta }

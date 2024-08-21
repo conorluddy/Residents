@@ -1,7 +1,7 @@
 import { getUserByID, getUserByEmail, getUserByUsername, getUserPasswordHash } from "./user/getUser"
 import { getAllUsers } from "./user/getAllUsers"
 import { createToken } from "./auth/createToken"
-import { createUser } from "./user/createUser"
+import { createUser, createUserMeta } from "./user/createUser"
 
 const SERVICES = {
   getAllUsers,
@@ -13,6 +13,7 @@ const SERVICES = {
   //
   createUser,
   createToken,
+  createUserMeta,
 }
 
 export default SERVICES
