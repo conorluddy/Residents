@@ -1,10 +1,8 @@
 import { NextFunction, Request, RequestHandler, Response } from "express"
 import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from "../../constants/http"
-import { logger } from "../../utils/logger"
-import { eq } from "drizzle-orm"
-import db from "../../db"
-import { tableTokens } from "../../db/schema"
+import SERVICES from "../../services"
 import { REQUEST_TOKEN, REQUEST_TOKEN_ID } from "../../types/requestSymbols"
+import { logger } from "../../utils/logger"
 
 /**
  * Middleware for finding a token and the user it belongs to.
@@ -18,7 +16,7 @@ const findValidTokenById: RequestHandler = async (req: Request, res: Response, n
       return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: `Valid token required` })
     }
 
-    const token = await db.query.tableTokens.findFirst({ where: eq(tableTokens.id, tokenId) })
+    const token = await SERVICES.getToken({ tokenId })
 
     if (!token) {
       logger.error(`Token not found: ${tokenId}`)

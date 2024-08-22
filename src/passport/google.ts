@@ -8,6 +8,7 @@ import { and, eq } from "drizzle-orm"
 import { NewUser, SafeUser } from "../db/types"
 import { tableFederatedCredentials } from "../db/schema"
 import { getUserByID } from "../services/user/getUser"
+import { createUser } from "../services/user/createUser"
 
 dotenv.config()
 
@@ -39,7 +40,7 @@ if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET || !GOOGLE_CALLBACK_URL) {
 
         if (fedCreds[0].userId) {
           const user = await getUserByID(fedCreds[0].userId)
-          if (!user) throw new Error("User not found")
+          if (!user) throw new Error("User not found matching federated credentials with ID:" + fedCreds[0].userId)
           return done(null, user)
         } else {
           try {
@@ -50,18 +51,11 @@ if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET || !GOOGLE_CALLBACK_URL) {
               username: profile.displayName,
             }
 
-            const newUsers = await db
-              .insert(tableUsers)
-              .values(user)
-              .onConflictDoNothing({ target: tableUsers.id })
-              .returning()
-
-            if (!newUsers) throw new Error("Failed to create user")
-
-            const { id } = newUsers[0]
+            const newUserId = await createUser(user)
+            if (!newUserId) throw new Error("Failed to create user")
 
             const fedCreds = {
-              userId: id,
+              userId: newUserId,
               provider: PROVIDER,
               subject: profile.id,
             }
@@ -76,13 +70,7 @@ if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET || !GOOGLE_CALLBACK_URL) {
 
             if (!newFedCred) throw new Error("Failed to create new federated credentials")
 
-            return done(null, {
-              firstName: newUsers[0].firstName,
-              lastName: newUsers[0].lastName,
-              email: newUsers[0].email,
-              username: newUsers[0].username,
-              role: newUsers[0].role,
-            })
+            return done(null, { id: newUserId })
           } catch (error) {
             logger.error("Failed to create user")
           }

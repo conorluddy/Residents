@@ -15,9 +15,9 @@ import { EmailError, PasswordError, ValidationError } from "../../utils/errors"
  */
 const createUser = async (userProps: NewUser): Promise<User["id"] | null> => {
   try {
-    const { username, firstName, lastName, email, password } = userProps
+    const { username, firstName, lastName, email, password, role } = userProps
 
-    if (!username || !firstName || !lastName || !email || !password) {
+    if (!username || !firstName || !lastName || !email || !password || !role) {
       throw new ValidationError("Missing required fields.")
     }
 
@@ -43,11 +43,13 @@ const createUser = async (userProps: NewUser): Promise<User["id"] | null> => {
       username: username.toLowerCase(),
       email: normalisedEmail,
       password: hashedPassword,
+
       //
-      role: ROLES.DEFAULT, // TODO: Need only allow roles below current users role
+      // role: ROLES.DEFAULT, // TODO: Need only allow roles below current users role
+      role: role,
     }
 
-    const [user] = await db.insert(tableUsers).values(newUser).returning()
+    const [user] = await db.insert(tableUsers).values(newUser).onConflictDoNothing().returning()
 
     return user.id
   } catch (error) {
