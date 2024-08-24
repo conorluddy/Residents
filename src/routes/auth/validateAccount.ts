@@ -1,11 +1,15 @@
 import { Router } from "express"
-import { authenticateToken } from "../../middleware/auth/jsonWebTokens"
 import CONTROLLERS from "../../controllers"
+import MW from "../../middleware"
 
 const router = Router()
 
-router.patch("/validate/:tokenId.:userId", authenticateToken, CONTROLLERS.AUTH.validateAccount)
-// Validate account - needs you to be logged in to validate the account,
-// but could be made public if you want to allow for email validation without logging in.
+router.patch(
+  "/validate/:tokenId.:userId",
+  MW.VALIDATE.tokenId,
+  MW.findValidTokenById,
+  MW.discardToken,
+  CONTROLLERS.AUTH.validateAccount
+)
 
 export default router

@@ -1,11 +1,8 @@
-import { eq } from "drizzle-orm"
 import { Request, Response } from "express"
 import { STATUS, TOKEN_TYPE } from "../../constants/database"
 import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constants/http"
-import db from "../../db"
-import { tableUsers } from "../../db/schema"
 import SERVICES from "../../services"
-import { REQUEST_USER } from "../../types/requestSymbols"
+import { REQUEST_TOKEN, REQUEST_USER } from "../../types/requestSymbols"
 import { logger } from "../../utils/logger"
 
 /**
@@ -13,12 +10,11 @@ import { logger } from "../../utils/logger"
  */
 export const validateAccount = async (req: Request, res: Response) => {
   try {
-    // Get the token and userId from the request
-    // if you're logged in though you could just
-    // use the userId from the JWT
     const { tokenId, userId } = req.params
     const jwtUserId = req[REQUEST_USER]?.id
-    const token = await SERVICES.getToken({ tokenId })
+    const token = req[REQUEST_TOKEN]
+
+    logger.info(`Attempting to validate User ${userId} with Token ${tokenId}`)
 
     if (token?.type !== TOKEN_TYPE.VALIDATE) {
       logger.error(`Token with ID ${tokenId} isnt a validation type token.`)
@@ -32,13 +28,7 @@ export const validateAccount = async (req: Request, res: Response) => {
     }
 
     // Validate the user
-    await db
-      .update(tableUsers)
-      .set({ status: STATUS.VERIFIED })
-      .where(eq(tableUsers.id, userId))
-      .returning({ updatedId: tableUsers.id })
-
-    await SERVICES.deleteToken({ tokenId })
+    await SERVICES.updateUserStatus({ userId, status: STATUS.VERIFIED })
 
     logger.info(`User ${userId} validated.`)
     return res.status(HTTP_SUCCESS.OK).json({ message: "Account validated." })
