@@ -1,11 +1,9 @@
-import db from ".."
-import { ROLES, ROLES_ARRAY, STATUS_ARRAY } from "../../constants/database"
-import { createUser } from "../../services/user/createUser"
+import { faker } from "@faker-js/faker"
+import { ROLES, STATUS_ARRAY } from "../../constants/database"
+import SERVICES from "../../services"
 import { createHash } from "../../utils/crypt"
 import { logger } from "../../utils/logger"
-import { tableUsers } from "../schema"
 import { NewUser } from "../types"
-import { faker } from "@faker-js/faker"
 
 /**
  * Faker function to create a random users
@@ -40,7 +38,7 @@ const seedUsers = async (amount: number) => {
     const users = await createRandomUsers(amount)
     for (const user of users) {
       logger.info(`${user.firstName} ${user.lastName} [${user.role} / ${user.status}]`)
-      await createUser(user)
+      await SERVICES.createUser(user)
     }
     logger.info(`${amount} user(s) seeded`)
   } catch (error) {

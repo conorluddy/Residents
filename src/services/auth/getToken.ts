@@ -11,7 +11,7 @@ interface Props {
 const getToken = async ({ tokenId }: Props): Promise<Token | null> => {
   try {
     if (!tokenId) throw new Error("No token ID provided")
-    const [token] = await db.select().from(tableTokens).where(eq(tableTokens.userId))
+    const [token] = await db.select().from(tableTokens).where(eq(tableTokens.userId, tokenId))
     return token
   } catch (error) {
     logger.error("Error getting token", error)

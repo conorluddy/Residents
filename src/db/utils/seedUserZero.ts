@@ -5,7 +5,7 @@ import { createHash } from "../../utils/crypt"
 import { logger } from "../../utils/logger"
 import { tableUsers } from "../schema"
 import { NewUser } from "../types"
-import { createUser } from "../../services/user/createUser"
+import SERVICES from "../../services"
 
 /**
  * Seed the first user in the database
@@ -36,11 +36,10 @@ const seedUserZero = async (password: string = "resident") => {
       deletedAt: null,
     }
 
-    await createUser(userZero)
+    await SERVICES.createUser(userZero)
 
     logger.info(`First user seeded with Owner role.`)
   } catch (error) {
-    console.log("error", error)
     logger.error(error)
   } finally {
     if (process.env.NODE_ENV !== "test") process.exit()

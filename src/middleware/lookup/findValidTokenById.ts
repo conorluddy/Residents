@@ -36,6 +36,7 @@ const findValidTokenById: RequestHandler = async (req: Request, res: Response, n
     // Should probably compare the token.type here too with the URL to ensure reset password token is used for reset password etc
 
     req[REQUEST_TOKEN] = token
+    req[REQUEST_TOKEN_ID] = token.id
     next()
   } catch (error) {
     logger.error(`Error finding user by valid token: ${error}`)

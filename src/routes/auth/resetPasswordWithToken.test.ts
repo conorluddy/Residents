@@ -9,23 +9,22 @@ import { logger } from "../../utils/logger"
 
 const validTokenId = createId()
 
+jest.mock("../../services/index", () => ({
+  getUserByID: jest.fn().mockImplementation(() => makeAFakeUser({ role: ROLES.DEFAULT })),
+  deleteToken: jest.fn().mockImplementation(() => "123"),
+  getToken: jest.fn().mockImplementation(() => ({
+    id: validTokenId,
+    createdAt: new Date(),
+    userId: "UID123",
+    type: TOKEN_TYPE.RESET,
+    used: false,
+    expiresAt: new Date(Date.now() + 60 * 60 * 1000), // Add one hour
+    user: makeAFakeUser({ email: "bananaman@ireland.ie", id: "UID123" }),
+  })),
+}))
+
+// Update this to use mocked service when update service is done
 jest.mock("../../db", () => ({
-  query: {
-    tableUsers: {
-      findFirst: jest.fn().mockImplementation(() => makeAFakeUser({ role: ROLES.DEFAULT })),
-    },
-    tableTokens: {
-      findFirst: jest.fn().mockImplementation(() => ({
-        id: validTokenId,
-        createdAt: new Date(),
-        userId: "UID123",
-        type: TOKEN_TYPE.RESET,
-        used: false,
-        expiresAt: new Date(Date.now() + 60 * 60 * 1000), // Add one hour
-        user: makeAFakeUser({ email: "bananaman@ireland.ie", id: "UID123" }),
-      })),
-    },
-  },
   update: jest.fn().mockReturnValue({
     set: jest.fn().mockReturnValue({
       where: jest.fn().mockReturnValue({
@@ -42,13 +41,6 @@ jest.mock("../../db", () => ({
       }),
     }),
   }),
-}))
-
-jest.mock("../../utils/logger", () => ({
-  logger: {
-    info: jest.fn(),
-    error: jest.fn(),
-  },
 }))
 
 const app = express()

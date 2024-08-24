@@ -19,7 +19,7 @@ export const refreshToken = async (req: Request, res: Response) => {
     const jwToken = authHeader && authHeader.split(" ")[1] // Bearer[ ]TOKEN...
     const refreshTokenId = req.body?.refreshToken
 
-    if (!refreshToken) {
+    if (!refreshTokenId) {
       logger.warn("Refresh token token was not provided in the request body")
       return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "Refresh token is required" })
     }
@@ -41,7 +41,7 @@ export const refreshToken = async (req: Request, res: Response) => {
     }
 
     if (!token) {
-      logger.error(`Refresh token not found: ${refreshToken}`)
+      logger.error(`Refresh token not found: ${refreshTokenId}`)
       return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Token not valid." })
     }
 
@@ -52,7 +52,7 @@ export const refreshToken = async (req: Request, res: Response) => {
     }
 
     if (token.expiresAt < new Date()) {
-      logger.error(`Attempt to use an expired refresh token: ${refreshToken}`)
+      logger.error(`Attempt to use an expired refresh token: ${refreshTokenId}`)
       return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Token has expired." })
     }
 
@@ -71,7 +71,7 @@ export const refreshToken = async (req: Request, res: Response) => {
     const user = await SERVICES.getUserByID(jwtUserIncoming.id)
 
     if (!user) {
-      logger.error(`User not found for refreshtoken: ${refreshToken}`)
+      logger.error(`User not found for refreshtoken: ${refreshTokenId}`)
       return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "User not found." })
     }
 

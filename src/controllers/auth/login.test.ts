@@ -5,6 +5,7 @@ import { User } from "../../db/types"
 import { makeAFakeUserWithHashedPassword } from "../../test-utils/mockUsers"
 import { logger } from "../../utils/logger"
 import { login } from "./login"
+import { TIMESPAN } from "../../constants/time"
 
 jest.mock("../../services/index", () => ({
   getUserByUsername: jest
@@ -22,7 +23,7 @@ jest.mock("../../services/index", () => ({
     type: TOKEN_TYPE.REFRESH,
     used: false,
     createdAt: new Date(),
-    expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
+    expiresAt: new Date(Date.now() + TIMESPAN.HOUR),
   })),
 }))
 

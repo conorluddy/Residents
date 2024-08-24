@@ -8,58 +8,51 @@ import { User } from "../../db/types"
 import generateXsrfToken from "../../middleware/util/xsrfToken"
 import { logger } from "../../utils/logger"
 import jwt from "jsonwebtoken"
+import { getUserByID } from "../../services/user/getUser"
 
 const mockDefaultUser = makeAFakeUser({ role: ROLES.DEFAULT })
 
 jest.mock("jsonwebtoken")
-jest.mock("../../utils/logger")
 jest.mock("../../utils/generateJwt", () => ({
   generateJwtFromUser: jest.fn().mockReturnValue("testAccessToken"),
 }))
 
+jest.mock("../../services/index", () => ({
+  getUserByID: jest.fn().mockImplementation(() => mockDefaultUser),
+  deleteToken: jest.fn().mockImplementation(() => "123"),
+  createToken: jest.fn().mockImplementation(() => ({ id: "tok1" })),
+  getToken: jest
+    .fn()
+    // Happy path
+    .mockImplementationOnce(() => ({
+      id: "tok0",
+      userId: mockDefaultUser.id,
+    }))
+    .mockImplementationOnce(() => undefined)
+    .mockImplementationOnce(() => ({
+      id: "tok1",
+      userId: "456",
+    }))
+    .mockImplementationOnce(() => ({
+      id: "tok3",
+      used: true,
+      userId: mockDefaultUser.id,
+    }))
+    .mockImplementationOnce(() => ({
+      id: "tok2",
+      expiresAt: new Date(Date.now() - 1000),
+      userId: mockDefaultUser.id,
+    })),
+}))
+
+// Remove this and use the mocked service instead
 jest.mock("../../db", () => ({
-  query: {
-    tableTokens: {
-      findFirst: jest
-        .fn()
-        // Happy path
-        .mockImplementationOnce(() => ({
-          id: "tok0",
-          userId: mockDefaultUser.id,
-        }))
-        .mockImplementationOnce(() => undefined)
-        .mockImplementationOnce(() => ({
-          id: "tok1",
-          userId: "456",
-        }))
-        .mockImplementationOnce(() => ({
-          id: "tok3",
-          used: true,
-          userId: mockDefaultUser.id,
-        }))
-        .mockImplementationOnce(() => ({
-          id: "tok2",
-          expiresAt: new Date(Date.now() - 1000),
-          userId: mockDefaultUser.id,
-        })),
-    },
-  },
-  select: jest.fn().mockReturnValue({
-    from: jest.fn().mockReturnValue({
-      where: jest.fn().mockImplementationOnce(async () => {
-        return [mockDefaultUser]
-      }),
-    }),
-  }),
   insert: jest.fn().mockReturnValue({
     values: jest.fn().mockReturnValue({
       returning: jest.fn().mockImplementationOnce(async () => {
         return [{ id: "tok1" }]
       }),
     }),
-  }),
-  delete: jest.fn().mockReturnValue({
-    where: jest.fn().mockImplementation(),
   }),
 }))
 
@@ -80,12 +73,8 @@ describe("Controller: Refresh token: Happy path", () => {
     jwToken = generateJwtFromUser(mockDefaultUser)
     xsrf = generateXsrfToken()
     mockRequest = {
-      body: {
-        refreshToken: "REFRESHME",
-      },
-      headers: {
-        authorization: `Bearer ${jwt}`,
-      },
+      body: { refreshToken: "REFRESHME" },
+      headers: { authorization: `Bearer ${jwt}` },
     }
     mockResponse = {
       status: jest.fn().mockReturnThis(),
@@ -96,6 +85,7 @@ describe("Controller: Refresh token: Happy path", () => {
 
   it("should allow tokens to refresh if existing tokens are legit", async () => {
     await refreshToken(mockRequest as Request, mockResponse as Response)
+    expect(logger.error).not.toHaveBeenCalled()
     expect(mockResponse.json).toHaveBeenCalledWith({ accessToken: "testAccessToken" })
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.OK)
     expect(mockResponse.cookie).toHaveBeenCalledTimes(2)
@@ -148,6 +138,7 @@ describe("Should return errors if", () => {
   it("there's no refresh token in the request body", async () => {
     delete mockRequest.body?.refreshToken
     await refreshToken(mockRequest as Request, mockResponse as Response)
+    expect(logger.error).not.toHaveBeenCalled()
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.BAD_REQUEST)
     expect(mockResponse.json).toHaveBeenCalledWith({ message: "Refresh token is required" })
   })
@@ -182,7 +173,7 @@ describe("Should return errors if", () => {
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)
     expect(mockResponse.json).toHaveBeenCalledWith({ message: "Token has expired." })
   })
-  it.skip("logs when an error is thrown", async () => {
+  it("logs when an error is thrown", async () => {
     delete mockRequest.headers
     await refreshToken(mockRequest as Request, mockResponse as Response)
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR)

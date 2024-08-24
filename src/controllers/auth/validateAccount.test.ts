@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import { ROLES } from "../../constants/database"
+import { ROLES, TOKEN_TYPE } from "../../constants/database"
 import { HTTP_SUCCESS } from "../../constants/http"
 import { PublicUser } from "../../db/types"
 import { makeAFakeSafeUser, makeAFakeUser } from "../../test-utils/mockUsers"
@@ -9,24 +9,17 @@ import { validateAccount } from "./validateAccount"
 
 const mockDefaultUser = makeAFakeUser({ role: ROLES.DEFAULT })
 
-jest.mock("../../utils/logger", () => ({
-  logger: {
-    info: jest.fn(),
-    error: jest.fn(),
-  },
+jest.mock("../../services/index", () => ({
+  deleteToken: jest.fn().mockImplementation(() => "123"),
+  getToken: jest.fn().mockImplementationOnce(() => ({
+    id: "TOKEN001",
+    userId: mockDefaultUser.id,
+    user: mockDefaultUser,
+    type: TOKEN_TYPE.VALIDATE,
+  })),
 }))
 
 jest.mock("../../db", () => ({
-  query: {
-    tableTokens: {
-      findFirst: jest.fn().mockImplementation(() => ({
-        id: "TOKEN001",
-        userId: mockDefaultUser.id,
-        user: mockDefaultUser,
-      })),
-    },
-  },
-  //
   update: jest.fn().mockReturnValue({
     set: jest.fn().mockReturnValue({
       where: jest.fn().mockReturnValue({
@@ -35,10 +28,6 @@ jest.mock("../../db", () => ({
         }),
       }),
     }),
-  }),
-  //
-  delete: jest.fn().mockReturnValue({
-    where: jest.fn().mockReturnValue({}),
   }),
 }))
 
@@ -66,6 +55,7 @@ describe("Controller: Validate Account", () => {
 
   it("Validates a users account when the token is found and matches the user", async () => {
     await validateAccount(mockRequest as Request, mockResponse as Response)
+    expect(logger.error).not.toHaveBeenCalled()
     expect(logger.info).toHaveBeenCalledWith(`User ${mockDefaultUser.id} validated.`)
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.OK)
     expect(mockResponse.json).toHaveBeenCalledWith({ message: "Account validated." })

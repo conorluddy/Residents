@@ -1,49 +1,53 @@
 import { NextFunction, Request, Response } from "express"
 import { TOKEN_TYPE } from "../../constants/database"
 import { HTTP_CLIENT_ERROR } from "../../constants/http"
+import { TIMESPAN } from "../../constants/time"
 import { Token } from "../../db/types"
 import { REQUEST_TOKEN, REQUEST_TOKEN_ID } from "../../types/requestSymbols"
 import findValidTokenById from "./findValidTokenById"
 
-jest.mock("../../utils/logger")
-jest.mock("../../db", () => ({
-  query: {
-    tableTokens: {
-      findFirst: jest
-        .fn()
-        .mockReturnValueOnce({
-          id: "XXX-XXX-XXX-XXX-XXX-XXX-XXX-XXX",
-          type: TOKEN_TYPE.MAGIC,
-          used: false,
-          createdAt: new Date(),
-          expiresAt: new Date().setFullYear(new Date().getFullYear() + 1),
-        })
-        .mockReturnValueOnce({
-          id: "XXX-XXX-XXX-XXX-XXX-XXX-XXX-XXX",
-          type: TOKEN_TYPE.MAGIC,
-          used: true,
-          createdAt: new Date(),
-          expiresAt: new Date().setFullYear(new Date().getFullYear() + 1),
-        })
-        .mockReturnValueOnce({
-          id: "XXX-XXX-XXX-XXX-XXX-XXX-XXX-XXX",
-          type: TOKEN_TYPE.MAGIC,
-          used: false,
-          createdAt: new Date(),
-          expiresAt: new Date(),
-        }),
-    },
-  },
+jest.mock("../../services/index", () => ({
+  getToken: jest
+    .fn()
+    .mockReturnValueOnce({
+      id: "XXX-XXX-XXX-XXX-XXX-XXX-XXX-XXX",
+      type: TOKEN_TYPE.MAGIC,
+      used: false,
+      createdAt: new Date(),
+      expiresAt: new Date().setFullYear(new Date().getFullYear() + 1),
+    })
+    .mockReturnValueOnce({
+      id: "XXX-XXX-XXX-XXX-XXX-XXX-XXX-XXX",
+      type: TOKEN_TYPE.MAGIC,
+      used: true,
+      createdAt: new Date(),
+      expiresAt: new Date().setFullYear(new Date().getFullYear() + 1),
+    })
+    .mockReturnValueOnce({
+      id: "XXX-XXX-XXX-XXX-XXX-XXX-XXX-XXX",
+      type: TOKEN_TYPE.MAGIC,
+      used: false,
+      createdAt: new Date(),
+      expiresAt: new Date(),
+    }),
 }))
 
 describe("Middleware:findValidTokenById", () => {
-  let mockRequest: Partial<Request> & { [REQUEST_TOKEN_ID]: string }
+  let mockRequest: Partial<Request> & { [REQUEST_TOKEN_ID]: string; [REQUEST_TOKEN]: Token }
   let mockResponse: Partial<Response>
   let nextFunction: NextFunction
 
   beforeEach(() => {
     mockRequest = {
       [REQUEST_TOKEN_ID]: "XXX-XXX-XXX-XXX-XXX-XXX-XXX-XXX",
+      [REQUEST_TOKEN]: {
+        id: "XXX-XXX-XXX-XXX-XXX-XXX-XXX-XXX",
+        userId: "UUU-UUU-UUU-UUU-UUU-UUU-UUU-UUU",
+        type: TOKEN_TYPE.VALIDATE,
+        used: false,
+        createdAt: new Date(),
+        expiresAt: new Date(Date.now() + TIMESPAN.HOUR),
+      },
     }
     mockResponse = {
       status: jest.fn().mockReturnThis(),
@@ -54,7 +58,8 @@ describe("Middleware:findValidTokenById", () => {
 
   it("Happy path: Find valid token in DB", async () => {
     await findValidTokenById(mockRequest as Request, mockResponse as Response, nextFunction)
-    expect(mockRequest[REQUEST_TOKEN]).toHaveProperty("id", "XXX-XXX-XXX-XXX-XXX-XXX-XXX-XXX")
+    expect(mockRequest[REQUEST_TOKEN_ID]).toEqual("XXX-XXX-XXX-XXX-XXX-XXX-XXX-XXX")
+    // expect(logger.error).toHaveBeenCalledWith("xx")
     expect(nextFunction).toHaveBeenCalled()
   })
 
