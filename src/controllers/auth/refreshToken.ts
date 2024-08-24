@@ -1,17 +1,14 @@
 import { Request, Response } from "express"
-import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constants/http"
-import { logger } from "../../utils/logger"
 import jwt from "jsonwebtoken"
-import { tableTokens, tableUsers, User } from "../../db/schema"
-import db from "../../db"
-import { eq } from "drizzle-orm"
-import { NewToken, PublicUser } from "../../db/types"
 import { TOKEN_TYPE } from "../../constants/database"
+import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constants/http"
 import { TIMESPAN } from "../../constants/time"
-import { generateJwtFromUser } from "../../utils/generateJwt"
+import { PublicUser } from "../../db/types"
 import generateXsrfToken from "../../middleware/util/xsrfToken"
-import { viewUsers } from "../../db/schema/Users"
 import SERVICES from "../../services"
+import { createToken } from "../../services/auth/createToken"
+import { generateJwtFromUser } from "../../utils/generateJwt"
+import { logger } from "../../utils/logger"
 
 /**
  * POST: refreshToken
@@ -20,9 +17,9 @@ export const refreshToken = async (req: Request, res: Response) => {
   try {
     const authHeader = req.headers["authorization"]
     const jwToken = authHeader && authHeader.split(" ")[1] // Bearer[ ]TOKEN...
-    const refreshToken = req.body?.refreshToken
+    const refreshTokenId = req.body?.refreshToken
 
-    if (!refreshToken) {
+    if (!refreshTokenId) {
       logger.warn("Refresh token token was not provided in the request body")
       return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "Refresh token is required" })
     }
@@ -35,9 +32,8 @@ export const refreshToken = async (req: Request, res: Response) => {
     // JWT is likely expired, so we don't need to verify it, just get the user ID from it
     const jwtUserIncoming = jwt.decode(jwToken) as PublicUser
 
-    const token = await db.query.tableTokens.findFirst({
-      where: eq(tableTokens.id, refreshToken),
-    })
+    // Get the refresh token from the DB if it exists
+    const token = await SERVICES.getToken({ tokenId: refreshTokenId })
 
     if (token && jwtUserIncoming && token?.userId !== jwtUserIncoming.id) {
       logger.error(`Token x user mismatch: ${token?.userId}`)
@@ -45,7 +41,7 @@ export const refreshToken = async (req: Request, res: Response) => {
     }
 
     if (!token) {
-      logger.error(`Refresh token not found: ${refreshToken}`)
+      logger.error(`Refresh token not found: ${refreshTokenId}`)
       return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Token not valid." })
     }
 
@@ -56,24 +52,26 @@ export const refreshToken = async (req: Request, res: Response) => {
     }
 
     if (token.expiresAt < new Date()) {
-      logger.error(`Attempt to use an expired refresh token: ${refreshToken}`)
+      logger.error(`Attempt to use an expired refresh token: ${refreshTokenId}`)
       return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Token has expired." })
     }
 
     // Create new JWT and RefreshToken and return them
     // Delete old RefreshToken
-    const newRefreshToken: NewToken = {
+    const freshRefreshToken = await createToken({
       userId: token.userId,
       type: TOKEN_TYPE.REFRESH,
-      expiresAt: new Date(Date.now() + TIMESPAN.WEEK), // Make configurable
+      expiry: TIMESPAN.WEEK,
+    })
+
+    if (!freshRefreshToken) {
+      return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Error creating refresh token." })
     }
 
-    // Move to a data access layer
-    const [freshRefreshToken] = await db.insert(tableTokens).values(newRefreshToken).returning()
     const user = await SERVICES.getUserByID(jwtUserIncoming.id)
 
     if (!user) {
-      logger.error(`User not found for refreshtoken: ${refreshToken}`)
+      logger.error(`User not found for refreshtoken: ${refreshTokenId}`)
       return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "User not found." })
     }
 
@@ -95,8 +93,7 @@ export const refreshToken = async (req: Request, res: Response) => {
       maxAge: TIMESPAN.WEEK,
     })
 
-    // Delete the old token...
-    await db.delete(tableTokens).where(eq(tableTokens.id, token.id))
+    await SERVICES.deleteToken({ tokenId: token.id })
 
     return res.status(HTTP_SUCCESS.OK).json({ accessToken })
   } catch (error) {

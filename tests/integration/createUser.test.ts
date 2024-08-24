@@ -1,7 +1,7 @@
 import request from "supertest"
 import { app } from "../../src"
 import { dbClient } from "../../src/db"
-import { logger } from "../../src/utils/logger"
+import { ROLES } from "../../src/constants/database"
 
 describe("Integration: Can CreateUser", () => {
   beforeAll(async () => await dbClient.connect())
@@ -15,6 +15,7 @@ describe("Integration: Can CreateUser", () => {
       email: "test.user@resi.dents",
       username: "mr.test",
       password: "STRONGP4$$w0rd_",
+      role: ROLES.ADMIN,
     }
     const response = await request(app).post("/users/register").send(newUser)
     expect(response.status).toBe(201)
@@ -28,6 +29,7 @@ describe("Integration: Can CreateUser", () => {
       email: "",
       username: "testuser",
       password: "password123",
+      role: ROLES.ADMIN,
     }
     const response = await request(app).post("/users/register").send(incompleteUser)
     expect(response.status).toBe(400)
@@ -41,6 +43,7 @@ describe("Integration: Can CreateUser", () => {
       email: "nope",
       username: "InvalidEmail",
       password: "STRONGP4$$w0rd_",
+      role: ROLES.ADMIN,
     }
     const response = await request(app).post("/users/register").send(incompleteUser)
     expect(response.status).toBe(400)
@@ -54,6 +57,7 @@ describe("Integration: Can CreateUser", () => {
       email: "weakpassword@weak.com",
       username: "weakpassword",
       password: "weak",
+      role: ROLES.ADMIN,
     }
     const response = await request(app).post("/users/register").send(incompleteUser)
     expect(response.status).toBe(400)

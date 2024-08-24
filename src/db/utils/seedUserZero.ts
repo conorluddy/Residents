@@ -5,6 +5,7 @@ import { createHash } from "../../utils/crypt"
 import { logger } from "../../utils/logger"
 import { tableUsers } from "../schema"
 import { NewUser } from "../types"
+import SERVICES from "../../services"
 
 /**
  * Seed the first user in the database
@@ -14,6 +15,7 @@ import { NewUser } from "../types"
  */
 const seedUserZero = async (password: string = "resident") => {
   try {
+    // Not making a service for this query because it's a one-off CLI util script
     const userCountResult = await db.select({ count: count() }).from(tableUsers)
 
     if (userCountResult && userCountResult[0]?.count > 0) {
@@ -34,11 +36,10 @@ const seedUserZero = async (password: string = "resident") => {
       deletedAt: null,
     }
 
-    await db.insert(tableUsers).values(userZero).returning().execute()
+    await SERVICES.createUser(userZero)
 
     logger.info(`First user seeded with Owner role.`)
   } catch (error) {
-    console.log("error", error)
     logger.error(error)
   } finally {
     if (process.env.NODE_ENV !== "test") process.exit()

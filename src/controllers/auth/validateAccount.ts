@@ -1,11 +1,12 @@
+import { eq } from "drizzle-orm"
 import { Request, Response } from "express"
+import { STATUS, TOKEN_TYPE } from "../../constants/database"
 import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constants/http"
 import db from "../../db"
-import { eq, and } from "drizzle-orm"
-import { logger } from "../../utils/logger"
-import { tableTokens, tableUsers, User } from "../../db/schema"
-import { STATUS, TOKEN_TYPE } from "../../constants/database"
+import { tableUsers } from "../../db/schema"
+import SERVICES from "../../services"
 import { REQUEST_USER } from "../../types/requestSymbols"
+import { logger } from "../../utils/logger"
 
 /**
  * validateAccount
@@ -17,10 +18,12 @@ export const validateAccount = async (req: Request, res: Response) => {
     // use the userId from the JWT
     const { tokenId, userId } = req.params
     const jwtUserId = req[REQUEST_USER]?.id
+    const token = await SERVICES.getToken({ tokenId })
 
-    const token = await db.query.tableTokens.findFirst({
-      where: and(eq(tableTokens.id, tokenId), eq(tableTokens.type, TOKEN_TYPE.VALIDATE)),
-    })
+    if (token?.type !== TOKEN_TYPE.VALIDATE) {
+      logger.error(`Token with ID ${tokenId} isnt a validation type token.`)
+      throw new Error("Invalid token type.")
+    }
 
     // Compare the UserId and TokenId from the URL to the UserId from the JWT - probably overkill - URL might be enough
     if (!token || token?.userId !== userId || jwtUserId !== token?.userId) {
@@ -35,8 +38,7 @@ export const validateAccount = async (req: Request, res: Response) => {
       .where(eq(tableUsers.id, userId))
       .returning({ updatedId: tableUsers.id })
 
-    // Delete the token once used
-    await db.delete(tableTokens).where(and(eq(tableTokens.id, tokenId), eq(tableTokens.type, TOKEN_TYPE.VALIDATE)))
+    await SERVICES.deleteToken({ tokenId })
 
     logger.info(`User ${userId} validated.`)
     return res.status(HTTP_SUCCESS.OK).json({ message: "Account validated." })
