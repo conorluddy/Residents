@@ -2,6 +2,7 @@ import request from "supertest"
 import { app } from "../../src"
 import { dbClient } from "../../src/db"
 import { HTTP_SUCCESS } from "../../src/constants/http"
+import { ROLES } from "../../src/constants/database"
 
 /**
  * - Create/Register a new user
@@ -29,8 +30,10 @@ describe("Integration: Default User flow", () => {
       email: "mrhappy@resi.dents",
       username: "mrhappy",
       password: "STRONGP4$$w0rd_",
+      role: ROLES.ADMIN,
     }
     const response = await request(app).post("/users/register").send(newUser)
+    // expect(logger.info).toHaveBeenCalledWith("Creating new user.")
     expect(response.status).toBe(201)
     expect(response.body).toHaveProperty("message", "User registered.")
   })
