@@ -1,9 +1,6 @@
-import { count } from "drizzle-orm"
-import db from ".."
 import { ROLES, STATUS } from "../../constants/database"
 import { createHash } from "../../utils/crypt"
 import { logger } from "../../utils/logger"
-import { tableUsers } from "../schema"
 import { NewUser } from "../types"
 import SERVICES from "../../services"
 
@@ -15,10 +12,9 @@ import SERVICES from "../../services"
  */
 const seedUserZero = async (password: string = "resident") => {
   try {
-    // Not making a service for this query because it's a one-off CLI util script
-    const userCountResult = await db.select({ count: count() }).from(tableUsers)
+    const usersAlreadyExist = (await SERVICES.getUserCount()) > 0
 
-    if (userCountResult && userCountResult[0]?.count > 0) {
+    if (usersAlreadyExist) {
       logger.warn(
         "This seeding script is only for setting the first user in an empty database, but the database already has users."
       )

@@ -5,6 +5,7 @@ import { createUser, createUserMeta } from "./user/createUser"
 import { getToken } from "./auth/getToken"
 import { deleteToken } from "./auth/deleteToken"
 import { deleteRefreshToken } from "./auth/deleteRefreshToken"
+import { getUserCount } from "./user/getUserCount"
 
 const SERVICES = {
   createToken,
@@ -18,6 +19,7 @@ const SERVICES = {
   getUserByID,
   getUserByUsername,
   getUserPasswordHash,
+  getUserCount,
 }
 
 export default SERVICES
