@@ -31,9 +31,9 @@ export const updateUserMeta = async (req: Request, res: Response) => {
       return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "No data provided to update the user with." })
     }
 
-    const { metaItem }: Partial<Meta> = req.body ?? {}
     // Add the rest of the user meta fields.
     // Sanitise and validate the data (ideally in a middleware before we ever get to this controller)
+    const { metaItem }: Partial<Meta> = req.body ?? {}
 
     const updatedUserId = await SERVICES.updateUserMeta({ userId: id, metaItem })
 

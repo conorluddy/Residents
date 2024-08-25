@@ -2,33 +2,19 @@ import { NextFunction, Request, Response } from "express"
 import { TOKEN_TYPE } from "../../constants/database"
 import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constants/http"
 import { Token } from "../../db/types"
-import { makeAFakeUser } from "../../test-utils/mockUsers"
+import { REQUEST_TOKEN } from "../../types/requestSymbols"
 import { logger } from "../../utils/logger"
 import { resetPasswordWithToken } from "./resetPasswordWithToken"
-import { REQUEST_TOKEN } from "../../types/requestSymbols"
 
 jest.mock("../../mail/sendgrid", () => ({
   sendMail: jest.fn(),
 }))
 
-jest.mock("../../db", () => ({
-  update: jest.fn().mockReturnValue({
-    set: jest.fn().mockReturnValue({
-      where: jest.fn().mockReturnValue({
-        returning: jest
-          .fn()
-          .mockImplementationOnce(async () => [{ updatedUserId: "UID123" }])
-          .mockImplementationOnce(async () => [{ updatedUserId: "NOT_SAME" }]),
-      }),
-    }),
-  }),
-}))
-
-jest.mock("../../utils/logger", () => ({
-  logger: {
-    info: jest.fn(),
-    error: jest.fn(),
-  },
+jest.mock("../../services/index", () => ({
+  updateUser: jest
+    .fn()
+    .mockImplementationOnce(async () => "UID123")
+    .mockImplementationOnce(async () => "NOT_SAME"),
 }))
 
 describe("Controller: Reset Password With Token", () => {

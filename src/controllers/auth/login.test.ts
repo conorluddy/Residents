@@ -17,14 +17,7 @@ jest.mock("../../services/index", () => ({
   getUserPasswordHash: jest
     .fn()
     .mockImplementationOnce(async () => (await makeAFakeUserWithHashedPassword({ password: "testpassword" })).password),
-  createToken: jest.fn().mockImplementation(async () => ({
-    userId: "123",
-    id: "token123",
-    type: TOKEN_TYPE.REFRESH,
-    used: false,
-    createdAt: new Date(),
-    expiresAt: new Date(Date.now() + TIMESPAN.HOUR),
-  })),
+  createToken: jest.fn().mockImplementation(async () => "token123"),
 }))
 
 jest.mock("../../utils/generateJwt", () => ({

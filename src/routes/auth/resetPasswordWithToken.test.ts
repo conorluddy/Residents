@@ -10,9 +10,10 @@ import { logger } from "../../utils/logger"
 const validTokenId = createId()
 
 jest.mock("../../services/index", () => ({
-  getUserByID: jest.fn().mockImplementation(() => makeAFakeUser({ role: ROLES.DEFAULT })),
-  deleteToken: jest.fn().mockImplementation(() => "123"),
-  getToken: jest.fn().mockImplementation(() => ({
+  updateUserPassword: jest.fn().mockImplementation(async () => "UID123"),
+  getUserByID: jest.fn().mockImplementation(async () => makeAFakeUser({ role: ROLES.DEFAULT })),
+  deleteToken: jest.fn().mockImplementation(async () => "123"),
+  getToken: jest.fn().mockImplementation(async () => ({
     id: validTokenId,
     createdAt: new Date(),
     userId: "UID123",
@@ -21,26 +22,6 @@ jest.mock("../../services/index", () => ({
     expiresAt: new Date(Date.now() + 60 * 60 * 1000), // Add one hour
     user: makeAFakeUser({ email: "bananaman@ireland.ie", id: "UID123" }),
   })),
-}))
-
-// Update this to use mocked service when update service is done
-jest.mock("../../db", () => ({
-  update: jest.fn().mockReturnValue({
-    set: jest.fn().mockReturnValue({
-      where: jest.fn().mockReturnValue({
-        returning: jest
-          .fn()
-          // Updates the token in the DiscardToken middleware
-          .mockImplementationOnce(async () => {
-            return [{ id: validTokenId }]
-          })
-          // Updates the user password in the controller
-          .mockImplementationOnce(async () => {
-            return [{ updatedUserId: "UID123" }]
-          }),
-      }),
-    }),
-  }),
 }))
 
 const app = express()
@@ -53,8 +34,8 @@ describe("Route: POST:resetPasswordWithToken", () => {
       .post(`/reset-password/${validTokenId}`)
       .send({ password: "the.NEWpassword_is-$3cuRE" })
 
+    expect(logger.error).not.toHaveBeenCalled()
     expect(response.body).toStrictEqual({ message: "Password successfully updated." })
     expect(response.status).toBe(HTTP_SUCCESS.OK)
-    expect(logger.error).not.toHaveBeenCalled()
   })
 })

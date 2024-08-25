@@ -10,11 +10,11 @@ interface Params {
 }
 
 const updateUserRole = async ({ userId, role }: Params): Promise<string> => {
-  if (!userId) throw new Error("User ID must be provided.")
-  if (!role) throw new Error("Role must be provided.")
-  if (!ROLES_ARRAY.includes(role)) throw new Error("Invalid role provided.")
-
   try {
+    if (!userId) throw new Error("User ID must be provided.")
+    if (!role) throw new Error("Role must be provided.")
+    if (!ROLES_ARRAY.includes(role)) throw new Error("Invalid role provided.")
+
     const [{ updatedUserId }] = await db
       .update(tableUsers)
       .set({ role })

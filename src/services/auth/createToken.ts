@@ -11,7 +11,7 @@ interface Props {
   expiry: TIMESPAN
 }
 
-const createToken = async ({ userId, type, expiry = TIMESPAN.MINUTE }: Props): Promise<Token | null> => {
+const createToken = async ({ userId, type, expiry = TIMESPAN.MINUTE }: Props): Promise<Token["id"] | null> => {
   try {
     if (!userId) throw new Error("Token requires a UserID, none provided")
     if (!type) throw new Error("Token type is required, none provided")
@@ -25,7 +25,7 @@ const createToken = async ({ userId, type, expiry = TIMESPAN.MINUTE }: Props): P
       })
       .returning()
 
-    return token
+    return token.id
   } catch (error) {
     logger.error("Error creating token", error)
     throw new Error("Error creating token")

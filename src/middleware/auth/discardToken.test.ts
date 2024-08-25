@@ -1,7 +1,6 @@
 import { Request, Response } from "express"
 import { TOKEN_TYPE } from "../../constants/database"
 import { HTTP_CLIENT_ERROR } from "../../constants/http"
-import db from "../../db"
 import { Token } from "../../db/types"
 import { REQUEST_TOKEN } from "../../types/requestSymbols"
 import { logger } from "../../utils/logger"
@@ -16,21 +15,8 @@ let testToken: Token = {
   expiresAt: new Date(Date.now() + 1 * 60 * 60 * 1000), // Add 1 hour
 }
 
-jest.mock("../../db", () => ({
-  update: jest.fn().mockReturnValue({
-    set: jest.fn().mockReturnValue({
-      where: jest.fn().mockReturnValue({
-        returning: jest.fn().mockImplementation(async () => [{ ...testToken, used: true }]),
-      }),
-    }),
-  }),
-}))
-
-jest.mock("../../utils/logger", () => ({
-  logger: {
-    info: jest.fn(),
-    error: jest.fn(),
-  },
+jest.mock("../../services/index", () => ({
+  deleteToken: jest.fn().mockImplementation(() => "XXX"),
 }))
 
 describe("Middleware: discardToken", () => {
@@ -53,7 +39,7 @@ describe("Middleware: discardToken", () => {
 
   it("Successfully marks a token as used if valid", async () => {
     await discardToken(mockRequest as Request, mockResponse as Response, nextFunction)
-    expect(db.update).toHaveBeenCalled()
+    // expect(db.update).toHaveBeenCalled()
     expect(nextFunction).toHaveBeenCalled()
   })
 

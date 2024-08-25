@@ -10,11 +10,11 @@ interface Params {
 }
 
 const updateUserStatus = async ({ userId, status }: Params): Promise<string> => {
-  if (!userId) throw new Error("User ID must be provided.")
-  if (!status) throw new Error("Status must be provided.")
-  if (!STATUS_ARRAY.includes(status)) throw new Error("Invalid status provided.")
-
   try {
+    if (!userId) throw new Error("User ID must be provided.")
+    if (!status) throw new Error("Status must be provided.")
+    if (!STATUS_ARRAY.includes(status)) throw new Error("Invalid status provided.")
+
     const [{ updatedUserId }] = await db
       .update(tableUsers)
       .set({ status })

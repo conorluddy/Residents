@@ -22,7 +22,7 @@ export const resetPassword = async (req: Request, res: Response) => {
       return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "User data missing." })
     }
 
-    const token = await createToken({
+    const tokenId = await createToken({
       userId: id,
       type: TOKEN_TYPE.RESET,
       expiry: TIMESPAN.HOUR,
@@ -31,11 +31,11 @@ export const resetPassword = async (req: Request, res: Response) => {
     sendMail({
       to: SENDGRID_TEST_EMAIL ?? "", //userNoPW.email, - Faker might seed with real emails, be careful not to spam people
       subject: "Reset your password",
-      body: `Click here to reset your password: http://localhost:3000/auth/reset-password/${token?.id}`,
+      body: `Click here to reset your password: http://localhost:3000/auth/reset-password/${tokenId}`,
       // Obviously this is a test link, in production you'd want to use a real domain
     })
 
-    logger.info(`Reset email sent to ${email}, token id: ${token?.id}`)
+    logger.info(`Reset email sent to ${email}, token id: ${tokenId}`)
     return res.status(HTTP_SUCCESS.OK).json({ message: "Reset email sent" })
   } catch (error) {
     logger.error(error)

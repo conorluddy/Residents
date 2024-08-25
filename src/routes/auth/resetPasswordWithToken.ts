@@ -5,7 +5,7 @@ import MW from "../../middleware"
 const router = Router()
 
 router.post(
-  "/reset-password/:token",
+  "/reset-password/:tokenId",
   MW.VALIDATE.tokenId,
   MW.findValidTokenById,
   MW.discardToken,

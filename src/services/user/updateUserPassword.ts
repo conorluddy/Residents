@@ -12,12 +12,12 @@ interface Params {
 }
 
 const updateUserPassword = async ({ userId, password }: Params): Promise<string> => {
-  if (!userId) throw new Error("User ID must be provided.")
-  if (!password) throw new PasswordError("You need a password.")
-  if (!isStrongPassword(password, PASSWORD_STRENGTH_CONFIG))
-    throw new PasswordError("Password not strong enough, try harder.")
-
   try {
+    if (!userId) throw new Error("User ID must be provided.")
+    if (!password) throw new PasswordError("You need a password.")
+    if (!isStrongPassword(password, PASSWORD_STRENGTH_CONFIG))
+      throw new PasswordError("Password not strong enough, try harder.")
+
     const [{ updatedUserId }] = await db
       .update(tableUsers)
       .set({ password })

@@ -17,33 +17,33 @@ interface Params {
 }
 
 const updateUser = async ({ userId, username, firstName, lastName, email, password }: Params): Promise<string> => {
-  if (!userId) {
-    logger.error("No ID provided for user update.")
-    throw new Error("User ID must be provided.")
-  }
-
-  if (email && !isEmail(email))
-    throw new Error(`You need to use a valid email address if you want to update an email. ${email} is not valid.`)
-
-  const normalizedEmail = email ? normalizeEmail(email, { all_lowercase: true }) : undefined
-
-  if (email && !normalizedEmail) throw new Error("Requested email for updating is invalid.")
-
-  const updatedUserProperties: Partial<UserUpdate> = {
-    ...(username && { username }),
-    ...(firstName && { firstName }),
-    ...(lastName && { lastName }),
-    ...(normalizedEmail && { email: normalizedEmail }),
-    ...(password && { password }),
-  }
-
-  if (Object.keys(updatedUserProperties).length === 0)
-    throw new Error("At least one property must be provided for update.")
-
-  if (updatedUserProperties.password && !isStrongPassword(updatedUserProperties.password, PASSWORD_STRENGTH_CONFIG))
-    throw new PasswordError("Password not strong enough, try harder.")
-
   try {
+    if (!userId) {
+      logger.error("No ID provided for user update.")
+      throw new Error("User ID must be provided.")
+    }
+
+    if (email && !isEmail(email))
+      throw new Error(`You need to use a valid email address if you want to update an email. ${email} is not valid.`)
+
+    const emailNormalized = email ? normalizeEmail(email, { all_lowercase: true }) : undefined
+
+    if (email && !emailNormalized) throw new Error("Requested email for updating is invalid.")
+
+    const updatedUserProperties: Partial<UserUpdate> = {
+      ...(username && { username }),
+      ...(firstName && { firstName }),
+      ...(lastName && { lastName }),
+      ...(emailNormalized && { email: emailNormalized }),
+      ...(password && { password }),
+    }
+
+    if (Object.keys(updatedUserProperties).length === 0)
+      throw new Error("At least one property must be provided for update.")
+
+    if (updatedUserProperties.password && !isStrongPassword(updatedUserProperties.password, PASSWORD_STRENGTH_CONFIG))
+      throw new PasswordError("Password not strong enough, try harder.")
+
     const [{ updatedUserId }] = await db
       .update(tableUsers)
       .set(updatedUserProperties)

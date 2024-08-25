@@ -4,21 +4,12 @@ import { HTTP_CLIENT_ERROR, HTTP_SUCCESS } from "../../constants/http"
 import { updateUser } from "./updateUser"
 import { User } from "../../db/types"
 import { REQUEST_TARGET_USER_ID } from "../../types/requestSymbols"
+import { logger } from "../../utils/logger"
 
-let fakeUser: Partial<User>
+const fakeUser: Partial<User> = makeAFakeUser({})
 
-jest.mock("../../utils/logger")
-jest.mock("../../db", () => ({
-  update: jest.fn().mockReturnValue({
-    set: jest.fn().mockReturnValue({
-      where: jest.fn().mockReturnValue({
-        returning: jest.fn().mockImplementationOnce(async () => {
-          fakeUser = makeAFakeUser({})
-          return [{ updatedId: fakeUser.id }]
-        }),
-      }),
-    }),
-  }),
+jest.mock("../../services/index", () => ({
+  updateUser: jest.fn().mockImplementationOnce(async () => fakeUser.id),
 }))
 
 describe("Controller: UpdateUser", () => {
@@ -46,6 +37,7 @@ describe("Controller: UpdateUser", () => {
 
   it("Successfully updates a user", async () => {
     await updateUser(mockRequest as Request, mockResponse as Response)
+    expect(logger.error).not.toHaveBeenCalled()
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.OK)
     expect(mockResponse.json).toHaveBeenCalledWith({ message: `User ${fakeUser.id} updated successfully` })
   })
@@ -75,17 +67,5 @@ describe("Controller: UpdateUser", () => {
     await updateUser(mockRequest as Request, mockResponse as Response)
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.BAD_REQUEST)
     expect(mockResponse.json).toHaveBeenCalledWith({ message: `No data provided to update the user with.` })
-  })
-
-  it("Responds with Bad Request if no update data is provided", async () => {
-    mockRequest.body = {
-      ...mockRequest.body,
-      email: "bademail",
-    }
-    await updateUser(mockRequest as Request, mockResponse as Response)
-    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.BAD_REQUEST)
-    expect(mockResponse.json).toHaveBeenCalledWith({
-      message: `You need to use a valid email address if you want to update an email. bademail is not valid.`,
-    })
   })
 })

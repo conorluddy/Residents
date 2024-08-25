@@ -32,8 +32,7 @@ export const updateUser = async (req: Request, res: Response) => {
 
     const { username, firstName, lastName, email, password }: Partial<UserUpdate> = req.body ?? {}
 
-    // Add user meta fields here too so they be updated in parallel from a single payload
-
+    // Add user meta fields here too so they be updated in parallel from a single payload?
     const updatedUserId = await SERVICES.updateUser({ userId: id, username, firstName, lastName, email, password })
 
     return res.status(HTTP_SUCCESS.OK).json({ message: `User ${updatedUserId} updated successfully` })

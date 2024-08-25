@@ -9,17 +9,17 @@ interface Params {
 }
 
 const updateUserMeta = async ({ userId, metaItem }: Params): Promise<string> => {
-  if (!userId) throw new Error("User ID must be provided.")
-  if (!metaItem) throw new Error("No meta data provided to update.")
-
   try {
-    const [{ updatedUserId }] = await db
+    if (!userId) throw new Error("User ID must be provided.")
+    if (!metaItem) throw new Error("No meta data provided to update.")
+
+    const [updatedMeta] = await db
       .update(tableUserMeta)
       .set({ metaItem })
-      .where(eq(tableUsers.id, userId))
-      .returning({ updatedUserId: tableUserMeta.userId })
+      .where(eq(tableUserMeta.userId, userId))
+      .returning()
 
-    return updatedUserId
+    return updatedMeta.userId
   } catch (error) {
     logger.error("Error updating user meta:", userId, error)
     throw new Error("Error updating user meta.")

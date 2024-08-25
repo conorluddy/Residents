@@ -5,6 +5,7 @@ import { HTTP_SUCCESS } from "../../constants/http"
 import updateUserRouter from "../../routes/users/updateUser"
 import { makeAFakeUser } from "../../test-utils/mockUsers"
 import { REQUEST_TARGET_USER_ID, REQUEST_USER } from "../../types/requestSymbols"
+import { logger } from "../../utils/logger"
 
 let fakeUser = makeAFakeUser({ password: "$TR0ngP@$$W0rDz123!", role: ROLES.DEFAULT })
 
@@ -23,14 +24,8 @@ jest.mock("../../middleware/auth/roleBasedAccessControl", () => ({
   }),
 }))
 
-jest.mock("../../db", () => ({
-  update: jest.fn().mockReturnValue({
-    set: jest.fn().mockReturnValue({
-      where: jest.fn().mockReturnValue({
-        returning: jest.fn().mockImplementation(() => [{ updatedId: fakeUser.id }]),
-      }),
-    }),
-  }),
+jest.mock("../../services/index", () => ({
+  updateUser: jest.fn().mockImplementationOnce(async () => fakeUser.id),
 }))
 
 const app = express()
@@ -40,6 +35,7 @@ app.use(updateUserRouter)
 describe("Route: Update User", () => {
   it("successfully updates a user", async () => {
     const response = await request(app).patch(`/${fakeUser.id}`).send({ firstName: "Banana Man" })
+    expect(logger.error).not.toHaveBeenCalled()
     expect(response.body.message).toBe(`User ${fakeUser.id} updated successfully`)
     expect(response.status).toBe(HTTP_SUCCESS.OK)
   })

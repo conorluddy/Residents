@@ -4,26 +4,20 @@ import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../consta
 import { deleteUser } from "./deleteUser"
 import { User } from "../../db/types"
 import { REQUEST_TARGET_USER_ID } from "../../types/requestSymbols"
+import { logger } from "../../utils/logger"
 
 let fakeUser: Partial<User>
 
-jest.mock("../../utils/logger")
-jest.mock("../../db", () => ({
-  update: jest.fn().mockReturnValue({
-    set: jest.fn().mockReturnValue({
-      where: jest.fn().mockReturnValue({
-        returning: jest
-          .fn()
-          .mockImplementationOnce(async () => {
-            fakeUser = makeAFakeUser({})
-            return [{ deletedUserId: fakeUser.id }]
-          })
-          .mockImplementationOnce(async () => {
-            throw new Error("Error deleting user")
-          }),
-      }),
+jest.mock("../../services/index", () => ({
+  deleteUser: jest
+    .fn()
+    .mockImplementationOnce(async () => {
+      fakeUser = makeAFakeUser({})
+      return fakeUser.id
+    })
+    .mockImplementationOnce(async () => {
+      throw new Error("Error deleting user")
     }),
-  }),
 }))
 
 describe("Controller: Delete User", () => {
@@ -32,10 +26,8 @@ describe("Controller: Delete User", () => {
   beforeAll(() => {})
   beforeEach(() => {
     mockRequest = {
-      params: {
-        id: "ID",
-      },
       [REQUEST_TARGET_USER_ID]: "ID",
+      params: { id: "ID" },
       body: {
         username: "test",
         firstName: "updatedFName",
@@ -51,6 +43,7 @@ describe("Controller: Delete User", () => {
 
   it("Happy path", async () => {
     await deleteUser(mockRequest as Request, mockResponse as Response)
+    expect(logger.error).not.toHaveBeenCalled()
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.OK)
     expect(mockResponse.json).toHaveBeenCalledWith({ message: `User ${fakeUser.id} deleted` })
   })

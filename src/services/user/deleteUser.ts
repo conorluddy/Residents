@@ -10,9 +10,9 @@ interface Params {
 }
 
 const deleteUser = async ({ userId }: Params): Promise<string> => {
-  if (!userId) throw new Error("User ID must be provided.")
-
   try {
+    if (!userId) throw new Error("User ID must be provided.")
+
     const [{ updatedUserId }] = await db
       .update(tableUsers)
       .set({ deletedAt: new Date(), status: STATUS.DELETED })
