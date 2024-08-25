@@ -22,7 +22,6 @@ jest.mock("../../services/index", () => ({
   createToken: jest.fn().mockImplementation(async () => "tok1"),
   getToken: jest
     .fn()
-    // Happy path
     .mockImplementationOnce(async () => ({
       id: "tok0",
       userId: mockDefaultUser.id,
@@ -47,9 +46,9 @@ jest.mock("../../services/index", () => ({
 describe("Controller: Refresh token: Happy path", () => {
   let mockRequest: Partial<Request> & { body: Partial<User> }
   let mockResponse: Partial<Response>
-  let jwToken: string
-  let xsrf: string
   let jwtDecodeSpy: jest.MockedFunction<typeof jwt.decode>
+  let xsrf: string
+  let jwToken: string
 
   beforeAll(() => {
     jwtDecodeSpy = jest.spyOn(jwt, "decode") as jest.MockedFunction<typeof jwt.decode>

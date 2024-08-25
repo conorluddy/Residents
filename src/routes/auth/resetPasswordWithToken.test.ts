@@ -10,10 +10,10 @@ import { logger } from "../../utils/logger"
 const validTokenId = createId()
 
 jest.mock("../../services/index", () => ({
-  updateUserPassword: jest.fn().mockImplementation(async () => "UID123"),
-  getUserByID: jest.fn().mockImplementation(async () => makeAFakeUser({ role: ROLES.DEFAULT })),
-  deleteToken: jest.fn().mockImplementation(async () => "123"),
-  getToken: jest.fn().mockImplementation(async () => ({
+  updateUserPassword: jest.fn().mockImplementation(() => "UID123"),
+  getUserByID: jest.fn().mockImplementation(() => makeAFakeUser({ role: ROLES.DEFAULT })),
+  deleteToken: jest.fn().mockImplementation(() => "123"),
+  getToken: jest.fn().mockImplementation(() => ({
     id: validTokenId,
     createdAt: new Date(),
     userId: "UID123",

@@ -4,9 +4,9 @@ import { TOKEN_TYPE } from "../../constants/database"
 import { HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constants/http"
 import { TIMESPAN } from "../../constants/time"
 import { sendMail } from "../../mail/sendgrid"
-import { createToken } from "../../services/auth/createToken"
 import { REQUEST_USER } from "../../types/requestSymbols"
 import { logger } from "../../utils/logger"
+import SERVICES from "../../services"
 
 /**
  * resetPassword
@@ -22,7 +22,7 @@ export const resetPassword = async (req: Request, res: Response) => {
       return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "User data missing." })
     }
 
-    const tokenId = await createToken({
+    const tokenId = await SERVICES.createToken({
       userId: id,
       type: TOKEN_TYPE.RESET,
       expiry: TIMESPAN.HOUR,

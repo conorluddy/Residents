@@ -1,8 +1,8 @@
 import { NextFunction, Request, RequestHandler, Response } from "express"
 import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from "../../constants/http"
-import { deleteToken } from "../../services/auth/deleteToken"
 import { REQUEST_TOKEN } from "../../types/requestSymbols"
 import { logger } from "../../utils/logger"
+import SERVICES from "../../services"
 /**
  * Middleware for discarding a token after it has been used.
  */
@@ -16,10 +16,10 @@ const discardToken: RequestHandler = async (req: Request, res: Response, next: N
     }
 
     // Probably just delete it here instead of setting it to used?
-    const deletedTokenId = await deleteToken({ tokenId: requestToken.id })
+    const deletedTokenId = await SERVICES.deleteToken({ tokenId: requestToken.id })
 
     if (!deletedTokenId || deletedTokenId !== requestToken?.id) {
-      logger.error(`Error expiring token ID:${requestToken.id}`)
+      logger.error(`Error expiring token ID: ${requestToken.id}`)
       return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Token invalid" })
     }
     next()

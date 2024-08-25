@@ -58,7 +58,7 @@ export const refreshToken = async (req: Request, res: Response) => {
 
     // Create new JWT and RefreshToken and return them
     // Delete old RefreshToken
-    const freshRefreshTokenId = await createToken({
+    const freshRefreshTokenId = await SERVICES.createToken({
       userId: token.userId,
       type: TOKEN_TYPE.REFRESH,
       expiry: TIMESPAN.WEEK,

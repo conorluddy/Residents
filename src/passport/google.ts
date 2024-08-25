@@ -1,14 +1,13 @@
+import dotenv from "dotenv"
+import { and, eq } from "drizzle-orm"
 import passport from "passport"
 import Google from "passport-google-oauth20"
-import dotenv from "dotenv"
-import { logger } from "../utils/logger"
 import db from "../db"
-import { tableUsers } from "../db/schema/Users"
-import { and, eq } from "drizzle-orm"
-import { NewUser, SafeUser } from "../db/types"
 import { tableFederatedCredentials } from "../db/schema"
+import { NewUser } from "../db/types"
+import SERVICES from "../services"
 import { getUserByID } from "../services/user/getUser"
-import { createUser } from "../services/user/createUser"
+import { logger } from "../utils/logger"
 
 dotenv.config()
 
@@ -39,7 +38,7 @@ if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET || !GOOGLE_CALLBACK_URL) {
           )
 
         if (fedCreds[0].userId) {
-          const user = await getUserByID(fedCreds[0].userId)
+          const user = await SERVICES.getUserByID(fedCreds[0].userId)
           if (!user) throw new Error("User not found matching federated credentials with ID:" + fedCreds[0].userId)
           return done(null, user)
         } else {
@@ -51,7 +50,7 @@ if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET || !GOOGLE_CALLBACK_URL) {
               username: profile.displayName,
             }
 
-            const newUserId = await createUser(user)
+            const newUserId = await SERVICES.createUser(user)
             if (!newUserId) throw new Error("Failed to create user")
 
             const fedCreds = {

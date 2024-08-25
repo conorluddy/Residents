@@ -5,6 +5,7 @@ import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from "../../constants/http"
 import { getUserByID } from "../../services/user/getUser"
 import { REQUEST_TARGET_USER_ID, REQUEST_USER } from "../../types/requestSymbols"
 import { logger } from "../../utils/logger"
+import SERVICES from "../../services"
 
 /**
  * Check if the user has the required permission to access the resource
@@ -68,7 +69,7 @@ async function getTargetUserAndCheckSuperiority(req: Request, res: Response, nex
       return res.status(HTTP_CLIENT_ERROR.UNAUTHORIZED).json({ message: "User account is deleted" })
     }
 
-    const targetUser = await getUserByID(targetUserId)
+    const targetUser = await SERVICES.getUserByID(targetUserId)
 
     // No user found
     if (!targetUser) {

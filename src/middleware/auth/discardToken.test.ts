@@ -54,7 +54,7 @@ describe("Middleware: discardToken", () => {
   it("returns a 403 if missing token in request", async () => {
     mockRequest = { [REQUEST_TOKEN]: { ...testToken, id: "YYY" } }
     await discardToken(mockRequest as Request, mockResponse as Response, nextFunction)
-    expect(logger.error).toHaveBeenCalledWith("Error expiring token ID:YYY")
+    expect(logger.error).toHaveBeenCalledWith("Error expiring token ID: YYY")
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)
     expect(mockResponse.json).toHaveBeenCalledWith({ message: "Token invalid" })
   })
