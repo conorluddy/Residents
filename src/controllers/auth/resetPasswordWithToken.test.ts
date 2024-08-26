@@ -11,7 +11,7 @@ jest.mock("../../mail/sendgrid", () => ({
 }))
 
 jest.mock("../../services/index", () => ({
-  updateUser: jest
+  updateUserPassword: jest
     .fn()
     .mockImplementationOnce(async () => "UID123")
     .mockImplementationOnce(async () => "NOT_SAME"),

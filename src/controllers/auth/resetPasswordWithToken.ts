@@ -39,7 +39,7 @@ export const resetPasswordWithToken = async (req: Request, res: Response, next: 
 
     const password = await createHash(plainPassword)
 
-    const updatedUserId = await SERVICES.updateUser({ userId: token.userId, password })
+    const updatedUserId = await SERVICES.updateUserPassword({ userId: token.userId, password })
 
     // This case should never happen but will leave it here for now
     if (updatedUserId !== token.userId) {
