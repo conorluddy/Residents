@@ -51,13 +51,13 @@ export const login = async (req: Request, res: Response) => {
       return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Nope." })
     }
 
-    const refreshToken = await SERVICES.createToken({
+    const refreshTokenId = await SERVICES.createToken({
       userId: user.id,
       type: TOKEN_TYPE.REFRESH,
       expiry: TIMESPAN.WEEK,
     })
 
-    if (!refreshToken) {
+    if (!refreshTokenId) {
       return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Nope." })
     }
 
@@ -65,7 +65,7 @@ export const login = async (req: Request, res: Response) => {
     const xsrfToken = generateXsrfToken()
 
     // Set the tokens in a HTTP-only secure cookies
-    res.cookie("refreshToken", refreshToken.id, {
+    res.cookie("refreshToken", refreshTokenId, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",

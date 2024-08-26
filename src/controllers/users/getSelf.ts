@@ -1,8 +1,8 @@
 import { Request, Response } from "express"
 import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constants/http"
-import { getUserByID } from "../../services/user/getUser"
 import { REQUEST_USER } from "../../types/requestSymbols"
 import { logger } from "../../utils/logger"
+import SERVICES from "../../services"
 
 /**
  * getSelf - gets own user record
@@ -14,7 +14,7 @@ export const getSelf = async (req: Request, res: Response) => {
     if (!userId)
       return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "User ID is missing in the request." })
 
-    const user = await getUserByID(userId)
+    const user = await SERVICES.getUserByID(userId)
 
     if (!user) return res.status(HTTP_CLIENT_ERROR.NOT_FOUND).json({ message: "User not found." })
 

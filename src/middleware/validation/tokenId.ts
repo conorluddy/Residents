@@ -6,7 +6,7 @@ import { REQUEST_TOKEN_ID } from "../../types/requestSymbols"
 
 const validateTokenId: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const tokenId: string | undefined = req.params?.token || req.body?.token || req.query?.token
+    const tokenId: string | undefined = req.params?.tokenId || req.body?.tokenId || req.query?.tokenId
 
     if (!tokenId) {
       return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "A token is required" })

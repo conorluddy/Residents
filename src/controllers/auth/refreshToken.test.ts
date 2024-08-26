@@ -8,7 +8,6 @@ import { User } from "../../db/types"
 import generateXsrfToken from "../../middleware/util/xsrfToken"
 import { logger } from "../../utils/logger"
 import jwt from "jsonwebtoken"
-import { getUserByID } from "../../services/user/getUser"
 
 const mockDefaultUser = makeAFakeUser({ role: ROLES.DEFAULT })
 
@@ -18,50 +17,38 @@ jest.mock("../../utils/generateJwt", () => ({
 }))
 
 jest.mock("../../services/index", () => ({
-  getUserByID: jest.fn().mockImplementation(() => mockDefaultUser),
-  deleteToken: jest.fn().mockImplementation(() => "123"),
-  createToken: jest.fn().mockImplementation(() => ({ id: "tok1" })),
+  getUserByID: jest.fn().mockImplementation(async () => mockDefaultUser),
+  deleteToken: jest.fn().mockImplementation(async () => "123"),
+  createToken: jest.fn().mockImplementation(async () => "tok1"),
   getToken: jest
     .fn()
-    // Happy path
-    .mockImplementationOnce(() => ({
+    .mockImplementationOnce(async () => ({
       id: "tok0",
       userId: mockDefaultUser.id,
     }))
-    .mockImplementationOnce(() => undefined)
-    .mockImplementationOnce(() => ({
+    .mockImplementationOnce(async () => undefined)
+    .mockImplementationOnce(async () => ({
       id: "tok1",
       userId: "456",
     }))
-    .mockImplementationOnce(() => ({
+    .mockImplementationOnce(async () => ({
       id: "tok3",
       used: true,
       userId: mockDefaultUser.id,
     }))
-    .mockImplementationOnce(() => ({
+    .mockImplementationOnce(async () => ({
       id: "tok2",
       expiresAt: new Date(Date.now() - 1000),
       userId: mockDefaultUser.id,
     })),
 }))
 
-// Remove this and use the mocked service instead
-jest.mock("../../db", () => ({
-  insert: jest.fn().mockReturnValue({
-    values: jest.fn().mockReturnValue({
-      returning: jest.fn().mockImplementationOnce(async () => {
-        return [{ id: "tok1" }]
-      }),
-    }),
-  }),
-}))
-
 describe("Controller: Refresh token: Happy path", () => {
   let mockRequest: Partial<Request> & { body: Partial<User> }
   let mockResponse: Partial<Response>
-  let jwToken: string
-  let xsrf: string
   let jwtDecodeSpy: jest.MockedFunction<typeof jwt.decode>
+  let xsrf: string
+  let jwToken: string
 
   beforeAll(() => {
     jwtDecodeSpy = jest.spyOn(jwt, "decode") as jest.MockedFunction<typeof jwt.decode>

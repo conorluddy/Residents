@@ -1,12 +1,9 @@
 import { Request, Response } from "express"
 import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constants/http"
-import { logger } from "../../utils/logger"
-import { eq } from "drizzle-orm"
-import db from "../../db"
-import { tableUserMeta, tableUsers } from "../../db/schema"
-import { isEmail, normalizeEmail } from "validator"
 import { Meta } from "../../db/types"
+import SERVICES from "../../services"
 import { REQUEST_TARGET_USER_ID } from "../../types/requestSymbols"
+import { logger } from "../../utils/logger"
 
 /**
  * updateUserMeta
@@ -34,32 +31,13 @@ export const updateUserMeta = async (req: Request, res: Response) => {
       return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "No data provided to update the user with." })
     }
 
-    const { metaItem }: Partial<Meta> = req.body ?? {}
-
-    const updateFields: Partial<Meta> = { metaItem }
-
     // Add the rest of the user meta fields.
     // Sanitise and validate the data (ideally in a middleware before we ever get to this controller)
-    if (metaItem) updateFields.metaItem = metaItem
+    const { metaItem }: Partial<Meta> = req.body ?? {}
 
-    if (Object.values(updateFields).length === 0) {
-      return res
-        .status(HTTP_CLIENT_ERROR.BAD_REQUEST)
-        .json({ message: "No valid fields were passed for updating the user meta." })
-    }
+    const updatedUserId = await SERVICES.updateUserMeta({ userId: id, metaItem })
 
-    const [result] = await db
-      .update(tableUserMeta)
-      .set(updateFields)
-      .where(eq(tableUserMeta.userId, id))
-      .returning({ updatedId: tableUsers.id })
-
-    if (!result) {
-      // The metadata table is created when a user is created, but we could do an upsert here just in case.
-      return res.status(HTTP_CLIENT_ERROR.NOT_FOUND).json({ message: "User meta data not found." })
-    }
-
-    return res.status(HTTP_SUCCESS.OK).json({ message: `User meta for ${result.updatedId} updated successfully` })
+    return res.status(HTTP_SUCCESS.OK).json({ message: `User meta for ${updatedUserId} updated successfully` })
   } catch (error) {
     logger.error(error)
     return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Error updating user metadata" })

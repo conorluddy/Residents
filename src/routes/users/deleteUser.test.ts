@@ -23,14 +23,8 @@ jest.mock("../../middleware/auth/roleBasedAccessControl", () => ({
   }),
 }))
 
-jest.mock("../../db", () => ({
-  update: jest.fn().mockReturnValue({
-    set: jest.fn().mockReturnValue({
-      where: jest.fn().mockReturnValue({
-        returning: jest.fn().mockImplementation(() => [{ deletedUserId: fakeUser.id }]),
-      }),
-    }),
-  }),
+jest.mock("../../services/index", () => ({
+  deleteUser: jest.fn().mockImplementation(() => fakeUser.id),
 }))
 
 const app = express()

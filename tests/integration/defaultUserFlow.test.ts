@@ -71,12 +71,12 @@ describe("Integration: Default User flow", () => {
     // Get Self
     const { status, body } = await request(app).get("/users/self").set("Authorization", `Bearer ${jwt}`)
 
-    expect(status).toBe(HTTP_SUCCESS.OK)
     expect(body).toMatchObject({
       username: "mrhappy",
       email: "mrhappy@resi.dents",
       firstName: "mrhappy",
       lastName: "mrhappy",
     })
+    expect(status).toBe(HTTP_SUCCESS.OK)
   })
 })

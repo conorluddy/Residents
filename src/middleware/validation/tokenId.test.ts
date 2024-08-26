@@ -9,11 +9,7 @@ describe("Middleware: validateTokenId", () => {
   let nextFunction: NextFunction
 
   beforeEach(() => {
-    mockRequest = {
-      body: {
-        token: null,
-      },
-    } as Request
+    mockRequest = { body: { tokenId: null } } as Request
     mockResponse = {
       json: jest.fn(),
       status: jest.fn().mockReturnThis(),
@@ -32,14 +28,14 @@ describe("Middleware: validateTokenId", () => {
   })
 
   it("should return 400 if the request token is invalid", () => {
-    mockRequest.body.token = "invalid_token"
+    mockRequest.body.tokenId = "invalid_token"
     validateTokenId(mockRequest as Request, mockResponse as Response, nextFunction)
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.BAD_REQUEST)
     expect(mockResponse.json).toHaveBeenCalledWith({ message: "Invalid token provided" })
   })
 
   it("should call next function if the request token is valid", () => {
-    mockRequest.body.token = createId()
+    mockRequest.body.tokenId = createId()
     validateTokenId(mockRequest as Request, mockResponse as Response, nextFunction)
     expect(nextFunction).toHaveBeenCalled()
     expect(mockResponse.status).not.toHaveBeenCalled()

@@ -1,7 +1,7 @@
 import { Request, Response } from "express"
 import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constants/http"
-import { getUserByID } from "../../services/user/getUser"
 import { logger } from "../../utils/logger"
+import SERVICES from "../../services"
 
 /**
  * getUser
@@ -14,7 +14,7 @@ export const getUser = async (req: Request, res: Response) => {
       return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "ID is missing in the request." })
     }
 
-    const user = await getUserByID(userId)
+    const user = await SERVICES.getUserByID(userId)
 
     if (!user) {
       return res.status(HTTP_CLIENT_ERROR.NOT_FOUND).json({ message: "User not found." })

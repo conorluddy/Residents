@@ -2,13 +2,11 @@ import { NextFunction, Request, Response } from "express"
 import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constants/http"
 import { logger } from "../../utils/logger"
 import { createHash } from "../../utils/crypt"
-import { tableUsers } from "../../db/schema/Users"
-import { eq } from "drizzle-orm"
 import { TOKEN_TYPE } from "../../constants/database"
 import { isStrongPassword } from "validator"
-import db from "../../db"
 import { PASSWORD_STRENGTH_CONFIG } from "../../constants/password"
 import { REQUEST_TOKEN } from "../../types/requestSymbols"
+import SERVICES from "../../services"
 
 /**
  * resetPasswordWithToken
@@ -41,16 +39,12 @@ export const resetPasswordWithToken = async (req: Request, res: Response, next: 
 
     const password = await createHash(plainPassword)
 
-    const result = await db
-      .update(tableUsers)
-      .set({ password })
-      .where(eq(tableUsers.id, token.userId))
-      .returning({ updatedUserId: tableUsers.id })
+    const updatedUserId = await SERVICES.updateUserPassword({ userId: token.userId, password })
 
     // This case should never happen but will leave it here for now
-    if (result[0].updatedUserId !== token.userId) {
+    if (updatedUserId !== token.userId) {
       logger.error(
-        `Error updating password for user: ${token.userId}, db-update result (should be empty or same as request ID): ${result[0].updatedUserId}`
+        `Error updating password for user: ${token.userId}, db-update result (should be empty or same as request ID): ${updatedUserId}`
       )
       return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Error updating password." })
     }

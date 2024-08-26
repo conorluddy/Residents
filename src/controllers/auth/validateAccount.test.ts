@@ -1,34 +1,28 @@
 import { Request, Response } from "express"
 import { ROLES, TOKEN_TYPE } from "../../constants/database"
 import { HTTP_SUCCESS } from "../../constants/http"
-import { PublicUser } from "../../db/types"
-import { makeAFakeSafeUser, makeAFakeUser } from "../../test-utils/mockUsers"
-import { REQUEST_USER } from "../../types/requestSymbols"
+import { PublicUser, Token } from "../../db/types"
+import { makeAFakeSafeUser } from "../../test-utils/mockUsers"
+import { REQUEST_TOKEN, REQUEST_USER } from "../../types/requestSymbols"
 import { logger } from "../../utils/logger"
 import { validateAccount } from "./validateAccount"
+import { TIMESPAN } from "../../constants/time"
 
-const mockDefaultUser = makeAFakeUser({ role: ROLES.DEFAULT })
+const mockDefaultUser = makeAFakeSafeUser({ role: ROLES.DEFAULT })
+const mockToken: Token = {
+  id: "XXX-XXX-XXX-XXX-XXX-XXX-XXX-XXX",
+  type: TOKEN_TYPE.VALIDATE,
+  used: false,
+  userId: mockDefaultUser.id,
+  createdAt: new Date(),
+  expiresAt: new Date(Date.now() + TIMESPAN.HOUR),
+}
 
 jest.mock("../../services/index", () => ({
-  deleteToken: jest.fn().mockImplementation(() => "123"),
-  getToken: jest.fn().mockImplementationOnce(() => ({
-    id: "TOKEN001",
-    userId: mockDefaultUser.id,
-    user: mockDefaultUser,
-    type: TOKEN_TYPE.VALIDATE,
-  })),
-}))
-
-jest.mock("../../db", () => ({
-  update: jest.fn().mockReturnValue({
-    set: jest.fn().mockReturnValue({
-      where: jest.fn().mockReturnValue({
-        returning: jest.fn().mockImplementationOnce(async () => {
-          return [{ id: "tok1" }]
-        }),
-      }),
-    }),
-  }),
+  deleteToken: jest.fn().mockImplementation(async () => "123"),
+  getToken: jest.fn().mockImplementationOnce(async () => mockToken),
+  updateUserRole: jest.fn().mockImplementation(async () => mockDefaultUser.id),
+  updateUserStatus: jest.fn().mockImplementation(async () => mockDefaultUser.id),
 }))
 
 jest.mock("../../utils/generateJwt", () => ({
@@ -36,16 +30,14 @@ jest.mock("../../utils/generateJwt", () => ({
 }))
 
 describe("Controller: Validate Account", () => {
-  let mockRequest: Partial<Request> & { [REQUEST_USER]: PublicUser }
+  let mockRequest: Partial<Request> & { [REQUEST_USER]: PublicUser; [REQUEST_TOKEN]: Token }
   let mockResponse: Partial<Response>
 
   beforeEach(() => {
     mockRequest = {
-      params: {
-        tokenId: "TOKEN001",
-        userId: mockDefaultUser.id,
-      },
-      [REQUEST_USER]: makeAFakeSafeUser({ id: mockDefaultUser.id }),
+      params: { tokenId: "TOKEN001", userId: mockDefaultUser.id },
+      [REQUEST_USER]: mockDefaultUser,
+      [REQUEST_TOKEN]: mockToken,
     }
     mockResponse = {
       status: jest.fn().mockReturnThis(),

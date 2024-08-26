@@ -9,6 +9,8 @@ export type User = InferSelectModel<typeof tableUsers>
 export type NewUser = InferInsertModel<typeof tableUsers>
 export type SafeUser = Omit<User, "password"> // Internal use without password
 export type PublicUser = Pick<User, "firstName" | "lastName" | "email" | "username" | "role" | "id"> // External use with only public information
+export type UserUpdate = Pick<User, "firstName" | "lastName" | "email" | "username" | "password">
+
 // Types by role
 export type DefaultUser = SafeUser & { role: ROLES.DEFAULT }
 export type ModeratorUser = SafeUser & { role: ROLES.MODERATOR }

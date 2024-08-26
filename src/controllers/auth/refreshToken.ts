@@ -58,13 +58,13 @@ export const refreshToken = async (req: Request, res: Response) => {
 
     // Create new JWT and RefreshToken and return them
     // Delete old RefreshToken
-    const freshRefreshToken = await createToken({
+    const freshRefreshTokenId = await SERVICES.createToken({
       userId: token.userId,
       type: TOKEN_TYPE.REFRESH,
       expiry: TIMESPAN.WEEK,
     })
 
-    if (!freshRefreshToken) {
+    if (!freshRefreshTokenId) {
       return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Error creating refresh token." })
     }
 
@@ -79,7 +79,7 @@ export const refreshToken = async (req: Request, res: Response) => {
     const xsrfToken = generateXsrfToken()
 
     // Set the tokens in a HTTP-only secure cookies
-    res.cookie("refreshToken", freshRefreshToken.id, {
+    res.cookie("refreshToken", freshRefreshTokenId, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",

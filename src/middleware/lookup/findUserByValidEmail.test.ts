@@ -5,19 +5,13 @@ import { SafeUser, User } from "../../db/types"
 import { makeAFakeUser } from "../../test-utils/mockUsers"
 import findUserByValidEmail from "./findUserByValidEmail"
 import { REQUEST_EMAIL, REQUEST_USER } from "../../types/requestSymbols"
-import { logger } from "../../utils/logger"
 
-jest.mock("../../utils/logger")
-jest.mock("../../db", () => ({
-  select: jest.fn().mockReturnValue({
-    from: jest.fn().mockReturnValue({
-      where: jest
-        .fn()
-        .mockReturnValueOnce([makeAFakeUser({ role: ROLES.DEFAULT, email: "validated@email.com", username: "MrFake" })])
-        .mockReturnValueOnce(null)
-        .mockReturnValueOnce(null),
-    }),
-  }),
+jest.mock("../../services/index", () => ({
+  getUserByEmail: jest
+    .fn()
+    .mockReturnValueOnce(makeAFakeUser({ role: ROLES.DEFAULT, email: "validated@email.com", username: "MrFake" }))
+    .mockReturnValueOnce(null)
+    .mockReturnValueOnce(null),
 }))
 
 describe("Middleware:findUserByValidEmail", () => {
@@ -28,13 +22,13 @@ describe("Middleware:findUserByValidEmail", () => {
 
   beforeAll(() => {
     mockDefaultUser = makeAFakeUser({ role: ROLES.DEFAULT })
-  })
-
-  beforeEach(() => {
     mockRequest = {
       user: mockDefaultUser,
       [REQUEST_EMAIL]: "validated@email.com",
     }
+  })
+
+  beforeEach(() => {
     mockResponse = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn(),
