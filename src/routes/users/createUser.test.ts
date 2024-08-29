@@ -4,6 +4,7 @@ import { HTTP_CLIENT_ERROR, HTTP_SUCCESS } from "../../constants/http"
 import CONTROLLERS from "../../controllers"
 import createUserRoute from "../../routes/users/createUser"
 import { logger } from "../../utils/logger"
+import { ROLES } from "../../constants/database"
 
 CONTROLLERS.USER.createUser = jest.fn(async (req, res) => {
   return res.status(HTTP_SUCCESS.OK).json({ message: "User created successfully" })
@@ -25,6 +26,9 @@ describe("POST /register", () => {
       username: "testuser",
       password: "password123!@$1P",
       email: "testuser@gmail.com",
+      role: ROLES.DEFAULT,
+      firstName: "Test",
+      lastName: "User",
     }
     const response = await request(app).post("/register").send(requestBody)
     expect(logger.error).not.toHaveBeenCalled()

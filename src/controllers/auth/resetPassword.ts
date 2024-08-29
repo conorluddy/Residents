@@ -39,6 +39,6 @@ export const resetPassword = async (req: Request, res: Response) => {
     return res.status(HTTP_SUCCESS.OK).json({ message: "Reset email sent" })
   } catch (error) {
     logger.error(error)
-    return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Something went kaput." })
+    return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Something went kaput..." })
   }
 }
