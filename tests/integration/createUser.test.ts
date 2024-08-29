@@ -51,7 +51,7 @@ describe("Integration: Can CreateUser", () => {
   })
 
   it("should return an error if password is weak", async () => {
-    const incompleteUser = {
+    const weakPasswordUser = {
       firstName: "Weak",
       lastName: "Password",
       email: "weakpassword@weak.com",
@@ -59,8 +59,8 @@ describe("Integration: Can CreateUser", () => {
       password: "weak",
       role: ROLES.ADMIN,
     }
-    const response = await request(app).post("/users/register").send(incompleteUser)
+    const response = await request(app).post("/users/register").send(weakPasswordUser)
     expect(response.status).toBe(400)
-    expect(response.body).toHaveProperty("message", "Password not strong enough, try harder.")
+    expect(response.body).toHaveProperty("message", "Password not strong enough.")
   })
 })

@@ -43,7 +43,7 @@ app.use(attachDb)
 // Swagger
 swaggerSetup(app)
 
-// Error handling
+// Error handling <always last>
 app.use(errorHandler)
 
 ////////////////////////////////////////////////

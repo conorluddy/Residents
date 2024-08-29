@@ -3,6 +3,31 @@ import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from "../constants/http"
 type ClientErrorCodes = (typeof HTTP_CLIENT_ERROR)[keyof typeof HTTP_CLIENT_ERROR]
 type ServerErrorCodes = (typeof HTTP_SERVER_ERROR)[keyof typeof HTTP_SERVER_ERROR]
 
+// TODO: Migrate these here from /src/utils/errors.ts
+// class ValidationError extends Error {
+//   constructor(message: string) {
+//     super(message)
+//     this.name = "ValidationError"
+//   }
+// }
+
+// class EmailError extends Error {
+//   constructor(message: string) {
+//     super(message)
+//     this.name = "EmailError"
+//   }
+// }
+
+class PasswordStrengthError extends Error {
+  public statusCode: ClientErrorCodes
+  constructor(message = "Password strength is insufficient.") {
+    super(message)
+    this.name = "PasswordStrengthError"
+    this.statusCode = HTTP_CLIENT_ERROR.BAD_REQUEST
+    Object.setPrototypeOf(this, PasswordStrengthError.prototype)
+  }
+}
+
 class BadRequestError extends Error {
   public statusCode: ClientErrorCodes
   constructor(message = "Bad Request") {
@@ -63,4 +88,12 @@ class NotImplementedError extends Error {
   }
 }
 
-export { BadRequestError, UnauthorizedError, ForbiddenError, NotFoundError, InternalServerError, NotImplementedError }
+export {
+  BadRequestError,
+  UnauthorizedError,
+  ForbiddenError,
+  NotFoundError,
+  InternalServerError,
+  NotImplementedError,
+  PasswordStrengthError,
+}

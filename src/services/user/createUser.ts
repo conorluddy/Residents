@@ -6,7 +6,8 @@ import { PASSWORD_STRENGTH_CONFIG } from "../../constants/password"
 import { createHash } from "../../utils/crypt"
 import { ROLES } from "../../constants/database"
 import { Meta } from "../../db/types"
-import { EmailError, PasswordError, ValidationError } from "../../utils/errors"
+import { EmailError, ValidationError } from "../../utils/errors"
+import { PasswordStrengthError } from "../../errors"
 
 /**
  * createUser - Service to create a new user.
@@ -22,7 +23,7 @@ const createUser = async (userProps: NewUser): Promise<User["id"] | null> => {
     }
 
     if (!isStrongPassword(password, PASSWORD_STRENGTH_CONFIG)) {
-      throw new PasswordError("Password not strong enough, try harder.")
+      throw new PasswordStrengthError("Password not strong enough, try harder.")
     }
 
     if (!isEmail(email)) {
