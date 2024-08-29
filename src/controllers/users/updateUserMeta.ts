@@ -4,6 +4,7 @@ import { Meta } from "../../db/types"
 import SERVICES from "../../services"
 import { REQUEST_TARGET_USER_ID } from "../../types/requestSymbols"
 import { logger } from "../../utils/logger"
+import { BadRequestError } from "../../errors"
 
 /**
  * updateUserMeta
@@ -14,7 +15,7 @@ export const updateUserMeta = async (req: Request, res: Response) => {
     const targetUserId = req[REQUEST_TARGET_USER_ID]
 
     if (!id || !targetUserId) {
-      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "User ID is missing in the request." })
+      throw new BadRequestError("User ID is missing in the request.")
     }
 
     // Possibly redundant, but the RBAC middleware will have found
@@ -28,7 +29,7 @@ export const updateUserMeta = async (req: Request, res: Response) => {
     // This is another check that should be done before even looking up the target user
     if (!req.body || Object.keys(req.body).length === 0) {
       logger.error(`Missing body data for updating user in request.`)
-      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "No data provided to update the user with." })
+      throw new BadRequestError("No data provided to update the user with.")
     }
 
     // Add the rest of the user meta fields.

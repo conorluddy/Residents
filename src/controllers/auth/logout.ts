@@ -1,8 +1,9 @@
 import { Request, Response } from "express"
-import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constants/http"
+import { HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constants/http"
 import SERVICES from "../../services"
 import { REQUEST_USER } from "../../types/requestSymbols"
 import { logger } from "../../utils/logger"
+import { BadRequestError } from "../../errors"
 
 /**
  * logout
@@ -13,7 +14,7 @@ export const logout = async (req: Request, res: Response) => {
 
     if (!userId) {
       logger.error("User ID not found", { userId })
-      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "User ID not found" })
+      throw new BadRequestError("User ID not found.")
     }
 
     // TODO: Clear the refreshToken and xsrfToken cookies

@@ -1,13 +1,10 @@
 import { Request, Response } from "express"
 import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constants/http"
-import { logger } from "../../utils/logger"
-import { eq } from "drizzle-orm"
-import db from "../../db"
-import { tableUsers, User } from "../../db/schema"
-import { isEmail, normalizeEmail } from "validator"
-import { REQUEST_TARGET_USER_ID } from "../../types/requestSymbols"
-import SERVICES from "../../services"
 import { UserUpdate } from "../../db/types"
+import { BadRequestError } from "../../errors"
+import SERVICES from "../../services"
+import { REQUEST_TARGET_USER_ID } from "../../types/requestSymbols"
+import { logger } from "../../utils/logger"
 
 /**
  * updateUser
@@ -17,8 +14,7 @@ export const updateUser = async (req: Request, res: Response) => {
     const { id } = req.params
     const targetUserId = req[REQUEST_TARGET_USER_ID]
 
-    if (!id || !targetUserId)
-      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "User ID is missing in the request." })
+    if (!id || !targetUserId) throw new BadRequestError("User ID is missing in the request.")
 
     // Possibly redundant, but the RBAC middleware will have found
     // the user and set the [REQUEST_TARGET_USER_ID] on the request object, so we
@@ -28,7 +24,7 @@ export const updateUser = async (req: Request, res: Response) => {
 
     // This is another check that should be done before even looking up the target user
     if (!req.body || Object.keys(req.body).length === 0)
-      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "No data provided to update the user with." })
+      throw new BadRequestError("No data was sent to update the user with.")
 
     const { username, firstName, lastName, email, password }: Partial<UserUpdate> = req.body ?? {}
 

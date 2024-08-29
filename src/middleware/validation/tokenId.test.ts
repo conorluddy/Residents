@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express"
 import validateTokenId from "./tokenId"
+import { BadRequestError } from "../../errors"
 import { createId } from "@paralleldrive/cuid2"
-import { HTTP_CLIENT_ERROR } from "../../constants/http"
 
 describe("Middleware: validateTokenId", () => {
   let mockRequest: Partial<Request>
@@ -21,17 +21,17 @@ describe("Middleware: validateTokenId", () => {
     jest.clearAllMocks()
   })
 
-  it("should return 400 if the request token is missing", () => {
-    validateTokenId(mockRequest as Request, mockResponse as Response, nextFunction)
-    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.BAD_REQUEST)
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: "A token is required" })
+  it("should throw BadRequestError if the request token is missing", async () => {
+    await expect(() => validateTokenId(mockRequest as Request, mockResponse as Response, nextFunction)).rejects.toThrow(
+      BadRequestError
+    )
   })
 
-  it("should return 400 if the request token is invalid", () => {
+  it("should throw BadRequestError if the request token is invalid", async () => {
     mockRequest.body.tokenId = "invalid_token"
-    validateTokenId(mockRequest as Request, mockResponse as Response, nextFunction)
-    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.BAD_REQUEST)
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: "Invalid token provided" })
+    await expect(() => {
+      validateTokenId(mockRequest as Request, mockResponse as Response, nextFunction)
+    }).toThrow(BadRequestError)
   })
 
   it("should call next function if the request token is valid", () => {

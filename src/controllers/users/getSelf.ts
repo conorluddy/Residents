@@ -3,6 +3,7 @@ import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../consta
 import { REQUEST_USER } from "../../types/requestSymbols"
 import { logger } from "../../utils/logger"
 import SERVICES from "../../services"
+import { BadRequestError } from "../../errors"
 
 /**
  * getSelf - gets own user record
@@ -11,8 +12,7 @@ export const getSelf = async (req: Request, res: Response) => {
   try {
     const userId = req[REQUEST_USER]?.id
 
-    if (!userId)
-      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "User ID is missing in the request." })
+    if (!userId) throw new BadRequestError("User ID mismatch.")
 
     const user = await SERVICES.getUserByID(userId)
 

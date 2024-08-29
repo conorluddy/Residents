@@ -3,6 +3,7 @@ import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../consta
 import SERVICES from "../../services"
 import { REQUEST_TARGET_USER_ID } from "../../types/requestSymbols"
 import { logger } from "../../utils/logger"
+import { BadRequestError } from "../../errors"
 
 /**
  * deleteUser
@@ -13,7 +14,7 @@ export const deleteUser = async (req: Request, res: Response) => {
     const targetUserId = req[REQUEST_TARGET_USER_ID] // Note, This gets added to the req by getTargetUserAndCheckSuperiority MW
 
     if (!id || !targetUserId) {
-      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "ID is missing in the request." })
+      throw new BadRequestError("User ID is missing.")
     }
 
     // Possibly redundant, but the RBAC middleware will have found

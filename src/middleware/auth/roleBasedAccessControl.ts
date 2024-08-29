@@ -2,10 +2,10 @@ import { NextFunction, Request, Response } from "express"
 import { ACL, PERMISSIONS } from "../../constants/accessControlList"
 import { ROLES, ROLES_ARRAY } from "../../constants/database"
 import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from "../../constants/http"
-import { getUserByID } from "../../services/user/getUser"
 import { REQUEST_TARGET_USER_ID, REQUEST_USER } from "../../types/requestSymbols"
 import { logger } from "../../utils/logger"
 import SERVICES from "../../services"
+import { BadRequestError } from "../../errors"
 
 /**
  * Check if the user has the required permission to access the resource
@@ -17,10 +17,7 @@ function checkPermission(permission: PERMISSIONS) {
     try {
       const user = req[REQUEST_USER]
 
-      if (!user) {
-        logger.warn(`User data is missing from the request`)
-        return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "Forbidden" })
-      }
+      if (!user) throw new BadRequestError(`User data is missing from the request`)
 
       if (!!user.deletedAt) {
         logger.warn(`User ${user.id} lacks permission ${permission} because they are deleted`)
@@ -48,10 +45,7 @@ async function getTargetUserAndCheckSuperiority(req: Request, res: Response, nex
   const targetUserId = req.params.id
 
   try {
-    if (!user) {
-      logger.warn(`User data is missing from the request`)
-      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "Missing User data." })
-    }
+    if (!user) throw new BadRequestError(`User data is missing from the request`)
 
     if (!user.role) {
       logger.warn(`User ${user.id} is missing a role`)
@@ -110,11 +104,7 @@ async function getTargetUserAndCheckSuperiority(req: Request, res: Response, nex
     req[REQUEST_TARGET_USER_ID] = targetUser.id
     next()
   } catch (error) {
-    logger.error(
-      `Error checking role superiority for user ${user?.id ?? "<missing userID>"} and target ${[
-        REQUEST_TARGET_USER_ID,
-      ]}: ${error}`
-    )
+    logger.error(`Error checking role superiority for user ${user?.id ?? "<missing userID>"} : ${error}`)
     return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Internal Server Error" })
   }
 }

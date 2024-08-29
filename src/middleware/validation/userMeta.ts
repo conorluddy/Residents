@@ -2,6 +2,7 @@ import { NextFunction, Request, RequestHandler, Response } from "express"
 import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from "../../constants/http"
 import { logger } from "../../utils/logger"
 import { Meta } from "../../db/types"
+import { BadRequestError } from "../../errors"
 
 // Define the valid keys for updating user meta
 type ValidMutableMetaProps = Exclude<keyof Meta, "id" | "userId">
@@ -16,7 +17,7 @@ const userMeta: RequestHandler = async (req: Request, res: Response, next: NextF
 
     // Ensure the payload is an object
     if (typeof updateUserMetaPayload !== "object" || updateUserMetaPayload === null) {
-      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "Invalid data provided." })
+      throw new BadRequestError("Invalid data provided.")
     }
 
     // Validate that all keys in the payload are allowed

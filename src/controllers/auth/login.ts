@@ -9,6 +9,7 @@ import SERVICES from "../../services"
 import { validateHash } from "../../utils/crypt"
 import { generateJwtFromUser } from "../../utils/generateJwt"
 import { logger } from "../../utils/logger"
+import { BadRequestError } from "../../errors"
 
 /**
  * login
@@ -18,7 +19,7 @@ export const login = async (req: Request, res: Response) => {
     const { username, email, password } = (req.body ?? {}) as Pick<User, "username" | "email" | "password">
 
     if (!username && !email) {
-      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "Username or email is required" })
+      throw new BadRequestError("Username or email is required")
     }
 
     if (!password) {
@@ -29,8 +30,7 @@ export const login = async (req: Request, res: Response) => {
       return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "Invalid email address" })
     }
 
-    const getUserByUsernameOrEmail = username ? SERVICES.getUserByUsername : SERVICES.getUserByEmail
-    const user = await getUserByUsernameOrEmail(username ?? email)
+    const user = await (username ? SERVICES.getUserByUsername(username) : SERVICES.getUserByEmail(email))
 
     if (!user) {
       // Should we throw here and then clear auth in the catch and res from there??
@@ -42,12 +42,10 @@ export const login = async (req: Request, res: Response) => {
     const passwordHash = await SERVICES.getUserPasswordHash(user.id)
 
     if (!passwordHash) {
-      // logger.error("No password found")
       return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Nope." })
     }
 
     if (!(await validateHash(password, passwordHash))) {
-      // logger.error("Password validation failed", { password, passwordHash })
       return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Nope." })
     }
 

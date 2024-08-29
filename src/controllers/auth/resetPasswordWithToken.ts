@@ -7,6 +7,7 @@ import { isStrongPassword } from "validator"
 import { PASSWORD_STRENGTH_CONFIG } from "../../constants/password"
 import { REQUEST_TOKEN } from "../../types/requestSymbols"
 import SERVICES from "../../services"
+import { BadRequestError } from "../../errors"
 
 /**
  * resetPasswordWithToken
@@ -33,8 +34,7 @@ export const resetPasswordWithToken = async (req: Request, res: Response, next: 
       // Note: Token is discarded in the MW before it gets here,
       // so they'd need to start the whole flow again if they mess this up.
       // Maybe it should be more forgiving or autogenerate a new token and redirect to a new link?
-      logger.error("Password reset attempt failed with weak password.")
-      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "Password not strong enough, try harder." })
+      throw new BadRequestError("Password reset attempt failed because of weak password.")
     }
 
     const password = await createHash(plainPassword)

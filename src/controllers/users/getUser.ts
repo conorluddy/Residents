@@ -2,6 +2,7 @@ import { Request, Response } from "express"
 import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constants/http"
 import { logger } from "../../utils/logger"
 import SERVICES from "../../services"
+import { BadRequestError } from "../../errors"
 
 /**
  * getUser
@@ -10,9 +11,7 @@ export const getUser = async (req: Request, res: Response) => {
   try {
     const userId = req.params.id
 
-    if (!userId) {
-      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "ID is missing in the request." })
-    }
+    if (!userId) throw new BadRequestError("ID is missing in the request.")
 
     const user = await SERVICES.getUserByID(userId)
 

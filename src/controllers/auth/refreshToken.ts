@@ -6,9 +6,9 @@ import { TIMESPAN } from "../../constants/time"
 import { PublicUser } from "../../db/types"
 import generateXsrfToken from "../../middleware/util/xsrfToken"
 import SERVICES from "../../services"
-import { createToken } from "../../services/auth/createToken"
 import { generateJwtFromUser } from "../../utils/generateJwt"
 import { logger } from "../../utils/logger"
+import { BadRequestError } from "../../errors"
 
 /**
  * POST: refreshToken
@@ -20,13 +20,11 @@ export const refreshToken = async (req: Request, res: Response) => {
     const refreshTokenId = req.body?.refreshToken
 
     if (!refreshTokenId) {
-      logger.warn("Refresh token token was not provided in the request body")
-      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "Refresh token is required" })
+      throw new BadRequestError("Refresh token was not provided.")
     }
 
     if (jwToken == null) {
-      logger.warn("JWT token was not provided in the request headers")
-      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "JWT token is required" })
+      throw new BadRequestError("JWT was not provided.")
     }
 
     // JWT is likely expired, so we don't need to verify it, just get the user ID from it

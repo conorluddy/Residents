@@ -6,6 +6,7 @@ import SERVICES from "../../services"
 import { logger } from "../../utils/logger"
 import { EmailError, PasswordError, ValidationError } from "../../utils/errors"
 import { NewUser } from "../../db/types"
+import { BadRequestError } from "../../errors"
 
 /**
  * createUser
@@ -16,7 +17,7 @@ export const createUser = async ({ body }: Request, res: Response) => {
 
     const userId = await SERVICES.createUser({ username, firstName, lastName, email, password, role })
 
-    if (!userId) return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "Error creating user" })
+    if (!userId) throw new BadRequestError("Error creating new user.")
 
     await Promise.all([
       SERVICES.createUserMeta(userId),
@@ -42,6 +43,7 @@ export const createUser = async ({ body }: Request, res: Response) => {
   }
 }
 
+// Add this again to send an intro email to new users
 // if (token) {
 // await sendMail({
 //   to: SENDGRID_TEST_EMAIL ?? "", // Faker might seed with real emails, be careful not to spam people

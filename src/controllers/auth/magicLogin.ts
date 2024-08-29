@@ -1,6 +1,7 @@
 import { Request, Response } from "express"
-import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from "../../constants/http"
+import { HTTP_SERVER_ERROR } from "../../constants/http"
 import { logger } from "../../utils/logger"
+import { BadRequestError } from "../../errors"
 
 /**
  * magicLogin
@@ -11,7 +12,7 @@ export const magicLogin = async (req: Request, res: Response) => {
     const { email }: Record<string, string> = req.body
 
     if (!email) {
-      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "Email is required" })
+      throw new BadRequestError("Email is required.")
     }
 
     return res.status(HTTP_SERVER_ERROR.NOT_IMPLEMENTED).json({ message: "Not implemented yet" })
