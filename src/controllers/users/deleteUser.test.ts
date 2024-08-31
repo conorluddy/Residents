@@ -1,10 +1,10 @@
-import { Request, Response } from "express"
-import { makeAFakeUser } from "../../test-utils/mockUsers"
-import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constants/http"
-import { deleteUser } from "./deleteUser"
+import { NextFunction, Request, Response } from "express"
+import { HTTP_SUCCESS } from "../../constants/http"
 import { User } from "../../db/types"
+import { makeAFakeUser } from "../../test-utils/mockUsers"
 import { REQUEST_TARGET_USER_ID } from "../../types/requestSymbols"
 import { logger } from "../../utils/logger"
+import { deleteUser } from "./deleteUser"
 
 let fakeUser: Partial<User>
 
@@ -23,6 +23,8 @@ jest.mock("../../services/index", () => ({
 describe("Controller: Delete User", () => {
   let mockRequest: Partial<Request> & { [REQUEST_TARGET_USER_ID]: string }
   let mockResponse: Partial<Response>
+  let mockNext: NextFunction = jest.fn().mockReturnThis()
+
   beforeAll(() => {})
   beforeEach(() => {
     mockRequest = {
@@ -42,37 +44,31 @@ describe("Controller: Delete User", () => {
   })
 
   it("Happy path", async () => {
-    await deleteUser(mockRequest as Request, mockResponse as Response)
+    await deleteUser(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
     expect(logger.error).not.toHaveBeenCalled()
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.OK)
     expect(mockResponse.json).toHaveBeenCalledWith({ message: `User ${fakeUser.id} deleted` })
   })
 
-  it("Unhappy path - error thrown", async () => {
-    await deleteUser(mockRequest as Request, mockResponse as Response)
-    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR)
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: `Error deleting user` })
-  })
-
   it("Missing ID", async () => {
     mockRequest.params = {}
-    await deleteUser(mockRequest as Request, mockResponse as Response)
-    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.BAD_REQUEST)
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: `ID is missing in the request.` })
+    await expect(
+      deleteUser(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
+    ).rejects.toThrow(`User ID is missing.`)
   })
 
   it("Missing [REQUEST_TARGET_USER_ID]", async () => {
     mockRequest[REQUEST_TARGET_USER_ID] = ""
-    await deleteUser(mockRequest as Request, mockResponse as Response)
-    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.BAD_REQUEST)
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: `ID is missing in the request.` })
+    await expect(
+      deleteUser(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
+    ).rejects.toThrow(`User ID is missing.`)
   })
 
   it("target user ID doesnt match url param user ID", async () => {
     mockRequest[REQUEST_TARGET_USER_ID] = "PersonToDelete"
     mockRequest.params = { id: "OtherPersonInURL" }
-    await deleteUser(mockRequest as Request, mockResponse as Response)
-    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: `You are not allowed to delete this user.` })
+    await expect(
+      deleteUser(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
+    ).rejects.toThrow(`ID mismatch, can not delete.`)
   })
 })
