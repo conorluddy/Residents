@@ -1,12 +1,11 @@
-import { Request, Response } from "express"
-import { makeAFakeUser } from "../../test-utils/mockUsers"
-import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constants/http"
-import { getUser } from "./getUser"
+import { NextFunction, Request, Response } from "express"
+import { HTTP_SUCCESS } from "../../constants/http"
 import { User } from "../../db/types"
+import { makeAFakeUser } from "../../test-utils/mockUsers"
+import { getUser } from "./getUser"
 
 let fakeUser: Partial<User>
 
-jest.mock("../../utils/logger")
 jest.mock("../../services/user/getUser", () => ({
   getUserByID: jest
     .fn()
@@ -18,13 +17,15 @@ jest.mock("../../services/user/getUser", () => ({
       return undefined
     })
     .mockImplementationOnce(async () => {
-      throw new Error("DB error")
+      throw new Error("DB error.")
     }),
 }))
 
 describe("Controller: GetUser", () => {
   let mockRequest: Partial<Request>
   let mockResponse: Partial<Response>
+  let mockNext = jest.fn().mockReturnThis()
+
   beforeAll(() => {})
   beforeEach(() => {
     mockRequest = {
@@ -39,28 +40,27 @@ describe("Controller: GetUser", () => {
   })
 
   it("Happy path", async () => {
-    await getUser(mockRequest as Request, mockResponse as Response)
+    await getUser(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.OK)
     expect(mockResponse.json).toHaveBeenCalledWith(fakeUser)
   })
 
   it("Missing User ID", async () => {
     mockRequest.params = {}
-    // Can't really happen because of the route definition, but just for cov
-    await getUser(mockRequest as Request, mockResponse as Response)
-    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.BAD_REQUEST)
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: "ID is missing in the request." })
+    await expect(getUser(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)).rejects.toThrow(
+      "User ID is missing."
+    )
   })
 
   it("User not found", async () => {
-    await getUser(mockRequest as Request, mockResponse as Response)
-    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.NOT_FOUND)
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: "User not found." })
+    await expect(getUser(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)).rejects.toThrow(
+      "User not found."
+    )
   })
 
   it("Error handling", async () => {
-    await getUser(mockRequest as Request, mockResponse as Response)
-    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR)
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: "Error getting user." })
+    await expect(getUser(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)).rejects.toThrow(
+      "DB error."
+    )
   })
 })
