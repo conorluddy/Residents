@@ -1,34 +1,24 @@
-import { Request, Response } from "express"
-import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constants/http"
-import SERVICES from "../../services"
+import { NextFunction, Request, Response } from "express"
+import { HTTP_SUCCESS } from "../../constants/http"
+import { BadRequestError, ForbiddenError } from "../../errors"
 import { REQUEST_TARGET_USER_ID } from "../../types/requestSymbols"
-import { logger } from "../../utils/logger"
+import SERVICES from "../../services"
 
 /**
  * deleteUser
  */
-export const deleteUser = async (req: Request, res: Response) => {
-  try {
-    const { id } = req.params
-    const targetUserId = req[REQUEST_TARGET_USER_ID] // Note, This gets added to the req by getTargetUserAndCheckSuperiority MW
+export const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
+  // The param ID is the ID of the user to be deleted from the URL
+  const { id } = req.params
+  // The targetUserId is the same ID of the user to be deleted, but will
+  // only exist on the request if it has been validated by the middleware
+  // getTargetUserAndCheckSuperiority fn
+  const targetUserId = req[REQUEST_TARGET_USER_ID]
 
-    if (!id || !targetUserId) {
-      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "ID is missing in the request." })
-    }
+  if (!id || !targetUserId) throw new BadRequestError("User ID is missing.")
+  if (id !== targetUserId) throw new ForbiddenError("ID mismatch, can not delete.")
 
-    // Possibly redundant, but the RBAC middleware will have found
-    // the user and set the [REQUEST_TARGET_USER_ID] on the request object, so we
-    // can double check it here for additionaly security.
+  const deletedUserId = await SERVICES.deleteUser({ userId: id })
 
-    if (id !== targetUserId) {
-      return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "You are not allowed to delete this user." })
-    }
-
-    const deletedUserId = await SERVICES.deleteUser({ userId: id })
-
-    return res.status(HTTP_SUCCESS.OK).json({ message: `User ${deletedUserId} deleted` })
-  } catch (error) {
-    logger.error(error)
-    return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Error deleting user" })
-  }
+  return res.status(HTTP_SUCCESS.OK).json({ message: `User ${deletedUserId} deleted` })
 }
