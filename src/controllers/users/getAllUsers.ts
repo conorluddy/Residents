@@ -1,20 +1,15 @@
-import { Request, Response } from "express"
-import { HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constants/http"
-import { logger } from "../../utils/logger"
+import { NextFunction, Request, Response } from "express"
+import { HTTP_SUCCESS } from "../../constants/http"
 import SERVICES from "../../services"
 
 /**
- * getAllUsers - This will need pagination and filtering/searching
+ * getAllUsers
  */
-export const getAllUsers = async (req: Request, res: Response) => {
-  try {
-    // Add a WITHMETA flag to include the user meta data
-    const users = await SERVICES.getAllUsers()
-    return res.status(HTTP_SUCCESS.OK).json(users)
-  } catch (error) {
-    logger.error("Controller: getAllUsers: Error: ", error)
-    res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Error getting users." })
-  }
+export const getAllUsers = async (req: Request, res: Response, next: NextFunction) => {
+  // TODO: Add a WITHMETA flag to include the user meta data
+  // TODO: Filtering / searching / pagination
+  const users = await SERVICES.getAllUsers()
+  return res.status(HTTP_SUCCESS.OK).json(users)
 }
 
 export default getAllUsers
