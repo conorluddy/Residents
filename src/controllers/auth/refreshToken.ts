@@ -1,4 +1,4 @@
-import { Request, Response } from "express"
+import { NextFunction, Request, Response } from "express"
 import jwt from "jsonwebtoken"
 import { TOKEN_TYPE } from "../../constants/database"
 import { HTTP_SUCCESS } from "../../constants/http"
@@ -12,7 +12,7 @@ import { generateJwtFromUser } from "../../utils/generateJwt"
 /**
  * POST: refreshToken
  */
-export const refreshToken = async (req: Request, res: Response, p0: unknown) => {
+export const refreshToken = async (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers["authorization"]
   const jwToken = authHeader && authHeader.split(" ")[1] // Bearer[ ]TOKEN...
   const refreshTokenId = req.body?.refreshToken
