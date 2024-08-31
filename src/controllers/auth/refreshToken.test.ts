@@ -1,6 +1,6 @@
 import { refreshToken } from "./refreshToken"
-import { Request, Response } from "express"
-import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constants/http"
+import { NextFunction, Request, Response } from "express"
+import { HTTP_SUCCESS } from "../../constants/http"
 import { makeAFakeUser } from "../../test-utils/mockUsers"
 import { ROLES } from "../../constants/database"
 import { generateJwtFromUser } from "../../utils/generateJwt"
@@ -46,6 +46,7 @@ jest.mock("../../services/index", () => ({
 describe("Controller: Refresh token: Happy path", () => {
   let mockRequest: Partial<Request> & { body: Partial<User> }
   let mockResponse: Partial<Response>
+  let mockNext = jest.fn().mockReturnThis()
   let jwtDecodeSpy: jest.MockedFunction<typeof jwt.decode>
   let xsrf: string
   let jwToken: string
@@ -71,7 +72,7 @@ describe("Controller: Refresh token: Happy path", () => {
   })
 
   it("should allow tokens to refresh if existing tokens are legit", async () => {
-    await refreshToken(mockRequest as Request, mockResponse as Response)
+    await refreshToken(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
     expect(logger.error).not.toHaveBeenCalled()
     expect(mockResponse.json).toHaveBeenCalledWith({ accessToken: "testAccessToken" })
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.OK)
@@ -94,6 +95,7 @@ describe("Controller: Refresh token: Happy path", () => {
 describe("Should return errors if", () => {
   let mockRequest: Partial<Request> & { body: Partial<User> }
   let mockResponse: Partial<Response>
+  let mockNext = jest.fn().mockReturnThis()
   let jwToken: string
   let jwtDecodeSpy: jest.MockedFunction<typeof jwt.decode>
   const otherMockDefaultUser = makeAFakeUser({ role: ROLES.MODERATOR })
@@ -124,46 +126,34 @@ describe("Should return errors if", () => {
 
   it("there's no refresh token in the request body", async () => {
     delete mockRequest.body?.refreshToken
-    await refreshToken(mockRequest as Request, mockResponse as Response)
-    expect(logger.error).not.toHaveBeenCalled()
-    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.BAD_REQUEST)
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: "Refresh token is required" })
+    await expect(
+      refreshToken(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
+    ).rejects.toThrow("Refresh token is required")
   })
-
   it("there's no JWT in the header", async () => {
     delete mockRequest.headers?.authorization
-    await refreshToken(mockRequest as Request, mockResponse as Response)
-    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.BAD_REQUEST)
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: "JWT token is required" })
+    await expect(
+      refreshToken(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
+    ).rejects.toThrow("JWT token is required")
   })
   it("the token isnt found in the database", async () => {
-    await refreshToken(mockRequest as Request, mockResponse as Response)
-    expect(logger.error).toHaveBeenCalledWith("Refresh token not found: REFRESHME")
-    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: "Token not valid." })
+    await expect(
+      refreshToken(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
+    ).rejects.toThrow("Token not valid.")
   })
   it("the token user doesn't match the JWT user", async () => {
-    await refreshToken(mockRequest as Request, mockResponse as Response)
-    expect(logger.error).toHaveBeenCalledWith("Token x user mismatch: 456")
-    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN) // Forbidden
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: "Token not valid." })
+    await expect(
+      refreshToken(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
+    ).rejects.toThrow("Token not valid.")
   })
   it("the token has a USED flag set", async () => {
-    await refreshToken(mockRequest as Request, mockResponse as Response)
-    expect(logger.error).toHaveBeenNthCalledWith(3, `Attempt to use a used refresh token for USER${mockDefaultUser.id}`)
-    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: "Token not valid." })
+    await expect(
+      refreshToken(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
+    ).rejects.toThrow("Token not valid.")
   })
   it("the token has expired", async () => {
-    await refreshToken(mockRequest as Request, mockResponse as Response)
-    expect(logger.error).toHaveBeenCalledWith(`Attempt to use an expired refresh token: REFRESHME`)
-    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: "Token has expired." })
-  })
-  it("logs when an error is thrown", async () => {
-    delete mockRequest.headers
-    await refreshToken(mockRequest as Request, mockResponse as Response)
-    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR)
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: "Error refreshing access token." })
+    await expect(
+      refreshToken(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
+    ).rejects.toThrow("Token not valid.")
   })
 })
