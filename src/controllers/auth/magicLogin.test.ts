@@ -1,4 +1,4 @@
-import { Request, Response } from "express"
+import { NextFunction, Request, Response } from "express"
 import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from "../../constants/http"
 import { User } from "../../db/types"
 import { magicLogin } from "./magicLogin"
@@ -6,6 +6,7 @@ import { magicLogin } from "./magicLogin"
 describe("Controller: Magic Login", () => {
   let mockRequest: Partial<Request> & { body: Partial<User> }
   let mockResponse: Partial<Response>
+  let mockNext = jest.fn().mockReturnThis()
 
   beforeEach(() => {
     mockRequest = {
@@ -21,15 +22,15 @@ describe("Controller: Magic Login", () => {
   })
 
   it("NOT IMPLEMENTED YET: TODO", async () => {
-    await magicLogin(mockRequest as Request, mockResponse as Response)
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: "Not implemented yet" })
+    await magicLogin(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
+    expect(mockResponse.json).toHaveBeenCalledWith({ message: "Not implemented yet." })
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SERVER_ERROR.NOT_IMPLEMENTED)
   })
 
   it("should bomb out early if you dont provide an email address", async () => {
     delete mockRequest.body.email
-    await magicLogin(mockRequest as Request, mockResponse as Response)
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: "Email is required" })
-    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.BAD_REQUEST)
+    await expect(
+      magicLogin(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
+    ).rejects.toThrow("Email is required.")
   })
 })

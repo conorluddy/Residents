@@ -1,4 +1,4 @@
-import { Request, Response } from "express"
+import { NextFunction, Request, Response } from "express"
 import { HTTP_SUCCESS } from "../../constants/http"
 import { PublicUser } from "../../db/types"
 import { makeAFakeSafeUser } from "../../test-utils/mockUsers"
@@ -8,6 +8,7 @@ import { googleCallback } from "./googleCallback"
 describe("Controller: GoogleCallback", () => {
   let mockRequest: Partial<Request> & { [REQUEST_USER]: PublicUser }
   let mockResponse: Partial<Response>
+  let mockNext = jest.fn().mockReturnThis()
 
   beforeAll(() => {
     process.env.JWT_TOKEN_SECRET = "TESTSECRET"
@@ -22,7 +23,7 @@ describe("Controller: GoogleCallback", () => {
   })
 
   it("has a gaping security hole", async () => {
-    await googleCallback(mockRequest as Request, mockResponse as Response)
+    await googleCallback(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.OK)
   })
 })

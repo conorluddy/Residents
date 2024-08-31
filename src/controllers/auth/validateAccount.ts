@@ -1,41 +1,27 @@
-import { Request, Response } from "express"
+import { NextFunction, Request, Response } from "express"
 import { STATUS, TOKEN_TYPE } from "../../constants/database"
-import { HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constants/http"
+import { HTTP_SUCCESS } from "../../constants/http"
+import { BadRequestError, ForbiddenError } from "../../errors"
 import SERVICES from "../../services"
-import { REQUEST_TOKEN, REQUEST_USER } from "../../types/requestSymbols"
+import { REQUEST_TOKEN } from "../../types/requestSymbols"
 import { logger } from "../../utils/logger"
 
 /**
  * validateAccount
  */
-export const validateAccount = async (req: Request, res: Response) => {
-  try {
-    const { tokenId, userId: userIdFromUrlParam } = req.params
-    const token = req[REQUEST_TOKEN]
+export const validateAccount = async (req: Request, res: Response, next: NextFunction) => {
+  const { tokenId, userId: userIdFromUrlParam } = req.params
+  const token = req[REQUEST_TOKEN]
 
-    if (!token) throw new Error("Validation token invalid.")
-    if (!userIdFromUrlParam) throw new Error("Invalid user data userIdFromUrlParam.")
+  if (!userIdFromUrlParam) throw new BadRequestError("Invalid user data.")
+  if (!token) throw new ForbiddenError("Validation token missing.")
+  if (token.type !== TOKEN_TYPE.VALIDATE) throw new ForbiddenError("Validation token invalid.")
+  if (token.userId !== userIdFromUrlParam) throw new ForbiddenError("Validation token invalid.")
 
-    logger.info(`Attempting to validate User ${userIdFromUrlParam} with Token ${tokenId}`)
+  logger.info(`Attempting to validate User ${userIdFromUrlParam} with Token ${tokenId}`)
+  await SERVICES.updateUserStatus({ userId: userIdFromUrlParam, status: STATUS.VERIFIED })
 
-    if (token.type !== TOKEN_TYPE.VALIDATE) {
-      logger.error(`Token with ID ${tokenId} isnt a validation type token.`)
-      throw new Error("Validation token invalid.")
-    }
+  logger.info(`User ${userIdFromUrlParam} validated.`)
 
-    if (token.userId !== userIdFromUrlParam) {
-      logger.error(`token.userId !== userIdFromUrlParam`, { token, userIdFromUrlParam })
-      throw new Error("Validation token invalid.")
-    }
-
-    // Validate the user
-    await SERVICES.updateUserStatus({ userId: userIdFromUrlParam, status: STATUS.VERIFIED })
-
-    logger.info(`User ${userIdFromUrlParam} validated.`)
-
-    return res.status(HTTP_SUCCESS.OK).json({ message: "Account validated." })
-  } catch (error) {
-    logger.error(error)
-    return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Error validating user." })
-  }
+  return res.status(HTTP_SUCCESS.OK).json({ message: "Account validated." })
 }
