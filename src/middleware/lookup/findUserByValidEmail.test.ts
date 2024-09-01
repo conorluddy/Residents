@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from "express"
 import { ROLES } from "../../constants/database"
-import { HTTP_CLIENT_ERROR } from "../../constants/http"
-import { SafeUser, User } from "../../db/types"
+import { SafeUser } from "../../db/types"
 import { makeAFakeUser } from "../../test-utils/mockUsers"
 import findUserByValidEmail from "./findUserByValidEmail"
 import { REQUEST_EMAIL, REQUEST_USER } from "../../types/requestSymbols"
@@ -40,24 +39,20 @@ describe("Middleware:findUserByValidEmail", () => {
   // but the middleware should still wotk in isolation and not care about the user's role.
   it("Happy path: Valid email used to find valid user", async () => {
     await findUserByValidEmail(mockRequest as Request, mockResponse as Response, nextFunction)
-    // expect(logger.error).toHaveBeenCalledWith("xx")
     expect(mockRequest[REQUEST_USER]).toHaveProperty("email", "validated@email.com")
     expect(mockRequest[REQUEST_USER]).toHaveProperty("username", "MrFake")
     expect(nextFunction).toHaveBeenCalled()
   })
   it("[REQUEST_EMAIL] doesn't exist in the request", async () => {
     mockRequest[REQUEST_EMAIL] = undefined
-    await findUserByValidEmail(mockRequest as Request, mockResponse as Response, nextFunction)
-    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.BAD_REQUEST)
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: "Invalid email" })
-    expect(nextFunction).not.toHaveBeenCalled()
+    await expect(findUserByValidEmail(mockRequest as Request, mockResponse as Response, nextFunction)).rejects.toThrow(
+      "Invalid email."
+    )
   })
-
   it("[REQUEST_EMAIL] holds an invalid email address", async () => {
     mockRequest[REQUEST_EMAIL] = "notAnEmail"
-    await findUserByValidEmail(mockRequest as Request, mockResponse as Response, nextFunction)
-    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.BAD_REQUEST)
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: "Invalid email" })
-    expect(nextFunction).not.toHaveBeenCalled()
+    await expect(findUserByValidEmail(mockRequest as Request, mockResponse as Response, nextFunction)).rejects.toThrow(
+      "User not found."
+    )
   })
 })

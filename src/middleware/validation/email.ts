@@ -1,27 +1,16 @@
 import { NextFunction, Request, RequestHandler, Response } from "express"
 import { isEmail } from "validator"
-import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from "../../constants/http"
-import { logger } from "../../utils/logger"
 import { REQUEST_EMAIL } from "../../types/requestSymbols"
+import { BadRequestError } from "../../errors"
 
 const validateEmail: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const email: string | undefined = req.params?.email || req.body?.email || req.query?.email
+  const email: string | undefined = req.params?.email || req.body?.email || req.query?.email
 
-    if (!email) {
-      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json("Email is required")
-    }
+  if (!email) throw new BadRequestError("Email is required")
+  if (!isEmail(email)) throw new BadRequestError("Invalid email address")
 
-    if (!isEmail(email)) {
-      return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json("Invalid email address")
-    }
-
-    req[REQUEST_EMAIL] = email
-    next()
-  } catch (error) {
-    logger.error("Posted email addresss was invalid", error)
-    return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json("Invalid email address")
-  }
+  req[REQUEST_EMAIL] = email
+  next()
 }
 
 export default validateEmail

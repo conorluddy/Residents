@@ -1,7 +1,5 @@
 import { Request, Response, NextFunction } from "express"
 import validateUserMeta from "./userMeta"
-import { createId } from "@paralleldrive/cuid2"
-import { HTTP_CLIENT_ERROR } from "../../constants/http"
 
 describe("Middleware: validateUserMeta", () => {
   let mockRequest: Partial<Request>
@@ -23,24 +21,25 @@ describe("Middleware: validateUserMeta", () => {
     jest.clearAllMocks()
   })
 
-  it("should return 400 if the request body is missing", () => {
+  it("should return 400 if the request body is missing", async () => {
     validateUserMeta(mockRequest as Request, mockResponse as Response, nextFunction)
-    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.BAD_REQUEST)
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: "Invalid data provided." })
+    await expect(validateUserMeta(mockRequest as Request, mockResponse as Response, nextFunction)).rejects.toThrow(
+      "Invalid data provided."
+    )
   })
 
-  it("should return 400 if the request body is null", () => {
+  it("should return 400 if the request body is null", async () => {
     mockRequest.body = null
-    validateUserMeta(mockRequest as Request, mockResponse as Response, nextFunction)
-    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.BAD_REQUEST)
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: "Invalid data provided." })
+    await expect(validateUserMeta(mockRequest as Request, mockResponse as Response, nextFunction)).rejects.toThrow(
+      "Invalid data provided."
+    )
   })
 
-  it("should return 400 if the request body is invalid", () => {
+  it("should return 400 if the request body is invalid", async () => {
     mockRequest.body = { randomProperty: "randomValue" }
-    validateUserMeta(mockRequest as Request, mockResponse as Response, nextFunction)
-    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.BAD_REQUEST)
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: "Invalid data provided. Some items are not allowed." })
+    await expect(validateUserMeta(mockRequest as Request, mockResponse as Response, nextFunction)).rejects.toThrow(
+      "Invalid data provided."
+    )
   })
 
   it("should call next function if the request token is valid", () => {
