@@ -59,29 +59,25 @@ describe("Middleware:findValidTokenById", () => {
   it("Happy path: Find valid token in DB", async () => {
     await findValidTokenById(mockRequest as Request, mockResponse as Response, nextFunction)
     expect(mockRequest[REQUEST_TOKEN_ID]).toEqual("XXX-XXX-XXX-XXX-XXX-XXX-XXX-XXX")
-    // expect(logger.error).toHaveBeenCalledWith("xx")
     expect(nextFunction).toHaveBeenCalled()
   })
 
   it("ValidatedToken doesn't exist in the request, return bad request", async () => {
     mockRequest[REQUEST_TOKEN_ID] = undefined as unknown as string
-    await findValidTokenById(mockRequest as Request, mockResponse as Response, nextFunction)
-    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.BAD_REQUEST)
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: `Valid token required` })
-    expect(nextFunction).not.toHaveBeenCalled()
+    await expect(findValidTokenById(mockRequest as Request, mockResponse as Response, nextFunction)).rejects.toThrow(
+      "A valid token is required."
+    )
   })
 
   it("Token is flagged as used, return forbidden", async () => {
-    await findValidTokenById(mockRequest as Request, mockResponse as Response, nextFunction)
-    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: "Token has already been used" })
-    expect(nextFunction).not.toHaveBeenCalled()
+    await expect(findValidTokenById(mockRequest as Request, mockResponse as Response, nextFunction)).rejects.toThrow(
+      "Token has already been used."
+    )
   })
 
   it("Token has expired, return forbidden", async () => {
-    await findValidTokenById(mockRequest as Request, mockResponse as Response, nextFunction)
-    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: "Token has expired" })
-    expect(nextFunction).not.toHaveBeenCalled()
+    await expect(findValidTokenById(mockRequest as Request, mockResponse as Response, nextFunction)).rejects.toThrow(
+      "Token has expired."
+    )
   })
 })
