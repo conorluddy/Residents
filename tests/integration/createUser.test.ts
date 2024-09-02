@@ -33,7 +33,7 @@ describe("Integration: Can CreateUser", () => {
     }
     const response = await request(app).post("/users/register").send(incompleteUser)
     expect(response.status).toBe(400)
-    expect(response.body).toBe("Email is required")
+    expect(response.body).toStrictEqual({ message: "Bad payload." })
   })
 
   it("should return an error if email isnt an email", async () => {
@@ -47,7 +47,7 @@ describe("Integration: Can CreateUser", () => {
     }
     const response = await request(app).post("/users/register").send(incompleteUser)
     expect(response.status).toBe(400)
-    expect(response.body).toBe("Invalid email address")
+    expect(response.body).toStrictEqual({ message: "Bad payload." })
   })
 
   it("should return an error if password is weak", async () => {

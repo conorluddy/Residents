@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express"
-import validateUserMeta from "./userMeta"
+import validateUserMeta from "./validateUserMeta"
 
 describe("Middleware: validateUserMeta", () => {
   let mockRequest: Partial<Request>
@@ -22,7 +22,6 @@ describe("Middleware: validateUserMeta", () => {
   })
 
   it("should return 400 if the request body is missing", async () => {
-    validateUserMeta(mockRequest as Request, mockResponse as Response, nextFunction)
     await expect(validateUserMeta(mockRequest as Request, mockResponse as Response, nextFunction)).rejects.toThrow(
       "Invalid data provided."
     )

@@ -10,7 +10,7 @@ const validUserMetaKeys: ValidMutableMetaProps[] = [
   // List other mutable metadata keys here
 ]
 
-const userMeta: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
+const validateUserMeta: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
   const updateUserMetaPayload = req.body
 
   // Ensure the payload is an object
@@ -27,4 +27,4 @@ const userMeta: RequestHandler = async (req: Request, res: Response, next: NextF
   next()
 }
 
-export default userMeta
+export default validateUserMeta

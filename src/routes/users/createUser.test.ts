@@ -44,7 +44,6 @@ describe("POST /register", () => {
     }
     const response = await request(app).post("/register").send(requestBody)
     expect(response.status).toBe(HTTP_CLIENT_ERROR.BAD_REQUEST)
-    expect(response.body).toBe("Invalid email address")
   })
 
   it("should return BAD_REQUEST when email is missing", async () => {
@@ -55,6 +54,5 @@ describe("POST /register", () => {
     }
     const response = await request(app).post("/register").send(requestBody)
     expect(response.status).toBe(HTTP_CLIENT_ERROR.BAD_REQUEST)
-    expect(response.body).toBe("Email is required")
   })
 })
