@@ -1,36 +1,23 @@
 import jwt from "jsonwebtoken"
 import { Request, Response, NextFunction } from "express"
-import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from "../../constants/http"
-import { logger } from "../../utils/logger"
 import { JWT_TOKEN_SECRET } from "../../config"
 import TYPEGUARD from "../../types/typeguards"
 import { REQUEST_USER } from "../../types/requestSymbols"
+import { InternalServerError, UnauthorizedError } from "../../errors"
 
 export const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers["authorization"]
-  const token = authHeader && authHeader.split(" ")[1] // Bearer[ ]TOKEN...
+  const token = authHeader && authHeader.split(" ")[1]
   const secret = JWT_TOKEN_SECRET
 
-  if (!token) {
-    logger.warn("JWT token is not provided in the request headers")
-    return res.status(HTTP_CLIENT_ERROR.UNAUTHORIZED).json({ message: "Token is required" })
-  }
+  if (!token) throw new UnauthorizedError("JWT token is not provided in the request headers.")
 
-  if (!secret || secret === "") {
-    logger.warn("JWT token secret is not defined in your environment variables")
-    return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Internal server error" })
-  }
+  if (!secret || secret === "")
+    throw new InternalServerError("JWT token secret is not defined in your environment variables.")
 
   jwt.verify(token, secret, (err, user) => {
-    if (err) {
-      logger.warn("JWT token is invalid or expired")
-      return res.status(HTTP_CLIENT_ERROR.UNAUTHORIZED).json({ message: "Token is invalid or expired" })
-    }
-    if (!TYPEGUARD.isJwtUser(user)) {
-      logger.warn("JWT contains invalid user data:", JSON.stringify(user, null, 2))
-      return res.status(HTTP_CLIENT_ERROR.UNAUTHORIZED).json({ message: "Token is invalid" })
-    }
-
+    if (err) throw new UnauthorizedError("Token is invalid or expired.")
+    if (!TYPEGUARD.isJwtUser(user)) throw new UnauthorizedError("JWT contains invalid user data.")
     req[REQUEST_USER] = user
     next()
   })
