@@ -9,7 +9,7 @@ router.patch(
   "/:id",
   authenticateToken,
   RBAC.checkCanUpdateUsers,
-  RBAC.getTargetUserAndCheckSuperiority,
+  RBAC.getTargetUserAndEnsureSuperiority,
   CONTROLLERS.USER.updateUser
 )
 

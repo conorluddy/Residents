@@ -12,7 +12,7 @@ export const deleteUser = async (req: Request, res: Response, next: NextFunction
   const { id } = req.params
   // The targetUserId is the same ID of the user to be deleted, but will
   // only exist on the request if it has been validated by the middleware
-  // getTargetUserAndCheckSuperiority fn
+  // getTargetUserAndEnsureSuperiority fn
   const targetUserId = req[REQUEST_TARGET_USER_ID]
 
   if (!id || !targetUserId) throw new BadRequestError("User ID is missing.")
