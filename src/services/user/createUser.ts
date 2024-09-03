@@ -4,10 +4,8 @@ import { NewUser, tableUserMeta, tableUsers, User } from "../../db/schema"
 import { logger } from "../../utils/logger"
 import { PASSWORD_STRENGTH_CONFIG } from "../../constants/password"
 import { createHash } from "../../utils/crypt"
-import { ROLES } from "../../constants/database"
 import { Meta } from "../../db/types"
-import { EmailError, ValidationError } from "../../utils/errors"
-import { PasswordStrengthError } from "../../errors"
+import { EmailError, PasswordStrengthError, ValidationError } from "../../errors"
 
 /**
  * createUser - Service to create a new user.

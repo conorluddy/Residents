@@ -5,7 +5,7 @@ import { logger } from "../../utils/logger"
 import { UserUpdate } from "../../db/types"
 import { isEmail, isStrongPassword, normalizeEmail } from "validator"
 import { PASSWORD_STRENGTH_CONFIG } from "../../constants/password"
-import { PasswordError } from "../../utils/errors"
+import { PasswordStrengthError } from "../../errors"
 
 interface Params {
   userId: string
@@ -42,7 +42,7 @@ const updateUser = async ({ userId, username, firstName, lastName, email, passwo
       throw new Error("At least one property must be provided for update.")
 
     if (updatedUserProperties.password && !isStrongPassword(updatedUserProperties.password, PASSWORD_STRENGTH_CONFIG))
-      throw new PasswordError("Password not strong enough, try harder.")
+      throw new PasswordStrengthError("Password not strong enough, try harder.")
 
     const [{ updatedUserId }] = await db
       .update(tableUsers)
