@@ -1,10 +1,10 @@
 import { Request, Response } from "express"
 import { TOKEN_TYPE } from "../../constants/database"
-import { HTTP_CLIENT_ERROR } from "../../constants/http"
 import { Token } from "../../db/types"
 import { REQUEST_TOKEN } from "../../types/requestSymbols"
-import { logger } from "../../utils/logger"
 import discardToken from "./discardToken"
+import { ForbiddenError } from "../../errors"
+import SERVICES from "../../services"
 
 let testToken: Token = {
   id: "XXX",
@@ -37,25 +37,25 @@ describe("Middleware: discardToken", () => {
     jest.clearAllMocks()
   })
 
-  it("Successfully marks a token as used if valid", async () => {
+  it("Successfully deletes a token", async () => {
     await discardToken(mockRequest as Request, mockResponse as Response, nextFunction)
-    // expect(db.update).toHaveBeenCalled()
+    expect(SERVICES.deleteToken).toHaveBeenCalled()
     expect(nextFunction).toHaveBeenCalled()
   })
 
   it("returns a 403 if missing token in request", async () => {
     mockRequest[REQUEST_TOKEN] = undefined as unknown as Token
-    await discardToken(mockRequest as Request, mockResponse as Response, nextFunction)
-    expect(logger.error).toHaveBeenCalledWith("Missing token in discardToken middleware")
-    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: "Token invalid" })
+    await expect(() => discardToken(mockRequest as Request, mockResponse as Response, nextFunction)).rejects.toThrow(
+      new ForbiddenError("Missing token in discardToken middleware.")
+    )
+    expect(nextFunction).not.toHaveBeenCalled()
   })
 
   it("returns a 403 if missing token in request", async () => {
     mockRequest = { [REQUEST_TOKEN]: { ...testToken, id: "YYY" } }
-    await discardToken(mockRequest as Request, mockResponse as Response, nextFunction)
-    expect(logger.error).toHaveBeenCalledWith("Error expiring token ID: YYY")
-    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: "Token invalid" })
+    await expect(() => discardToken(mockRequest as Request, mockResponse as Response, nextFunction)).rejects.toThrow(
+      new ForbiddenError("Error expiring token ID: YYY")
+    )
+    expect(nextFunction).not.toHaveBeenCalled()
   })
 })
