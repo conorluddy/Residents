@@ -7,6 +7,7 @@ import {
   REQUEST_TOKEN_ID,
   REQUEST_EMAIL,
   REQUEST_DB,
+  REQUEST_TARGET_USER,
   REQUEST_TARGET_USER_ID,
 } from "../types/requestSymbols"
 
@@ -17,6 +18,7 @@ declare module "express-serve-static-core" {
     [REQUEST_TOKEN_ID]?: string
     [REQUEST_TOKEN]?: Token | null
     [REQUEST_USER]?: SafeUser | null
+    [REQUEST_TARGET_USER]?: SafeUser | null
     [REQUEST_TARGET_USER_ID]?: string
     [REQUEST_EMAIL]?: string | null
     [REQUEST_DB]: NodePgDatabase<Record<string, never>>

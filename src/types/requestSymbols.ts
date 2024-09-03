@@ -1,4 +1,5 @@
 export const REQUEST_USER = Symbol("User")
+export const REQUEST_TARGET_USER = Symbol("TargetedUser")
 export const REQUEST_TARGET_USER_ID = Symbol("TargetedUserId")
 export const REQUEST_TOKEN = Symbol("Token")
 export const REQUEST_TOKEN_ID = Symbol("TokenID")

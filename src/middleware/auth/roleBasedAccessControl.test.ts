@@ -1,27 +1,21 @@
 import { NextFunction, Request, Response } from "express"
-import { ROLES } from "../../constants/database"
-import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from "../../constants/http"
+import { ROLES, STATUS } from "../../constants/database"
 import { PublicUser, SafeUser } from "../../db/types"
 import { makeAFakeSafeUser, makeAFakeUser } from "../../test-utils/mockUsers"
 import { REQUEST_USER } from "../../types/requestSymbols"
 import RBAC from "./roleBasedAccessControl"
+import { BadRequestError, ForbiddenError } from "../../errors"
 
-jest.mock("../../utils/logger")
-jest.mock("../../db", () => ({
-  // Move this to own mocks file
-  select: jest.fn().mockReturnValue({
-    from: jest.fn().mockReturnValue({
-      where: jest
-        .fn()
-        .mockResolvedValueOnce([makeAFakeUser({ role: ROLES.DEFAULT })])
-        .mockResolvedValueOnce([makeAFakeUser({ role: ROLES.DEFAULT })])
-        .mockResolvedValueOnce([makeAFakeUser({ role: ROLES.ADMIN })])
-        .mockResolvedValueOnce([makeAFakeUser({ role: ROLES.ADMIN })])
-        .mockResolvedValueOnce([makeAFakeUser({ role: ROLES.LOCKED })])
-        .mockResolvedValueOnce([makeAFakeUser({ role: ROLES.LOCKED })])
-        .mockResolvedValueOnce([{}]),
-    }),
-  }),
+jest.mock("../../services/index", () => ({
+  getUserByID: jest
+    .fn()
+    .mockResolvedValueOnce(makeAFakeUser({ role: ROLES.DEFAULT, status: STATUS.VERIFIED, username: "1" }))
+    .mockResolvedValueOnce(makeAFakeUser({ role: ROLES.DEFAULT, status: STATUS.VERIFIED, username: "2" }))
+    .mockResolvedValueOnce(makeAFakeUser({ role: ROLES.ADMIN, status: STATUS.VERIFIED, username: "3" }))
+    .mockResolvedValueOnce(makeAFakeUser({ role: ROLES.ADMIN, status: STATUS.VERIFIED, username: "4" }))
+    .mockResolvedValueOnce(makeAFakeUser({ role: ROLES.LOCKED, status: STATUS.VERIFIED, username: "5" }))
+    .mockResolvedValueOnce(makeAFakeUser({ role: ROLES.LOCKED, status: STATUS.VERIFIED, username: "6" }))
+    .mockResolvedValueOnce({}),
 }))
 
 describe("Middleware:RBAC:checkPermission", () => {
@@ -31,15 +25,15 @@ describe("Middleware:RBAC:checkPermission", () => {
   let mockAdminUser: SafeUser
   let mockDefaultUser: SafeUser
   let mockLockedUser: SafeUser
+  let mockBannedUser: SafeUser
   let mockDeletedAdminUser: SafeUser
-  let mockDeletedDefaultUser: SafeUser
 
   beforeAll(() => {
     mockAdminUser = makeAFakeSafeUser({ role: ROLES.ADMIN })
     mockDefaultUser = makeAFakeSafeUser({ role: ROLES.DEFAULT })
     mockLockedUser = makeAFakeSafeUser({ role: ROLES.LOCKED })
+    mockBannedUser = makeAFakeSafeUser({ status: STATUS.BANNED })
     mockDeletedAdminUser = makeAFakeSafeUser({ role: ROLES.ADMIN, deletedAt: new Date() })
-    mockDeletedDefaultUser = makeAFakeSafeUser({ role: ROLES.DEFAULT, deletedAt: new Date() })
   })
 
   beforeEach(() => {
@@ -55,10 +49,10 @@ describe("Middleware:RBAC:checkPermission", () => {
 
   it("should return early if there's no User data provided", () => {
     mockRequest[REQUEST_USER] = null as unknown as SafeUser
-    RBAC.checkCanGetUsers(mockRequest as Request, mockResponse as Response, nextFunction)
+    expect(() => RBAC.checkCanGetUsers(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
+      new BadRequestError("User data is missing.")
+    )
     expect(nextFunction).not.toHaveBeenCalled()
-    expect(mockResponse.status).toHaveBeenCalled()
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: "Forbidden" })
   })
 
   it("should call next function if the user has the required permission", () => {
@@ -68,11 +62,11 @@ describe("Middleware:RBAC:checkPermission", () => {
     expect(mockResponse.status).not.toHaveBeenCalled()
   })
 
-  it("should return 403 if the user lacks the required permission", () => {
+  it("should return 403 if the user lacks the required permission", async () => {
     mockRequest[REQUEST_USER] = mockDefaultUser
-    RBAC.checkCanGetUsers(mockRequest as Request, mockResponse as Response, nextFunction)
-    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: "Forbidden" })
+    expect(() => RBAC.checkCanGetUsers(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
+      new ForbiddenError("User cant perform this action.")
+    )
     expect(nextFunction).not.toHaveBeenCalled()
   })
 
@@ -133,229 +127,209 @@ describe("Middleware:RBAC:checkPermission", () => {
     it("can UPDATE OWN/SELF profile (probably same as user update tbh)", () => {
       mockRequest[REQUEST_USER] = mockDefaultUser
       RBAC.checkCanUpdateOwnProfile(mockRequest as Request, mockResponse as Response, nextFunction)
-      expect(nextFunction).toHaveBeenCalled()
     })
-    it("can't CREATE users", () => {
+    it("can't CREATE users", async () => {
       mockRequest[REQUEST_USER] = mockDefaultUser
-      RBAC.checkCanCreateUsers(mockRequest as Request, mockResponse as Response, nextFunction)
-      expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)
-      expect(mockResponse.json).toHaveBeenCalledWith({ message: "Forbidden" })
-      expect(nextFunction).not.toHaveBeenCalled()
+      expect(() => RBAC.checkCanCreateUsers(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
+        new ForbiddenError(`User cant perform this action.`)
+      )
     })
-    it("can't GET users", () => {
+    it("can't GET users", async () => {
       mockRequest[REQUEST_USER] = mockDefaultUser
-      RBAC.checkCanGetUsers(mockRequest as Request, mockResponse as Response, nextFunction)
-      expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)
-      expect(mockResponse.json).toHaveBeenCalledWith({ message: "Forbidden" })
-      expect(nextFunction).not.toHaveBeenCalled()
+      expect(() => RBAC.checkCanGetUsers(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
+        new ForbiddenError(`User cant perform this action.`)
+      )
     })
 
-    it("can't UPDATE users", () => {
+    it("can't UPDATE users", async () => {
       mockRequest[REQUEST_USER] = mockDefaultUser
-      RBAC.checkCanUpdateUsers(mockRequest as Request, mockResponse as Response, nextFunction)
-      expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)
-      expect(mockResponse.json).toHaveBeenCalledWith({ message: "Forbidden" })
-      expect(nextFunction).not.toHaveBeenCalled()
+      expect(() => RBAC.checkCanUpdateUsers(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
+        new ForbiddenError(`User cant perform this action.`)
+      )
     })
-    it("can't UPDATE other users status", () => {
+    it("can't UPDATE other users status", async () => {
       mockRequest[REQUEST_USER] = mockDefaultUser
-      RBAC.checkCanUpdateAnyUserStatus(mockRequest as Request, mockResponse as Response, nextFunction)
-      expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)
-      expect(mockResponse.json).toHaveBeenCalledWith({ message: "Forbidden" })
-      expect(nextFunction).not.toHaveBeenCalled()
+      expect(() =>
+        RBAC.checkCanUpdateAnyUserStatus(mockRequest as Request, mockResponse as Response, nextFunction)
+      ).toThrow(new ForbiddenError(`User cant perform this action.`))
     })
 
-    it("can't DELETE users", () => {
+    it("can't DELETE users", async () => {
       mockRequest[REQUEST_USER] = mockDefaultUser
-      RBAC.checkCanDeleteUsers(mockRequest as Request, mockResponse as Response, nextFunction)
-      expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)
-      expect(mockResponse.json).toHaveBeenCalledWith({ message: "Forbidden" })
-      expect(nextFunction).not.toHaveBeenCalled()
+      expect(() => RBAC.checkCanDeleteUsers(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
+        new ForbiddenError(`User cant perform this action.`)
+      )
     })
   })
 
   describe("Users with LOCKED role", () => {
-    it("can GET OWN/SELF user", () => {
-      mockRequest[REQUEST_USER] = mockLockedUser
-      RBAC.checkCanGetOwnUser(mockRequest as Request, mockResponse as Response, nextFunction)
-      expect(nextFunction).toHaveBeenCalled()
-    })
-    it("can't UPDATE OWN/SELF user", () => {
-      mockRequest[REQUEST_USER] = mockLockedUser
-      RBAC.checkCanUpdateOwnUser(mockRequest as Request, mockResponse as Response, nextFunction)
-      expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)
-      expect(mockResponse.json).toHaveBeenCalledWith({ message: "Forbidden" })
+    beforeEach(() => (mockRequest[REQUEST_USER] = mockLockedUser))
+    it("can't GET OWN/SELF user", async () => {
+      // TODO: Probably need to return limited data to them
+      expect(() => RBAC.checkCanUpdateOwnUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
+        new ForbiddenError(`User account is locked.`)
+      )
       expect(nextFunction).not.toHaveBeenCalled()
     })
-    it("can't CREATE users", () => {
-      mockRequest[REQUEST_USER] = mockLockedUser
-      RBAC.checkCanCreateUsers(mockRequest as Request, mockResponse as Response, nextFunction)
-      expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)
-      expect(mockResponse.json).toHaveBeenCalledWith({ message: "Forbidden" })
+    it("can't UPDATE OWN/SELF user", async () => {
+      expect(() => RBAC.checkCanUpdateOwnUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
+        new ForbiddenError(`User account is locked.`)
+      )
       expect(nextFunction).not.toHaveBeenCalled()
     })
-    it("can't GET users", () => {
-      mockRequest[REQUEST_USER] = mockLockedUser
-      RBAC.checkCanGetUsers(mockRequest as Request, mockResponse as Response, nextFunction)
-      expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)
-      expect(mockResponse.json).toHaveBeenCalledWith({ message: "Forbidden" })
+    it("can't CREATE users if account is banned", async () => {
+      expect(() => RBAC.checkCanCreateUsers(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
+        new ForbiddenError(`User account is locked.`)
+      )
       expect(nextFunction).not.toHaveBeenCalled()
     })
-
-    it("can't UPDATE users", () => {
-      mockRequest[REQUEST_USER] = mockLockedUser
-      RBAC.checkCanUpdateUsers(mockRequest as Request, mockResponse as Response, nextFunction)
-      expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)
-      expect(mockResponse.json).toHaveBeenCalledWith({ message: "Forbidden" })
+    it("can't GET users", async () => {
+      expect(() => RBAC.checkCanGetUsers(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
+        new ForbiddenError(`User account is locked.`)
+      )
       expect(nextFunction).not.toHaveBeenCalled()
     })
 
-    it("can't DELETE users", () => {
-      mockRequest[REQUEST_USER] = mockLockedUser
-      RBAC.checkCanDeleteUsers(mockRequest as Request, mockResponse as Response, nextFunction)
-      expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)
-      expect(mockResponse.json).toHaveBeenCalledWith({ message: "Forbidden" })
+    it("can't UPDATE users", async () => {
+      expect(() => RBAC.checkCanUpdateUsers(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
+        new ForbiddenError(`User account is locked.`)
+      )
+      expect(nextFunction).not.toHaveBeenCalled()
+    })
+
+    it("can't DELETE users", async () => {
+      expect(() => RBAC.checkCanDeleteUsers(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
+        new ForbiddenError(`User account is locked.`)
+      )
       expect(nextFunction).not.toHaveBeenCalled()
     })
   })
 
-  describe("Users with LOCKED role", () => {
-    it("can GET OWN/SELF user", () => {
-      mockRequest[REQUEST_USER] = mockLockedUser
-      RBAC.checkCanGetOwnUser(mockRequest as Request, mockResponse as Response, nextFunction)
-      expect(nextFunction).toHaveBeenCalled()
+  describe("Users with BANNED status", () => {
+    beforeEach(() => (mockRequest[REQUEST_USER] = mockBannedUser))
+    it("can't GET OWN/SELF user", async () => {
+      // TODO: Probably need to return limited data to them
+      expect(() => RBAC.checkCanGetOwnUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
+        new ForbiddenError(`User account is banned.`)
+      )
+      expect(nextFunction).not.toHaveBeenCalled()
     })
     it("can't UPDATE OWN/SELF user", () => {
-      mockRequest[REQUEST_USER] = mockLockedUser
-      RBAC.checkCanUpdateOwnUser(mockRequest as Request, mockResponse as Response, nextFunction)
-      expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)
-      expect(mockResponse.json).toHaveBeenCalledWith({ message: "Forbidden" })
+      expect(() => RBAC.checkCanUpdateOwnUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
+        new ForbiddenError(`User account is banned.`)
+      )
       expect(nextFunction).not.toHaveBeenCalled()
     })
     it("can't CREATE users", () => {
-      mockRequest[REQUEST_USER] = mockLockedUser
-      RBAC.checkCanCreateUsers(mockRequest as Request, mockResponse as Response, nextFunction)
-      expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)
-      expect(mockResponse.json).toHaveBeenCalledWith({ message: "Forbidden" })
+      expect(() => RBAC.checkCanCreateUsers(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
+        new ForbiddenError(`User account is banned.`)
+      )
       expect(nextFunction).not.toHaveBeenCalled()
     })
     it("can't GET users", () => {
-      mockRequest[REQUEST_USER] = mockLockedUser
-      RBAC.checkCanGetUsers(mockRequest as Request, mockResponse as Response, nextFunction)
-      expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)
-      expect(mockResponse.json).toHaveBeenCalledWith({ message: "Forbidden" })
+      expect(() => RBAC.checkCanGetUsers(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
+        new ForbiddenError(`User account is banned.`)
+      )
       expect(nextFunction).not.toHaveBeenCalled()
     })
 
     it("can't UPDATE users", () => {
-      mockRequest[REQUEST_USER] = mockLockedUser
-      RBAC.checkCanUpdateUsers(mockRequest as Request, mockResponse as Response, nextFunction)
-      expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)
-      expect(mockResponse.json).toHaveBeenCalledWith({ message: "Forbidden" })
+      expect(() => RBAC.checkCanUpdateUsers(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
+        new ForbiddenError(`User account is banned.`)
+      )
       expect(nextFunction).not.toHaveBeenCalled()
     })
 
     it("can't DELETE users", () => {
-      mockRequest[REQUEST_USER] = mockLockedUser
-      RBAC.checkCanDeleteUsers(mockRequest as Request, mockResponse as Response, nextFunction)
-      expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)
-      expect(mockResponse.json).toHaveBeenCalledWith({ message: "Forbidden" })
+      expect(() => RBAC.checkCanDeleteUsers(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
+        new ForbiddenError(`User account is banned.`)
+      )
       expect(nextFunction).not.toHaveBeenCalled()
     })
   })
 
   describe("DELETED Users", () => {
+    beforeEach(() => (mockRequest[REQUEST_USER] = mockDeletedAdminUser))
     it("can't GET OWN/SELF user", () => {
-      mockRequest[REQUEST_USER] = mockDeletedDefaultUser
-      RBAC.checkCanGetOwnUser(mockRequest as Request, mockResponse as Response, nextFunction)
-      expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)
-      expect(mockResponse.json).toHaveBeenCalledWith({ message: "Forbidden" })
+      expect(() => RBAC.checkCanGetOwnUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
+        new ForbiddenError(`User was deleted.`)
+      )
       expect(nextFunction).not.toHaveBeenCalled()
     })
     it("can't UPDATE OWN/SELF user", () => {
-      mockRequest[REQUEST_USER] = mockDeletedDefaultUser
-      RBAC.checkCanUpdateOwnUser(mockRequest as Request, mockResponse as Response, nextFunction)
-      expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)
-      expect(mockResponse.json).toHaveBeenCalledWith({ message: "Forbidden" })
+      expect(() => RBAC.checkCanUpdateOwnUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
+        new ForbiddenError(`User was deleted.`)
+      )
       expect(nextFunction).not.toHaveBeenCalled()
     })
     it("can't CREATE users", () => {
-      mockRequest[REQUEST_USER] = mockDeletedDefaultUser
-      RBAC.checkCanCreateUsers(mockRequest as Request, mockResponse as Response, nextFunction)
-      expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)
-      expect(mockResponse.json).toHaveBeenCalledWith({ message: "Forbidden" })
+      expect(() => RBAC.checkCanCreateUsers(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
+        new ForbiddenError(`User was deleted.`)
+      )
       expect(nextFunction).not.toHaveBeenCalled()
     })
     it("can't GET users", () => {
-      mockRequest[REQUEST_USER] = mockDeletedDefaultUser
-      RBAC.checkCanGetUsers(mockRequest as Request, mockResponse as Response, nextFunction)
-      expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)
-      expect(mockResponse.json).toHaveBeenCalledWith({ message: "Forbidden" })
+      expect(() => RBAC.checkCanGetUsers(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
+        new ForbiddenError(`User was deleted.`)
+      )
       expect(nextFunction).not.toHaveBeenCalled()
     })
     it("can't UPDATE users", () => {
-      mockRequest[REQUEST_USER] = mockDeletedDefaultUser
-      RBAC.checkCanUpdateUsers(mockRequest as Request, mockResponse as Response, nextFunction)
-      expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)
-      expect(mockResponse.json).toHaveBeenCalledWith({ message: "Forbidden" })
+      expect(() => RBAC.checkCanUpdateUsers(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
+        new ForbiddenError(`User was deleted.`)
+      )
       expect(nextFunction).not.toHaveBeenCalled()
     })
     it("can't DELETE users", () => {
-      mockRequest[REQUEST_USER] = mockDeletedDefaultUser
-      RBAC.checkCanDeleteUsers(mockRequest as Request, mockResponse as Response, nextFunction)
-      expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)
-      expect(mockResponse.json).toHaveBeenCalledWith({ message: "Forbidden" })
+      expect(() => RBAC.checkCanDeleteUsers(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
+        new ForbiddenError(`User was deleted.`)
+      )
       expect(nextFunction).not.toHaveBeenCalled()
     })
   })
 
   describe("DELETED ADMIN Users", () => {
+    beforeEach(() => (mockRequest[REQUEST_USER] = mockDeletedAdminUser))
     it("can't GET OWN/SELF user", () => {
-      mockRequest[REQUEST_USER] = mockDeletedAdminUser
-      RBAC.checkCanGetOwnUser(mockRequest as Request, mockResponse as Response, nextFunction)
-      expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)
-      expect(mockResponse.json).toHaveBeenCalledWith({ message: "Forbidden" })
+      expect(() => RBAC.checkCanGetOwnUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
+        new ForbiddenError(`User was deleted.`)
+      )
       expect(nextFunction).not.toHaveBeenCalled()
     })
     it("can't UPDATE OWN/SELF user", () => {
-      mockRequest[REQUEST_USER] = mockDeletedAdminUser
-      RBAC.checkCanUpdateOwnUser(mockRequest as Request, mockResponse as Response, nextFunction)
-      expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)
-      expect(mockResponse.json).toHaveBeenCalledWith({ message: "Forbidden" })
+      expect(() => RBAC.checkCanUpdateOwnUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
+        new ForbiddenError(`User was deleted.`)
+      )
       expect(nextFunction).not.toHaveBeenCalled()
     })
     it("can't CREATE users", () => {
-      mockRequest[REQUEST_USER] = mockDeletedAdminUser
-      RBAC.checkCanCreateUsers(mockRequest as Request, mockResponse as Response, nextFunction)
-      expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)
-      expect(mockResponse.json).toHaveBeenCalledWith({ message: "Forbidden" })
+      expect(() => RBAC.checkCanCreateUsers(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
+        new ForbiddenError(`User was deleted.`)
+      )
       expect(nextFunction).not.toHaveBeenCalled()
     })
     it("can't GET users", () => {
-      mockRequest[REQUEST_USER] = mockDeletedAdminUser
-      RBAC.checkCanGetUsers(mockRequest as Request, mockResponse as Response, nextFunction)
-      expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)
-      expect(mockResponse.json).toHaveBeenCalledWith({ message: "Forbidden" })
+      expect(() => RBAC.checkCanGetUsers(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
+        new ForbiddenError(`User was deleted.`)
+      )
       expect(nextFunction).not.toHaveBeenCalled()
     })
     it("can't UPDATE users", () => {
-      mockRequest[REQUEST_USER] = mockDeletedAdminUser
-      RBAC.checkCanUpdateUsers(mockRequest as Request, mockResponse as Response, nextFunction)
-      expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)
-      expect(mockResponse.json).toHaveBeenCalledWith({ message: "Forbidden" })
+      expect(() => RBAC.checkCanUpdateUsers(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
+        new ForbiddenError(`User was deleted.`)
+      )
       expect(nextFunction).not.toHaveBeenCalled()
     })
     it("can't DELETE users", () => {
-      mockRequest[REQUEST_USER] = mockDeletedAdminUser
-      RBAC.checkCanDeleteUsers(mockRequest as Request, mockResponse as Response, nextFunction)
-      expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.FORBIDDEN)
-      expect(mockResponse.json).toHaveBeenCalledWith({ message: "Forbidden" })
+      expect(() => RBAC.checkCanDeleteUsers(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
+        new ForbiddenError(`User was deleted.`)
+      )
       expect(nextFunction).not.toHaveBeenCalled()
     })
   })
 })
 
-describe("Middleware:RBAC:getTargetUserAndCheckSuperiority", () => {
+describe("Middleware:RBAC:getTargetUserAndEnsureSuperiority", () => {
   let mockRequest: Partial<Request>
   let mockResponse: Partial<Response>
   let nextFunction: NextFunction
@@ -364,27 +338,20 @@ describe("Middleware:RBAC:getTargetUserAndCheckSuperiority", () => {
   let mockLockedUser: SafeUser
   let mockDeletedAdminUser: SafeUser
   let mockUserNoRole: SafeUser
-  // let mockDeletedDefaultUser: Partial<User>
-  // let mockOwnerUser: Partial<User>
-  // let mockModeratorUser: Partial<User>
 
   beforeAll(() => {
-    mockAdminUser = makeAFakeUser({ role: ROLES.ADMIN })
-    mockDefaultUser = makeAFakeUser({ role: ROLES.DEFAULT })
+    mockAdminUser = makeAFakeUser({ role: ROLES.ADMIN, status: STATUS.VERIFIED })
+    mockDefaultUser = makeAFakeUser({ role: ROLES.DEFAULT, status: STATUS.VERIFIED })
     mockLockedUser = makeAFakeUser({ role: ROLES.LOCKED })
     mockDeletedAdminUser = makeAFakeUser({ role: ROLES.ADMIN, deletedAt: new Date() })
-    // mockDeletedDefaultUser = makeAFakeUser({ role: ROLES.DEFAULT, deletedAt: new Date() })
-    // mockOwnerUser = makeAFakeUser({ role: ROLES.OWNER })
-    // mockModeratorUser = makeAFakeUser({ role: ROLES.MODERATOR })
-
-    mockUserNoRole = makeAFakeUser({ role: ROLES.DEFAULT })
+    mockUserNoRole = makeAFakeUser({ status: STATUS.VERIFIED })
     mockUserNoRole.role = undefined as unknown as ROLES
   })
 
   beforeEach(() => {
     mockRequest = {
       user: { role: ROLES.ADMIN, id: "TestUser" },
-      params: { id: "TestUserTargetID", role: ROLES.DEFAULT },
+      params: { id: "TestUserTargetID" },
     }
     mockResponse = {
       status: jest.fn().mockReturnThis(),
@@ -395,77 +362,78 @@ describe("Middleware:RBAC:getTargetUserAndCheckSuperiority", () => {
 
   it("Happy path: User has more seniority than target, next() is called", async () => {
     mockRequest[REQUEST_USER] = mockAdminUser
-    await RBAC.getTargetUserAndCheckSuperiority(mockRequest as Request, mockResponse as Response, nextFunction)
+    await RBAC.getTargetUserAndEnsureSuperiority(mockRequest as Request, mockResponse as Response, nextFunction)
+
     expect(nextFunction).toHaveBeenCalled()
   })
 
   it("should return early if the Role isnt legit", async () => {
     mockRequest[REQUEST_USER] = { ...mockAdminUser, role: "FAKE_ROLE" as ROLES }
-    await RBAC.getTargetUserAndCheckSuperiority(mockRequest as Request, mockResponse as Response, nextFunction)
-    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR)
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: "Roles not found." })
+    await expect(() =>
+      RBAC.getTargetUserAndEnsureSuperiority(mockRequest as Request, mockResponse as Response, nextFunction)
+    ).rejects.toThrow(new ForbiddenError(`Invalid user role.`))
     expect(nextFunction).not.toHaveBeenCalled()
   })
 
   it("should return early if there's no User data provided", async () => {
     mockRequest[REQUEST_USER] = undefined
-    await RBAC.getTargetUserAndCheckSuperiority(mockRequest as Request, mockResponse as Response, nextFunction)
-    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.BAD_REQUEST)
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: "Missing User data." })
+    await expect(() =>
+      RBAC.getTargetUserAndEnsureSuperiority(mockRequest as Request, mockResponse as Response, nextFunction)
+    ).rejects.toThrow(new ForbiddenError(`Missing User data.`))
     expect(nextFunction).not.toHaveBeenCalled()
   })
 
   it("User has same role as target, forbid action", async () => {
-    mockRequest[REQUEST_USER] = mockAdminUser
-    await RBAC.getTargetUserAndCheckSuperiority(mockRequest as Request, mockResponse as Response, nextFunction)
-    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.UNAUTHORIZED)
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: "Role superiority is required for this operation" })
+    mockRequest[REQUEST_USER] = mockDefaultUser
+    await expect(() =>
+      RBAC.getTargetUserAndEnsureSuperiority(mockRequest as Request, mockResponse as Response, nextFunction)
+    ).rejects.toThrow(new ForbiddenError(`Role superiority is required for this operation.`))
     expect(nextFunction).not.toHaveBeenCalled()
   })
 
   it("User has lower role than target, forbid action", async () => {
     mockRequest[REQUEST_USER] = mockDefaultUser
-    await RBAC.getTargetUserAndCheckSuperiority(mockRequest as Request, mockResponse as Response, nextFunction)
-    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.UNAUTHORIZED)
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: "Role superiority is required for this operation" })
+    await expect(() =>
+      RBAC.getTargetUserAndEnsureSuperiority(mockRequest as Request, mockResponse as Response, nextFunction)
+    ).rejects.toThrow(new ForbiddenError(`Role superiority is required for this operation.`))
     expect(nextFunction).not.toHaveBeenCalled()
   })
 
   it("User role is LOCKED, forbid action", async () => {
     mockRequest[REQUEST_USER] = mockLockedUser
-    await RBAC.getTargetUserAndCheckSuperiority(mockRequest as Request, mockResponse as Response, nextFunction)
-    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.UNAUTHORIZED)
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: "User account is locked" })
+    await expect(() =>
+      RBAC.getTargetUserAndEnsureSuperiority(mockRequest as Request, mockResponse as Response, nextFunction)
+    ).rejects.toThrow(new ForbiddenError(`User account is locked.`))
     expect(nextFunction).not.toHaveBeenCalled()
   })
 
   it("Target User role is LOCKED, can not be mutated by less than Admin", async () => {
     mockRequest[REQUEST_USER] = mockDefaultUser
-    await RBAC.getTargetUserAndCheckSuperiority(mockRequest as Request, mockResponse as Response, nextFunction)
-    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.UNAUTHORIZED)
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: "Target user account is locked" })
+    await expect(() =>
+      RBAC.getTargetUserAndEnsureSuperiority(mockRequest as Request, mockResponse as Response, nextFunction)
+    ).rejects.toThrow(new ForbiddenError(`Role superiority is required for this operation.`))
     expect(nextFunction).not.toHaveBeenCalled()
   })
 
   it("Target User role is LOCKED, can still be mutated by Admin+", async () => {
     mockRequest[REQUEST_USER] = mockAdminUser
-    await RBAC.getTargetUserAndCheckSuperiority(mockRequest as Request, mockResponse as Response, nextFunction)
+    await RBAC.getTargetUserAndEnsureSuperiority(mockRequest as Request, mockResponse as Response, nextFunction)
     expect(nextFunction).toHaveBeenCalled()
   })
 
   it("Admin account in deleted state should be forbidden from acting", async () => {
     mockRequest[REQUEST_USER] = mockDeletedAdminUser
-    await RBAC.getTargetUserAndCheckSuperiority(mockRequest as Request, mockResponse as Response, nextFunction)
-    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.UNAUTHORIZED)
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: "User account is deleted" })
+    await expect(() =>
+      RBAC.getTargetUserAndEnsureSuperiority(mockRequest as Request, mockResponse as Response, nextFunction)
+    ).rejects.toThrow(new ForbiddenError(`User account is deleted.`))
     expect(nextFunction).not.toHaveBeenCalled()
   })
 
   it("If user role is missing, forbid action", async () => {
     mockRequest[REQUEST_USER] = mockUserNoRole
-    await RBAC.getTargetUserAndCheckSuperiority(mockRequest as Request, mockResponse as Response, nextFunction)
-    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.UNAUTHORIZED)
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: "User has no role" })
+    await expect(() =>
+      RBAC.getTargetUserAndEnsureSuperiority(mockRequest as Request, mockResponse as Response, nextFunction)
+    ).rejects.toThrow(new ForbiddenError(`User has no role.`))
     expect(nextFunction).not.toHaveBeenCalled()
   })
 })

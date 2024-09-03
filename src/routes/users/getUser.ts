@@ -9,7 +9,7 @@ router.get(
   "/:id",
   authenticateToken,
   RBAC.checkCanGetUsers,
-  RBAC.getTargetUserAndCheckSuperiority,
+  RBAC.getTargetUserAndEnsureSuperiority,
   CONTROLLERS.USER.getUser
 )
 
