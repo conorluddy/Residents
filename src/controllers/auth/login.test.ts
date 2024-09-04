@@ -61,7 +61,7 @@ describe("Controller: Login", () => {
     mockRequest.body.username = "MrsFake"
     mockRequest.body.password = "testpassword"
     await expect(login(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)).rejects.toThrow(
-      "Nope."
+      "No user found for that username or email."
     )
   })
 
@@ -69,7 +69,7 @@ describe("Controller: Login", () => {
     mockRequest.body.username = "MrFake"
     mockRequest.body.password = "wrongpassword"
     await expect(login(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)).rejects.toThrow(
-      "Nope."
+      "No user found for that username or email."
     )
   })
 
@@ -102,7 +102,7 @@ describe("Controller: Login", () => {
   it("should catch errors", async () => {
     delete mockRequest.cookies
     await expect(login(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)).rejects.toThrow(
-      "Nope."
+      "No user found for that username or email."
     )
   })
 })
