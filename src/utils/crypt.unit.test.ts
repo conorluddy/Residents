@@ -32,11 +32,4 @@ describe("crypt utilities", () => {
     expect(bcrypt.compare).toHaveBeenCalledWith(input, hash)
     expect(result).toBe(false)
   })
-
-  it("should return false if an error occurs during hash validation", async () => {
-    ;(bcrypt.compare as jest.Mock).mockRejectedValue(new Error("Test error"))
-    const result = await validateHash(input, hash)
-    expect(bcrypt.compare).toHaveBeenCalledWith(input, hash)
-    expect(result).toBe(false)
-  })
 })

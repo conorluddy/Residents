@@ -19,6 +19,7 @@ describe.skip("Integration: Owner flow from seeded default owner", () => {
 
   beforeAll(async () => {
     await dbClient.connect()
+    await dbClient.query("BEGIN") // Transaction
     await dbClient.query("DELETE FROM users")
     await seedUserZero("resident")
     await seedUsers(50)
@@ -26,6 +27,7 @@ describe.skip("Integration: Owner flow from seeded default owner", () => {
 
   afterAll(async () => {
     await dbClient.query("DELETE FROM users")
+    await dbClient.query("ROLLBACK") // Rollback the transaction
     await dbClient.end()
   })
 

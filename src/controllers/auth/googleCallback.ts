@@ -1,16 +1,36 @@
 import { NextFunction, Request, Response } from "express"
-import { HTTP_SUCCESS } from "../../constants/http"
-import { REQUEST_USER } from "../../types/requestSymbols"
+import { HTTP_SUCCESS, HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from "../../constants/http"
 import { generateJwtFromUser } from "../../utils/generateJwt"
+import { OAuth2Client } from "google-auth-library"
+import { EmailError, NotFoundError } from "../../errors"
+import SERVICES from "../../services"
+
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
 
 /**
  * googleCallback
  */
 export const googleCallback = async (req: Request, res: Response, next: NextFunction) => {
-  if (!req[REQUEST_USER]) throw new Error("User not found")
-  // TODO: Revalidate before returning token
-  // This isn't secure, you can just fire a made up user at it in the request and get a token.
-  // Probably need to check request for google related stuff and validate that the user is who they say they are.
-  const token = generateJwtFromUser(req[REQUEST_USER])
+  // Verify the Google ID token
+  const ticket = await client.verifyIdToken({
+    idToken: req.body.idToken,
+    audience: process.env.GOOGLE_CLIENT_ID,
+  })
+
+  const payload = ticket.getPayload()
+  if (!payload) {
+    return res.status(HTTP_CLIENT_ERROR.UNAUTHORIZED).json({ error: "Invalid token" })
+  }
+
+  const userId = payload.sub
+
+  if (!payload.email) throw new EmailError("No email found in Google payload")
+
+  const user = await SERVICES.getUserByEmail(payload.email)
+
+  if (!user) throw new NotFoundError("User not found")
+
+  const token = generateJwtFromUser(user)
+
   return res.status(HTTP_SUCCESS.OK).json({ token })
 }
