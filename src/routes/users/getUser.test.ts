@@ -27,7 +27,7 @@ CONTROLLERS.USER.getUser = jest.fn(async (req, res) => {
 })
 
 let fakeUser: SafeUser
-jest.mock("../../services/user/getUser", () => ({
+jest.mock("../../services/user/getUserByID", () => ({
   getUserByID: jest.fn().mockImplementationOnce(async () => {
     fakeUser = await makeAFakeUser({ password: "$TR0ngP@$$W0rDz123!", id: "ABC123" })
     return [fakeUser]

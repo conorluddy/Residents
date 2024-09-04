@@ -1,17 +1,13 @@
+import db from "../../db"
+import { eq } from "drizzle-orm"
 import { tableUsers } from "../../db/schema"
 import { SafeUser } from "../../db/types"
-import db from "../../db"
+import { BadRequestError } from "../../errors"
 
-interface PaginationProps {
-  page: number
-  limit: number
-}
+const getUserByUsername = async (username: string): Promise<SafeUser | null> => {
+  if (!username) throw new BadRequestError("No username provided")
 
-// Hard limit until we have pagination
-const MAX_LIMIT = 1000
-
-const getAllUsers = async ({ page, limit }: PaginationProps = { page: 0, limit: MAX_LIMIT }): Promise<SafeUser[]> => {
-  const users: SafeUser[] = await db
+  const [user] = await db
     .select({
       id: tableUsers.id,
       username: tableUsers.username,
@@ -24,9 +20,9 @@ const getAllUsers = async ({ page, limit }: PaginationProps = { page: 0, limit: 
       deletedAt: tableUsers.deletedAt,
     })
     .from(tableUsers)
-    .limit(MAX_LIMIT)
+    .where(eq(tableUsers.username, username.toLowerCase()))
 
-  return users
+  return user
 }
 
-export { getAllUsers }
+export { getUserByUsername }

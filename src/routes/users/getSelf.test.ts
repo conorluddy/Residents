@@ -7,7 +7,6 @@ import getSelfRoute from "./getSelf"
 import { makeAFakeUser } from "../../test-utils/mockUsers"
 import { generateJwtFromUser } from "../../utils/generateJwt"
 import { REQUEST_USER } from "../../types/requestSymbols"
-import { getUserByID } from "../../services/user/getUser"
 
 let fakeUser = makeAFakeUser({ role: ROLES.DEFAULT })
 

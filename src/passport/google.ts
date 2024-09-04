@@ -6,7 +6,6 @@ import db from "../db"
 import { tableFederatedCredentials } from "../db/schema"
 import { NewUser } from "../db/types"
 import SERVICES from "../services"
-import { getUserByID } from "../services/user/getUser"
 import { logger } from "../utils/logger"
 
 dotenv.config()

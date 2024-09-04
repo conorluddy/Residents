@@ -4,7 +4,6 @@ import { getAllUsers } from "./getAllUsers"
 
 let fakeUser: SafeUser
 
-jest.mock("../../utils/logger")
 jest.mock("../../db", () => ({
   select: jest.fn().mockReturnValue({
     from: jest.fn().mockReturnValue({
