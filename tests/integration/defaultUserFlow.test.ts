@@ -15,11 +15,13 @@ describe("Integration: Default User flow", () => {
 
   beforeAll(async () => {
     await dbClient.connect()
+    await dbClient.query("BEGIN") // Transaction
     await dbClient.query("DELETE FROM users")
   })
 
   afterAll(async () => {
     await dbClient.query("DELETE FROM users")
+    await dbClient.query("ROLLBACK") // Rollback the transaction
     await dbClient.end()
   })
 

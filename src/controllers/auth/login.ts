@@ -4,10 +4,10 @@ import { TOKEN_TYPE } from "../../constants/database"
 import { HTTP_SUCCESS } from "../../constants/http"
 import { TIMESPAN } from "../../constants/time"
 import { User } from "../../db/schema"
-import { BadRequestError, ForbiddenError } from "../../errors"
+import { BadRequestError, ForbiddenError, PasswordError } from "../../errors"
 import generateXsrfToken from "../../middleware/util/xsrfToken"
 import SERVICES from "../../services"
-import { validateHash } from "../../utils/crypt"
+import { createHash, validateHash } from "../../utils/crypt"
 import { generateJwtFromUser } from "../../utils/generateJwt"
 
 /**
@@ -25,13 +25,16 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
   const getUserByUsernameOrEmail = username ? SERVICES.getUserByUsername : SERVICES.getUserByEmail
   const user = await getUserByUsernameOrEmail(username ?? email)
 
-  if (!user) throw new ForbiddenError("Nope.") // Should probably clear any existing auth here
+  if (!user) throw new ForbiddenError("No user found for that username or email.") // Should probably clear any existing auth here
 
   const passwordHash = await SERVICES.getUserPasswordHash(user.id)
 
-  if (!passwordHash) throw new ForbiddenError("Nope.")
+  if (!passwordHash) throw new PasswordError("No password hash found for that username or email.")
 
-  if (!(await validateHash(password, passwordHash))) throw new ForbiddenError("Nope.")
+  const hp = await createHash(password)
+  console.log("Hashed input password:", hp)
+
+  if (!(await validateHash(password, passwordHash))) throw new PasswordError("Incorrect password.")
 
   const refreshTokenId = await SERVICES.createToken({
     userId: user.id,
@@ -39,7 +42,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
     expiry: TIMESPAN.WEEK,
   })
 
-  if (!refreshTokenId) throw new ForbiddenError("Nope.")
+  if (!refreshTokenId) throw new ForbiddenError("Couldnt create refresh token.")
 
   const accessToken = generateJwtFromUser(user)
   const xsrfToken = generateXsrfToken()

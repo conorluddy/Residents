@@ -4,9 +4,15 @@ import { dbClient } from "../../src/db"
 import { ROLES } from "../../src/constants/database"
 
 describe("Integration: Can CreateUser", () => {
-  beforeAll(async () => await dbClient.connect())
+  beforeAll(async () => {
+    await dbClient.connect()
+    await dbClient.query("BEGIN") // Transaction
+  })
   beforeEach(async () => await dbClient.query("DELETE FROM users"))
-  afterAll(async () => await dbClient.end())
+  afterAll(async () => {
+    await dbClient.query("ROLLBACK") // Rollback the transaction
+    await dbClient.end()
+  })
 
   it("should create a new user successfully", async () => {
     const newUser = {

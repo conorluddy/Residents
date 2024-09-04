@@ -3,8 +3,9 @@ import { TOKEN_TYPE } from "../../constants/database"
 import { HTTP_SUCCESS } from "../../constants/http"
 import { NewUser } from "../../db/types"
 import { TIMESPAN } from "../../constants/time"
-import { BadRequestError } from "../../errors"
+import { BadRequestError, EmailError } from "../../errors"
 import SERVICES from "../../services"
+import { isEmail } from "validator"
 
 // For dev - remove before flight
 // import { SENDGRID_TEST_EMAIL } from "../../config"
@@ -17,8 +18,10 @@ import SERVICES from "../../services"
 export const createUser = async ({ body }: Request, res: Response, next: NextFunction) => {
   const { username, firstName, lastName, email, password, role }: NewUser = body
 
-  if (![username, firstName, lastName, email, password, role].every(Boolean))
+  if (![username, firstName, lastName, email, password].every(Boolean))
     throw new BadRequestError("Missing required fields.")
+
+  if (email && !isEmail(email)) throw new EmailError("Invalid email address")
 
   const userId = await SERVICES.createUser({ username, firstName, lastName, email, password, role })
 

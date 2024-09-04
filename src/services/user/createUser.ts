@@ -1,9 +1,8 @@
-import { isEmail, isStrongPassword, normalizeEmail } from "validator"
 import db from "../../db"
-import { NewUser, tableUserMeta, tableUsers, User } from "../../db/schema"
+import { isEmail, isStrongPassword, normalizeEmail } from "validator"
+import { NewUser, tableUsers, User } from "../../db/schema"
 import { PASSWORD_STRENGTH_CONFIG } from "../../constants/password"
 import { createHash } from "../../utils/crypt"
-import { Meta } from "../../db/types"
 import { EmailError, PasswordStrengthError, ValidationError } from "../../errors"
 
 /**
