@@ -16,6 +16,7 @@ import { getUserByEmail } from "./user/getUserByEmail"
 import { getUserById } from "./user/getUserById"
 import { getUserByUsername } from "./user/getUserByUsername"
 import { getUserPasswordHash } from "./user/getUserPasswordHash"
+import { deleteExpiredTokens } from "./auth/deleteExpiredTokens"
 
 const SERVICES = {
   // C
@@ -38,6 +39,7 @@ const SERVICES = {
   updateUserPassword,
   // D
   deleteRefreshToken,
+  deleteExpiredTokens,
   deleteToken,
   deleteUser,
   //

@@ -10,6 +10,7 @@ import googleLogin from "./googleLogin"
 import logout from "./logout"
 import validateAccount from "./validateAccount"
 import MW from "../../middleware"
+import deleteExpiredTokens from "./deleteExpiredTokens"
 
 const router = Router()
 
@@ -25,6 +26,7 @@ router.use(resetPassword)
 router.use(resetPasswordWithToken)
 router.use(validateAccount)
 router.use(refreshToken)
+router.use(deleteExpiredTokens)
 
 // Passport Strategies
 router.use(googleLogin)

@@ -7,7 +7,7 @@ import { User } from "../../db/schema"
 import { BadRequestError, ForbiddenError, PasswordError } from "../../errors"
 import generateXsrfToken from "../../middleware/util/xsrfToken"
 import SERVICES from "../../services"
-import { createHash, validateHash } from "../../utils/crypt"
+import { validateHash } from "../../utils/crypt"
 import { generateJwtFromUser } from "../../utils/generateJwt"
 
 /**
@@ -30,9 +30,6 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
   const passwordHash = await SERVICES.getUserPasswordHash(user.id)
 
   if (!passwordHash) throw new PasswordError("No password hash found for that username or email.")
-
-  const hp = await createHash(password)
-  console.log("Hashed input password:", hp)
 
   if (!(await validateHash(password, passwordHash))) throw new PasswordError("Incorrect password.")
 
