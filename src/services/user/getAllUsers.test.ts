@@ -1,10 +1,9 @@
 import { makeAFakeSafeUser } from "../../test-utils/mockUsers"
-import { SafeUser, User } from "../../db/types"
+import { SafeUser } from "../../db/types"
 import { getAllUsers } from "./getAllUsers"
 
 let fakeUser: SafeUser
 
-jest.mock("../../utils/logger")
 jest.mock("../../db", () => ({
   select: jest.fn().mockReturnValue({
     from: jest.fn().mockReturnValue({

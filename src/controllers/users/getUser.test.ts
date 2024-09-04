@@ -6,8 +6,8 @@ import { getUser } from "./getUser"
 
 let fakeUser: Partial<User>
 
-jest.mock("../../services/user/getUser", () => ({
-  getUserByID: jest
+jest.mock("../../services/user/getUserById", () => ({
+  getUserById: jest
     .fn()
     .mockImplementationOnce(async () => {
       fakeUser = makeAFakeUser({})

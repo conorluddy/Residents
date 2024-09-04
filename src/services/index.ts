@@ -1,7 +1,7 @@
-import { getUserByID, getUserByEmail, getUserByUsername, getUserPasswordHash } from "./user/getUser"
 import { getAllUsers } from "./user/getAllUsers"
 import { createToken } from "./auth/createToken"
-import { createUser, createUserMeta } from "./user/createUser"
+import { createUser } from "./user/createUser"
+import { createUserMeta } from "./user/createUserMeta"
 import { getToken } from "./auth/getToken"
 import { deleteToken } from "./auth/deleteToken"
 import { deleteRefreshToken } from "./auth/deleteRefreshToken"
@@ -12,6 +12,10 @@ import { updateUserPassword } from "./user/updateUserPassword"
 import { updateUserStatus } from "./user/updateUserStatus"
 import { updateUserRole } from "./user/updateUserRole"
 import { deleteUser } from "./user/deleteUser"
+import { getUserByEmail } from "./user/getUserByEmail"
+import { getUserById } from "./user/getUserById"
+import { getUserByUsername } from "./user/getUserByUsername"
+import { getUserPasswordHash } from "./user/getUserPasswordHash"
 
 const SERVICES = {
   // C
@@ -22,7 +26,7 @@ const SERVICES = {
   getAllUsers,
   getToken,
   getUserByEmail,
-  getUserByID,
+  getUserById,
   getUserByUsername,
   getUserPasswordHash,
   getUserCount,

@@ -17,7 +17,7 @@ jest.mock("../../utils/generateJwt", () => ({
 }))
 
 jest.mock("../../services/index", () => ({
-  getUserByID: jest.fn().mockImplementation(async () => mockDefaultUser),
+  getUserById: jest.fn().mockImplementation(async () => mockDefaultUser),
   deleteToken: jest.fn().mockImplementation(async () => "123"),
   createToken: jest.fn().mockImplementation(async () => "tok1"),
   getToken: jest

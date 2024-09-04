@@ -3,11 +3,10 @@ import { isStrongPassword } from "validator"
 import { TOKEN_TYPE } from "../../constants/database"
 import { HTTP_SUCCESS } from "../../constants/http"
 import { PASSWORD_STRENGTH_CONFIG } from "../../constants/password"
-import { ForbiddenError, InternalServerError } from "../../errors"
+import { DatabaseError, PasswordStrengthError, TokenError } from "../../errors"
 import SERVICES from "../../services"
 import { REQUEST_TOKEN } from "../../types/requestSymbols"
 import { createHash } from "../../utils/crypt"
-import { PasswordError } from "../../utils/errors"
 import { logger } from "../../utils/logger"
 
 /**
@@ -21,13 +20,13 @@ export const resetPasswordWithToken = async (req: Request, res: Response, next: 
   // Alternatively here we can generate a temporary PW and email it to the user,
   // and make that configurable for the app. Probably overlaps with magic login.
 
-  if (!token || !token.userId) throw new ForbiddenError("Token missing.")
+  if (!token || !token.userId) throw new TokenError("Token missing.")
 
-  if (token.type !== TOKEN_TYPE.RESET) throw new ForbiddenError("Invalid token type.")
+  if (token.type !== TOKEN_TYPE.RESET) throw new TokenError("Invalid token type.")
 
   // Centralise configuration for this somewhere - can use it for registration too
   if (!isStrongPassword(plainPassword, PASSWORD_STRENGTH_CONFIG))
-    throw new PasswordError("Password not strong enough, try harder.")
+    throw new PasswordStrengthError("Password not strong enough, try harder.")
 
   const password = await createHash(plainPassword)
 
@@ -35,7 +34,7 @@ export const resetPasswordWithToken = async (req: Request, res: Response, next: 
 
   // This case should never happen but will leave it here for now
   if (updatedUserId !== token.userId)
-    throw new InternalServerError(
+    throw new DatabaseError(
       `Error updating password for user: ${token.userId}, the DB update result should be the same as request ID: ${updatedUserId}`
     )
 

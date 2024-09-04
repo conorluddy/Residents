@@ -7,7 +7,7 @@ import RBAC from "./roleBasedAccessControl"
 import { BadRequestError, ForbiddenError } from "../../errors"
 
 jest.mock("../../services/index", () => ({
-  getUserByID: jest
+  getUserById: jest
     .fn()
     .mockResolvedValueOnce(makeAFakeUser({ role: ROLES.DEFAULT, status: STATUS.VERIFIED, username: "1" }))
     .mockResolvedValueOnce(makeAFakeUser({ role: ROLES.DEFAULT, status: STATUS.VERIFIED, username: "2" }))

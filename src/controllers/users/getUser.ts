@@ -11,7 +11,7 @@ export const getUser = async (req: Request, res: Response, next: NextFunction) =
   const userId = req.params.id
   if (!userId) throw new BadRequestError("User ID is missing.")
   //
-  const user = await SERVICES.getUserByID(userId)
+  const user = await SERVICES.getUserById(userId)
   if (!user) throw new NotFoundError("User not found.")
   //
   return res.status(HTTP_SUCCESS.OK).json(user)

@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from "express"
 import { HTTP_SUCCESS } from "../../constants/http"
 import { createUser } from "./createUser"
 import { ROLES } from "../../constants/database"
-import { logger } from "../../utils/logger"
 
 jest.mock("../../services/index", () => ({
   createToken: jest.fn(),

@@ -1,7 +1,7 @@
 import db from "../../db"
 import { eq } from "drizzle-orm"
-import { tableUserMeta, tableUsers } from "../../db/schema"
-import { logger } from "../../utils/logger"
+import { tableUserMeta } from "../../db/schema"
+import { BadRequestError } from "../../errors"
 
 interface Params {
   userId: string
@@ -9,21 +9,16 @@ interface Params {
 }
 
 const updateUserMeta = async ({ userId, metaItem }: Params): Promise<string> => {
-  try {
-    if (!userId) throw new Error("User ID must be provided.")
-    if (!metaItem) throw new Error("No meta data provided to update.")
+  if (!userId) throw new BadRequestError("User ID must be provided.")
+  if (!metaItem) throw new BadRequestError("No meta data provided to update.")
 
-    const [updatedMeta] = await db
-      .update(tableUserMeta)
-      .set({ metaItem })
-      .where(eq(tableUserMeta.userId, userId))
-      .returning()
+  const [updatedMeta] = await db
+    .update(tableUserMeta)
+    .set({ metaItem })
+    .where(eq(tableUserMeta.userId, userId))
+    .returning()
 
-    return updatedMeta.userId
-  } catch (error) {
-    logger.error("Error updating user meta:", userId, error)
-    throw new Error("Error updating user meta.")
-  }
+  return updatedMeta.userId
 }
 
 export { updateUserMeta }

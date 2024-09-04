@@ -42,7 +42,7 @@ describe("Integration: Default User flow", () => {
     const response = await request(app).get("/users/self")
     expect(response.status).toBe(401)
     expect(response.body).toMatchObject({
-      message: "Unauthorized.",
+      message: "Unauthorized access.",
     })
   })
 

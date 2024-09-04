@@ -47,7 +47,7 @@ async function getTargetUserAndEnsureSuperiority(req: Request, res: Response, ne
 
   // Don't get target user until we know the user has the required permissions //
 
-  const targetUser = await SERVICES.getUserByID(targetUserId)
+  const targetUser = await SERVICES.getUserById(targetUserId)
 
   if (!targetUser) throw new NotFoundError("Target user not found.")
   if (!targetUser.role) throw new ForbiddenError("Target user role not found.")

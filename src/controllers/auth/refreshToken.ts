@@ -43,7 +43,7 @@ export const refreshToken = async (req: Request, res: Response, next: NextFuncti
 
   if (!freshRefreshTokenId) throw new ForbiddenError("Error creating refresh token.")
 
-  const user = await SERVICES.getUserByID(jwtUserIncoming.id)
+  const user = await SERVICES.getUserById(jwtUserIncoming.id)
 
   if (!user) throw new ForbiddenError("User not found.")
 
