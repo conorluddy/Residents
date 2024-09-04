@@ -8,7 +8,7 @@ import { getSelf } from "./getSelf"
 let fakeUser: Partial<User>
 
 jest.mock("../../services/index", () => ({
-  getUserByID: jest
+  getUserById: jest
     .fn()
     .mockImplementationOnce(async () => {
       fakeUser = makeAFakeUser({ id: "SELF_ID" })

@@ -13,7 +13,7 @@ import { updateUserStatus } from "./user/updateUserStatus"
 import { updateUserRole } from "./user/updateUserRole"
 import { deleteUser } from "./user/deleteUser"
 import { getUserByEmail } from "./user/getUserByEmail"
-import { getUserByID } from "./user/getUserById"
+import { getUserById } from "./user/getUserById"
 import { getUserByUsername } from "./user/getUserByUsername"
 import { getUserPasswordHash } from "./user/getUserPasswordHash"
 
@@ -26,7 +26,7 @@ const SERVICES = {
   getAllUsers,
   getToken,
   getUserByEmail,
-  getUserByID,
+  getUserById,
   getUserByUsername,
   getUserPasswordHash,
   getUserCount,

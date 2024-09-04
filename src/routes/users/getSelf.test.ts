@@ -31,7 +31,7 @@ jest.mock("../../db", () => ({
 }))
 
 jest.mock("../../services/index", () => ({
-  getUserByID: jest.fn().mockImplementationOnce(async () => fakeUser),
+  getUserById: jest.fn().mockImplementationOnce(async () => fakeUser),
 }))
 
 const app = express()

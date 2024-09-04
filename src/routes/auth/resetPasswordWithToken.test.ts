@@ -23,7 +23,7 @@ const token = {
 
 jest.mock("../../services/index", () => ({
   updateUserPassword: jest.fn().mockImplementation(() => "UID123"),
-  getUserByID: jest.fn().mockImplementation(() => user),
+  getUserById: jest.fn().mockImplementation(() => user),
   deleteToken: jest.fn().mockImplementation(() => token.id),
   getToken: jest.fn().mockImplementation(() => token),
 }))

@@ -4,7 +4,7 @@ import { tableUsers } from "../../db/schema"
 import { SafeUser } from "../../db/types"
 import { BadRequestError } from "../../errors"
 
-const getUserByID = async (id: string): Promise<SafeUser | null> => {
+const getUserById = async (id: string): Promise<SafeUser | null> => {
   if (!id) throw new BadRequestError("No User ID provided.")
 
   const [user] = await db
@@ -25,4 +25,4 @@ const getUserByID = async (id: string): Promise<SafeUser | null> => {
   return user
 }
 
-export { getUserByID }
+export { getUserById }
