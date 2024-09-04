@@ -1,5 +1,5 @@
 import { makeAFakeSafeUser } from "../../test-utils/mockUsers"
-import { SafeUser, User } from "../../db/types"
+import { SafeUser } from "../../db/types"
 import { getAllUsers } from "./getAllUsers"
 
 let fakeUser: SafeUser
