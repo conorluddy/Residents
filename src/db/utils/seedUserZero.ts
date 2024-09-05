@@ -4,7 +4,7 @@ import { NewUser } from "../types"
 import SERVICES from "../../services"
 
 // Make this an EVN
-const DEFAULT_PASSWORD = "R351D3NT!zero"
+export const DEFAULT_SEED_PASSWORD = "R351D3NT!zero"
 
 /**
  * Seed the first user in the database
@@ -12,7 +12,7 @@ const DEFAULT_PASSWORD = "R351D3NT!zero"
  *
  * @param {string} password - The password to use for the first user
  */
-const seedUserZero = async (password: string = DEFAULT_PASSWORD) => {
+const seedUserZero = async (password: string = DEFAULT_SEED_PASSWORD) => {
   try {
     const usersAlreadyExist = (await SERVICES.getUserCount()) > 0
 
@@ -45,7 +45,7 @@ const seedUserZero = async (password: string = DEFAULT_PASSWORD) => {
 
 // Gets the amount of users to seed from the command line
 const args = process.argv.slice(2)
-const password = args.length > 0 ? args[0] : DEFAULT_PASSWORD
+const password = args.length > 0 ? args[0] : DEFAULT_SEED_PASSWORD
 
 seedUserZero(password)
 

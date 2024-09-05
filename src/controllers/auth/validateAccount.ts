@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express"
 import { STATUS, TOKEN_TYPE } from "../../constants/database"
 import { HTTP_SUCCESS } from "../../constants/http"
-import { BadRequestError, ForbiddenError } from "../../errors"
+import { BadRequestError, TokenError } from "../../errors"
 import SERVICES from "../../services"
 import { REQUEST_TOKEN } from "../../types/requestSymbols"
 import { logger } from "../../utils/logger"
@@ -13,13 +13,16 @@ export const validateAccount = async (req: Request, res: Response, next: NextFun
   const { tokenId, userId: userIdFromUrlParam } = req.params
   const token = req[REQUEST_TOKEN]
 
-  if (!userIdFromUrlParam) throw new BadRequestError("Invalid user data.")
-  if (!token) throw new ForbiddenError("Validation token missing.")
-  if (token.type !== TOKEN_TYPE.VALIDATE) throw new ForbiddenError("Validation token invalid.")
-  if (token.userId !== userIdFromUrlParam) throw new ForbiddenError("Validation token invalid.")
+  if (!userIdFromUrlParam) throw new BadRequestError("Invalid user data.") // probably redundant
+  if (!token) throw new TokenError("Validation token missing.")
+  if (token.type !== TOKEN_TYPE.VALIDATE) throw new TokenError("Validation token invalid.")
+  if (token.userId !== userIdFromUrlParam) throw new TokenError("Validation token invalid.")
+  if (tokenId !== token.id) throw new TokenError("Validation token invalid.")
 
-  logger.info(`Attempting to validate User ${userIdFromUrlParam} with Token ${tokenId}`)
-  await SERVICES.updateUserStatus({ userId: userIdFromUrlParam, status: STATUS.VERIFIED })
+  await Promise.all([
+    SERVICES.updateUserStatus({ userId: userIdFromUrlParam, status: STATUS.VERIFIED }),
+    SERVICES.deleteToken({ tokenId: token.id }),
+  ])
 
   logger.info(`User ${userIdFromUrlParam} validated.`)
 

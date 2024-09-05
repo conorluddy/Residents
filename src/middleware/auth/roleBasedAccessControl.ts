@@ -78,6 +78,7 @@ const RBAC = {
   checkCanDeleteUsers: checkPermission(PERMISSIONS.CAN_DELETE_ANY_USER),
   checkCanUpdateAnyUserStatus: checkPermission(PERMISSIONS.CAN_UPDATE_ANY_USER_STATUS),
   checkCanUpdateOwnProfile: checkPermission(PERMISSIONS.CAN_UPDATE_OWN_USER),
+  checkCanClearExpiredTokens: checkPermission(PERMISSIONS.CAN_CLEAR_EXPIRED_TOKENS),
 }
 
 export default RBAC
