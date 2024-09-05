@@ -36,7 +36,7 @@ describe("Controller: Validate Account", () => {
 
   beforeEach(() => {
     mockRequest = {
-      params: { tokenId: "TOKEN001", userId: mockDefaultUser.id },
+      params: { tokenId: mockToken.id, userId: mockDefaultUser.id },
       [REQUEST_USER]: mockDefaultUser,
       [REQUEST_TOKEN]: mockToken,
     }
