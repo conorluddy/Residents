@@ -56,11 +56,3 @@ describe("Test the health check route", () => {
     expect(response.body).toEqual({ status: "👌" })
   })
 })
-
-// Think we need to give Github env secrets for testing this
-describe.skip("Test the /auth/google path", () => {
-  test("It should respond with a 302 for the Google endpoint", async () => {
-    const response = await request(app).get("/auth/google")
-    expect(response.statusCode).toBe(HTTP_REDIRECTION.FOUND)
-  })
-})

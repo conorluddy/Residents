@@ -44,18 +44,10 @@ describe("Controller: CreateUser", () => {
     ).rejects.toThrow("Missing required fields.")
   })
 
-  // Uncomment and refine these test cases as needed
-  // it.skip("Create User - Weak password", async () => {
-  //   mockRequest.body.password = "weak";
-  //   await createUser(mockRequest as Request, mockResponse as Response);
-  //   expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.BAD_REQUEST);
-  //   expect(mockResponse.json).toHaveBeenCalledWith({ message: "Password not strong enough, try harder." });
-  // });
-
-  // it.skip("Create User - Invalid email", async () => {
-  //   mockRequest.body.email = "invalid-email";
-  //   await createUser(mockRequest as Request, mockResponse as Response);
-  //   expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.BAD_REQUEST);
-  //   expect(mockResponse.json).toHaveBeenCalledWith({ message: "Email needs to be a valid email." });
-  // });
+  it("Create User - Invalid email", async () => {
+    mockRequest.body.email = "invalid-email"
+    await expect(
+      createUser(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
+    ).rejects.toThrow("Invalid email address")
+  })
 })

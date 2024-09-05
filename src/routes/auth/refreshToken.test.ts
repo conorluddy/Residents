@@ -17,7 +17,7 @@ app.use(express.json())
 app.use(refreshTokenRoute)
 
 describe("POST /refresh", () => {
-  it.skip("should call the refreshToken controller", async () => {
+  it("should call the refreshToken controller", async () => {
     const response = await request(app).post("/refresh").send({ refreshToken: "REFRESHME" })
     expect(response.status).toBe(HTTP_CLIENT_ERROR.BAD_REQUEST)
   })

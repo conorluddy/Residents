@@ -43,7 +43,18 @@ describe("Integration: Owner flow from seeded default owner", () => {
   })
 
   it("Hit the /self endpoint once logged in and get own user object", async () => {
+    const login = {
+      username: "resident",
+      password: DEFAULT_SEED_PASSWORD,
+    }
+    const loginResponse = await request(app).post("/auth").send(login)
+
+    expect(loginResponse.body).toHaveProperty("accessToken")
+    expect(loginResponse.status).toBe(HTTP_SUCCESS.OK)
+    const jwt = loginResponse.body.accessToken
+
     const response = await request(app).get("/users/self").set("Authorization", `Bearer ${jwt}`)
+
     expect(response.body).toMatchObject({
       firstName: "Resident",
       lastName: "Zero",
@@ -59,16 +70,38 @@ describe("Integration: Owner flow from seeded default owner", () => {
   })
 
   it("Call getAllUsers again and delete one of them", async () => {
+    const login = {
+      username: "resident",
+      password: DEFAULT_SEED_PASSWORD,
+    }
+    const loginResponse = await request(app).post("/auth").send(login)
+
+    expect(loginResponse.body).toHaveProperty("accessToken")
+    expect(loginResponse.status).toBe(HTTP_SUCCESS.OK)
+    const jwt = loginResponse.body.accessToken
+
     const usersResponse = await request(app).get("/users").set("Authorization", `Bearer ${jwt}`)
     const userIdToDelete = usersResponse.body[3]?.id
+
     const deleteResponse = await request(app)
       .delete("/users/" + userIdToDelete)
       .set("Authorization", `Bearer ${jwt}`)
+
     expect(deleteResponse.body).toMatchObject({ message: `User ${userIdToDelete} deleted` })
     expect(deleteResponse.status).toBe(HTTP_SUCCESS.OK)
   })
 
   it("Call getAllUsers again and then get a specific one", async () => {
+    const login = {
+      username: "resident",
+      password: DEFAULT_SEED_PASSWORD,
+    }
+    const loginResponse = await request(app).post("/auth").send(login)
+
+    expect(loginResponse.body).toHaveProperty("accessToken")
+    expect(loginResponse.status).toBe(HTTP_SUCCESS.OK)
+    const jwt = loginResponse.body.accessToken
+
     const usersResponse = await request(app).get("/users").set("Authorization", `Bearer ${jwt}`)
     const userIdToGet = usersResponse.body[5]?.id
     const userResponse = await request(app)

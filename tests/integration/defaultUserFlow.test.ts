@@ -65,6 +65,7 @@ describe("Integration: Default User flow", () => {
       username: "mrhappy",
       password: "STRONGP4$$w0rd_",
     }
+
     // Log in
     const {
       body: { accessToken: jwt },
