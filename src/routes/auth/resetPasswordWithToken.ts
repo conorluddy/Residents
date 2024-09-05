@@ -8,7 +8,6 @@ router.post(
   "/reset-password/:tokenId",
   MW.VALIDATE.tokenId,
   MW.findValidTokenById,
-  MW.discardToken,
   CONTROLLERS.AUTH.resetPasswordWithToken
 )
 

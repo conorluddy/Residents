@@ -8,6 +8,7 @@ export enum PERMISSIONS {
   CAN_UPDATE_ANY_USER_STATUS = "can_update_any_user_status",
   CAN_UPDATE_OWN_USER = "can_update_own_user",
   CAN_DELETE_ANY_USER = "can_delete_any_user",
+  CAN_CLEAR_EXPIRED_TOKENS = "can_clear_expired_tokens",
   YOULL_DO_NOTHIN = "youll_do_nothin",
 }
 
@@ -21,6 +22,7 @@ export const ACL: { [key in ROLES]: PERMISSIONS[] } = {
     PERMISSIONS.CAN_DELETE_ANY_USER,
     PERMISSIONS.CAN_UPDATE_ANY_USER_STATUS,
     PERMISSIONS.CAN_UPDATE_OWN_USER,
+    PERMISSIONS.CAN_CLEAR_EXPIRED_TOKENS,
   ],
 
   // 👸🏻
@@ -32,6 +34,7 @@ export const ACL: { [key in ROLES]: PERMISSIONS[] } = {
     PERMISSIONS.CAN_DELETE_ANY_USER,
     PERMISSIONS.CAN_UPDATE_ANY_USER_STATUS,
     PERMISSIONS.CAN_UPDATE_OWN_USER,
+    PERMISSIONS.CAN_CLEAR_EXPIRED_TOKENS,
   ],
 
   // 👮🏽‍♀️
