@@ -27,7 +27,7 @@ export const logout = async (req: Request, res: Response, next: NextFunction) =>
     expires: new Date(),
   })
 
-  await SERVICES.deleteRefreshToken({ userId })
+  await SERVICES.deleteRefreshTokensByUserId({ userId })
 
   return res.status(HTTP_SUCCESS.OK).json({ message: "Logged out from API. Clear your client tokens." })
 }

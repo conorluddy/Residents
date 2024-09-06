@@ -23,7 +23,7 @@ const xsrfTokens = (req: Request, res: Response, next: NextFunction) => {
 
   // XSRF-Token should actually be checked in the headers.
   // Client should take it from cookie and add it to headers.
-  const requestHeadersXsrfToken = req.headers["xsrf-token"]
+  const requestHeadersXsrfToken = req.cookies?.["xsrfToken"]
 
   if (!requestHeadersXsrfToken) {
     throw new UnauthorizedError("XSRF token is required.")

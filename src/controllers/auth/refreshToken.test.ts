@@ -61,8 +61,11 @@ describe("Controller: Refresh token: Happy path", () => {
     jwToken = generateJwtFromUser(mockDefaultUser)
     xsrf = generateXsrfToken()
     mockRequest = {
-      body: { refreshToken: "REFRESHME" },
+      body: {},
       headers: { authorization: `Bearer ${jwt}` },
+      cookies: {
+        refreshToken: "REFRESHME",
+      },
     }
     mockResponse = {
       status: jest.fn().mockReturnThis(),
@@ -110,11 +113,12 @@ describe("Should return errors if", () => {
     process.env.JWT_TOKEN_SECRET = "TESTSECRET"
     jwToken = generateJwtFromUser(otherMockDefaultUser)
     mockRequest = {
-      body: {
-        refreshToken: "REFRESHME",
-      },
+      body: {},
       headers: {
         authorization: `Bearer ${jwToken}`,
+      },
+      cookies: {
+        refreshToken: "REFRESHME",
       },
     }
     mockResponse = {
@@ -125,11 +129,12 @@ describe("Should return errors if", () => {
   })
 
   it("there's no refresh token in the request body", async () => {
-    delete mockRequest.body?.refreshToken
+    delete mockRequest.cookies?.refreshToken
     await expect(
       refreshToken(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
     ).rejects.toThrow("Refresh token is required")
   })
+
   it("there's no JWT in the header", async () => {
     delete mockRequest.headers?.authorization
     await expect(

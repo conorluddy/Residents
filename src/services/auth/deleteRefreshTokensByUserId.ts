@@ -9,15 +9,15 @@ interface Props {
   userId: string
 }
 
-const deleteRefreshToken = async ({ userId }: Props): Promise<Token["id"] | null> => {
-  if (!userId) throw new TokenError("No token ID provided")
+const deleteRefreshTokensByUserId = async ({ userId }: Props): Promise<number> => {
+  if (!userId) throw new TokenError("No user ID provided")
 
-  const [deleted] = await db
+  const deleted = await db
     .delete(tableTokens)
     .where(and(eq(tableTokens.userId, userId), eq(tableTokens.type, TOKEN_TYPE.REFRESH)))
     .returning()
 
-  return deleted.id
+  return deleted.length
 }
 
-export { deleteRefreshToken }
+export { deleteRefreshTokensByUserId }

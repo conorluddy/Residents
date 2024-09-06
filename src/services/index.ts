@@ -4,7 +4,7 @@ import { createUser } from "./user/createUser"
 import { createUserMeta } from "./user/createUserMeta"
 import { getToken } from "./auth/getToken"
 import { deleteToken } from "./auth/deleteToken"
-import { deleteRefreshToken } from "./auth/deleteRefreshToken"
+import { deleteRefreshTokensByUserId } from "./auth/deleteRefreshTokensByUserId"
 import { getUserCount } from "./user/getUserCount"
 import { updateUserMeta } from "./user/updateUserMeta"
 import { updateUser } from "./user/updateUser"
@@ -38,7 +38,7 @@ const SERVICES = {
   updateUserStatus,
   updateUserPassword,
   // D
-  deleteRefreshToken,
+  deleteRefreshTokensByUserId,
   deleteExpiredTokens,
   deleteToken,
   deleteUser,

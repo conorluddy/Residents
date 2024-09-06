@@ -11,6 +11,7 @@ import rateLimiter from "./middleware/util/rateLimiter"
 import { HTTP_SUCCESS } from "./constants/http"
 import xsrfTokens from "./middleware/auth/xsrfTokens"
 import errorHandler from "./middleware/util/errorHandler"
+import path from "path"
 
 dotenv.config()
 
@@ -45,6 +46,20 @@ swaggerSetup(app)
 
 // Error handling <always last>
 app.use(errorHandler)
+
+// Add CSP middleware
+app.use((req, res, next) => {
+  res.setHeader("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'")
+  next()
+})
+
+// Serve static files from the 'examples' directory
+app.use(express.static(path.join(__dirname, "../examples")))
+
+// Add this route to serve the index.html file
+app.get("/", (_req, res) => {
+  res.sendFile(path.join(__dirname, "../examples/index.html"))
+})
 
 ////////////////////////////////////////////////
 // /Middleware
