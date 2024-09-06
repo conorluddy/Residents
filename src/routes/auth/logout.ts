@@ -4,6 +4,6 @@ import MW from "../../middleware"
 
 const router = Router()
 
-router.get("/logout", MW.authenticateToken, CONTROLLERS.AUTH.logout)
+router.get("/logout", CONTROLLERS.AUTH.logout)
 
 export default router
