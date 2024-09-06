@@ -6,7 +6,7 @@ import { REQUEST_USER } from "../../types/requestSymbols"
 import { makeAFakeSafeUser } from "../../test-utils/mockUsers"
 
 jest.mock("../../services/index", () => ({
-  deleteRefreshToken: jest.fn().mockImplementation(() => "123"),
+  deleteRefreshTokensByUserId: jest.fn().mockImplementation(() => "123"),
 }))
 
 describe("Controller: Logout", () => {

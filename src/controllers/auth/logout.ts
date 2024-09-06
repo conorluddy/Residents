@@ -1,7 +1,7 @@
+import SERVICES from "../../services"
 import { NextFunction, Request, Response } from "express"
 import { HTTP_SUCCESS } from "../../constants/http"
 import { BadRequestError } from "../../errors"
-import SERVICES from "../../services"
 import { REQUEST_USER } from "../../types/requestSymbols"
 
 /**

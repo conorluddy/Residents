@@ -49,7 +49,7 @@ describe("Middleware: XSRF Tokens: ", () => {
     process.env.NODE_ENV = "not-test"
     mockRequest.headers = {}
     await expect(() => xsrfTokens(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
-      new UnauthorizedError("XSRF token is required.")
+      new UnauthorizedError("XSRF token is invalid.")
     )
     expect(nextFunction).not.toHaveBeenCalled()
   })

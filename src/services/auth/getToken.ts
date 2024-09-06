@@ -9,7 +9,6 @@ interface Props {
 }
 
 const getToken = async ({ tokenId }: Props): Promise<Token | null> => {
-  console.log("getToken tokenId", tokenId)
   if (!tokenId) throw new TokenError("No token ID provided")
 
   const [token] = await db

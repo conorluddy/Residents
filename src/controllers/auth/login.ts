@@ -9,12 +9,8 @@ import generateXsrfToken from "../../middleware/util/xsrfToken"
 import SERVICES from "../../services"
 import { validateHash } from "../../utils/crypt"
 import { generateJwtFromUser } from "../../utils/generateJwt"
-
-// Centralise these, they're repeated in refreshToken
-const TOKEN_EXPIRY = TIMESPAN.WEEK
-const REFRESH_TOKEN = "refreshToken"
-const XSRF_TOKEN = "xsrfToken"
-const RESIDENT_TOKEN = "residentToken"
+import { REFRESH_TOKEN, XSRF_TOKEN, RESIDENT_TOKEN } from "../../constants/keys"
+import { REFRESH_TOKEN_EXPIRY } from "../../constants/crypt"
 
 /**
  * login
@@ -53,7 +49,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
-    maxAge: TOKEN_EXPIRY,
+    maxAge: REFRESH_TOKEN_EXPIRY,
   })
 
   const xsrfToken = generateXsrfToken()
@@ -61,7 +57,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
-    maxAge: TOKEN_EXPIRY,
+    maxAge: REFRESH_TOKEN_EXPIRY,
   })
 
   const userIdToken = refreshTokenId
@@ -69,7 +65,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
-    maxAge: TOKEN_EXPIRY,
+    maxAge: REFRESH_TOKEN_EXPIRY,
   })
 
   return res.status(HTTP_SUCCESS.OK).json({ accessToken })

@@ -1,16 +1,13 @@
+import SERVICES from "../../services"
+import generateXsrfToken from "../../middleware/util/xsrfToken"
 import { NextFunction, Request, Response } from "express"
 import { TOKEN_TYPE } from "../../constants/database"
 import { HTTP_SUCCESS } from "../../constants/http"
 import { TIMESPAN } from "../../constants/time"
 import { ForbiddenError, TokenError } from "../../errors"
-import generateXsrfToken from "../../middleware/util/xsrfToken"
-import SERVICES from "../../services"
 import { generateJwtFromUser } from "../../utils/generateJwt"
-
-const TOKEN_EXPIRY = TIMESPAN.WEEK
-const REFRESH_TOKEN = "refreshToken"
-const XSRF_TOKEN = "xsrfToken"
-const RESIDENT_TOKEN = "residentToken"
+import { REFRESH_TOKEN, RESIDENT_TOKEN, XSRF_TOKEN } from "../../constants/keys"
+import { REFRESH_TOKEN_EXPIRY } from "../../constants/crypt"
 
 /**
  * POST: refreshToken
@@ -20,8 +17,8 @@ export const refreshToken = async (req: Request, res: Response, next: NextFuncti
   const refreshTokenId = req.cookies?.[REFRESH_TOKEN]
   const userId = req.cookies?.[RESIDENT_TOKEN]
 
-  if (!refreshTokenId) throw new TokenError("Refresh token is required")
-  if (!userId) throw new TokenError("Refresh token counterpart is required")
+  if (!refreshTokenId) throw new TokenError("Refresh token is required.")
+  if (!userId) throw new TokenError("Refresh token counterpart is required.")
 
   // Get the refresh token from the DB if it exists
   const token = await SERVICES.getToken({ tokenId: refreshTokenId })
@@ -61,7 +58,7 @@ export const refreshToken = async (req: Request, res: Response, next: NextFuncti
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
-    maxAge: TOKEN_EXPIRY,
+    maxAge: REFRESH_TOKEN_EXPIRY,
   })
 
   const xsrfToken = generateXsrfToken()
@@ -69,7 +66,7 @@ export const refreshToken = async (req: Request, res: Response, next: NextFuncti
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
-    maxAge: TOKEN_EXPIRY,
+    maxAge: REFRESH_TOKEN_EXPIRY,
   })
 
   const userIdToken = userId
@@ -77,10 +74,8 @@ export const refreshToken = async (req: Request, res: Response, next: NextFuncti
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
-    maxAge: TOKEN_EXPIRY,
+    maxAge: REFRESH_TOKEN_EXPIRY,
   })
-
-  userId
 
   await SERVICES.deleteToken({ tokenId: token.id })
 
