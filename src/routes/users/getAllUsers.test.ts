@@ -13,7 +13,7 @@ import { logger } from "../../utils/logger"
 let fakeUser
 
 // Mock the middlewares
-jest.mock("../../middleware/auth/jsonWebTokens", () => ({
+jest.mock("../../middleware/auth/authenticateToken", () => ({
   authenticateToken: jest.fn((req, _res, next) => {
     req[REQUEST_USER] = makeAFakeSafeUser({ id: "123", role: ROLES.ADMIN })
     next()

@@ -1,7 +1,7 @@
 import { Router } from "express"
 import CONTROLLERS from "../../controllers"
 import RBAC from "../../middleware/auth/roleBasedAccessControl"
-import { authenticateToken } from "../../middleware/auth/jsonWebTokens"
+import { authenticateToken } from "../../middleware/auth/authenticateToken"
 
 const router = Router()
 

@@ -1,5 +1,5 @@
 import { attachDb } from "./util/database"
-import { authenticateToken } from "./auth/jsonWebTokens"
+import { authenticateToken } from "./auth/authenticateToken"
 import discardToken from "./auth/discardToken"
 import errorHandler from "./util/errorHandler"
 import findUserByValidEmail from "./lookup/findUserByValidEmail"

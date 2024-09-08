@@ -44,7 +44,12 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
   if (!refreshTokenId) throw new ForbiddenError("Couldnt create refresh token.")
 
   // Set the tokens in a HTTP-only secure cookies
+
+  // New JWT
   const accessToken = generateJwtFromUser(user)
+
+  console.log("New JWT", { accessToken })
+
   res.cookie(REFRESH_TOKEN, refreshTokenId, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
@@ -53,6 +58,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
   })
 
   const xsrfToken = generateXsrfToken()
+
   res.cookie(XSRF_TOKEN, xsrfToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
@@ -61,6 +67,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
   })
 
   const userIdToken = refreshTokenId
+
   res.cookie(RESIDENT_TOKEN, user.id, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",

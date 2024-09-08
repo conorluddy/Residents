@@ -1,8 +1,8 @@
 import jwt from "jsonwebtoken"
+import TYPEGUARD from "../../types/typeguards"
 import { Request, Response, NextFunction } from "express"
 import { JWT_TOKEN_SECRET } from "../../config"
-import TYPEGUARD from "../../types/typeguards"
-import { REQUEST_USER } from "../../types/requestSymbols"
+import { REQUEST_USER, REQUEST_VERIFIED_JWT } from "../../types/requestSymbols"
 import { InternalServerError, UnauthorizedError } from "../../errors"
 
 export const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
@@ -15,10 +15,11 @@ export const authenticateToken = (req: Request, res: Response, next: NextFunctio
   if (!secret || secret === "")
     throw new InternalServerError("JWT token secret is not defined in your environment variables.")
 
-  jwt.verify(token, secret, (err, user) => {
+  jwt.verify(token, secret, (err, jwtPayload) => {
     if (err) throw new UnauthorizedError("Token is invalid or expired.")
-    if (!TYPEGUARD.isJwtUser(user)) throw new UnauthorizedError("JWT contains invalid user data.")
-    req[REQUEST_USER] = user
+    if (!TYPEGUARD.isJwtUser(jwtPayload)) throw new UnauthorizedError("JWT contains invalid user data.")
+    req[REQUEST_USER] = jwtPayload
+    req[REQUEST_VERIFIED_JWT] = jwtPayload
     next()
   })
 }

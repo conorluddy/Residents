@@ -38,6 +38,8 @@ const config: Config = {
   SENDGRID_TEST_EMAIL: process.env.SENDGRID_TEST_EMAIL!,
 }
 
+console.log("config", { config })
+
 export const {
   JWT_TOKEN_SECRET,
   EXPIRATION_JWT_TOKEN,

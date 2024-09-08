@@ -11,7 +11,7 @@ import { REQUEST_USER } from "../../types/requestSymbols"
 let fakeUser = makeAFakeUser({ role: ROLES.DEFAULT })
 
 // Mock the middlewares
-jest.mock("../../middleware/auth/jsonWebTokens", () => ({
+jest.mock("../../middleware/auth/authenticateToken", () => ({
   authenticateToken: jest.fn((req, res, next) => {
     req[REQUEST_USER] = { id: "123", role: "admin" }
     next()

@@ -1,5 +1,5 @@
 import { Router } from "express"
-import { authenticateToken } from "../../middleware/auth/jsonWebTokens"
+import { authenticateToken } from "../../middleware/auth/authenticateToken"
 import RBAC from "../../middleware/auth/roleBasedAccessControl"
 import CONTROLLERS from "../../controllers"
 

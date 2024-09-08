@@ -4,7 +4,7 @@ import { PublicUser, User } from "../../db/types"
 import { makeAFakeSafeUser, makeAFakeUser } from "../../test-utils/mockUsers"
 import { REQUEST_USER } from "../../types/requestSymbols"
 import { generateJwtFromUser } from "../../utils/generateJwt"
-import { authenticateToken } from "./jsonWebTokens"
+import { authenticateToken } from "./authenticateToken"
 import { UnauthorizedError } from "../../errors"
 
 describe("Middleware:JWT", () => {

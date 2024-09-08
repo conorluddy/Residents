@@ -9,7 +9,7 @@ import { logger } from "../../utils/logger"
 
 let fakeUser = makeAFakeUser({ password: "$TR0ngP@$$W0rDz123!", role: ROLES.DEFAULT })
 
-jest.mock("../../middleware/auth/jsonWebTokens", () => ({
+jest.mock("../../middleware/auth/authenticateToken", () => ({
   authenticateToken: jest.fn((req, _res, next) => {
     req[REQUEST_USER] = { id: "XX", role: ROLES.MODERATOR }
     next()
