@@ -66,7 +66,7 @@ describe("Integration: Owner flow from seeded default owner", () => {
   it("Hit the /getAllUsers endpoint once logged in and get all of the users back", async () => {
     const response = await request(app).get("/users").set("Authorization", `Bearer ${jwt}`)
     expect(response.status).toBe(HTTP_SUCCESS.OK)
-    expect(response.body).toHaveLength(21) // 10 seeded users + the owner. TODO: fix. Myster 10 coming from somewhere....
+    expect(response.body).toHaveLength(21) // 10 seeded users + the owner. TODO: fix. Mystery 10 coming from somewhere....
   })
 
   it("Call getAllUsers again and delete one of them", async () => {
