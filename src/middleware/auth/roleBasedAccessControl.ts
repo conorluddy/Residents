@@ -36,13 +36,17 @@ async function getTargetUserAndEnsureSuperiority(req: Request, res: Response, ne
   if (!user) throw new BadRequestError("Missing User data.")
   if (!!user.deletedAt) throw new UnauthorizedError("User account is deleted.")
   if (!user.role) throw new ForbiddenError("User has no role.")
+
   const userIsAdminOrOwner = [ROLES.ADMIN, ROLES.OWNER].includes(user.role)
+
   if (user.role === ROLES.LOCKED) throw new ForbiddenError("User account is locked.")
   if (STATUS.BANNED === user.status) throw new ForbiddenError("User account is banned.")
   if (STATUS.SUSPENDED === user.status) throw new ForbiddenError("User account is suspended.")
   if (STATUS.UNVERIFIED === user.status) throw new ForbiddenError("User account is not verified.")
   if (STATUS.REJECTED === user.status) throw new ForbiddenError("User account is rejected.") // Not sure we need/use this
+
   const userRoleIndex = ROLES_ARRAY.findIndex((role) => role === user.role)
+
   if (userRoleIndex === -1) throw new ForbiddenError("Invalid user role.")
 
   // Don't get target user until we know the user has the required permissions //
