@@ -24,6 +24,9 @@ const errorHandler = (err: Error, _req: Request, res: Response, next: NextFuncti
 
   logger.error(err.message)
 
+  // Debug
+  // if (process.env.NODE_ENV === "test") console.log(err.message)
+
   if (err instanceof BadRequestError) {
     return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "Bad request." })
   }
