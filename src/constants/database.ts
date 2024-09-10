@@ -11,8 +11,8 @@ import { getEnumValues } from "../utils/typescriptUtils"
  * than their own.
  */
 export enum ROLES {
-  ADMIN = "admin",
   OWNER = "owner",
+  ADMIN = "admin",
   MODERATOR = "moderator",
   DEFAULT = "default",
   LOCKED = "locked",
