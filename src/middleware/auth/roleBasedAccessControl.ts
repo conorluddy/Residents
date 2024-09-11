@@ -39,31 +39,22 @@ async function getTargetUser(req: Request, res: Response, next: NextFunction) {
   if (!user) throw new BadRequestError("Missing User data.")
   if (!!user.deletedAt) throw new UnauthorizedError("User account is deleted.")
   if (!user.role) throw new ForbiddenError("User has no role.")
-
-  const userIsAdminOrOwner = [ROLES.ADMIN, ROLES.OWNER].includes(user.role)
-
+  if (!ROLES_ARRAY.includes(user.role)) throw new ForbiddenError("Invalid user role.")
   if (user.role === ROLES.LOCKED) throw new ForbiddenError("User account is locked.")
   if (STATUS.BANNED === user.status) throw new ForbiddenError("User account is banned.")
   if (STATUS.SUSPENDED === user.status) throw new ForbiddenError("User account is suspended.")
   if (STATUS.UNVERIFIED === user.status) throw new ForbiddenError("User account is not verified.")
   if (STATUS.REJECTED === user.status) throw new ForbiddenError("User account is rejected.") // Not sure we need/use this
 
-  const userRoleIndex = ROLES_ARRAY.findIndex((role) => role === user.role)
-
-  if (userRoleIndex === -1) throw new ForbiddenError("Invalid user role.")
-
-  // Don't get target user until we know the user has the required permissions //
+  // Go fetch the target user
 
   const targetUser = await SERVICES.getUserById(targetUserId)
 
+  //
+
   if (!targetUser) throw new NotFoundError("Target user not found.")
   if (!targetUser.role) throw new ForbiddenError("Target user role not found.")
-  if (targetUser?.role === ROLES.LOCKED && !userIsAdminOrOwner)
-    throw new UnauthorizedError("Target user account is locked and can only be unlocked by an admin.")
-
-  const targetRoleIndex = ROLES_ARRAY.findIndex((role) => role === targetUser?.role)
-
-  if (targetRoleIndex === -1) throw new ForbiddenError("Invalid target user role.")
+  if (!ROLES_ARRAY.includes(targetUser.role)) throw new ForbiddenError("Invalid target user role.")
 
   // All good, set the target user on the request object //
 
@@ -72,21 +63,77 @@ async function getTargetUser(req: Request, res: Response, next: NextFunction) {
   next()
 }
 
+/**
+ *
+ * @param req
+ * @param res
+ * @param next
+ */
+async function checkCanGetUser(req: Request, res: Response, next: NextFunction) {
+  const user = req[REQUEST_USER]
+  const targetUser = req[REQUEST_TARGET_USER]
+
+  if (!user || !targetUser || !user.role || !targetUser.role) {
+    throw new BadRequestError("User data is missing.")
+  }
+
+  if (user.id === targetUser.id && ACL[user.role].includes(PERMISSIONS.CAN_GET_OWN_USER)) {
+    return next()
+  }
+
+  if (ACL[user.role].includes(PERMISSIONS.CAN_GET_ALL_USERS)) {
+    return next()
+  }
+
+  if (user.role === targetUser.role && ACL[user.role].includes(PERMISSIONS.CAN_GET_SAME_ROLE_USERS)) {
+    return next()
+  }
+
+  const userRoleIndex = ROLES_ARRAY.indexOf(user.role)
+  const targetRoleIndex = ROLES_ARRAY.indexOf(targetUser.role)
+
+  if (userRoleIndex < targetRoleIndex && ACL[user.role].includes(PERMISSIONS.CAN_GET_LOWER_ROLE_USERS)) {
+    return next()
+  }
+
+  throw new ForbiddenError("User doesn't have permission to get this user.")
+}
+
 const RBAC = {
-  //
   getTargetUser,
-  //
-  checkCanGetOwnUser: checkPermission(PERMISSIONS.CAN_GET_OWN_USER),
+  checkCanGetUser,
+
+  // User management
   checkCanCreateUsers: checkPermission(PERMISSIONS.CAN_CREATE_USERS),
-  checkCanGetUsers: checkPermission(PERMISSIONS.CAN_GET_ALL_USERS),
-  checkCanGetUsersWithSameRole: checkPermission(PERMISSIONS.CAN_GET_USERS_WITH_SAME_ROLE),
-  checkCanGetUsersWithLowerRole: checkPermission(PERMISSIONS.CAN_GET_USERS_WITH_LOWER_ROLE),
-  checkCanUpdateUsers: checkPermission(PERMISSIONS.CAN_UPDATE_ANY_USER),
-  checkCanUpdateOwnUser: checkPermission(PERMISSIONS.CAN_UPDATE_OWN_USER),
-  checkCanDeleteUsers: checkPermission(PERMISSIONS.CAN_DELETE_ANY_USER),
+  checkCanCreateSameRoleUsers: checkPermission(PERMISSIONS.CAN_CREATE_SAME_ROLE_USERS),
+  checkCanCreateLowerRoleUsers: checkPermission(PERMISSIONS.CAN_CREATE_LOWER_ROLE_USERS),
+
+  // User retrieval
+  checkCanGetOwnUser: checkPermission(PERMISSIONS.CAN_GET_OWN_USER),
+  checkCanGetAllUsers: checkPermission(PERMISSIONS.CAN_GET_ALL_USERS),
+  checkCanGetSameRoleUsers: checkPermission(PERMISSIONS.CAN_GET_SAME_ROLE_USERS),
+  checkCanGetLowerRoleUsers: checkPermission(PERMISSIONS.CAN_GET_LOWER_ROLE_USERS),
+
+  // User updates
+  checkCanUpdateAnyUserProfile: checkPermission(PERMISSIONS.CAN_UPDATE_ANY_USER_PROFILE),
+  checkCanUpdateAnyUserRole: checkPermission(PERMISSIONS.CAN_UPDATE_ANY_USER_ROLE),
   checkCanUpdateAnyUserStatus: checkPermission(PERMISSIONS.CAN_UPDATE_ANY_USER_STATUS),
-  checkCanUpdateOwnProfile: checkPermission(PERMISSIONS.CAN_UPDATE_OWN_USER),
+  checkCanUpdateOwnUser: checkPermission(PERMISSIONS.CAN_UPDATE_OWN_USER),
+  checkCanUpdateSameRoleUsers: checkPermission(PERMISSIONS.CAN_UPDATE_SAME_ROLE_USERS),
+  checkCanUpdateLowerRoleUsers: checkPermission(PERMISSIONS.CAN_UPDATE_LOWER_ROLE_USERS),
+
+  // User deletion
+  checkCanDeleteAnyUser: checkPermission(PERMISSIONS.CAN_DELETE_ANY_USER),
+  checkCanDeleteSameRoleUsers: checkPermission(PERMISSIONS.CAN_DELETE_SAME_ROLE_USERS),
+  checkCanDeleteLowerRoleUsers: checkPermission(PERMISSIONS.CAN_DELETE_LOWER_ROLE_USERS),
+
+  // System operations
   checkCanClearExpiredTokens: checkPermission(PERMISSIONS.CAN_CLEAR_EXPIRED_TOKENS),
+  checkCanViewAuditLogs: checkPermission(PERMISSIONS.CAN_VIEW_AUDIT_LOGS),
+  checkCanManageRoles: checkPermission(PERMISSIONS.CAN_MANAGE_ROLES),
+
+  // Minimal permissions
+  checkCanAccessOwnData: checkPermission(PERMISSIONS.CAN_ACCESS_OWN_DATA),
 }
 
 export default RBAC

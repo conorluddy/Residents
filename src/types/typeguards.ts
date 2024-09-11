@@ -1,5 +1,6 @@
 import { PublicUser, SafeUser } from "../db/types"
 
+// Need to strip this back to id and role and maybe name
 function isJwtUser(jwt: any): jwt is SafeUser {
   return (
     typeof jwt === "object" &&

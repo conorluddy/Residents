@@ -9,8 +9,8 @@ const router = Router()
 router.patch(
   "/meta/:id",
   authenticateToken,
-  RBAC.checkCanUpdateUsers,
   RBAC.getTargetUser,
+  RBAC.checkCanUpdateUsers,
   VALIDATE.userMeta,
   CONTROLLERS.USER.updateUserMeta
 )

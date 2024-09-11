@@ -5,6 +5,6 @@ import CONTROLLERS from "../../controllers"
 
 const router = Router()
 
-router.patch("/:id", authenticateToken, RBAC.checkCanUpdateUsers, RBAC.getTargetUser, CONTROLLERS.USER.updateUser)
+router.patch("/:id", authenticateToken, RBAC.getTargetUser, RBAC.checkCanUpdateUsers, CONTROLLERS.USER.updateUser)
 
 export default router
