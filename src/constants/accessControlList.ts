@@ -1,14 +1,21 @@
 import { ROLES } from "./database"
 
 export enum PERMISSIONS {
+  //
   CAN_CREATE_USERS = "can_create_users",
+  //
   CAN_GET_OWN_USER = "can_get_own_user",
   CAN_GET_ALL_USERS = "can_get_all_users",
+  CAN_GET_USERS_WITH_SAME_ROLE = "can_get_users_with_same_role",
+  CAN_GET_USERS_WITH_LOWER_ROLE = "can_get_users_with_lower_role",
+  //
   CAN_UPDATE_ANY_USER = "can_update_any_user",
   CAN_UPDATE_ANY_USER_STATUS = "can_update_any_user_status",
   CAN_UPDATE_OWN_USER = "can_update_own_user",
+  //
   CAN_DELETE_ANY_USER = "can_delete_any_user",
   CAN_CLEAR_EXPIRED_TOKENS = "can_clear_expired_tokens",
+  //
   YOULL_DO_NOTHIN = "youll_do_nothin",
 }
 
@@ -49,7 +56,11 @@ export const ACL: { [key in ROLES]: PERMISSIONS[] } = {
   ],
 
   // 🧑🏻‍🦰
-  [ROLES.DEFAULT]: [PERMISSIONS.CAN_GET_OWN_USER, PERMISSIONS.CAN_UPDATE_OWN_USER],
+  [ROLES.DEFAULT]: [
+    PERMISSIONS.CAN_GET_OWN_USER,
+    PERMISSIONS.CAN_UPDATE_OWN_USER,
+    PERMISSIONS.CAN_GET_USERS_WITH_SAME_ROLE,
+  ],
 
   // ⛔️
   [ROLES.LOCKED]: [PERMISSIONS.CAN_GET_OWN_USER, PERMISSIONS.YOULL_DO_NOTHIN],

@@ -10,7 +10,7 @@ router.patch(
   "/meta/:id",
   authenticateToken,
   RBAC.checkCanUpdateUsers,
-  RBAC.getTargetUserAndEnsureSuperiority,
+  RBAC.getTargetUser,
   VALIDATE.userMeta,
   CONTROLLERS.USER.updateUserMeta
 )

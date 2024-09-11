@@ -5,12 +5,6 @@ import CONTROLLERS from "../../controllers"
 
 const router = Router()
 
-router.delete(
-  "/:id",
-  authenticateToken,
-  RBAC.checkCanDeleteUsers,
-  RBAC.getTargetUserAndEnsureSuperiority,
-  CONTROLLERS.USER.deleteUser
-)
+router.delete("/:id", authenticateToken, RBAC.checkCanDeleteUsers, RBAC.getTargetUser, CONTROLLERS.USER.deleteUser)
 
 export default router

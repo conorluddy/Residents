@@ -329,7 +329,7 @@ describe("Middleware:RBAC:checkPermission", () => {
   })
 })
 
-describe("Middleware:RBAC:getTargetUserAndEnsureSuperiority", () => {
+describe("Middleware:RBAC:getTargetUser", () => {
   let mockRequest: Partial<Request>
   let mockResponse: Partial<Response>
   let nextFunction: NextFunction
@@ -362,7 +362,7 @@ describe("Middleware:RBAC:getTargetUserAndEnsureSuperiority", () => {
 
   it("Happy path: User has more seniority than target, next() is called", async () => {
     mockRequest[REQUEST_USER] = mockAdminUser
-    await RBAC.getTargetUserAndEnsureSuperiority(mockRequest as Request, mockResponse as Response, nextFunction)
+    await RBAC.getTargetUser(mockRequest as Request, mockResponse as Response, nextFunction)
 
     expect(nextFunction).toHaveBeenCalled()
   })
@@ -370,7 +370,7 @@ describe("Middleware:RBAC:getTargetUserAndEnsureSuperiority", () => {
   it("should return early if the Role isnt legit", async () => {
     mockRequest[REQUEST_USER] = { ...mockAdminUser, role: "FAKE_ROLE" as ROLES }
     await expect(() =>
-      RBAC.getTargetUserAndEnsureSuperiority(mockRequest as Request, mockResponse as Response, nextFunction)
+      RBAC.getTargetUser(mockRequest as Request, mockResponse as Response, nextFunction)
     ).rejects.toThrow(new ForbiddenError(`Invalid user role.`))
     expect(nextFunction).not.toHaveBeenCalled()
   })
@@ -378,23 +378,23 @@ describe("Middleware:RBAC:getTargetUserAndEnsureSuperiority", () => {
   it("should return early if there's no User data provided", async () => {
     mockRequest[REQUEST_USER] = undefined
     await expect(() =>
-      RBAC.getTargetUserAndEnsureSuperiority(mockRequest as Request, mockResponse as Response, nextFunction)
+      RBAC.getTargetUser(mockRequest as Request, mockResponse as Response, nextFunction)
     ).rejects.toThrow(new ForbiddenError(`Missing User data.`))
     expect(nextFunction).not.toHaveBeenCalled()
   })
 
-  it("User has same role as target, forbid action", async () => {
+  it.skip("User has same role as target, forbid action (lets leave role comparison to ACL)", async () => {
     mockRequest[REQUEST_USER] = mockDefaultUser
     await expect(() =>
-      RBAC.getTargetUserAndEnsureSuperiority(mockRequest as Request, mockResponse as Response, nextFunction)
+      RBAC.getTargetUser(mockRequest as Request, mockResponse as Response, nextFunction)
     ).rejects.toThrow(new ForbiddenError(`Role superiority is required for this operation.`))
     expect(nextFunction).not.toHaveBeenCalled()
   })
 
-  it("User has lower role than target, forbid action", async () => {
+  it.skip("User has lower role than target, forbid action (lets leave role comparison to ACL)", async () => {
     mockRequest[REQUEST_USER] = mockDefaultUser
     await expect(() =>
-      RBAC.getTargetUserAndEnsureSuperiority(mockRequest as Request, mockResponse as Response, nextFunction)
+      RBAC.getTargetUser(mockRequest as Request, mockResponse as Response, nextFunction)
     ).rejects.toThrow(new ForbiddenError(`Role superiority is required for this operation.`))
     expect(nextFunction).not.toHaveBeenCalled()
   })
@@ -402,7 +402,7 @@ describe("Middleware:RBAC:getTargetUserAndEnsureSuperiority", () => {
   it("User role is LOCKED, forbid action", async () => {
     mockRequest[REQUEST_USER] = mockLockedUser
     await expect(() =>
-      RBAC.getTargetUserAndEnsureSuperiority(mockRequest as Request, mockResponse as Response, nextFunction)
+      RBAC.getTargetUser(mockRequest as Request, mockResponse as Response, nextFunction)
     ).rejects.toThrow(new ForbiddenError(`User account is locked.`))
     expect(nextFunction).not.toHaveBeenCalled()
   })
@@ -410,21 +410,21 @@ describe("Middleware:RBAC:getTargetUserAndEnsureSuperiority", () => {
   it("Target User role is LOCKED, can not be mutated by less than Admin", async () => {
     mockRequest[REQUEST_USER] = mockDefaultUser
     await expect(() =>
-      RBAC.getTargetUserAndEnsureSuperiority(mockRequest as Request, mockResponse as Response, nextFunction)
+      RBAC.getTargetUser(mockRequest as Request, mockResponse as Response, nextFunction)
     ).rejects.toThrow(new ForbiddenError(`Role superiority is required for this operation.`))
     expect(nextFunction).not.toHaveBeenCalled()
   })
 
   it("Target User role is LOCKED, can still be mutated by Admin+", async () => {
     mockRequest[REQUEST_USER] = mockAdminUser
-    await RBAC.getTargetUserAndEnsureSuperiority(mockRequest as Request, mockResponse as Response, nextFunction)
+    await RBAC.getTargetUser(mockRequest as Request, mockResponse as Response, nextFunction)
     expect(nextFunction).toHaveBeenCalled()
   })
 
   it("Admin account in deleted state should be forbidden from acting", async () => {
     mockRequest[REQUEST_USER] = mockDeletedAdminUser
     await expect(() =>
-      RBAC.getTargetUserAndEnsureSuperiority(mockRequest as Request, mockResponse as Response, nextFunction)
+      RBAC.getTargetUser(mockRequest as Request, mockResponse as Response, nextFunction)
     ).rejects.toThrow(new ForbiddenError(`User account is deleted.`))
     expect(nextFunction).not.toHaveBeenCalled()
   })
@@ -432,7 +432,7 @@ describe("Middleware:RBAC:getTargetUserAndEnsureSuperiority", () => {
   it("If user role is missing, forbid action", async () => {
     mockRequest[REQUEST_USER] = mockUserNoRole
     await expect(() =>
-      RBAC.getTargetUserAndEnsureSuperiority(mockRequest as Request, mockResponse as Response, nextFunction)
+      RBAC.getTargetUser(mockRequest as Request, mockResponse as Response, nextFunction)
     ).rejects.toThrow(new ForbiddenError(`User has no role.`))
     expect(nextFunction).not.toHaveBeenCalled()
   })

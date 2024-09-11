@@ -16,20 +16,23 @@ const checkPermission = (permission: PERMISSIONS) => (req: Request, res: Respons
   if (!user) throw new BadRequestError("User data is missing.")
   if (!!user.deletedAt) throw new ForbiddenError("User was deleted.")
   if (!user.role) throw new ForbiddenError("User has no role.")
+
   if (ROLES.LOCKED === user.role) throw new ForbiddenError("User account is locked.")
   if (STATUS.BANNED === user.status) throw new ForbiddenError("User account is banned.")
   if (STATUS.DELETED === user.status) throw new ForbiddenError("User account was deleted.")
   if (STATUS.SUSPENDED === user.status) throw new ForbiddenError("User account is suspended.")
   if (STATUS.UNVERIFIED === user.status) throw new ForbiddenError("User account is not verified.")
+
+  // Finally check the actual ACL
   if (user.role && !ACL[user.role].includes(permission)) throw new ForbiddenError("User cant perform this action.")
 
   next()
 }
 
 /**
- * Check if the user has role superiority over the target user
+ * Get the target user from the request params if the user has the required permissions
  */
-async function getTargetUserAndEnsureSuperiority(req: Request, res: Response, next: NextFunction) {
+async function getTargetUser(req: Request, res: Response, next: NextFunction) {
   const user = req[REQUEST_USER]
   const targetUserId = req.params.id
 
@@ -61,7 +64,6 @@ async function getTargetUserAndEnsureSuperiority(req: Request, res: Response, ne
   const targetRoleIndex = ROLES_ARRAY.findIndex((role) => role === targetUser?.role)
 
   if (targetRoleIndex === -1) throw new ForbiddenError("Invalid target user role.")
-  if (targetRoleIndex <= userRoleIndex) throw new UnauthorizedError("Role superiority is required for this operation.")
 
   // All good, set the target user on the request object //
 
@@ -72,11 +74,13 @@ async function getTargetUserAndEnsureSuperiority(req: Request, res: Response, ne
 
 const RBAC = {
   //
-  getTargetUserAndEnsureSuperiority,
+  getTargetUser,
   //
   checkCanGetOwnUser: checkPermission(PERMISSIONS.CAN_GET_OWN_USER),
   checkCanCreateUsers: checkPermission(PERMISSIONS.CAN_CREATE_USERS),
   checkCanGetUsers: checkPermission(PERMISSIONS.CAN_GET_ALL_USERS),
+  checkCanGetUsersWithSameRole: checkPermission(PERMISSIONS.CAN_GET_USERS_WITH_SAME_ROLE),
+  checkCanGetUsersWithLowerRole: checkPermission(PERMISSIONS.CAN_GET_USERS_WITH_LOWER_ROLE),
   checkCanUpdateUsers: checkPermission(PERMISSIONS.CAN_UPDATE_ANY_USER),
   checkCanUpdateOwnUser: checkPermission(PERMISSIONS.CAN_UPDATE_OWN_USER),
   checkCanDeleteUsers: checkPermission(PERMISSIONS.CAN_DELETE_ANY_USER),
