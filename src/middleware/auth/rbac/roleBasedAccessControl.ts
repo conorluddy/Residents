@@ -1,9 +1,13 @@
 import { NextFunction, Request, Response } from "express"
-import { ACL, PERMISSIONS } from "../../constants/accessControlList"
-import { ROLES, ROLES_ARRAY, STATUS } from "../../constants/database"
-import { REQUEST_TARGET_USER, REQUEST_TARGET_USER_ID, REQUEST_USER } from "../../types/requestSymbols"
-import SERVICES from "../../services"
-import { BadRequestError, ForbiddenError, NotFoundError, UnauthorizedError } from "../../errors"
+import { ACL, PERMISSIONS } from "../../../constants/accessControlList"
+import { ROLES, ROLES_ARRAY, STATUS } from "../../../constants/database"
+import { REQUEST_TARGET_USER, REQUEST_TARGET_USER_ID, REQUEST_USER } from "../../../types/requestSymbols"
+import SERVICES from "../../../services"
+import { BadRequestError, ForbiddenError, NotFoundError, UnauthorizedError } from "../../../errors"
+import canGetUser from "./canGetUser"
+import canUpdateUser from "./canUpdateUser"
+import canDeleteUser from "./canDeleteUser"
+import getTargetUser from "./getTargetUser"
 
 /**
  * Check if the user has the required permission to access the resource
@@ -29,79 +33,16 @@ const checkPermission = (permission: PERMISSIONS) => (req: Request, res: Respons
   next()
 }
 
-/**
- * Get the target user from the request params if the user has the required permissions
- */
-async function getTargetUser(req: Request, res: Response, next: NextFunction) {
-  const user = req[REQUEST_USER]
-  const targetUserId = req.params.id
-
-  if (!user) throw new BadRequestError("Missing User data.")
-  if (!!user.deletedAt) throw new UnauthorizedError("User account is deleted.")
-  if (!user.role) throw new ForbiddenError("User has no role.")
-  if (!ROLES_ARRAY.includes(user.role)) throw new ForbiddenError("Invalid user role.")
-  if (user.role === ROLES.LOCKED) throw new ForbiddenError("User account is locked.")
-  if (STATUS.BANNED === user.status) throw new ForbiddenError("User account is banned.")
-  if (STATUS.SUSPENDED === user.status) throw new ForbiddenError("User account is suspended.")
-  if (STATUS.UNVERIFIED === user.status) throw new ForbiddenError("User account is not verified.")
-  if (STATUS.REJECTED === user.status) throw new ForbiddenError("User account is rejected.") // Not sure we need/use this
-
-  // Go fetch the target user
-
-  const targetUser = await SERVICES.getUserById(targetUserId)
-
-  //
-
-  if (!targetUser) throw new NotFoundError("Target user not found.")
-  if (!targetUser.role) throw new ForbiddenError("Target user role not found.")
-  if (!ROLES_ARRAY.includes(targetUser.role)) throw new ForbiddenError("Invalid target user role.")
-
-  // All good, set the target user on the request object //
-
-  req[REQUEST_TARGET_USER] = targetUser
-  req[REQUEST_TARGET_USER_ID] = targetUser.id
-  next()
-}
-
-/**
- *
- * @param req
- * @param res
- * @param next
- */
-async function checkCanGetUser(req: Request, res: Response, next: NextFunction) {
-  const user = req[REQUEST_USER]
-  const targetUser = req[REQUEST_TARGET_USER]
-
-  if (!user || !targetUser || !user.role || !targetUser.role) {
-    throw new BadRequestError("User data is missing.")
-  }
-
-  if (user.id === targetUser.id && ACL[user.role].includes(PERMISSIONS.CAN_GET_OWN_USER)) {
-    return next()
-  }
-
-  if (ACL[user.role].includes(PERMISSIONS.CAN_GET_ALL_USERS)) {
-    return next()
-  }
-
-  if (user.role === targetUser.role && ACL[user.role].includes(PERMISSIONS.CAN_GET_SAME_ROLE_USERS)) {
-    return next()
-  }
-
-  const userRoleIndex = ROLES_ARRAY.indexOf(user.role)
-  const targetRoleIndex = ROLES_ARRAY.indexOf(targetUser.role)
-
-  if (userRoleIndex < targetRoleIndex && ACL[user.role].includes(PERMISSIONS.CAN_GET_LOWER_ROLE_USERS)) {
-    return next()
-  }
-
-  throw new ForbiddenError("User doesn't have permission to get this user.")
-}
-
 const RBAC = {
   getTargetUser,
-  checkCanGetUser,
+
+  // More complex checks for multiple permission cases
+
+  checkCanGetUser: canGetUser,
+  checkCanUpdateUser: canUpdateUser,
+  checkCanDeleteUser: canDeleteUser,
+
+  // Simple checks 1:1 against permissions
 
   // User management
   checkCanCreateUsers: checkPermission(PERMISSIONS.CAN_CREATE_USERS),

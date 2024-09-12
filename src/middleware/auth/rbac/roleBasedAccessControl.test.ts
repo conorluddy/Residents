@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from "express"
-import { ROLES, STATUS } from "../../constants/database"
-import { PublicUser, SafeUser } from "../../db/types"
-import { makeAFakeSafeUser, makeAFakeUser } from "../../test-utils/mockUsers"
-import { REQUEST_USER } from "../../types/requestSymbols"
+import { ROLES, STATUS } from "../../../constants/database"
+import { PublicUser, SafeUser } from "../../../db/types"
+import { makeAFakeSafeUser, makeAFakeUser } from "../../../test-utils/mockUsers"
+import { REQUEST_USER } from "../../../types/requestSymbols"
 import RBAC from "./roleBasedAccessControl"
-import { BadRequestError, ForbiddenError } from "../../errors"
+import { BadRequestError, ForbiddenError } from "../../../errors"
 
 jest.mock("../../services/index", () => ({
   getUserById: jest
@@ -49,7 +49,7 @@ describe("Middleware:RBAC:checkPermission", () => {
 
   it("should return early if there's no User data provided", () => {
     mockRequest[REQUEST_USER] = null as unknown as SafeUser
-    expect(() => RBAC.checkCanGetUsers(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
+    expect(() => RBAC.checkCanGetUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
       new BadRequestError("User data is missing.")
     )
     expect(nextFunction).not.toHaveBeenCalled()
@@ -57,14 +57,14 @@ describe("Middleware:RBAC:checkPermission", () => {
 
   it("should call next function if the user has the required permission", () => {
     mockRequest[REQUEST_USER] = mockAdminUser
-    RBAC.checkCanGetUsers(mockRequest as Request, mockResponse as Response, nextFunction)
+    RBAC.checkCanGetUser(mockRequest as Request, mockResponse as Response, nextFunction)
     expect(nextFunction).toHaveBeenCalled()
     expect(mockResponse.status).not.toHaveBeenCalled()
   })
 
   it("should return 403 if the user lacks the required permission", async () => {
     mockRequest[REQUEST_USER] = mockDefaultUser
-    expect(() => RBAC.checkCanGetUsers(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
+    expect(() => RBAC.checkCanGetUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
       new ForbiddenError("User cant perform this action.")
     )
     expect(nextFunction).not.toHaveBeenCalled()

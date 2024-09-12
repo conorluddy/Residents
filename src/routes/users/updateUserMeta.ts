@@ -1,6 +1,6 @@
 import { Router } from "express"
 import { authenticateToken } from "../../middleware/auth/jsonWebTokens"
-import RBAC from "../../middleware/auth/roleBasedAccessControl"
+import RBAC from "../../middleware/auth/rbac/roleBasedAccessControl"
 import CONTROLLERS from "../../controllers"
 import VALIDATE from "../../middleware/validation"
 
@@ -10,7 +10,7 @@ router.patch(
   "/meta/:id",
   authenticateToken,
   RBAC.getTargetUser,
-  RBAC.checkCanUpdateUsers,
+  RBAC.checkCanUpdateUser, // change to use RBAC.checkCanUpdateUserMeta or more fine graied user stuff
   VALIDATE.userMeta,
   CONTROLLERS.USER.updateUserMeta
 )
