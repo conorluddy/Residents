@@ -3,6 +3,7 @@ import { HTTP_SUCCESS } from "../../constants/http"
 import { User } from "../../db/types"
 import { makeAFakeUser } from "../../test-utils/mockUsers"
 import { getUser } from "./getUser"
+import { REQUEST_TARGET_USER_ID } from "../../types/requestSymbols"
 
 let fakeUser: Partial<User>
 
@@ -22,16 +23,14 @@ jest.mock("../../services/user/getUserById", () => ({
 }))
 
 describe("Controller: GetUser", () => {
-  let mockRequest: Partial<Request>
+  let mockRequest: Partial<Request> & { [REQUEST_TARGET_USER_ID]?: string }
   let mockResponse: Partial<Response>
   let mockNext = jest.fn().mockReturnThis()
 
   beforeAll(() => {})
   beforeEach(() => {
     mockRequest = {
-      params: {
-        id: "ID",
-      },
+      [REQUEST_TARGET_USER_ID]: "ID",
     }
     mockResponse = {
       status: jest.fn().mockReturnThis(),
@@ -46,7 +45,7 @@ describe("Controller: GetUser", () => {
   })
 
   it("Missing User ID", async () => {
-    mockRequest.params = {}
+    delete mockRequest[REQUEST_TARGET_USER_ID]
     await expect(getUser(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)).rejects.toThrow(
       "User ID is missing."
     )

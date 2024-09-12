@@ -1,12 +1,11 @@
 import { NextFunction, Request, Response } from "express"
 import { ACL, PERMISSIONS } from "../../../constants/accessControlList"
-import { ROLES, ROLES_ARRAY, STATUS } from "../../../constants/database"
-import { REQUEST_TARGET_USER, REQUEST_TARGET_USER_ID, REQUEST_USER } from "../../../types/requestSymbols"
-import SERVICES from "../../../services"
-import { BadRequestError, ForbiddenError, NotFoundError, UnauthorizedError } from "../../../errors"
+import { ROLES, STATUS } from "../../../constants/database"
+import { BadRequestError, ForbiddenError } from "../../../errors"
+import { REQUEST_USER } from "../../../types/requestSymbols"
+import canDeleteUser from "./canDeleteUser"
 import canGetUser from "./canGetUser"
 import canUpdateUser from "./canUpdateUser"
-import canDeleteUser from "./canDeleteUser"
 import getTargetUser from "./getTargetUser"
 
 /**
@@ -16,6 +15,8 @@ import getTargetUser from "./getTargetUser"
  */
 const checkPermission = (permission: PERMISSIONS) => (req: Request, res: Response, next: NextFunction) => {
   const user = req[REQUEST_USER]
+
+  console.log("user", user)
 
   if (!user) throw new BadRequestError("User data is missing.")
   if (!!user.deletedAt) throw new ForbiddenError("User was deleted.")
@@ -36,13 +37,9 @@ const checkPermission = (permission: PERMISSIONS) => (req: Request, res: Respons
 const RBAC = {
   getTargetUser,
 
-  // More complex checks for multiple permission cases
-
-  checkCanGetUser: canGetUser,
-  checkCanUpdateUser: canUpdateUser,
-  checkCanDeleteUser: canDeleteUser,
-
-  // Simple checks 1:1 against permissions
+  /**
+   * Simple checks 1:1 against permissions
+   */
 
   // User management
   checkCanCreateUsers: checkPermission(PERMISSIONS.CAN_CREATE_USERS),
@@ -75,6 +72,16 @@ const RBAC = {
 
   // Minimal permissions
   checkCanAccessOwnData: checkPermission(PERMISSIONS.CAN_ACCESS_OWN_DATA),
+
+  /**
+   * More complex checks for multiple permission cases
+   */
+
+  checkCanGetUser: canGetUser,
+  checkCanUpdateUser: canUpdateUser,
+  checkCanDeleteUser: canDeleteUser,
 }
 
 export default RBAC
+
+export { getTargetUser }

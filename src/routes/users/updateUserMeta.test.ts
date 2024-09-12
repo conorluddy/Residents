@@ -15,8 +15,8 @@ jest.mock("../../middleware/auth/jsonWebTokens", () => ({
   }),
 }))
 
-jest.mock("../../middleware/auth/roleBasedAccessControl", () => ({
-  checkCanUpdateUsers: jest.fn((_req, _res, next) => next()),
+jest.mock("../../middleware/auth/rbac", () => ({
+  checkCanUpdateUser: jest.fn((_req, _res, next) => next()),
   getTargetUser: jest.fn((req, _res, next) => {
     req[REQUEST_TARGET_USER_ID] = fakeUser.id
     next()

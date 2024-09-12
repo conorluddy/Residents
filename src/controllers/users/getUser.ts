@@ -6,6 +6,7 @@ import { REQUEST_TARGET_USER_ID } from "../../types/requestSymbols"
 
 /**
  * getUser
+ * @param req[REQUEST_TARGET_USER_ID] - The ID of the user to get, provided by upstream middleware
  */
 export const getUser = async (req: Request, res: Response, next: NextFunction) => {
   //

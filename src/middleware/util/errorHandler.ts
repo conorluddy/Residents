@@ -22,6 +22,8 @@ import {
 const errorHandler = (err: Error, _req: Request, res: Response, next: NextFunction) => {
   if (!err) next()
 
+  console.log(err.message)
+
   logger.error(err.message)
 
   // Debug

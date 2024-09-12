@@ -15,24 +15,25 @@ async function getTargetUser(req: Request, res: Response, next: NextFunction) {
   const targetUserId = req.params.id
 
   if (!user) throw new BadRequestError("Missing User data.")
-  if (!!user.deletedAt) throw new UnauthorizedError("User account is deleted.")
   if (!user.role) throw new ForbiddenError("User has no role.")
+  if (!!user.deletedAt) throw new UnauthorizedError("User account is deleted.")
+
+  // OPTIMISATION: Make a map for these to make it more efficient sometime
   if (!ROLES_ARRAY.includes(user.role)) throw new ForbiddenError("Invalid user role.")
-  if (user.role === ROLES.LOCKED) throw new ForbiddenError("User account is locked.")
+  if (ROLES.LOCKED === user.role) throw new ForbiddenError("User account is locked.")
   if (STATUS.BANNED === user.status) throw new ForbiddenError("User account is banned.")
   if (STATUS.SUSPENDED === user.status) throw new ForbiddenError("User account is suspended.")
   if (STATUS.UNVERIFIED === user.status) throw new ForbiddenError("User account is not verified.")
   if (STATUS.REJECTED === user.status) throw new ForbiddenError("User account is rejected.") // Not sure we need/use this
 
   // Go fetch the target user
-
   const targetUser = await SERVICES.getUserById(targetUserId)
 
   if (!targetUser) throw new NotFoundError("Target user not found.")
   if (!targetUser.role) throw new ForbiddenError("Target user role not found.")
   if (!ROLES_ARRAY.includes(targetUser.role)) throw new ForbiddenError("Invalid target user role.")
 
-  // All good, set the target user on the request object //
+  // All good, set the target user on the request object
 
   req[REQUEST_TARGET_USER] = targetUser
   req[REQUEST_TARGET_USER_ID] = targetUser.id

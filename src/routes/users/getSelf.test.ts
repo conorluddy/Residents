@@ -18,8 +18,8 @@ jest.mock("../../middleware/auth/jsonWebTokens", () => ({
   }),
 }))
 
-jest.mock("../../middleware/auth/roleBasedAccessControl", () => ({
-  checkCanGetOwnUser: jest.fn((req, res, next) => next()),
+jest.mock("../../middleware/auth/rbac", () => ({
+  checkCanAccessOwnData: jest.fn((req, res, next) => next()),
 }))
 
 jest.mock("../../db", () => ({

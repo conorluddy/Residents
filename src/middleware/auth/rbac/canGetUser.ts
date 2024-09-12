@@ -21,6 +21,10 @@ async function canGetUser(req: Request, res: Response, next: NextFunction): Prom
   if (user.id === targetUser.id && ACL[user.role].includes(PERMISSIONS.CAN_GET_OWN_USER)) {
     return next()
   }
+  // OPTIMISE: Dedupe these - they do the same stuff
+  if (user.id === targetUser.id && ACL[user.role].includes(PERMISSIONS.CAN_ACCESS_OWN_DATA)) {
+    return next()
+  }
 
   if (ACL[user.role].includes(PERMISSIONS.CAN_GET_ALL_USERS)) {
     return next()

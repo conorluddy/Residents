@@ -31,8 +31,6 @@ export const logout = async (req: Request, res: Response, next: NextFunction) =>
     expires: new Date(0),
   })
 
-  console.log("cookies", req.cookies)
-
   // Delete the refresh tokens from the database
   const userId = req.cookies?.[RESIDENT_TOKEN]
   if (!userId) throw new BadRequestError("User ID is missing.")

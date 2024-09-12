@@ -3,10 +3,10 @@ import { ROLES, STATUS } from "../../../constants/database"
 import { PublicUser, SafeUser } from "../../../db/types"
 import { makeAFakeSafeUser, makeAFakeUser } from "../../../test-utils/mockUsers"
 import { REQUEST_USER } from "../../../types/requestSymbols"
-import RBAC from "./roleBasedAccessControl"
+import RBAC from "./index"
 import { BadRequestError, ForbiddenError } from "../../../errors"
 
-jest.mock("../../services/index", () => ({
+jest.mock("../../../services/index", () => ({
   getUserById: jest
     .fn()
     .mockResolvedValueOnce(makeAFakeUser({ role: ROLES.DEFAULT, status: STATUS.VERIFIED, username: "1" }))
@@ -83,12 +83,12 @@ describe("Middleware:RBAC:checkPermission", () => {
     })
     it("can GetUsers", () => {
       mockRequest[REQUEST_USER] = mockAdminUser
-      RBAC.checkCanGetUsers(mockRequest as Request, mockResponse as Response, nextFunction)
+      RBAC.checkCanGetUser(mockRequest as Request, mockResponse as Response, nextFunction)
       expect(nextFunction).toHaveBeenCalled()
     })
     it("can UpdateUsers", () => {
       mockRequest[REQUEST_USER] = mockAdminUser
-      RBAC.checkCanUpdateUsers(mockRequest as Request, mockResponse as Response, nextFunction)
+      RBAC.checkCanUpdateUser(mockRequest as Request, mockResponse as Response, nextFunction)
       expect(nextFunction).toHaveBeenCalled()
     })
     it("can UpdateOwnUser", () => {
@@ -98,7 +98,7 @@ describe("Middleware:RBAC:checkPermission", () => {
     })
     it("can DeleteUser", () => {
       mockRequest[REQUEST_USER] = mockAdminUser
-      RBAC.checkCanDeleteUsers(mockRequest as Request, mockResponse as Response, nextFunction)
+      RBAC.checkCanDeleteUser(mockRequest as Request, mockResponse as Response, nextFunction)
       expect(nextFunction).toHaveBeenCalled()
     })
     it("can UpdateAnyUserStatus", () => {
@@ -108,7 +108,7 @@ describe("Middleware:RBAC:checkPermission", () => {
     })
     it("can UpdateOwnProfile", () => {
       mockRequest[REQUEST_USER] = mockAdminUser
-      RBAC.checkCanUpdateOwnProfile(mockRequest as Request, mockResponse as Response, nextFunction)
+      RBAC.checkCanUpdateOwnUser(mockRequest as Request, mockResponse as Response, nextFunction)
       expect(nextFunction).toHaveBeenCalled()
     })
   })
@@ -126,7 +126,7 @@ describe("Middleware:RBAC:checkPermission", () => {
     })
     it("can UPDATE OWN/SELF profile (probably same as user update tbh)", () => {
       mockRequest[REQUEST_USER] = mockDefaultUser
-      RBAC.checkCanUpdateOwnProfile(mockRequest as Request, mockResponse as Response, nextFunction)
+      RBAC.checkCanUpdateOwnUser(mockRequest as Request, mockResponse as Response, nextFunction)
     })
     it("can't CREATE users", async () => {
       mockRequest[REQUEST_USER] = mockDefaultUser
@@ -136,14 +136,14 @@ describe("Middleware:RBAC:checkPermission", () => {
     })
     it("can't GET users", async () => {
       mockRequest[REQUEST_USER] = mockDefaultUser
-      expect(() => RBAC.checkCanGetUsers(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
+      expect(() => RBAC.checkCanGetUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
         new ForbiddenError(`User cant perform this action.`)
       )
     })
 
     it("can't UPDATE users", async () => {
       mockRequest[REQUEST_USER] = mockDefaultUser
-      expect(() => RBAC.checkCanUpdateUsers(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
+      expect(() => RBAC.checkCanUpdateUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
         new ForbiddenError(`User cant perform this action.`)
       )
     })
@@ -156,7 +156,7 @@ describe("Middleware:RBAC:checkPermission", () => {
 
     it("can't DELETE users", async () => {
       mockRequest[REQUEST_USER] = mockDefaultUser
-      expect(() => RBAC.checkCanDeleteUsers(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
+      expect(() => RBAC.checkCanDeleteUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
         new ForbiddenError(`User cant perform this action.`)
       )
     })
@@ -184,21 +184,21 @@ describe("Middleware:RBAC:checkPermission", () => {
       expect(nextFunction).not.toHaveBeenCalled()
     })
     it("can't GET users", async () => {
-      expect(() => RBAC.checkCanGetUsers(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
+      expect(() => RBAC.checkCanGetUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
         new ForbiddenError(`User account is locked.`)
       )
       expect(nextFunction).not.toHaveBeenCalled()
     })
 
     it("can't UPDATE users", async () => {
-      expect(() => RBAC.checkCanUpdateUsers(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
+      expect(() => RBAC.checkCanUpdateUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
         new ForbiddenError(`User account is locked.`)
       )
       expect(nextFunction).not.toHaveBeenCalled()
     })
 
     it("can't DELETE users", async () => {
-      expect(() => RBAC.checkCanDeleteUsers(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
+      expect(() => RBAC.checkCanDeleteUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
         new ForbiddenError(`User account is locked.`)
       )
       expect(nextFunction).not.toHaveBeenCalled()
@@ -227,21 +227,21 @@ describe("Middleware:RBAC:checkPermission", () => {
       expect(nextFunction).not.toHaveBeenCalled()
     })
     it("can't GET users", () => {
-      expect(() => RBAC.checkCanGetUsers(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
+      expect(() => RBAC.checkCanGetUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
         new ForbiddenError(`User account is banned.`)
       )
       expect(nextFunction).not.toHaveBeenCalled()
     })
 
     it("can't UPDATE users", () => {
-      expect(() => RBAC.checkCanUpdateUsers(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
+      expect(() => RBAC.checkCanUpdateUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
         new ForbiddenError(`User account is banned.`)
       )
       expect(nextFunction).not.toHaveBeenCalled()
     })
 
     it("can't DELETE users", () => {
-      expect(() => RBAC.checkCanDeleteUsers(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
+      expect(() => RBAC.checkCanDeleteUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
         new ForbiddenError(`User account is banned.`)
       )
       expect(nextFunction).not.toHaveBeenCalled()
@@ -269,19 +269,19 @@ describe("Middleware:RBAC:checkPermission", () => {
       expect(nextFunction).not.toHaveBeenCalled()
     })
     it("can't GET users", () => {
-      expect(() => RBAC.checkCanGetUsers(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
+      expect(() => RBAC.checkCanGetUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
         new ForbiddenError(`User was deleted.`)
       )
       expect(nextFunction).not.toHaveBeenCalled()
     })
     it("can't UPDATE users", () => {
-      expect(() => RBAC.checkCanUpdateUsers(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
+      expect(() => RBAC.checkCanUpdateUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
         new ForbiddenError(`User was deleted.`)
       )
       expect(nextFunction).not.toHaveBeenCalled()
     })
     it("can't DELETE users", () => {
-      expect(() => RBAC.checkCanDeleteUsers(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
+      expect(() => RBAC.checkCanDeleteUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
         new ForbiddenError(`User was deleted.`)
       )
       expect(nextFunction).not.toHaveBeenCalled()
@@ -309,19 +309,19 @@ describe("Middleware:RBAC:checkPermission", () => {
       expect(nextFunction).not.toHaveBeenCalled()
     })
     it("can't GET users", () => {
-      expect(() => RBAC.checkCanGetUsers(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
+      expect(() => RBAC.checkCanGetUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
         new ForbiddenError(`User was deleted.`)
       )
       expect(nextFunction).not.toHaveBeenCalled()
     })
     it("can't UPDATE users", () => {
-      expect(() => RBAC.checkCanUpdateUsers(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
+      expect(() => RBAC.checkCanUpdateUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
         new ForbiddenError(`User was deleted.`)
       )
       expect(nextFunction).not.toHaveBeenCalled()
     })
     it("can't DELETE users", () => {
-      expect(() => RBAC.checkCanDeleteUsers(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
+      expect(() => RBAC.checkCanDeleteUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
         new ForbiddenError(`User was deleted.`)
       )
       expect(nextFunction).not.toHaveBeenCalled()

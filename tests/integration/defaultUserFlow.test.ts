@@ -53,7 +53,6 @@ describe("Integration: Default User flow", () => {
       username: "mrhappy",
       password: "STRONGP4$$w0rd_",
     }
-
     const response = await request(app).post("/auth").send(login)
     expect(response.status).toBe(HTTP_SUCCESS.OK)
     expect(response.body).toHaveProperty("accessToken")
