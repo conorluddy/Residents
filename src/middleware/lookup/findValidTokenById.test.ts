@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express"
 import { TOKEN_TYPE } from "../../constants/database"
-import { HTTP_CLIENT_ERROR } from "../../constants/http"
 import { TIMESPAN } from "../../constants/time"
 import { Token } from "../../db/types"
 import { REQUEST_TOKEN, REQUEST_TOKEN_ID } from "../../types/requestSymbols"
