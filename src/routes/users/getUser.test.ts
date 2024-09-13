@@ -9,12 +9,15 @@ import { makeAFakeUser } from "../../test-utils/mockUsers"
 import { REQUEST_USER } from "../../types/requestSymbols"
 import { generateJwtFromUser } from "../../utils/generateJwt"
 
-let fakeUser: SafeUser
+let fakeUser: SafeUser = makeAFakeUser({ password: "$TR0ngP@$$W0rDz123!", id: "ABC123" })
+const app = express()
+app.use(express.json())
+app.use("/user", getUserRoute)
 
 // Mock the middlewares
 jest.mock("../../middleware/auth/jsonWebTokens", () => ({
   authenticateToken: jest.fn((req, res, next) => {
-    req[REQUEST_USER] = { id: "123", role: "admin" }
+    req[REQUEST_USER] = { id: "123", role: ROLES.DEFAULT }
     next()
   }),
 }))
@@ -25,19 +28,12 @@ jest.mock("../../middleware/auth/rbac", () => ({
 }))
 
 jest.mock("../../services/user/getUserById", () => ({
-  getUserById: jest.fn().mockImplementationOnce(async () => {
-    fakeUser = await makeAFakeUser({ password: "$TR0ngP@$$W0rDz123!", id: "ABC123" })
-    return [fakeUser]
-  }),
+  getUserById: jest.fn().mockImplementationOnce(async () => fakeUser),
 }))
 
-CONTROLLERS.USER.getUser = jest.fn(async (req, res) => {
+CONTROLLERS.USER.getUser = jest.fn(async (_req, res) => {
   return res.status(HTTP_SUCCESS.OK).json({ message: "User retrieved successfully" })
 })
-
-const app = express()
-app.use(express.json())
-app.use("/user", getUserRoute)
 
 describe("GET /user/:id", () => {
   let mockDefaultUser: PublicUser
@@ -48,7 +44,7 @@ describe("GET /user/:id", () => {
   })
 
   it("should call the getUser controller with valid data", async () => {
-    const userId = "123"
+    const userId = fakeUser.id
     const response = await request(app)
       .get(`/user/${userId}`)
       .set("Authorization", `Bearer ${generateJwtFromUser(mockDefaultUser)}`)

@@ -1,8 +1,15 @@
 import winston from "winston"
 
+// Update all this to be env specific
+
 const logger = winston.createLogger({
-  level: "info", // Minimum level to log
-  format: winston.format.json(), // Output format
+  level: "debug", //  "info", // Minimum level to log
+  format: winston.format.combine(
+    winston.format.prettyPrint(),
+    winston.format.colorize(),
+    winston.format.simple(),
+    winston.format.json()
+  ),
   transports: [
     // Write all logs with level `info` and below to `combined.log`
     new winston.transports.File({ filename: "combined.log" }),
@@ -12,12 +19,12 @@ const logger = winston.createLogger({
 })
 
 // If we're not in production, log to the `console` as well
-if (!["production", "test"].includes(process.env.NODE_ENV ?? "")) {
-  logger.add(
-    new winston.transports.Console({
-      format: winston.format.simple(),
-    })
-  )
-}
+// if (process.env.NODE_ENV === "production") {
+logger.add(
+  new winston.transports.Console({
+    format: winston.format.prettyPrint(),
+  })
+)
+// }
 
 export { logger }

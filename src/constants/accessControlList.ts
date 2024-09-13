@@ -40,6 +40,8 @@ export const ACL: { [key in ROLES]: PERMISSIONS[] } = {
     ...Object.values(PERMISSIONS),
   ],
 
+  // TODO: ROLES.CRON
+
   [ROLES.ADMIN]: [
     PERMISSIONS.CAN_CLEAR_EXPIRED_TOKENS,
     PERMISSIONS.CAN_CREATE_LOWER_ROLE_USERS,

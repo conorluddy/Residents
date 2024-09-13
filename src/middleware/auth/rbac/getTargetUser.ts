@@ -12,11 +12,12 @@ import { REQUEST_TARGET_USER, REQUEST_TARGET_USER_ID, REQUEST_USER } from "../..
  */
 async function getTargetUser(req: Request, res: Response, next: NextFunction) {
   const user = req[REQUEST_USER]
-  const targetUserId = req.params.id
-
   if (!user) throw new BadRequestError("Missing User data.")
   if (!user.role) throw new ForbiddenError("User has no role.")
   if (!!user.deletedAt) throw new UnauthorizedError("User account is deleted.")
+
+  const isSelfLookup = req.url === "/self"
+  const targetUserId = isSelfLookup ? user.id : req.params.id
 
   // OPTIMISATION: Make a map for these to make it more efficient sometime
   if (!ROLES_ARRAY.includes(user.role)) throw new ForbiddenError("Invalid user role.")

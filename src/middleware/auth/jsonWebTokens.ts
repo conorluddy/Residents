@@ -10,6 +10,8 @@ export const authenticateToken = (req: Request, res: Response, next: NextFunctio
   const token = authHeader && authHeader.split(" ")[1]
   const secret = JWT_TOKEN_SECRET
 
+  console.log("AUTH")
+
   if (!token) throw new UnauthorizedError("JWT token is not provided in the request headers.")
 
   if (!secret || secret === "")
