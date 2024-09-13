@@ -3,7 +3,7 @@ import { authenticateToken } from "./auth/jsonWebTokens"
 import discardToken from "./auth/discardToken"
 import errorHandler from "./util/errorHandler"
 import findUserByValidEmail from "./lookup/findUserByValidEmail"
-import RBAC from "./auth/roleBasedAccessControl"
+import RBAC from "./auth/rbac"
 import VALIDATE from "./validation"
 import findValidTokenById from "./lookup/findValidTokenById"
 

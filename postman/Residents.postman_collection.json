@@ -117,7 +117,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"username\": \"Dorothea29\",\n    \"password\": \"Dorothea29\"\n}",
+							"raw": "{\n    \"username\": \"resident\",\n    \"password\": \"R351D3NT!zero\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -268,7 +268,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{ \"email\": \"Emile_Metz@hotmail.com\"}",
+							"raw": "{ \"email\": \"resident@resident.resident\"}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -336,6 +336,47 @@
 				},
 				{
 					"name": "Refresh Token [auth]",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"if (jsonData.accessToken) {",
+									"    pm.environment.set(\"JWT\", jsonData.accessToken);",
+									"} else {",
+									"    console.error(\"JWT not found in response.\");",
+									"}",
+									"",
+									"const xsrfToken = pm.cookies.get(\"xsrfToken\");",
+									"if (xsrfToken) {",
+									"    pm.environment.set(\"XSRF-TOKEN\", xsrfToken);",
+									"} else {",
+									"    console.error(\"XSRF token not found in cookies.\");",
+									"}",
+									"",
+									"const refreshToken = pm.cookies.get(\"refreshToken\");",
+									"if (refreshToken) {",
+									"    pm.environment.set(\"REFRESH-TOKEN\", refreshToken)",
+									"} else {",
+									"    console.error(\"Refresh token not found in cookies.\");",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -357,7 +398,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{ \"refreshToken\": \"{{REFRESH-TOKEN}}\"}",
+							"raw": "",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -373,6 +414,57 @@
 							"path": [
 								"auth",
 								"refresh"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Clear Expired Tokens [auth]",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "xsrf-token",
+								"value": "{{XSRF-TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"refreshToken\": \"{{REFRESH-TOKEN}}\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/auth/clear-tokens",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"auth",
+								"clear-tokens"
 							],
 							"query": [
 								{
@@ -433,7 +525,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"firstName\": \"firstName\",\n    \"lastName\": \"lastName\",\n    \"email\": \"email5\",\n    \"username\": \"USER5\",\n    \"password\": \"password\"\n}",
+							"raw": "{\n    \"firstName\": \"Resident\",\n    \"lastName\": \"Resident\",\n    \"email\": \"Resident@gmail.ie\",\n    \"username\": \"Resident\",\n    \"password\": \"StrongPpa$$Word123\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"

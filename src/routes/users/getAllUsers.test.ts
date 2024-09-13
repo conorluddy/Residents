@@ -8,7 +8,6 @@ import getAllUsersRoute from "../../routes/users/getAllUsers"
 import { makeAFakeSafeUser, makeAFakeUser } from "../../test-utils/mockUsers"
 import { REQUEST_USER } from "../../types/requestSymbols"
 import { generateJwtFromUser } from "../../utils/generateJwt"
-import { logger } from "../../utils/logger"
 
 let fakeUser
 
@@ -20,8 +19,8 @@ jest.mock("../../middleware/auth/jsonWebTokens", () => ({
   }),
 }))
 
-jest.mock("../../middleware/auth/roleBasedAccessControl", () => ({
-  checkCanGetUsers: jest.fn((_req, _res, next) => next()),
+jest.mock("../../middleware/auth/rbac", () => ({
+  checkCanGetAllUsers: jest.fn((_req, _res, next) => next()),
 }))
 
 CONTROLLERS.USER.getAllUsers = jest.fn(async (_req, res) => {

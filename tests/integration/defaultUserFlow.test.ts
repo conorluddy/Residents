@@ -25,7 +25,7 @@ describe("Integration: Default User flow", () => {
     await dbClient.end()
   })
 
-  it("Create a new user", async () => {
+  it("Creates a new user", async () => {
     const newUser = {
       firstName: "mrhappy",
       lastName: "mrhappy",
@@ -48,30 +48,33 @@ describe("Integration: Default User flow", () => {
     })
   })
 
-  it("Log in with the new user", async () => {
+  it("Logs in with the new user", async () => {
     const login = {
       username: "mrhappy",
       password: "STRONGP4$$w0rd_",
     }
-
     const response = await request(app).post("/auth").send(login)
     expect(response.status).toBe(HTTP_SUCCESS.OK)
     expect(response.body).toHaveProperty("accessToken")
     jwt = response.body.accessToken
   })
 
-  it("Log in and get own user object", async () => {
+  it("Logs in and gets own user object", async () => {
     const login = {
       username: "mrhappy",
       password: "STRONGP4$$w0rd_",
     }
 
     // Log in
+
     const {
       body: { accessToken: jwt },
     } = await request(app).post("/auth").send(login)
 
+    expect(jwt).toBeDefined()
+
     // Get Self
+
     const { status, body } = await request(app).get("/users/self").set("Authorization", `Bearer ${jwt}`)
 
     expect(body).toMatchObject({
