@@ -14,13 +14,9 @@ async function canGetUser(req: Request, res: Response, next: NextFunction): Prom
   const user = req[REQUEST_USER]
   const targetUser = req[REQUEST_TARGET_USER]
 
-  console.log("canGetUser", { user, targetUser })
-
   if (!user || !targetUser || !user.role || !targetUser.role) {
     throw new BadRequestError("User data is missing.")
   }
-
-  console.log("XX")
 
   if (user.id === targetUser.id && ACL[user.role].includes(PERMISSIONS.CAN_GET_OWN_USER)) {
     return next()

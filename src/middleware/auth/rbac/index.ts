@@ -16,8 +16,6 @@ import getTargetUser from "./getTargetUser"
 const checkPermission = (permission: PERMISSIONS) => (req: Request, res: Response, next: NextFunction) => {
   const user = req[REQUEST_USER]
 
-  console.log("user", user)
-
   if (!user) throw new BadRequestError("User data is missing.")
   if (!!user.deletedAt) throw new ForbiddenError("User was deleted.")
   if (!user.role) throw new ForbiddenError("User has no role.")

@@ -10,7 +10,7 @@ import { REQUEST_TARGET_USER, REQUEST_TARGET_USER_ID, REQUEST_USER } from "../..
  * @param res
  * @param next
  */
-async function getTargetUser(req: Request, res: Response, next: NextFunction) {
+async function getTargetUser(req: Request, _res: Response, next: NextFunction) {
   const user = req[REQUEST_USER]
   if (!user) throw new BadRequestError("Missing User data.")
   if (!user.role) throw new ForbiddenError("User has no role.")

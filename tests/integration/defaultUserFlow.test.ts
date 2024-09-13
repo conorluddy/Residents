@@ -66,6 +66,7 @@ describe("Integration: Default User flow", () => {
     }
 
     // Log in
+
     const {
       body: { accessToken: jwt },
     } = await request(app).post("/auth").send(login)
@@ -73,6 +74,7 @@ describe("Integration: Default User flow", () => {
     expect(jwt).toBeDefined()
 
     // Get Self
+
     const { status, body } = await request(app).get("/users/self").set("Authorization", `Bearer ${jwt}`)
 
     expect(body).toMatchObject({
