@@ -20,8 +20,8 @@ export const resetPasswordWithToken = async (req: Request, res: Response, next: 
   // Alternatively here we can generate a temporary PW and email it to the user,
   // and make that configurable for the app. Probably overlaps with magic login.
 
+  // MW should guarantee we have this
   if (!token || !token.userId) throw new TokenError("Token missing.")
-
   if (token.type !== TOKEN_TYPE.RESET) throw new TokenError("Invalid token type.")
 
   // Centralise configuration for this somewhere - can use it for registration too

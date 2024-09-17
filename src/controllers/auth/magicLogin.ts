@@ -17,6 +17,8 @@ export const magicLogin = async (req: Request, res: Response, next: NextFunction
   const email = req[REQUEST_EMAIL]
   if (!email) throw new BadRequestError("User data missing.")
 
+  let debugTokenId
+
   const user = await SERVICES.getUserByEmail(email)
 
   // Only set up token and send email if the user exists,
@@ -39,7 +41,11 @@ export const magicLogin = async (req: Request, res: Response, next: NextFunction
     })
 
     logger.info(`Magic login email sent to ${email}, token id: ${tokenId}`)
+    debugTokenId = tokenId
   }
 
-  return res.status(HTTP_SUCCESS.OK).json({ message: "Check your email for your reset password link." })
+  return res.status(HTTP_SUCCESS.OK).json({
+    message: "Check your email for your magic login link.",
+    debug: `http://localhost:3000/auth/magic-login/${debugTokenId}`,
+  })
 }
