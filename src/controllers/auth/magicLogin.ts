@@ -46,6 +46,6 @@ export const magicLogin = async (req: Request, res: Response, next: NextFunction
 
   return res.status(HTTP_SUCCESS.OK).json({
     message: "Check your email for your magic login link.",
-    debug: `http://localhost:3000/auth/magic-login/${debugTokenId}`,
+    debug: `http://localhost:3000/auth/magic-login/${debugTokenId}`, // TODO: Remove
   })
 }
