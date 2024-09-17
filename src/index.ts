@@ -32,15 +32,14 @@ app.use(express.json())
 // Health check
 app.get("/health", (_req, res) => res.status(HTTP_SUCCESS.OK).json({ status: "👌" }))
 
-//
 app.use(cookieParser())
-app.use(xsrfTokens) // Maybe move this to specific endpoints
+
+// Attach the database instance to the request object
+app.use(attachDb)
+
 // Routers
 app.use("/users", usersRouter)
 app.use("/auth", authRouter)
-
-//Not using this consistently at the moment - revisit
-app.use(attachDb)
 
 // Swagger
 swaggerSetup(app)

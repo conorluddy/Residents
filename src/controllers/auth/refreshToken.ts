@@ -11,9 +11,10 @@ import { REFRESH_TOKEN_EXPIRY } from "../../constants/crypt"
 
 /**
  * POST: refreshToken
+ *
+ * Refreshes the access token using the refresh token.
  */
 export const refreshToken = async (req: Request, res: Response, next: NextFunction) => {
-  const authHeader = req.headers["authorization"]
   const refreshTokenId = req.cookies?.[REFRESH_TOKEN]
   const userId = req.cookies?.[RESIDENT_TOKEN]
 
@@ -52,7 +53,8 @@ export const refreshToken = async (req: Request, res: Response, next: NextFuncti
 
   if (!user) throw new ForbiddenError("User not found.")
 
-  // Set the tokens in a HTTP-only secure cookies
+  // Set the tokens in HTTP-only secure cookies
+
   const accessToken = generateJwtFromUser(user)
   res.cookie(REFRESH_TOKEN, freshRefreshTokenId, {
     httpOnly: true,
@@ -69,7 +71,6 @@ export const refreshToken = async (req: Request, res: Response, next: NextFuncti
     maxAge: REFRESH_TOKEN_EXPIRY,
   })
 
-  const userIdToken = userId
   res.cookie(RESIDENT_TOKEN, userId, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
