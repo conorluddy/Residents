@@ -4,8 +4,6 @@ import { rateLimitTenPerTenMins } from "../../middleware/util/rateLimiter"
 
 const router = Router()
 
-router.use(rateLimitTenPerTenMins)
-
-router.get("/logout", CONTROLLERS.AUTH.logout)
+router.get("/logout", rateLimitTenPerTenMins, CONTROLLERS.AUTH.logout)
 
 export default router

@@ -5,8 +5,6 @@ import { rateLimitTenPerTenMins } from "../../middleware/util/rateLimiter"
 
 const router = Router()
 
-router.use(rateLimitTenPerTenMins)
-
-router.post("/reset-password", MW.VALIDATE.email, CONTROLLERS.AUTH.resetPassword)
+router.post("/reset-password", rateLimitTenPerTenMins, MW.VALIDATE.email, CONTROLLERS.AUTH.resetPassword)
 
 export default router

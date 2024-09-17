@@ -6,8 +6,12 @@ import { rateLimitOncePerTenMins } from "../../middleware/util/rateLimiter"
 
 const router = Router()
 
-router.use(rateLimitOncePerTenMins)
-
-router.delete("/clear-tokens", authenticateToken, RBAC.checkCanClearExpiredTokens, CONTROLLERS.AUTH.deleteExpiredTokens)
+router.delete(
+  "/clear-tokens",
+  rateLimitOncePerTenMins,
+  authenticateToken,
+  RBAC.checkCanClearExpiredTokens,
+  CONTROLLERS.AUTH.deleteExpiredTokens
+)
 
 export default router

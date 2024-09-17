@@ -4,8 +4,6 @@ import { rateLimitOncePerTenMins } from "../../middleware/util/rateLimiter"
 
 const router = Router()
 
-router.use(rateLimitOncePerTenMins)
-
-router.post("/magic-login", CONTROLLERS.AUTH.magicLogin)
+router.post("/magic-login", rateLimitOncePerTenMins, CONTROLLERS.AUTH.magicLogin)
 
 export default router

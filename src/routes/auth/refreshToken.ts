@@ -4,8 +4,6 @@ import { rateLimitOncePerTenMins, rateLimitTenPerTenMins } from "../../middlewar
 
 const router = Router()
 
-router.use(rateLimitOncePerTenMins)
-
-router.post("/refresh", CONTROLLERS.AUTH.refreshToken)
+router.post("/refresh", rateLimitOncePerTenMins, CONTROLLERS.AUTH.refreshToken)
 
 export default router

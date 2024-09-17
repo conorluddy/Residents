@@ -5,10 +5,9 @@ import { rateLimitTenPerTenMins } from "../../middleware/util/rateLimiter"
 
 const router = Router()
 
-router.use(rateLimitTenPerTenMins)
-
 router.post(
   "/reset-password/:tokenId",
+  rateLimitTenPerTenMins,
   MW.VALIDATE.tokenId,
   MW.findValidTokenById,
   CONTROLLERS.AUTH.resetPasswordWithToken
