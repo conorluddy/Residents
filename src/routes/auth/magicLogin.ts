@@ -1,9 +1,10 @@
 import { Router } from "express"
 import CONTROLLERS from "../../controllers"
-import { rateLimitOncePerTenMins } from "../../middleware/util/rateLimiter"
+import { rateLimitTenPerTenMins } from "../../middleware/util/rateLimiter"
+import MW from "../../middleware"
 
 const router = Router()
 
-router.post("/magic-login", rateLimitOncePerTenMins, CONTROLLERS.AUTH.magicLogin)
+router.post("/magic-login", rateLimitTenPerTenMins, MW.VALIDATE.email, CONTROLLERS.AUTH.magicLogin)
 
 export default router

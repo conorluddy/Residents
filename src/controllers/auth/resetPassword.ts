@@ -28,6 +28,7 @@ export const resetPassword = async (req: Request, res: Response, next: NextFunct
   // but this endpoint doesnt require auth, so we don't
   // disclose whether or not the email exists in the system.
   if (user) {
+    // TODO Delete older reset tokens before creating new one (see magic login)
     const tokenId = await SERVICES.createToken({
       userId: user.id,
       type: TOKEN_TYPE.RESET,
