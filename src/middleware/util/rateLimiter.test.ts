@@ -29,8 +29,8 @@ describe("Rate Limiter Middleware", () => {
 
   it("should include rate limit headers", async () => {
     const response = await request(app).get("/")
-    expect(response.headers["ratelimit"]).toBe("limit=100, remaining=0, reset=900")
-    expect(response.headers["ratelimit-policy"]).toBe("100;w=900")
-    expect(response.headers["retry-after"]).toBe("900")
+    expect(response.headers["ratelimit"]).toBe("limit=100, remaining=0, reset=600")
+    expect(response.headers["ratelimit-policy"]).toBe("100;w=600")
+    expect(response.headers["retry-after"]).toBe("600")
   })
 })

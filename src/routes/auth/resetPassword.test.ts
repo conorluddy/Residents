@@ -38,7 +38,7 @@ app.use(resetPasswordRoute)
 describe("POST /resetPassword", () => {
   it("should call the resetPassword controller and respond with a 400 BAD_REQUEST status if no resetPassword data is sent", async () => {
     const response = await request(app).post("/reset-password").send({ email: "emile_metz@hotmail.com" })
-    expect(response.body).toStrictEqual({ message: "Reset email sent" })
+    expect(response.body).toStrictEqual({ message: "Check your email for your reset password link." })
     expect(response.status).toBe(HTTP_SUCCESS.OK)
   })
 })

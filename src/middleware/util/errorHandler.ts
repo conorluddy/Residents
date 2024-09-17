@@ -58,7 +58,9 @@ const errorHandler = (err: Error, _req: Request, res: Response, next: NextFuncti
     return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "Password strength insufficient." })
   }
   if (err instanceof RateLimitError) {
-    return res.status(HTTP_CLIENT_ERROR.TOO_MANY_REQUESTS).json({ message: "Too many requests, slow down!" })
+    return res
+      .status(HTTP_CLIENT_ERROR.TOO_MANY_REQUESTS)
+      .json({ message: err.message ? err.message : "Too many requests, slow down!" })
   }
   if (err instanceof TokenError) {
     return res.status(HTTP_CLIENT_ERROR.UNAUTHORIZED).json({ message: "Invalid or expired token." })

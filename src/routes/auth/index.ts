@@ -11,26 +11,27 @@ import logout from "./logout"
 import validateAccount from "./validateAccount"
 import MW from "../../middleware"
 import deleteExpiredTokens from "./deleteExpiredTokens"
+import xsrfTokens from "../../middleware/auth/xsrfTokens"
 
 const router = Router()
 
 // Middleware
 router.use(MW.errorHandler)
 
-// Routes
+// Publicly Exposed Routes
 router.use(login)
-router.use(logout)
 router.use(magicLogin)
 router.use(magicLoginWithToken)
 router.use(resetPassword)
 router.use(resetPasswordWithToken)
-router.use(validateAccount)
 router.use(refreshToken)
-router.use(deleteExpiredTokens)
-
-// Passport Strategies
+router.use(validateAccount)
 router.use(googleLogin)
 router.use(googleLoginCallback)
-// ...
+
+// Private Routes
+router.use(xsrfTokens) // This middleware must be after the public routes
+router.use(logout)
+router.use(deleteExpiredTokens)
 
 export default router
