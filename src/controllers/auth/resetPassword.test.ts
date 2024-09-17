@@ -5,17 +5,17 @@ import { resetPassword } from "./resetPassword"
 import { sendMail } from "../../mail/sendgrid"
 import { logger } from "../../utils/logger"
 import { SafeUser } from "../../db/types"
-import { REQUEST_EMAIL, REQUEST_USER } from "../../types/requestSymbols"
+import { REQUEST_EMAIL } from "../../types/requestSymbols"
 
-const user = makeAFakeUser({ email: "bananaman@ireland.ie" })
+let user: SafeUser = makeAFakeUser({ email: "bananaman@ireland.ie" })
 
 jest.mock("../../mail/sendgrid", () => ({
   sendMail: jest.fn(),
 }))
 
 jest.mock("../../services/index", () => ({
+  getUserByEmail: jest.fn().mockReturnValueOnce(makeAFakeUser({ email: "bananaman@ireland.ie" })),
   createToken: jest.fn().mockReturnValueOnce("tok1"),
-  getUserByEmail: jest.fn().mockReturnValueOnce(user),
 }))
 
 describe("Controller: Reset Password", () => {
@@ -40,11 +40,11 @@ describe("Controller: Reset Password", () => {
     expect(logger.error).not.toHaveBeenCalled()
     expect(logger.info).toHaveBeenCalledWith("Reset email sent to bananaman@ireland.ie, token id: tok1")
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.OK)
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: "Reset email sent" })
+    expect(mockResponse.json).toHaveBeenCalledWith({ message: "Check your email for your reset password link." })
   })
 
   it("missing user data", async () => {
-    mockRequest[REQUEST_USER] = undefined
+    mockRequest[REQUEST_EMAIL] = undefined
     await expect(
       resetPassword(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
     ).rejects.toThrow("User data missing.")
