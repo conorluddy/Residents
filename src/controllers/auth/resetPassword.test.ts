@@ -5,7 +5,9 @@ import { resetPassword } from "./resetPassword"
 import { sendMail } from "../../mail/sendgrid"
 import { logger } from "../../utils/logger"
 import { SafeUser } from "../../db/types"
-import { REQUEST_USER } from "../../types/requestSymbols"
+import { REQUEST_EMAIL, REQUEST_USER } from "../../types/requestSymbols"
+
+const user = makeAFakeUser({ email: "bananaman@ireland.ie" })
 
 jest.mock("../../mail/sendgrid", () => ({
   sendMail: jest.fn(),
@@ -13,17 +15,18 @@ jest.mock("../../mail/sendgrid", () => ({
 
 jest.mock("../../services/index", () => ({
   createToken: jest.fn().mockReturnValueOnce("tok1"),
+  getUserByEmail: jest.fn().mockReturnValueOnce(user),
 }))
 
 describe("Controller: Reset Password", () => {
-  let mockRequest: Partial<Request> & { [REQUEST_USER]?: SafeUser }
+  let mockRequest: Partial<Request> & { [REQUEST_EMAIL]?: SafeUser["email"] }
   let mockResponse: Partial<Response>
   let mockNext = jest.fn().mockReturnThis()
 
   beforeAll(() => {})
   beforeEach(() => {
     mockRequest = {
-      [REQUEST_USER]: makeAFakeUser({ email: "bananaman@ireland.ie" }),
+      [REQUEST_EMAIL]: user.email,
     }
     mockResponse = {
       status: jest.fn().mockReturnThis(),
