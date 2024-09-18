@@ -41,7 +41,7 @@ describe("Controller: GetUser", () => {
   it("Happy path", async () => {
     await getUser(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.OK)
-    expect(mockResponse.json).toHaveBeenCalledWith(fakeUser)
+    expect(mockResponse.json).toHaveBeenCalledWith({ user: fakeUser })
   })
 
   it("Missing User ID", async () => {

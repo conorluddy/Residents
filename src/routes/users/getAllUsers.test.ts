@@ -53,6 +53,6 @@ describe("GET /users", () => {
       .get(`/`)
       .set("Authorization", `Bearer ${generateJwtFromUser(mockAdmin)}`)
     expect(response.status).toBe(HTTP_SUCCESS.OK)
-    expect(response.body).toBe("")
+    expect(response.body).toStrictEqual({})
   })
 })

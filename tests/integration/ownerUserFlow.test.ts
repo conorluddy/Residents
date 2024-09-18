@@ -37,9 +37,9 @@ describe("Integration: Owner flow from seeded default owner", () => {
       password: DEFAULT_SEED_PASSWORD,
     }
     const response = await request(app).post("/auth").send(login)
-    expect(response.body).toHaveProperty("accessToken")
+    expect(response.body).toHaveProperty("token")
     expect(response.status).toBe(HTTP_SUCCESS.OK)
-    jwt = response.body.accessToken
+    jwt = response.body.token
   })
 
   it("Hit the /self endpoint once logged in and get own user object", async () => {
@@ -49,13 +49,14 @@ describe("Integration: Owner flow from seeded default owner", () => {
     }
     const loginResponse = await request(app).post("/auth").send(login)
 
-    expect(loginResponse.body).toHaveProperty("accessToken")
+    expect(loginResponse.body).toHaveProperty("token")
     expect(loginResponse.status).toBe(HTTP_SUCCESS.OK)
-    const jwt = loginResponse.body.accessToken
+
+    const jwt = loginResponse.body.token
 
     const response = await request(app).get("/users/self").set("Authorization", `Bearer ${jwt}`)
 
-    expect(response.body).toMatchObject({
+    expect(response.body.user).toMatchObject({
       firstName: "Resident",
       lastName: "Zero",
       username: "resident",
@@ -66,7 +67,7 @@ describe("Integration: Owner flow from seeded default owner", () => {
   it("Hit the /getAllUsers endpoint once logged in and get all of the users back", async () => {
     const response = await request(app).get("/users").set("Authorization", `Bearer ${jwt}`)
     expect(response.status).toBe(HTTP_SUCCESS.OK)
-    expect(response.body).toHaveLength(21) // 10 seeded users + the owner. TODO: fix. Mystery 10 coming from somewhere....
+    expect(response.body.users).toHaveLength(21) // 10 seeded users + the owner. TODO: fix. Mystery 10 coming from somewhere....
   })
 
   it("Call getAllUsers again and delete one of them", async () => {
@@ -76,9 +77,9 @@ describe("Integration: Owner flow from seeded default owner", () => {
     }
     const loginResponse = await request(app).post("/auth").send(login)
 
-    expect(loginResponse.body).toHaveProperty("accessToken")
+    expect(loginResponse.body).toHaveProperty("token")
     expect(loginResponse.status).toBe(HTTP_SUCCESS.OK)
-    const jwt = loginResponse.body.accessToken
+    const jwt = loginResponse.body.token
 
     const usersResponse = await request(app).get("/users").set("Authorization", `Bearer ${jwt}`)
     const userIdToDelete = usersResponse.body[3]?.id
@@ -98,9 +99,9 @@ describe("Integration: Owner flow from seeded default owner", () => {
     }
     const loginResponse = await request(app).post("/auth").send(login)
 
-    expect(loginResponse.body).toHaveProperty("accessToken")
+    expect(loginResponse.body).toHaveProperty("token")
     expect(loginResponse.status).toBe(HTTP_SUCCESS.OK)
-    const jwt = loginResponse.body.accessToken
+    const jwt = loginResponse.body.token
 
     const usersResponse = await request(app).get("/users").set("Authorization", `Bearer ${jwt}`)
     const userIdToGet = usersResponse.body[5]?.id

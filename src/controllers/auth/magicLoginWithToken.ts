@@ -36,7 +36,7 @@ export const magicLoginWithToken = async (req: Request, res: Response, next: Nex
 
   // Set the tokens in HTTP-only secure cookies
 
-  const accessToken = generateJwtFromUser(user)
+  const jwt = generateJwtFromUser(user)
   res.cookie(REFRESH_TOKEN, refreshTokenId, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
@@ -60,5 +60,5 @@ export const magicLoginWithToken = async (req: Request, res: Response, next: Nex
     maxAge: REFRESH_TOKEN_EXPIRY,
   })
 
-  return handleSuccessResponse({ res, message: { accessToken } })
+  return handleSuccessResponse({ res, token: jwt })
 }

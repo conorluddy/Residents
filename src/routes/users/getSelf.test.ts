@@ -53,7 +53,7 @@ describe("GET /self", () => {
     const response = await request(app)
       .get(`/self`)
       .set("Authorization", `Bearer ${generateJwtFromUser(fakeUser)}`)
-    expect(response.body.email).toBe(fakeUser.email)
+    expect(response.body.user.email).toBe(fakeUser.email)
     expect(response.status).toBe(HTTP_SUCCESS.OK)
   })
 })

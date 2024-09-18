@@ -16,7 +16,7 @@ export const getUser = async (req: Request, res: Response, next: NextFunction) =
   const user = await SERVICES.getUserById(userId)
   if (!user) throw new NotFoundError("User not found.")
   //
-  return handleSuccessResponse({ res, message: user })
+  return handleSuccessResponse({ res, user })
 }
 
 export default getUser

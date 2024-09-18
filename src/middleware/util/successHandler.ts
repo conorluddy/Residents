@@ -11,10 +11,19 @@ interface Props {
   debug?: string // TODO: Add a DEBUG req symbol so we can return extra data
 }
 
-const handleSuccessResponse = ({ res, message = "Success.", token, user, users, debug }: Props) =>
-  res.status(HTTP_SUCCESS.OK).json({ message, token, user, users })
+const handleSuccessResponse = ({ res, message, token, user, users, debug }: Props) => {
+  return res.status(HTTP_SUCCESS.OK).json({
+    ...(message && { message }),
+    ...(token && { token }),
+    ...(user && { user }),
+    ...(users && { users }),
+  })
+}
 
-const handleCreatedResponse = ({ res, message = "Success.", token, user, debug }: Props) =>
-  res.status(HTTP_SUCCESS.CREATED).json({ message, token, user })
+const handleCreatedResponse = ({ res, message, user }: Props) =>
+  res.status(HTTP_SUCCESS.CREATED).json({
+    ...(message && { message }),
+    ...(user && { user }),
+  })
 
 export { handleSuccessResponse, handleCreatedResponse }

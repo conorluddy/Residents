@@ -69,6 +69,6 @@ describe("Controller: Delete User", () => {
     mockRequest.params = { id: "OtherPersonInURL" }
     await expect(
       deleteUser(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
-    ).rejects.toThrow(`ID mismatch, can not delete.`)
+    ).rejects.toThrow(`User ID mismatch.`)
   })
 })

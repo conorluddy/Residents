@@ -77,7 +77,7 @@ describe("Controller: Refresh token: Happy path", () => {
   it("should allow tokens to refresh if existing tokens are legit", async () => {
     await refreshToken(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
     expect(logger.error).not.toHaveBeenCalled()
-    expect(mockResponse.json).toHaveBeenCalledWith({ accessToken: "testAccessToken" })
+    expect(mockResponse.json).toHaveBeenCalledWith({ token: "testAccessToken" })
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.OK)
     expect(mockResponse.cookie).toHaveBeenCalledTimes(3)
     expect(mockResponse.cookie).toHaveBeenNthCalledWith(1, "refreshToken", "tok1", {
