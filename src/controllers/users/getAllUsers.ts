@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express"
-import { HTTP_SUCCESS } from "../../constants/http"
 import SERVICES from "../../services"
+import { handleSuccessResponse } from "../../middleware/util/successHandler"
 
 /**
  * getAllUsers
@@ -9,7 +9,7 @@ export const getAllUsers = async (req: Request, res: Response, next: NextFunctio
   // TODO: Add a WITHMETA flag to include the user meta data
   // TODO: Filtering / searching / pagination
   const users = await SERVICES.getAllUsers()
-  return res.status(HTTP_SUCCESS.OK).json(users)
+  return handleSuccessResponse({ res, users })
 }
 
 export default getAllUsers

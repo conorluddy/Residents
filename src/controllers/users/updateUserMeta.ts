@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express"
-import { HTTP_SUCCESS } from "../../constants/http"
 import { Meta } from "../../db/types"
 import { BadRequestError } from "../../errors"
 import SERVICES from "../../services"
 import { REQUEST_TARGET_USER_ID } from "../../types/requestSymbols"
+import { handleSuccessResponse } from "../../middleware/util/successHandler"
 
 /**
  * updateUserMeta
@@ -13,9 +13,9 @@ export const updateUserMeta = async (req: Request, res: Response, next: NextFunc
   const targetUserId = req[REQUEST_TARGET_USER_ID]
 
   if (!id || !targetUserId) throw new BadRequestError("User ID is missing in the request.")
+  if (id !== targetUserId) throw new BadRequestError("User ID mismatch.")
 
-  if (id !== targetUserId) throw new BadRequestError("You are not allowed to update this user.")
-
+  // TODO: Use a request symbol for this
   if (!req.body || Object.keys(req.body).length === 0) throw new BadRequestError("No udpate data provided.")
 
   // Add the rest of the user meta fields.
@@ -24,5 +24,5 @@ export const updateUserMeta = async (req: Request, res: Response, next: NextFunc
 
   const updatedUserId = await SERVICES.updateUserMeta({ userId: id, metaItem })
 
-  return res.status(HTTP_SUCCESS.OK).json({ message: `User meta for ${updatedUserId} updated successfully` })
+  return handleSuccessResponse({ res, message: `User meta for ${updatedUserId} updated successfully` })
 }

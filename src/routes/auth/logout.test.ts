@@ -1,12 +1,13 @@
 import express from "express"
 import request from "supertest"
-import { HTTP_CLIENT_ERROR, HTTP_SUCCESS } from "../../constants/http"
+import { HTTP_SUCCESS } from "../../constants/http"
 import { REFRESH_TOKEN, RESIDENT_TOKEN } from "../../constants/keys"
 import CONTROLLERS from "../../controllers"
 import logoutRoute from "./logout"
+import { handleSuccessResponse } from "../../middleware/util/successHandler"
 
 CONTROLLERS.AUTH.logout = jest.fn(async (req, res) => {
-  return res.status(HTTP_SUCCESS.OK).json({ message: "Logged in successfully" })
+  return handleSuccessResponse({ res, message: "Logged in successfully" })
 })
 
 jest.mock("../../services", () => ({

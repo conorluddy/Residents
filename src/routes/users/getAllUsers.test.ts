@@ -8,6 +8,7 @@ import getAllUsersRoute from "../../routes/users/getAllUsers"
 import { makeAFakeSafeUser, makeAFakeUser } from "../../test-utils/mockUsers"
 import { REQUEST_USER } from "../../types/requestSymbols"
 import { generateJwtFromUser } from "../../utils/generateJwt"
+import { handleSuccessResponse } from "../../middleware/util/successHandler"
 
 let fakeUser
 
@@ -25,7 +26,7 @@ jest.mock("../../middleware/auth/rbac", () => ({
 
 CONTROLLERS.USER.getAllUsers = jest.fn(async (_req, res) => {
   fakeUser = makeAFakeUser({})
-  return res.status(HTTP_SUCCESS.OK).json({ message: [fakeUser, fakeUser, fakeUser] })
+  return handleSuccessResponse({ res, users: [fakeUser, fakeUser, fakeUser] })
 })
 
 jest.mock("../../services/user/getAllUsers", () => ({

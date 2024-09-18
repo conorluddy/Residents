@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express"
-import { HTTP_SUCCESS } from "../../constants/http"
 import { BadRequestError, ForbiddenError } from "../../errors"
 import { REQUEST_TARGET_USER_ID } from "../../types/requestSymbols"
 import SERVICES from "../../services"
+import { handleSuccessResponse } from "../../middleware/util/successHandler"
 
 /**
  * deleteUser
@@ -16,9 +16,9 @@ export const deleteUser = async (req: Request, res: Response, next: NextFunction
   const targetUserId = req[REQUEST_TARGET_USER_ID]
 
   if (!id || !targetUserId) throw new BadRequestError("User ID is missing.")
-  if (id !== targetUserId) throw new ForbiddenError("ID mismatch, can not delete.")
+  if (id !== targetUserId) throw new ForbiddenError("User ID mismatch.")
 
   const deletedUserId = await SERVICES.deleteUser({ userId: id })
 
-  return res.status(HTTP_SUCCESS.OK).json({ message: `User ${deletedUserId} deleted` })
+  return handleSuccessResponse({ res, message: `User ${deletedUserId} deleted` })
 }

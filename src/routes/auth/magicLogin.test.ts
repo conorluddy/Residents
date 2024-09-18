@@ -2,10 +2,11 @@ import request from "supertest"
 import express from "express"
 import magicLoginRoute from "./magicLogin"
 import CONTROLLERS from "../../controllers"
-import { HTTP_SERVER_ERROR, HTTP_SUCCESS } from "../../constants/http"
+import { HTTP_SERVER_ERROR } from "../../constants/http"
+import { handleSuccessResponse } from "../../middleware/util/successHandler"
 
-CONTROLLERS.AUTH.magicLogin = jest.fn(async (req, res) => {
-  return res.status(HTTP_SUCCESS.OK).json({ message: "Logged in successfully" })
+CONTROLLERS.AUTH.magicLogin = jest.fn(async (_req, res) => {
+  return handleSuccessResponse({ res, message: "Logged in successfully" })
 })
 
 jest.mock("../../db", () => ({
