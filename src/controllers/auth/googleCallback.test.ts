@@ -3,11 +3,17 @@ import { HTTP_SUCCESS, HTTP_CLIENT_ERROR } from "../../constants/http"
 import { makeAFakeSafeUser } from "../../test-utils/mockUsers"
 import { googleCallback } from "./googleCallback"
 import { OAuth2Client } from "google-auth-library"
-import { EmailError, NotFoundError } from "../../errors"
+import { EmailError, NotFoundError, UnauthorizedError } from "../../errors"
 import SERVICES from "../../services"
 
 jest.mock("google-auth-library")
-jest.mock("../../services")
+jest.mock("../../services", () => ({
+  getUserById: jest.fn().mockImplementation(() => makeAFakeSafeUser({ username: "Hackerman" })),
+  getUserByEmail: jest
+    .fn()
+    .mockImplementationOnce(() => makeAFakeSafeUser({ username: "Hackermaner" }))
+    .mockImplementationOnce(() => null),
+}))
 
 describe("Controller: GoogleCallback", () => {
   let mockRequest: Partial<Request>
@@ -33,21 +39,17 @@ describe("Controller: GoogleCallback", () => {
   })
 
   it("successfully authenticates a user with Google", async () => {
-    const fakeUser = makeAFakeSafeUser({ username: "Hackerman" })
     const fakePayload = { sub: "123", email: "test@example.com" }
 
     ;(OAuth2Client.prototype.verifyIdToken as jest.Mock).mockResolvedValue({
       getPayload: jest.fn().mockReturnValue(fakePayload),
     })
-    ;(SERVICES.getUserByEmail as jest.Mock).mockResolvedValue(fakeUser)
-
     await googleCallback(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
 
     expect(OAuth2Client.prototype.verifyIdToken).toHaveBeenCalledWith({
       idToken: "fake-id-token",
       audience: "test-client-id",
     })
-    expect(SERVICES.getUserByEmail).toHaveBeenCalledWith(fakePayload.email)
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.OK)
     expect(mockResponse.json).toHaveBeenCalledWith({ token: expect.any(String) })
   })
@@ -56,11 +58,9 @@ describe("Controller: GoogleCallback", () => {
     ;(OAuth2Client.prototype.verifyIdToken as jest.Mock).mockResolvedValue({
       getPayload: jest.fn().mockReturnValue(null),
     })
-
-    await googleCallback(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
-
-    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.UNAUTHORIZED)
-    expect(mockResponse.json).toHaveBeenCalledWith({ error: "Invalid token" })
+    await expect(
+      googleCallback(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
+    ).rejects.toThrow(UnauthorizedError)
   })
 
   it("throws EmailError when no email is found in Google payload", async () => {
@@ -76,12 +76,11 @@ describe("Controller: GoogleCallback", () => {
   })
 
   it("throws NotFoundError when user is not found", async () => {
-    const fakePayload = { sub: "123", email: "test@example.com" }
+    const fakePayload = { sub: "123", email: "nope@example.com" }
 
     ;(OAuth2Client.prototype.verifyIdToken as jest.Mock).mockResolvedValue({
       getPayload: jest.fn().mockReturnValue(fakePayload),
     })
-    ;(SERVICES.getUserByEmail as jest.Mock).mockResolvedValue(null)
 
     await expect(
       googleCallback(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)

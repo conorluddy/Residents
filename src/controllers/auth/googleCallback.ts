@@ -20,13 +20,10 @@ export const googleCallback = async (req: Request, res: Response, next: NextFunc
 
   if (!payload) throw new UnauthorizedError("Invalid Google Callback token")
 
-  const userId = payload.sub
+  const userEmail = payload.email
+  if (!userEmail) throw new EmailError("No email found in Google payload")
 
-  if (!payload.email) throw new EmailError("No email found in Google payload")
-
-  const user = await SERVICES.getUserById(userId)
-
-  // const user = await SERVICES.getUserByEmail(payload.email)
+  const user = await SERVICES.getUserByEmail(userEmail)
 
   if (!user) throw new NotFoundError("User not found")
 
