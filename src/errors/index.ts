@@ -155,6 +155,16 @@ class RateLimitError extends Error {
   }
 }
 
+class LoginError extends Error {
+  public statusCode: ClientErrorCodes
+  constructor(message = "Error logging in.") {
+    super(message)
+    this.name = "LoginError"
+    this.statusCode = HTTP_CLIENT_ERROR.UNAUTHORIZED
+    Object.setPrototypeOf(this, RateLimitError.prototype)
+  }
+}
+
 export {
   BadRequestError,
   ConflictError,
@@ -162,6 +172,7 @@ export {
   EmailError,
   ForbiddenError,
   InternalServerError,
+  LoginError,
   NotAcceptableError,
   NotFoundError,
   NotImplementedError,

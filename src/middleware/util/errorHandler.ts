@@ -17,6 +17,7 @@ import {
   RateLimitError,
   TokenError,
   ValidationError,
+  LoginError,
 } from "../../errors"
 
 const errorHandler = (err: Error, _req: Request, res: Response, next: NextFunction) => {
@@ -52,7 +53,11 @@ const errorHandler = (err: Error, _req: Request, res: Response, next: NextFuncti
     return res.status(HTTP_SERVER_ERROR.NOT_IMPLEMENTED).json({ message: "Feature not implemented." })
   }
   if (err instanceof PasswordError) {
-    return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "Password error." })
+    return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Access denied." })
+  }
+  // Don't disclose any user/pw information about the error to the client.
+  if (err instanceof LoginError) {
+    return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Access denied." })
   }
   if (err instanceof PasswordStrengthError) {
     return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "Password strength insufficient." })
