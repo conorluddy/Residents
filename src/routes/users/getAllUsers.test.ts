@@ -1,14 +1,14 @@
-import express from "express"
-import request from "supertest"
-import { ROLES } from "../../constants/database"
-import { HTTP_SUCCESS } from "../../constants/http"
-import CONTROLLERS from "../../controllers"
-import { SafeUser } from "../../db/types"
-import getAllUsersRoute from "../../routes/users/getAllUsers"
-import { makeAFakeSafeUser, makeAFakeUser } from "../../test-utils/mockUsers"
-import { REQUEST_USER } from "../../types/requestSymbols"
-import { generateJwtFromUser } from "../../utils/generateJwt"
-import { handleSuccessResponse } from "../../middleware/util/successHandler"
+import express from 'express'
+import request from 'supertest'
+import { ROLES } from '../../constants/database'
+import { HTTP_SUCCESS } from '../../constants/http'
+import CONTROLLERS from '../../controllers'
+import { SafeUser } from '../../db/types'
+import getAllUsersRoute from '../../routes/users/getAllUsers'
+import { makeAFakeSafeUser, makeAFakeUser } from '../../test-utils/mockUsers'
+import { REQUEST_USER } from '../../types/requestSymbols'
+import { generateJwtFromUser } from '../../utils/generateJwt'
+import { handleSuccessResponse } from '../../middleware/util/successHandler'
 
 let fakeUser
 

@@ -1,8 +1,8 @@
-import { NextFunction, Request, Response } from "express"
-import { REQUEST_USER } from "../../types/requestSymbols"
-import SERVICES from "../../services"
-import { BadRequestError, NotFoundError } from "../../errors"
-import { handleSuccessResponse } from "../../middleware/util/successHandler"
+import { NextFunction, Request, Response } from 'express'
+import { REQUEST_USER } from '../../types/requestSymbols'
+import SERVICES from '../../services'
+import { BadRequestError, NotFoundError } from '../../errors'
+import { handleSuccessResponse } from '../../middleware/util/successHandler'
 
 /**
  * getSelf - gets own user record

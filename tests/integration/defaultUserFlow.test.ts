@@ -55,7 +55,7 @@ describe('Integration: Default User flow', () => {
     }
     const response = await request(app).post('/auth').send(login)
     expect(response.status).toBe(HTTP_SUCCESS.OK)
-    expect(response.body).toHaveProperty("token")
+    expect(response.body).toHaveProperty('token')
     jwt = response.body.token
   })
 
@@ -69,7 +69,7 @@ describe('Integration: Default User flow', () => {
 
     const {
       body: { token: jwt },
-    } = await request(app).post("/auth").send(login)
+    } = await request(app).post('/auth').send(login)
 
     expect(jwt).toBeDefined()
 
@@ -78,13 +78,13 @@ describe('Integration: Default User flow', () => {
     const {
       status,
       body: { user },
-    } = await request(app).get("/users/self").set("Authorization", `Bearer ${jwt}`)
+    } = await request(app).get('/users/self').set('Authorization', `Bearer ${jwt}`)
 
     expect(user).toMatchObject({
-      username: "mrhappy",
-      email: "mrhappy@resi.dents",
-      firstName: "mrhappy",
-      lastName: "mrhappy",
+      username: 'mrhappy',
+      email: 'mrhappy@resi.dents',
+      firstName: 'mrhappy',
+      lastName: 'mrhappy',
     })
     expect(status).toBe(HTTP_SUCCESS.OK)
   })

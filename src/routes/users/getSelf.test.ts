@@ -1,13 +1,13 @@
-import express from "express"
-import request from "supertest"
-import { ROLES } from "../../constants/database"
-import { HTTP_SUCCESS } from "../../constants/http"
-import CONTROLLERS from "../../controllers"
-import getSelfRoute from "./getSelf"
-import { makeAFakeUser } from "../../test-utils/mockUsers"
-import { generateJwtFromUser } from "../../utils/generateJwt"
-import { REQUEST_USER } from "../../types/requestSymbols"
-import { handleSuccessResponse } from "../../middleware/util/successHandler"
+import express from 'express'
+import request from 'supertest'
+import { ROLES } from '../../constants/database'
+import { HTTP_SUCCESS } from '../../constants/http'
+import CONTROLLERS from '../../controllers'
+import getSelfRoute from './getSelf'
+import { makeAFakeUser } from '../../test-utils/mockUsers'
+import { generateJwtFromUser } from '../../utils/generateJwt'
+import { REQUEST_USER } from '../../types/requestSymbols'
+import { handleSuccessResponse } from '../../middleware/util/successHandler'
 
 const fakeUser = makeAFakeUser({ role: ROLES.DEFAULT })
 
@@ -43,7 +43,7 @@ app.use('/', getSelfRoute)
 
 describe('GET /self', () => {
   beforeAll(() => {
-    process.env.JWT_TOKEN_SECRET = "TESTSECRET"
+    process.env.JWT_TOKEN_SECRET = 'TESTSECRET'
     CONTROLLERS.USER.getSelf = jest.fn(async (_req, res) => {
       return handleSuccessResponse({ res, user: fakeUser })
     })
@@ -51,8 +51,8 @@ describe('GET /self', () => {
 
   it('should call the getSelf controller and get own user data', async () => {
     const response = await request(app)
-      .get(`/self`)
-      .set("Authorization", `Bearer ${generateJwtFromUser(fakeUser)}`)
+      .get('/self')
+      .set('Authorization', `Bearer ${generateJwtFromUser(fakeUser)}`)
     expect(response.body.user.email).toBe(fakeUser.email)
     expect(response.status).toBe(HTTP_SUCCESS.OK)
   })

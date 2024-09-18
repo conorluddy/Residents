@@ -1,6 +1,6 @@
-import { NextFunction, Request, Response } from "express"
-import SERVICES from "../../services"
-import { handleSuccessResponse } from "../../middleware/util/successHandler"
+import { NextFunction, Request, Response } from 'express'
+import SERVICES from '../../services'
+import { handleSuccessResponse } from '../../middleware/util/successHandler'
 
 /**
  * getAllUsers

@@ -47,7 +47,7 @@ describe('Controller: Login', () => {
 
   it('should allow login with correct username and password', async () => {
     await login(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
-    expect(mockResponse.json).toHaveBeenCalledWith({ token: "fakeToken" })
+    expect(mockResponse.json).toHaveBeenCalledWith({ token: 'fakeToken' })
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.OK)
     expect(mockResponse.cookie).toHaveBeenCalledWith('refreshToken', 'token123', {
       httpOnly: true,

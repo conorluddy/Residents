@@ -1,8 +1,8 @@
-import SERVICES from "../../services"
-import { NextFunction, Request, Response } from "express"
-import { BadRequestError } from "../../errors"
-import { REFRESH_TOKEN, RESIDENT_TOKEN, XSRF_TOKEN } from "../../constants/keys"
-import { handleSuccessResponse } from "../../middleware/util/successHandler"
+import SERVICES from '../../services'
+import { NextFunction, Request, Response } from 'express'
+import { BadRequestError } from '../../errors'
+import { REFRESH_TOKEN, RESIDENT_TOKEN, XSRF_TOKEN } from '../../constants/keys'
+import { handleSuccessResponse } from '../../middleware/util/successHandler'
 
 /**
  * logout
@@ -36,5 +36,5 @@ export const logout = async (req: Request, res: Response, next: NextFunction) =>
   if (!userId) {throw new BadRequestError('User ID is missing.')}
   await SERVICES.deleteRefreshTokensByUserId({ userId })
 
-  return handleSuccessResponse({ res, message: "Logged out successfully." })
+  return handleSuccessResponse({ res, message: 'Logged out successfully.' })
 }

@@ -36,8 +36,8 @@ describe('Integration: Owner flow from seeded default owner', () => {
       username: 'resident',
       password: DEFAULT_SEED_PASSWORD,
     }
-    const response = await request(app).post("/auth").send(login)
-    expect(response.body).toHaveProperty("token")
+    const response = await request(app).post('/auth').send(login)
+    expect(response.body).toHaveProperty('token')
     expect(response.status).toBe(HTTP_SUCCESS.OK)
     jwt = response.body.token
   })
@@ -49,7 +49,7 @@ describe('Integration: Owner flow from seeded default owner', () => {
     }
     const loginResponse = await request(app).post('/auth').send(login)
 
-    expect(loginResponse.body).toHaveProperty("token")
+    expect(loginResponse.body).toHaveProperty('token')
     expect(loginResponse.status).toBe(HTTP_SUCCESS.OK)
 
     const jwt = loginResponse.body.token
@@ -57,9 +57,9 @@ describe('Integration: Owner flow from seeded default owner', () => {
     const jwt = loginResponse.body.token
 
     expect(response.body.user).toMatchObject({
-      firstName: "Resident",
-      lastName: "Zero",
-      username: "resident",
+      firstName: 'Resident',
+      lastName: 'Zero',
+      username: 'resident',
     })
     expect(response.status).toBe(HTTP_SUCCESS.OK)
   })
@@ -77,11 +77,11 @@ describe('Integration: Owner flow from seeded default owner', () => {
     }
     const loginResponse = await request(app).post('/auth').send(login)
 
-    expect(loginResponse.body).toHaveProperty("token")
+    expect(loginResponse.body).toHaveProperty('token')
     expect(loginResponse.status).toBe(HTTP_SUCCESS.OK)
     const jwt = loginResponse.body.token
 
-    const usersResponse = await request(app).get("/users").set("Authorization", `Bearer ${jwt}`)
+    const usersResponse = await request(app).get('/users').set('Authorization', `Bearer ${jwt}`)
     const userIdToDelete = usersResponse.body.users[3].id
 
     const deleteResponse = await request(app)
@@ -99,11 +99,11 @@ describe('Integration: Owner flow from seeded default owner', () => {
     }
     const loginResponse = await request(app).post('/auth').send(login)
 
-    expect(loginResponse.body).toHaveProperty("token")
+    expect(loginResponse.body).toHaveProperty('token')
     expect(loginResponse.status).toBe(HTTP_SUCCESS.OK)
     const jwt = loginResponse.body.token
 
-    const usersResponse = await request(app).get("/users").set("Authorization", `Bearer ${jwt}`)
+    const usersResponse = await request(app).get('/users').set('Authorization', `Bearer ${jwt}`)
     const userIdToGet = usersResponse.body.users[5].id
     const userResponse = await request(app)
       .get(`/users/${ userIdToGet}`)

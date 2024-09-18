@@ -1,16 +1,16 @@
-import express from "express"
-import usersRouter from "./routes/users/index"
-import authRouter from "./routes/auth"
-import { attachDb } from "./middleware/util/database"
-import { logger } from "./utils/logger"
-import helmet from "helmet"
-import cookieParser from "cookie-parser"
-import dotenv from "dotenv"
-import swaggerSetup from "./swagger"
-import rateLimiter from "./middleware/util/rateLimiter"
-import errorHandler from "./middleware/util/errorHandler"
-import path from "path"
-import { handleSuccessResponse } from "./middleware/util/successHandler"
+import express from 'express'
+import usersRouter from './routes/users/index'
+import authRouter from './routes/auth'
+import { attachDb } from './middleware/util/database'
+import { logger } from './utils/logger'
+import helmet from 'helmet'
+import cookieParser from 'cookie-parser'
+import dotenv from 'dotenv'
+import swaggerSetup from './swagger'
+import rateLimiter from './middleware/util/rateLimiter'
+import errorHandler from './middleware/util/errorHandler'
+import path from 'path'
+import { handleSuccessResponse } from './middleware/util/successHandler'
 
 dotenv.config()
 
@@ -29,7 +29,7 @@ app.use(rateLimiter)
 app.use(express.json())
 
 // Health check
-app.get("/health", (_req, res) => handleSuccessResponse({ res, message: "👌" }))
+app.get('/health', (_req, res) => handleSuccessResponse({ res, message: '👌' }))
 
 app.use(cookieParser())
 
