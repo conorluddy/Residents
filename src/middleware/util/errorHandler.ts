@@ -21,7 +21,9 @@ import {
 } from '../../errors'
 
 const errorHandler = (err: Error, _req: Request, res: Response, next: NextFunction) => {
-  if (!err) {next()}
+  if (!err) {
+    next()
+  }
 
   logger.error(err.message)
 
