@@ -1,6 +1,6 @@
-import { tableUsers } from "../../db/schema"
-import { SafeUser } from "../../db/types"
-import db from "../../db"
+import { tableUsers } from '../../db/schema'
+import { SafeUser } from '../../db/types'
+import db from '../../db'
 
 interface PaginationProps {
   page: number

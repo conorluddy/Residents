@@ -1,4 +1,4 @@
-import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from "../constants/http"
+import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from '../constants/http'
 
 type ClientErrorCodes = (typeof HTTP_CLIENT_ERROR)[keyof typeof HTTP_CLIENT_ERROR]
 type ServerErrorCodes = (typeof HTTP_SERVER_ERROR)[keyof typeof HTTP_SERVER_ERROR]
@@ -7,9 +7,9 @@ type ServerErrorCodes = (typeof HTTP_SERVER_ERROR)[keyof typeof HTTP_SERVER_ERRO
 
 class PasswordStrengthError extends Error {
   public statusCode: ClientErrorCodes
-  constructor(message = "Password strength is insufficient.") {
+  constructor(message = 'Password strength is insufficient.') {
     super(message)
-    this.name = "PasswordStrengthError"
+    this.name = 'PasswordStrengthError'
     this.statusCode = HTTP_CLIENT_ERROR.BAD_REQUEST
     Object.setPrototypeOf(this, PasswordStrengthError.prototype)
   }
@@ -17,9 +17,9 @@ class PasswordStrengthError extends Error {
 
 class BadRequestError extends Error {
   public statusCode: ClientErrorCodes
-  constructor(message = "Bad Request") {
+  constructor(message = 'Bad Request') {
     super(message)
-    this.name = "BadRequestError"
+    this.name = 'BadRequestError'
     this.statusCode = HTTP_CLIENT_ERROR.BAD_REQUEST
     Object.setPrototypeOf(this, BadRequestError.prototype)
   }
@@ -27,9 +27,9 @@ class BadRequestError extends Error {
 
 class UnauthorizedError extends Error {
   public statusCode: ClientErrorCodes
-  constructor(message = "Unauthorized") {
+  constructor(message = 'Unauthorized') {
     super(message)
-    this.name = "UnauthorizedError"
+    this.name = 'UnauthorizedError'
     this.statusCode = HTTP_CLIENT_ERROR.UNAUTHORIZED
     Object.setPrototypeOf(this, UnauthorizedError.prototype)
   }
@@ -37,9 +37,9 @@ class UnauthorizedError extends Error {
 
 class ForbiddenError extends Error {
   public statusCode: ClientErrorCodes
-  constructor(message = "Forbidden") {
+  constructor(message = 'Forbidden') {
     super(message)
-    this.name = "ForbiddenError"
+    this.name = 'ForbiddenError'
     this.statusCode = HTTP_CLIENT_ERROR.FORBIDDEN
     Object.setPrototypeOf(this, ForbiddenError.prototype)
   }
@@ -47,9 +47,9 @@ class ForbiddenError extends Error {
 
 class NotFoundError extends Error {
   public statusCode: ClientErrorCodes
-  constructor(message = "Not Found") {
+  constructor(message = 'Not Found') {
     super(message)
-    this.name = "NotFoundError"
+    this.name = 'NotFoundError'
     this.statusCode = HTTP_CLIENT_ERROR.NOT_FOUND
     Object.setPrototypeOf(this, NotFoundError.prototype)
   }
@@ -57,9 +57,9 @@ class NotFoundError extends Error {
 
 class InternalServerError extends Error {
   public statusCode: ServerErrorCodes
-  constructor(message = "Internal Server Error") {
+  constructor(message = 'Internal Server Error') {
     super(message)
-    this.name = "InternalServerError"
+    this.name = 'InternalServerError'
     this.statusCode = HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR
     Object.setPrototypeOf(this, InternalServerError.prototype)
   }
@@ -67,9 +67,9 @@ class InternalServerError extends Error {
 
 class NotImplementedError extends Error {
   public statusCode: ServerErrorCodes
-  constructor(message = "Not Implemented") {
+  constructor(message = 'Not Implemented') {
     super(message)
-    this.name = "NotImplementedError"
+    this.name = 'NotImplementedError'
     this.statusCode = HTTP_SERVER_ERROR.NOT_IMPLEMENTED
     Object.setPrototypeOf(this, NotImplementedError.prototype)
   }
@@ -77,9 +77,9 @@ class NotImplementedError extends Error {
 
 class ValidationError extends Error {
   public statusCode: ClientErrorCodes
-  constructor(message = "Validation Error") {
+  constructor(message = 'Validation Error') {
     super(message)
-    this.name = "ValidationError"
+    this.name = 'ValidationError'
     this.statusCode = HTTP_CLIENT_ERROR.UNPROCESSABLE_ENTITY
     Object.setPrototypeOf(this, ValidationError.prototype)
   }
@@ -87,9 +87,9 @@ class ValidationError extends Error {
 
 class EmailError extends Error {
   public statusCode: ClientErrorCodes
-  constructor(message = "Email Error") {
+  constructor(message = 'Email Error') {
     super(message)
-    this.name = "EmailError"
+    this.name = 'EmailError'
     this.statusCode = HTTP_CLIENT_ERROR.BAD_REQUEST
     Object.setPrototypeOf(this, EmailError.prototype)
   }
@@ -97,9 +97,9 @@ class EmailError extends Error {
 
 class TokenError extends Error {
   public statusCode: ClientErrorCodes
-  constructor(message = "Token Error") {
+  constructor(message = 'Token Error') {
     super(message)
-    this.name = "TokenError"
+    this.name = 'TokenError'
     this.statusCode = HTTP_CLIENT_ERROR.UNAUTHORIZED
     Object.setPrototypeOf(this, TokenError.prototype)
   }
@@ -107,9 +107,9 @@ class TokenError extends Error {
 
 class DatabaseError extends Error {
   public statusCode: ServerErrorCodes
-  constructor(message = "Database Error") {
+  constructor(message = 'Database Error') {
     super(message)
-    this.name = "DatabaseError"
+    this.name = 'DatabaseError'
     this.statusCode = HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR
     Object.setPrototypeOf(this, DatabaseError.prototype)
   }
@@ -117,9 +117,9 @@ class DatabaseError extends Error {
 
 class PasswordError extends Error {
   public statusCode: ClientErrorCodes
-  constructor(message = "Password Error") {
+  constructor(message = 'Password Error') {
     super(message)
-    this.name = "PasswordError"
+    this.name = 'PasswordError'
     this.statusCode = HTTP_CLIENT_ERROR.BAD_REQUEST
     Object.setPrototypeOf(this, PasswordError.prototype)
   }
@@ -127,9 +127,9 @@ class PasswordError extends Error {
 
 class ConflictError extends Error {
   public statusCode: ClientErrorCodes
-  constructor(message = "Conflict Error") {
+  constructor(message = 'Conflict Error') {
     super(message)
-    this.name = "ConflictError"
+    this.name = 'ConflictError'
     this.statusCode = HTTP_CLIENT_ERROR.CONFLICT
     Object.setPrototypeOf(this, ConflictError.prototype)
   }
@@ -137,9 +137,9 @@ class ConflictError extends Error {
 
 class NotAcceptableError extends Error {
   public statusCode: ClientErrorCodes
-  constructor(message = "Not Acceptable") {
+  constructor(message = 'Not Acceptable') {
     super(message)
-    this.name = "NotAcceptableError"
+    this.name = 'NotAcceptableError'
     this.statusCode = HTTP_CLIENT_ERROR.NOT_ACCEPTABLE
     Object.setPrototypeOf(this, NotAcceptableError.prototype)
   }
@@ -147,9 +147,9 @@ class NotAcceptableError extends Error {
 
 class RateLimitError extends Error {
   public statusCode: ClientErrorCodes
-  constructor(message = "Too Many Requests") {
+  constructor(message = 'Too Many Requests') {
     super(message)
-    this.name = "RateLimitError"
+    this.name = 'RateLimitError'
     this.statusCode = HTTP_CLIENT_ERROR.TOO_MANY_REQUESTS
     Object.setPrototypeOf(this, RateLimitError.prototype)
   }
@@ -157,9 +157,9 @@ class RateLimitError extends Error {
 
 class LoginError extends Error {
   public statusCode: ClientErrorCodes
-  constructor(message = "Error logging in.") {
+  constructor(message = 'Error logging in.') {
     super(message)
-    this.name = "LoginError"
+    this.name = 'LoginError'
     this.statusCode = HTTP_CLIENT_ERROR.UNAUTHORIZED
     Object.setPrototypeOf(this, RateLimitError.prototype)
   }

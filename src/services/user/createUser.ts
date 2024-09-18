@@ -1,28 +1,28 @@
-import db from "../../db"
-import { isEmail, isStrongPassword, normalizeEmail } from "validator"
-import { NewUser, tableUsers, User } from "../../db/schema"
-import { PASSWORD_STRENGTH_CONFIG } from "../../constants/password"
-import { createHash } from "../../utils/crypt"
-import { EmailError, PasswordStrengthError, ValidationError } from "../../errors"
+import db from '../../db'
+import { isEmail, isStrongPassword, normalizeEmail } from 'validator'
+import { NewUser, tableUsers, User } from '../../db/schema'
+import { PASSWORD_STRENGTH_CONFIG } from '../../constants/password'
+import { createHash } from '../../utils/crypt'
+import { EmailError, PasswordStrengthError, ValidationError } from '../../errors'
 
 /**
  * createUser - Service to create a new user.
  * @param {NewUser} user - The new user object.
  * @returns {Promise<User["id"] | null>} - The new user object.
  */
-const createUser = async (userProps: NewUser): Promise<User["id"] | null> => {
+const createUser = async (userProps: NewUser): Promise<User['id'] | null> => {
   const { username, firstName, lastName, email, password, role } = userProps
 
   if (!username || !firstName || !lastName || !email || !password || !role) {
-    throw new ValidationError("Missing required fields.")
+    throw new ValidationError('Missing required fields.')
   }
 
   if (!isStrongPassword(password, PASSWORD_STRENGTH_CONFIG)) {
-    throw new PasswordStrengthError("Password not strong enough, try harder.")
+    throw new PasswordStrengthError('Password not strong enough, try harder.')
   }
 
   if (!isEmail(email)) {
-    throw new EmailError("Email needs to be a valid email.")
+    throw new EmailError('Email needs to be a valid email.')
   }
 
   const normalisedEmail = normalizeEmail(email, { all_lowercase: true })

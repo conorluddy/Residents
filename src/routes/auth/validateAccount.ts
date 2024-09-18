@@ -1,12 +1,12 @@
-import { Router } from "express"
-import CONTROLLERS from "../../controllers"
-import MW from "../../middleware"
-import { rateLimitTenPerTenMins } from "../../middleware/util/rateLimiter"
+import { Router } from 'express'
+import CONTROLLERS from '../../controllers'
+import MW from '../../middleware'
+import { rateLimitTenPerTenMins } from '../../middleware/util/rateLimiter'
 
 const router = Router()
 
 router.patch(
-  "/validate/:tokenId.:userId",
+  '/validate/:tokenId.:userId',
   rateLimitTenPerTenMins,
   MW.VALIDATE.tokenId,
   MW.findValidTokenById,

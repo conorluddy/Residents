@@ -1,15 +1,15 @@
-import express from "express"
-import request from "supertest"
-import { TOKEN_TYPE } from "../../constants/database"
-import { HTTP_SUCCESS } from "../../constants/http"
-import { TIMESPAN } from "../../constants/time"
-import { makeAFakeSafeUser } from "../../test-utils/mockUsers"
-import { REQUEST_TOKEN, REQUEST_TOKEN_ID, REQUEST_USER } from "../../types/requestSymbols"
-import validateAccountRoute from "./validateAccount"
-import { createId } from "@paralleldrive/cuid2"
-import { logger } from "../../utils/logger"
+import express from 'express'
+import request from 'supertest'
+import { TOKEN_TYPE } from '../../constants/database'
+import { HTTP_SUCCESS } from '../../constants/http'
+import { TIMESPAN } from '../../constants/time'
+import { makeAFakeSafeUser } from '../../test-utils/mockUsers'
+import { REQUEST_TOKEN, REQUEST_TOKEN_ID, REQUEST_USER } from '../../types/requestSymbols'
+import validateAccountRoute from './validateAccount'
+import { createId } from '@paralleldrive/cuid2'
+import { logger } from '../../utils/logger'
 
-const user = makeAFakeSafeUser({ email: "bananaman@ireland.ie", id: "UID123" })
+const user = makeAFakeSafeUser({ email: 'bananaman@ireland.ie', id: 'UID123' })
 const validTokenId = createId()
 const token = {
   user,
@@ -21,7 +21,7 @@ const token = {
   createdAt: new Date(),
 }
 
-jest.mock("../../services/index", () => ({
+jest.mock('../../services/index', () => ({
   getToken: jest.fn().mockImplementationOnce(() => token),
   deleteToken: jest.fn().mockImplementationOnce(async () => validTokenId),
   updateUserStatus: jest.fn().mockImplementationOnce(async () => user.id),
@@ -37,11 +37,11 @@ app.use((req, _res, next) => {
   next()
 })
 
-describe("GET /validateAccount", () => {
-  it("should call the validateAccount controller", async () => {
+describe('GET /validateAccount', () => {
+  it('should call the validateAccount controller', async () => {
     const response = await request(app).patch(`/validate/${validTokenId}.${user.id}`)
     expect(logger.error).not.toHaveBeenCalled()
-    expect(response.body).toStrictEqual({ message: "Account validated." })
+    expect(response.body).toStrictEqual({ message: 'Account validated.' })
     expect(response.status).toBe(HTTP_SUCCESS.OK)
   })
 })

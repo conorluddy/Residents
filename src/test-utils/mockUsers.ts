@@ -1,9 +1,9 @@
-import { faker } from "@faker-js/faker"
-import { createHash } from "../utils/crypt"
-import { ROLES, ROLES_ARRAY, STATUS, STATUS_ARRAY } from "../constants/database"
-import { User } from "../db/schema"
-import { createId } from "@paralleldrive/cuid2"
-import { PublicUser, SafeUser } from "../db/types"
+import { faker } from '@faker-js/faker'
+import { createHash } from '../utils/crypt'
+import { ROLES, ROLES_ARRAY, STATUS, STATUS_ARRAY } from '../constants/database'
+import { User } from '../db/schema'
+import { createId } from '@paralleldrive/cuid2'
+import { PublicUser, SafeUser } from '../db/types'
 
 faker.seed(123)
 
@@ -32,7 +32,7 @@ const makeAFakeUser = ({
   password,
   role,
   status,
-  username = "U53rn4m3",
+  username = 'U53rn4m3',
 }: Params): User => ({
   id: id ?? createId(),
   deletedAt: deletedAt ?? null,
@@ -58,14 +58,14 @@ const makeAFakeUserWithHashedPassword = async ({
   role,
   referredBy,
   status,
-  username = "U53rn4m3",
+  username = 'U53rn4m3',
 }: Params): Promise<User> => ({
   id: id ?? createId(),
   deletedAt: deletedAt ?? null,
   email: email ?? faker.internet.email(),
   firstName: firstName ?? faker.person.firstName(),
   lastName: lastName ?? faker.person.lastName(),
-  password: await createHash(password ?? username ?? ""), // default password is username
+  password: await createHash(password ?? username ?? ''), // default password is username
   role: role === null ? null : role ?? faker.helpers.arrayElement(ROLES_ARRAY),
   status: status ?? faker.helpers.arrayElement(STATUS_ARRAY),
   username: username ?? faker.internet.userName(),
@@ -81,7 +81,7 @@ const makeAFakeSafeUser = ({
   lastName,
   role,
   status,
-  username = "U53rn4m3",
+  username = 'U53rn4m3',
 }: Params): SafeUser => ({
   id: id ?? createId(),
   deletedAt: deletedAt ?? null,
@@ -94,7 +94,7 @@ const makeAFakeSafeUser = ({
   createdAt: createdAt ?? new Date(),
 })
 
-const makeAFakePublicUser = ({ id, email, firstName, lastName, role, username = "U53rn4m3" }: Params): PublicUser => ({
+const makeAFakePublicUser = ({ id, email, firstName, lastName, role, username = 'U53rn4m3' }: Params): PublicUser => ({
   id: id ?? createId(),
   username: username ?? faker.internet.userName(),
   email: email ?? faker.internet.email(),

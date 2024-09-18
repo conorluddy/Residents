@@ -1,6 +1,6 @@
-import { Response } from "express"
-import { HTTP_SUCCESS } from "../../constants/http"
-import { PublicUser } from "../../db/types"
+import { Response } from 'express'
+import { HTTP_SUCCESS } from '../../constants/http'
+import { PublicUser } from '../../db/types'
 
 interface Props {
   res: Response
@@ -11,7 +11,7 @@ interface Props {
   debug?: string // TODO: Add a DEBUG req symbol so we can return extra data
 }
 
-const handleSuccessResponse = ({ res, message, token, user, users, debug }: Props) => {
+const handleSuccessResponse = ({ res, message, token, user, users }: Props) => {
   return res.status(HTTP_SUCCESS.OK).json({
     ...(message && { message }),
     ...(token && { token }),

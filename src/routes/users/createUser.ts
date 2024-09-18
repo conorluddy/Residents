@@ -1,10 +1,10 @@
-import { Router } from "express"
-import CONTROLLERS from "../../controllers"
-import MW from "../../middleware"
+import { Router } from 'express'
+import CONTROLLERS from '../../controllers'
+import MW from '../../middleware'
 
 const router = Router()
 
-router.post("/register", MW.VALIDATE.email, CONTROLLERS.USER.createUser)
+router.post('/register', MW.VALIDATE.email, CONTROLLERS.USER.createUser)
 //                      ^
 //                      RBAC.checkCanCreateUsers
 //                      We can lock this down if we don't

@@ -1,13 +1,13 @@
-import { NextFunction, Request, Response } from "express"
-import { HTTP_SUCCESS } from "../../constants/http"
-import { User } from "../../db/types"
-import { makeAFakeUser } from "../../test-utils/mockUsers"
-import { getUser } from "./getUser"
-import { REQUEST_TARGET_USER_ID } from "../../types/requestSymbols"
+import { NextFunction, Request, Response } from 'express'
+import { HTTP_SUCCESS } from '../../constants/http'
+import { User } from '../../db/types'
+import { makeAFakeUser } from '../../test-utils/mockUsers'
+import { getUser } from './getUser'
+import { REQUEST_TARGET_USER_ID } from '../../types/requestSymbols'
 
 let fakeUser: Partial<User>
 
-jest.mock("../../services/user/getUserById", () => ({
+jest.mock('../../services/user/getUserById', () => ({
   getUserById: jest
     .fn()
     .mockImplementationOnce(async () => {
@@ -18,19 +18,19 @@ jest.mock("../../services/user/getUserById", () => ({
       return undefined
     })
     .mockImplementationOnce(async () => {
-      throw new Error("DB error.")
+      throw new Error('DB error.')
     }),
 }))
 
-describe("Controller: GetUser", () => {
+describe('Controller: GetUser', () => {
   let mockRequest: Partial<Request> & { [REQUEST_TARGET_USER_ID]?: string }
   let mockResponse: Partial<Response>
-  let mockNext = jest.fn().mockReturnThis()
+  const mockNext = jest.fn().mockReturnThis()
 
   beforeAll(() => {})
   beforeEach(() => {
     mockRequest = {
-      [REQUEST_TARGET_USER_ID]: "ID",
+      [REQUEST_TARGET_USER_ID]: 'ID',
     }
     mockResponse = {
       status: jest.fn().mockReturnThis(),
@@ -38,28 +38,28 @@ describe("Controller: GetUser", () => {
     }
   })
 
-  it("Happy path", async () => {
+  it('Happy path', async () => {
     await getUser(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.OK)
     expect(mockResponse.json).toHaveBeenCalledWith({ user: fakeUser })
   })
 
-  it("Missing User ID", async () => {
+  it('Missing User ID', async () => {
     delete mockRequest[REQUEST_TARGET_USER_ID]
     await expect(getUser(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)).rejects.toThrow(
-      "User ID is missing."
+      'User ID is missing.'
     )
   })
 
-  it("User not found", async () => {
+  it('User not found', async () => {
     await expect(getUser(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)).rejects.toThrow(
-      "User not found."
+      'User not found.'
     )
   })
 
-  it("Error handling", async () => {
+  it('Error handling', async () => {
     await expect(getUser(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)).rejects.toThrow(
-      "DB error."
+      'DB error.'
     )
   })
 })

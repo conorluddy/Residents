@@ -1,12 +1,12 @@
-import { NextFunction, Request, Response } from "express"
-import { TOKEN_TYPE } from "../../constants/database"
-import { HTTP_SUCCESS } from "../../constants/http"
-import { NewUser } from "../../db/types"
-import { TIMESPAN } from "../../constants/time"
-import { BadRequestError, EmailError } from "../../errors"
-import SERVICES from "../../services"
-import { isEmail } from "validator"
-import { handleCreatedResponse } from "../../middleware/util/successHandler"
+import { NextFunction, Request, Response } from 'express'
+import { TOKEN_TYPE } from '../../constants/database'
+import { HTTP_SUCCESS } from '../../constants/http'
+import { NewUser } from '../../db/types'
+import { TIMESPAN } from '../../constants/time'
+import { BadRequestError, EmailError } from '../../errors'
+import SERVICES from '../../services'
+import { isEmail } from 'validator'
+import { handleCreatedResponse } from '../../middleware/util/successHandler'
 
 // For dev - remove before flight
 // import { SENDGRID_TEST_EMAIL } from "../../config"
@@ -20,13 +20,13 @@ export const createUser = async ({ body }: Request, res: Response, next: NextFun
   const { username, firstName, lastName, email, password, role }: NewUser = body
 
   if (![username, firstName, lastName, email, password].every(Boolean))
-    throw new BadRequestError("Missing required fields.")
+  {throw new BadRequestError('Missing required fields.')}
 
-  if (email && !isEmail(email)) throw new EmailError("Invalid email address")
+  if (email && !isEmail(email)) {throw new EmailError('Invalid email address')}
 
   const userId = await SERVICES.createUser({ username, firstName, lastName, email, password, role })
 
-  if (!userId) throw new BadRequestError("Error creating new user.")
+  if (!userId) {throw new BadRequestError('Error creating new user.')}
 
   await Promise.all([
     SERVICES.createUserMeta(userId),
@@ -41,5 +41,5 @@ export const createUser = async ({ body }: Request, res: Response, next: NextFun
   //   })
   // }
 
-  return handleCreatedResponse({ res, message: "User registered." })
+  return handleCreatedResponse({ res, message: 'User registered.' })
 }

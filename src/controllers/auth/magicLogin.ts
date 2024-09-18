@@ -1,13 +1,13 @@
-import { NextFunction, Request, Response } from "express"
-import { HTTP_SUCCESS } from "../../constants/http"
-import { BadRequestError } from "../../errors"
-import { REQUEST_EMAIL } from "../../types/requestSymbols"
-import SERVICES from "../../services"
-import { TOKEN_TYPE } from "../../constants/database"
-import { TIMESPAN } from "../../constants/time"
-import { sendMail } from "../../mail/sendgrid"
-import { SENDGRID_TEST_EMAIL } from "../../config"
-import { logger } from "../../utils/logger"
+import { NextFunction, Request, Response } from 'express'
+import { HTTP_SUCCESS } from '../../constants/http'
+import { BadRequestError } from '../../errors'
+import { REQUEST_EMAIL } from '../../types/requestSymbols'
+import SERVICES from '../../services'
+import { TOKEN_TYPE } from '../../constants/database'
+import { TIMESPAN } from '../../constants/time'
+import { sendMail } from '../../mail/sendgrid'
+import { SENDGRID_TEST_EMAIL } from '../../config'
+import { logger } from '../../utils/logger'
 
 /**
  * magicLogin
@@ -15,7 +15,7 @@ import { logger } from "../../utils/logger"
 export const magicLogin = async (req: Request, res: Response, next: NextFunction) => {
   // Email will be added to the request from the previous email validation middleware
   const email = req[REQUEST_EMAIL]
-  if (!email) throw new BadRequestError("User data missing.")
+  if (!email) {throw new BadRequestError('User data missing.')}
 
   let debugTokenId
 
@@ -34,8 +34,8 @@ export const magicLogin = async (req: Request, res: Response, next: NextFunction
     })
 
     sendMail({
-      to: SENDGRID_TEST_EMAIL ?? "", //userNoPW.email, - Faker might seed with real emails, be careful not to spam people
-      subject: "Magic login link",
+      to: SENDGRID_TEST_EMAIL ?? '', //userNoPW.email, - Faker might seed with real emails, be careful not to spam people
+      subject: 'Magic login link',
       body: `Magic link - Click to magically log in: http://localhost:3000/auth/magic-login/${tokenId}`,
       // Obviously this is a test link, in production you'd want to use a real domain
     })
@@ -45,7 +45,7 @@ export const magicLogin = async (req: Request, res: Response, next: NextFunction
   }
 
   return res.status(HTTP_SUCCESS.OK).json({
-    message: "Check your email for your magic login link.",
+    message: 'Check your email for your magic login link.',
     debug: `http://localhost:3000/auth/magic-login/${debugTokenId}`, // TODO: Remove
   })
 }

@@ -1,8 +1,8 @@
-import { NextFunction, Request, Response } from "express"
-import { ACL, PERMISSIONS } from "../../../constants/accessControlList"
-import { ROLES_ARRAY } from "../../../constants/database"
-import { BadRequestError, ForbiddenError } from "../../../errors"
-import { REQUEST_TARGET_USER, REQUEST_USER } from "../../../types/requestSymbols"
+import { NextFunction, Request, Response } from 'express'
+import { ACL, PERMISSIONS } from '../../../constants/accessControlList'
+import { ROLES_ARRAY } from '../../../constants/database'
+import { BadRequestError, ForbiddenError } from '../../../errors'
+import { REQUEST_TARGET_USER, REQUEST_USER } from '../../../types/requestSymbols'
 
 /**
  * Check if the user has the required permission
@@ -15,11 +15,11 @@ async function canDeleteUser(req: Request, res: Response, next: NextFunction): P
   const targetUser = req[REQUEST_TARGET_USER]
 
   if (!user || !targetUser || !user.role || !targetUser.role) {
-    throw new BadRequestError("User data is missing.")
+    throw new BadRequestError('User data is missing.')
   }
 
   if (user.id === targetUser.id) {
-    throw new ForbiddenError("Users can not self-delete.")
+    throw new ForbiddenError('Users can not self-delete.')
   }
 
   if (ACL[user.role].includes(PERMISSIONS.CAN_DELETE_ANY_USER)) {
@@ -38,7 +38,7 @@ async function canDeleteUser(req: Request, res: Response, next: NextFunction): P
     return next()
   }
 
-  throw new ForbiddenError("User doesn't have permission to delete this user.")
+  throw new ForbiddenError('User doesn\'t have permission to delete this user.')
 }
 
 export default canDeleteUser

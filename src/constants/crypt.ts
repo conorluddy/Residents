@@ -1,4 +1,4 @@
-import { TIMESPAN } from "./time"
+import { TIMESPAN } from './time'
 
 export const SALT_ROUNDS = 10
 

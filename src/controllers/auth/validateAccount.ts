@@ -1,10 +1,10 @@
-import { NextFunction, Request, Response } from "express"
-import { STATUS, TOKEN_TYPE } from "../../constants/database"
-import { BadRequestError, TokenError } from "../../errors"
-import SERVICES from "../../services"
-import { REQUEST_TOKEN } from "../../types/requestSymbols"
-import { logger } from "../../utils/logger"
-import { handleSuccessResponse } from "../../middleware/util/successHandler"
+import { NextFunction, Request, Response } from 'express'
+import { STATUS, TOKEN_TYPE } from '../../constants/database'
+import { BadRequestError, TokenError } from '../../errors'
+import SERVICES from '../../services'
+import { REQUEST_TOKEN } from '../../types/requestSymbols'
+import { logger } from '../../utils/logger'
+import { handleSuccessResponse } from '../../middleware/util/successHandler'
 
 /**
  * validateAccount
@@ -13,10 +13,10 @@ export const validateAccount = async (req: Request, res: Response, next: NextFun
   const { tokenId, userId: userIdFromUrlParam } = req.params
   const token = req[REQUEST_TOKEN]
 
-  if (!userIdFromUrlParam) throw new BadRequestError("Invalid user data.") // probably redundant
-  if (!token) throw new TokenError("Validation token missing.")
+  if (!userIdFromUrlParam) {throw new BadRequestError('Invalid user data.')} // probably redundant
+  if (!token) {throw new TokenError('Validation token missing.')}
   if (token.type !== TOKEN_TYPE.VALIDATE || token.userId !== userIdFromUrlParam || tokenId !== token.id)
-    throw new TokenError("Validation token invalid.")
+  {throw new TokenError('Validation token invalid.')}
 
   await Promise.all([
     SERVICES.updateUserStatus({ userId: userIdFromUrlParam, status: STATUS.VERIFIED }),
@@ -25,5 +25,5 @@ export const validateAccount = async (req: Request, res: Response, next: NextFun
 
   logger.info(`User ${userIdFromUrlParam} validated.`)
 
-  return handleSuccessResponse({ res, message: "Account validated." })
+  return handleSuccessResponse({ res, message: 'Account validated.' })
 }

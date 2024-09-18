@@ -1,7 +1,7 @@
-import { Request, Response, NextFunction } from "express"
-import validateEmail from "./validateEmail"
+import { Request, Response, NextFunction } from 'express'
+import validateEmail from './validateEmail'
 
-describe("Middleware: validateEmail", () => {
+describe('Middleware: validateEmail', () => {
   let mockRequest: Partial<Request>
   let mockResponse: Partial<Response>
   let nextFunction: NextFunction
@@ -26,21 +26,21 @@ describe("Middleware: validateEmail", () => {
     jest.clearAllMocks()
   })
 
-  it("should return 400 if the request email is missing", async () => {
+  it('should return 400 if the request email is missing', async () => {
     await expect(validateEmail(mockRequest as Request, mockResponse as Response, nextFunction)).rejects.toThrow(
-      "Email is required"
+      'Email is required'
     )
   })
 
-  it("should return 400 if the request email is invalid", async () => {
-    mockRequest.body.email = "thatsnotanemail"
+  it('should return 400 if the request email is invalid', async () => {
+    mockRequest.body.email = 'thatsnotanemail'
     await expect(validateEmail(mockRequest as Request, mockResponse as Response, nextFunction)).rejects.toThrow(
-      "Invalid email address"
+      'Invalid email address'
     )
   })
 
-  it("should call next function if email is valid", async () => {
-    mockRequest.body.email = "thats@anemail.com"
+  it('should call next function if email is valid', async () => {
+    mockRequest.body.email = 'thats@anemail.com'
     await validateEmail(mockRequest as Request, mockResponse as Response, nextFunction)
     expect(nextFunction).toHaveBeenCalled()
     expect(mockResponse.status).not.toHaveBeenCalled()

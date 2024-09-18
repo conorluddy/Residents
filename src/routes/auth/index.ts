@@ -1,17 +1,17 @@
-import { Router } from "express"
-import googleLoginCallback from "./googleLoginCallback"
-import login from "./login"
-import magicLogin from "./magicLogin"
-import magicLoginWithToken from "./magicLoginWithToken"
-import resetPassword from "./resetPassword"
-import resetPasswordWithToken from "./resetPasswordWithToken"
-import refreshToken from "./refreshToken"
-import googleLogin from "./googleLogin"
-import logout from "./logout"
-import validateAccount from "./validateAccount"
-import MW from "../../middleware"
-import deleteExpiredTokens from "./deleteExpiredTokens"
-import xsrfTokens from "../../middleware/auth/xsrfTokens"
+import { Router } from 'express'
+import googleLoginCallback from './googleLoginCallback'
+import login from './login'
+import magicLogin from './magicLogin'
+import magicLoginWithToken from './magicLoginWithToken'
+import resetPassword from './resetPassword'
+import resetPasswordWithToken from './resetPasswordWithToken'
+import refreshToken from './refreshToken'
+import googleLogin from './googleLogin'
+import logout from './logout'
+import validateAccount from './validateAccount'
+import MW from '../../middleware'
+import deleteExpiredTokens from './deleteExpiredTokens'
+import xsrfTokens from '../../middleware/auth/xsrfTokens'
 
 const router = Router()
 

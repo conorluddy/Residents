@@ -1,12 +1,12 @@
-import { Router } from "express"
-import CONTROLLERS from "../../controllers"
-import { rateLimitTenPerTenMins } from "../../middleware/util/rateLimiter"
-import MW from "../../middleware"
+import { Router } from 'express'
+import CONTROLLERS from '../../controllers'
+import { rateLimitTenPerTenMins } from '../../middleware/util/rateLimiter'
+import MW from '../../middleware'
 
 const router = Router()
 
 router.post(
-  "/reset-password/:tokenId",
+  '/reset-password/:tokenId',
   rateLimitTenPerTenMins,
   MW.VALIDATE.tokenId,
   MW.findValidTokenById,

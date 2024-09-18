@@ -1,6 +1,6 @@
-import db from "../../db"
-import { eq, lt, or, sql } from "drizzle-orm"
-import { tableTokens } from "../../db/schema"
+import db from '../../db'
+import { eq, lt, or, sql } from 'drizzle-orm'
+import { tableTokens } from '../../db/schema'
 
 /**
  * deleteExpiredTokens

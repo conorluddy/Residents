@@ -37,6 +37,6 @@ const timeToMs = (timeString: string): number => {
   return value * timeUnitConversions[unit]
 }
 
-type TimeUnit = "s" | "m" | "h" | "d" | "w" | "y"
+type TimeUnit = 's' | 'm' | 'h' | 'd' | 'w' | 'y'
 
 export { timeToMs }

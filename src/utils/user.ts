@@ -1,4 +1,4 @@
-import { User, SafeUser, PublicUser } from "../db/types"
+import { User, SafeUser, PublicUser } from '../db/types'
 
 /**
  * Remove the password from a user object.
@@ -16,7 +16,7 @@ export function userToSafeUser(user: User): SafeUser {
 export function userToPublicUser(user: User | SafeUser | PublicUser): PublicUser {
   const { username, firstName, lastName, email, role, id } = user
   if (!username || !firstName || !lastName || !email || !role || !id) {
-    throw new Error("User is missing required fields")
+    throw new Error('User is missing required fields')
   }
   return {
     username,
