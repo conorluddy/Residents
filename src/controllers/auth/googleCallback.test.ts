@@ -1,10 +1,9 @@
 import { NextFunction, Request, Response } from "express"
-import { HTTP_SUCCESS, HTTP_CLIENT_ERROR } from "../../constants/http"
+import { HTTP_SUCCESS } from "../../constants/http"
 import { makeAFakeSafeUser } from "../../test-utils/mockUsers"
 import { googleCallback } from "./googleCallback"
 import { OAuth2Client } from "google-auth-library"
 import { EmailError, NotFoundError, UnauthorizedError } from "../../errors"
-import SERVICES from "../../services"
 
 jest.mock("google-auth-library")
 jest.mock("../../services", () => ({
