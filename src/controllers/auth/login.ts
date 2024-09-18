@@ -1,16 +1,16 @@
-import { NextFunction, Request, Response } from 'express'
-import { isEmail } from 'validator'
-import { TOKEN_TYPE } from '../../constants/database'
-import { TIMESPAN } from '../../constants/time'
-import { User } from '../../db/schema'
-import { BadRequestError, ForbiddenError, LoginError } from '../../errors'
-import generateXsrfToken from '../../middleware/util/xsrfToken'
-import SERVICES from '../../services'
-import { validateHash } from '../../utils/crypt'
-import { generateJwtFromUser } from '../../utils/generateJwt'
-import { REFRESH_TOKEN, XSRF_TOKEN, RESIDENT_TOKEN } from '../../constants/keys'
-import { REFRESH_TOKEN_EXPIRY } from '../../constants/crypt'
-import { handleSuccessResponse } from '../../middleware/util/successHandler'
+import { NextFunction, Request, Response } from "express"
+import { isEmail } from "validator"
+import { TOKEN_TYPE } from "../../constants/database"
+import { TIMESPAN } from "../../constants/time"
+import { User } from "../../db/schema"
+import { BadRequestError, ForbiddenError, LoginError } from "../../errors"
+import generateXsrfToken from "../../middleware/util/xsrfToken"
+import SERVICES from "../../services"
+import { validateHash } from "../../utils/crypt"
+import { generateJwtFromUser } from "../../utils/generateJwt"
+import { REFRESH_TOKEN, XSRF_TOKEN, RESIDENT_TOKEN } from "../../constants/keys"
+import { REFRESH_TOKEN_EXPIRY } from "../../constants/crypt"
+import { handleSuccessResponse } from "../../middleware/util/successHandler"
 
 /**
  * login
@@ -42,6 +42,8 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
   })
 
   if (!refreshTokenId) {throw new ForbiddenError('Couldnt create refresh token.')}
+
+  // Set the tokens in HTTP-only secure cookies
 
   // Set the tokens in HTTP-only secure cookies
 

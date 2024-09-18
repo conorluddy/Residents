@@ -1,16 +1,17 @@
-import { NextFunction, Request, Response } from 'express'
-import { HTTP_SUCCESS } from '../../constants/http'
-import { makeAFakeSafeUser } from '../../test-utils/mockUsers'
-import { googleCallback } from './googleCallback'
-import { OAuth2Client } from 'google-auth-library'
-import { EmailError, NotFoundError, UnauthorizedError } from '../../errors'
+import { NextFunction, Request, Response } from "express"
+import { HTTP_SUCCESS, HTTP_CLIENT_ERROR } from "../../constants/http"
+import { makeAFakeSafeUser } from "../../test-utils/mockUsers"
+import { googleCallback } from "./googleCallback"
+import { OAuth2Client } from "google-auth-library"
+import { EmailError, NotFoundError, UnauthorizedError } from "../../errors"
+import SERVICES from "../../services"
 
-jest.mock('google-auth-library')
-jest.mock('../../services', () => ({
-  getUserById: jest.fn().mockImplementation(() => makeAFakeSafeUser({ username: 'Hackerman' })),
+jest.mock("google-auth-library")
+jest.mock("../../services", () => ({
+  getUserById: jest.fn().mockImplementation(() => makeAFakeSafeUser({ username: "Hackerman" })),
   getUserByEmail: jest
     .fn()
-    .mockImplementationOnce(() => makeAFakeSafeUser({ username: 'Hackermaner' }))
+    .mockImplementationOnce(() => makeAFakeSafeUser({ username: "Hackermaner" }))
     .mockImplementationOnce(() => null),
 }))
 
@@ -37,8 +38,8 @@ describe('Controller: GoogleCallback', () => {
     jest.clearAllMocks()
   })
 
-  it('successfully authenticates a user with Google', async () => {
-    const fakePayload = { sub: '123', email: 'test@example.com' }
+  it("successfully authenticates a user with Google", async () => {
+    const fakePayload = { sub: "123", email: "test@example.com" }
 
     ;(OAuth2Client.prototype.verifyIdToken as jest.Mock).mockResolvedValue({
       getPayload: jest.fn().mockReturnValue(fakePayload),
@@ -74,8 +75,8 @@ describe('Controller: GoogleCallback', () => {
     ).rejects.toThrow(EmailError)
   })
 
-  it('throws NotFoundError when user is not found', async () => {
-    const fakePayload = { sub: '123', email: 'nope@example.com' }
+  it("throws NotFoundError when user is not found", async () => {
+    const fakePayload = { sub: "123", email: "nope@example.com" }
 
     ;(OAuth2Client.prototype.verifyIdToken as jest.Mock).mockResolvedValue({
       getPayload: jest.fn().mockReturnValue(fakePayload),

@@ -1,8 +1,8 @@
-import { NextFunction, Request, Response } from 'express'
-import { BadRequestError, NotFoundError } from '../../errors'
-import SERVICES from '../../services'
-import { REQUEST_TARGET_USER_ID } from '../../types/requestSymbols'
-import { handleSuccessResponse } from '../../middleware/util/successHandler'
+import { NextFunction, Request, Response } from "express"
+import { BadRequestError, NotFoundError } from "../../errors"
+import SERVICES from "../../services"
+import { REQUEST_TARGET_USER_ID } from "../../types/requestSymbols"
+import { handleSuccessResponse } from "../../middleware/util/successHandler"
 
 /**
  * getUser

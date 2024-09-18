@@ -53,6 +53,6 @@ describe('Test the health check route', () => {
   test('It should respond with a status of "👌"', async () => {
     const response = await request(app).get('/health')
     expect(response.statusCode).toBe(HTTP_SUCCESS.OK)
-    expect(response.body).toEqual({ message: '👌' })
+    expect(response.body).toEqual({ message: "👌" })
   })
 })

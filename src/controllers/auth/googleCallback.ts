@@ -1,9 +1,9 @@
-import { NextFunction, Request, Response } from 'express'
-import { generateJwtFromUser } from '../../utils/generateJwt'
-import { OAuth2Client } from 'google-auth-library'
-import { EmailError, NotFoundError, UnauthorizedError } from '../../errors'
-import { handleSuccessResponse } from '../../middleware/util/successHandler'
-import SERVICES from '../../services'
+import { NextFunction, Request, Response } from "express"
+import { generateJwtFromUser } from "../../utils/generateJwt"
+import { OAuth2Client } from "google-auth-library"
+import { EmailError, NotFoundError, UnauthorizedError } from "../../errors"
+import { handleSuccessResponse } from "../../middleware/util/successHandler"
+import SERVICES from "../../services"
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
 
@@ -18,10 +18,10 @@ export const googleCallback = async (req: Request, res: Response, next: NextFunc
 
   const payload = ticket.getPayload()
 
-  if (!payload) {throw new UnauthorizedError('Invalid Google Callback token')}
+  if (!payload) throw new UnauthorizedError("Invalid Google Callback token")
 
   const userEmail = payload.email
-  if (!userEmail) {throw new EmailError('No email found in Google payload')}
+  if (!userEmail) throw new EmailError("No email found in Google payload")
 
   const user = await SERVICES.getUserByEmail(userEmail)
 

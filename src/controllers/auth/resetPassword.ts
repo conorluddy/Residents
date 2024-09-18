@@ -1,13 +1,13 @@
-import { NextFunction, Request, Response } from 'express'
-import { SENDGRID_TEST_EMAIL } from '../../config'
-import { TOKEN_TYPE } from '../../constants/database'
-import { TIMESPAN } from '../../constants/time'
-import { sendMail } from '../../mail/sendgrid'
-import SERVICES from '../../services'
-import { REQUEST_EMAIL } from '../../types/requestSymbols'
-import { logger } from '../../utils/logger'
-import { BadRequestError } from '../../errors'
-import { handleSuccessResponse } from '../../middleware/util/successHandler'
+import { NextFunction, Request, Response } from "express"
+import { SENDGRID_TEST_EMAIL } from "../../config"
+import { TOKEN_TYPE } from "../../constants/database"
+import { TIMESPAN } from "../../constants/time"
+import { sendMail } from "../../mail/sendgrid"
+import SERVICES from "../../services"
+import { REQUEST_EMAIL } from "../../types/requestSymbols"
+import { logger } from "../../utils/logger"
+import { BadRequestError } from "../../errors"
+import { handleSuccessResponse } from "../../middleware/util/successHandler"
 
 /**
  * resetPassword
@@ -42,5 +42,5 @@ export const resetPassword = async (req: Request, res: Response, next: NextFunct
     logger.info(`Reset email sent to ${email}, token id: ${tokenId}`)
   }
 
-  return handleSuccessResponse({ res, message: 'Check your email for your reset password link.' })
+  return handleSuccessResponse({ res, message: "Check your email for your reset password link." })
 }

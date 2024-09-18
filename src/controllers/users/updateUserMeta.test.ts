@@ -45,7 +45,7 @@ describe('Controller: UpdateUserMeta', () => {
     mockRequest.params = { ...mockRequest.params!, id: 'NotTheFakerUsersID' }
     await expect(
       updateUserMeta(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
-    ).rejects.toThrow('User ID mismatch.')
+    ).rejects.toThrow(`User ID mismatch.`)
   })
 
   it('Responds with Bad Request if no update data is provided', async () => {

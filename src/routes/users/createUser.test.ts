@@ -1,14 +1,14 @@
-import express from 'express'
-import request from 'supertest'
-import { HTTP_CLIENT_ERROR, HTTP_SUCCESS } from '../../constants/http'
-import CONTROLLERS from '../../controllers'
-import createUserRoute from '../../routes/users/createUser'
-import { logger } from '../../utils/logger'
-import { ROLES } from '../../constants/database'
-import { handleSuccessResponse } from '../../middleware/util/successHandler'
+import express from "express"
+import request from "supertest"
+import { HTTP_CLIENT_ERROR, HTTP_SUCCESS } from "../../constants/http"
+import CONTROLLERS from "../../controllers"
+import createUserRoute from "../../routes/users/createUser"
+import { logger } from "../../utils/logger"
+import { ROLES } from "../../constants/database"
+import { handleSuccessResponse } from "../../middleware/util/successHandler"
 
 CONTROLLERS.USER.createUser = jest.fn(async (req, res) => {
-  return handleSuccessResponse({ res, message: 'User created successfully' })
+  return handleSuccessResponse({ res, message: "User created successfully" })
 })
 
 jest.mock('../../services/index', () => ({
