@@ -1,8 +1,8 @@
-import { NextFunction, Request, Response } from "express"
-import { ACL, PERMISSIONS } from "../../../constants/accessControlList"
-import { ROLES_ARRAY } from "../../../constants/database"
-import { BadRequestError, ForbiddenError } from "../../../errors"
-import { REQUEST_TARGET_USER, REQUEST_USER } from "../../../types/requestSymbols"
+import { NextFunction, Request, Response } from 'express'
+import { ACL, PERMISSIONS } from '../../../constants/accessControlList'
+import { ROLES_ARRAY } from '../../../constants/database'
+import { BadRequestError, ForbiddenError } from '../../../errors'
+import { REQUEST_TARGET_USER, REQUEST_USER } from '../../../types/requestSymbols'
 
 /**
  * Check if the user has the required permission to get the target user
@@ -15,11 +15,11 @@ async function canGetUser(req: Request, res: Response, next: NextFunction): Prom
   const targetUser = req[REQUEST_TARGET_USER]
 
   if (!user?.role) {
-    throw new BadRequestError("User data is missing.")
+    throw new BadRequestError('User data is missing.')
   }
 
   if (!targetUser?.role) {
-    throw new BadRequestError("Target user data is missing.")
+    throw new BadRequestError('Target user data is missing.')
   }
 
   if (user.id === targetUser.id && ACL[user.role].includes(PERMISSIONS.CAN_GET_OWN_USER)) {

@@ -1,11 +1,11 @@
-import { Router } from "express"
-import { googlePassport } from "../../passport/google"
-import { rateLimitTenPerTenMins } from "../../middleware/util/rateLimiter"
+import { Router } from 'express'
+import { googlePassport } from '../../passport/google'
+import { rateLimitTenPerTenMins } from '../../middleware/util/rateLimiter'
 
 const router = Router().get(
-  "/google",
+  '/google',
   rateLimitTenPerTenMins,
-  googlePassport.authenticate("google", { scope: ["email", "profile"] })
+  googlePassport.authenticate('google', { scope: ['email', 'profile'] })
 )
 
 export default router

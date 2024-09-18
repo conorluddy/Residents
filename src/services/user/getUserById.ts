@@ -1,11 +1,13 @@
-import { eq } from "drizzle-orm"
-import db from "../../db"
-import { tableUsers } from "../../db/schema"
-import { SafeUser } from "../../db/types"
-import { BadRequestError } from "../../errors"
+import { eq } from 'drizzle-orm'
+import db from '../../db'
+import { tableUsers } from '../../db/schema'
+import { SafeUser } from '../../db/types'
+import { BadRequestError } from '../../errors'
 
 const getUserById = async (id: string): Promise<SafeUser | null> => {
-  if (!id) throw new BadRequestError("No User ID provided.")
+  if (!id) {
+    throw new BadRequestError('No User ID provided.')
+  }
 
   const [user] = await db
     .select({

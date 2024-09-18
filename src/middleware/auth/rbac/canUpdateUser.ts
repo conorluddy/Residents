@@ -1,8 +1,8 @@
-import { NextFunction, Request, Response } from "express"
-import { ACL, PERMISSIONS } from "../../../constants/accessControlList"
-import { ROLES_ARRAY } from "../../../constants/database"
-import { BadRequestError, ForbiddenError } from "../../../errors"
-import { REQUEST_TARGET_USER, REQUEST_USER } from "../../../types/requestSymbols"
+import { NextFunction, Request, Response } from 'express'
+import { ACL, PERMISSIONS } from '../../../constants/accessControlList'
+import { ROLES_ARRAY } from '../../../constants/database'
+import { BadRequestError, ForbiddenError } from '../../../errors'
+import { REQUEST_TARGET_USER, REQUEST_USER } from '../../../types/requestSymbols'
 
 /**
  * Check if the user has the required permission
@@ -15,7 +15,7 @@ async function canUpdateUser(req: Request, res: Response, next: NextFunction): P
   const targetUser = req[REQUEST_TARGET_USER]
 
   if (!user || !targetUser || !user.role || !targetUser.role) {
-    throw new BadRequestError("User data is missing.")
+    throw new BadRequestError('User data is missing.')
   }
 
   if (user.id === targetUser.id && ACL[user.role].includes(PERMISSIONS.CAN_UPDATE_OWN_USER)) {

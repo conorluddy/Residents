@@ -1,6 +1,6 @@
-import { NextFunction, Request, Response } from "express"
-import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from "../../constants/http"
-import { logger } from "../../utils/logger"
+import { NextFunction, Request, Response } from 'express'
+import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from '../../constants/http'
+import { logger } from '../../utils/logger'
 import {
   BadRequestError,
   UnauthorizedError,
@@ -18,66 +18,68 @@ import {
   TokenError,
   ValidationError,
   LoginError,
-} from "../../errors"
+} from '../../errors'
 
 const errorHandler = (err: Error, _req: Request, res: Response, next: NextFunction) => {
-  if (!err) next()
+  if (!err) {
+    next()
+  }
 
   logger.error(err.message)
 
   if (err instanceof BadRequestError) {
-    return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "Bad request." })
+    return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: 'Bad request.' })
   }
   if (err instanceof ConflictError) {
-    return res.status(HTTP_CLIENT_ERROR.CONFLICT).json({ message: "Conflict error." })
+    return res.status(HTTP_CLIENT_ERROR.CONFLICT).json({ message: 'Conflict error.' })
   }
   if (err instanceof DatabaseError) {
-    return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Database error." })
+    return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: 'Database error.' })
   }
   if (err instanceof EmailError) {
-    return res.status(HTTP_CLIENT_ERROR.UNPROCESSABLE_ENTITY).json({ message: "Email processing error." })
+    return res.status(HTTP_CLIENT_ERROR.UNPROCESSABLE_ENTITY).json({ message: 'Email processing error.' })
   }
   if (err instanceof ForbiddenError) {
-    return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Access denied." })
+    return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: 'Access denied.' })
   }
   if (err instanceof InternalServerError) {
-    return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Internal server error." })
+    return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: 'Internal server error.' })
   }
   if (err instanceof NotAcceptableError) {
-    return res.status(HTTP_CLIENT_ERROR.NOT_ACCEPTABLE).json({ message: "Request not acceptable." })
+    return res.status(HTTP_CLIENT_ERROR.NOT_ACCEPTABLE).json({ message: 'Request not acceptable.' })
   }
   if (err instanceof NotFoundError) {
-    return res.status(HTTP_CLIENT_ERROR.NOT_FOUND).json({ message: "Resource not found." })
+    return res.status(HTTP_CLIENT_ERROR.NOT_FOUND).json({ message: 'Resource not found.' })
   }
   if (err instanceof NotImplementedError) {
-    return res.status(HTTP_SERVER_ERROR.NOT_IMPLEMENTED).json({ message: "Feature not implemented." })
+    return res.status(HTTP_SERVER_ERROR.NOT_IMPLEMENTED).json({ message: 'Feature not implemented.' })
   }
   if (err instanceof PasswordError) {
-    return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Access denied." })
+    return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: 'Access denied.' })
   }
   // Don't disclose any user/pw information about the error to the client.
   if (err instanceof LoginError) {
-    return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: "Access denied." })
+    return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: 'Access denied.' })
   }
   if (err instanceof PasswordStrengthError) {
-    return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: "Password strength insufficient." })
+    return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: 'Password strength insufficient.' })
   }
   if (err instanceof RateLimitError) {
     return res
       .status(HTTP_CLIENT_ERROR.TOO_MANY_REQUESTS)
-      .json({ message: err.message ? err.message : "Too many requests, slow down!" })
+      .json({ message: err.message ? err.message : 'Too many requests, slow down!' })
   }
   if (err instanceof TokenError) {
-    return res.status(HTTP_CLIENT_ERROR.UNAUTHORIZED).json({ message: "Invalid or expired token." })
+    return res.status(HTTP_CLIENT_ERROR.UNAUTHORIZED).json({ message: 'Invalid or expired token.' })
   }
   if (err instanceof UnauthorizedError) {
-    return res.status(HTTP_CLIENT_ERROR.UNAUTHORIZED).json({ message: "Unauthorized access." })
+    return res.status(HTTP_CLIENT_ERROR.UNAUTHORIZED).json({ message: 'Unauthorized access.' })
   }
   if (err instanceof ValidationError) {
-    return res.status(HTTP_CLIENT_ERROR.UNPROCESSABLE_ENTITY).json({ message: "Validation failed." })
+    return res.status(HTTP_CLIENT_ERROR.UNPROCESSABLE_ENTITY).json({ message: 'Validation failed.' })
   }
 
-  res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: "Something went kaput..." })
+  res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: 'Something went kaput...' })
 
   next(err)
 }

@@ -1,7 +1,7 @@
-import db from "../../db"
-import { eq } from "drizzle-orm"
-import { tableUserMeta } from "../../db/schema"
-import { BadRequestError } from "../../errors"
+import db from '../../db'
+import { eq } from 'drizzle-orm'
+import { tableUserMeta } from '../../db/schema'
+import { BadRequestError } from '../../errors'
 
 interface Params {
   userId: string
@@ -9,8 +9,12 @@ interface Params {
 }
 
 const updateUserMeta = async ({ userId, metaItem }: Params): Promise<string> => {
-  if (!userId) throw new BadRequestError("User ID must be provided.")
-  if (!metaItem) throw new BadRequestError("No meta data provided to update.")
+  if (!userId) {
+    throw new BadRequestError('User ID must be provided.')
+  }
+  if (!metaItem) {
+    throw new BadRequestError('No meta data provided to update.')
+  }
 
   const [updatedMeta] = await db
     .update(tableUserMeta)

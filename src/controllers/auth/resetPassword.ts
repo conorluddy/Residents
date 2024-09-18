@@ -1,13 +1,13 @@
-import { NextFunction, Request, Response } from "express"
-import { SENDGRID_TEST_EMAIL } from "../../config"
-import { TOKEN_TYPE } from "../../constants/database"
-import { TIMESPAN } from "../../constants/time"
-import { sendMail } from "../../mail/sendgrid"
-import SERVICES from "../../services"
-import { REQUEST_EMAIL } from "../../types/requestSymbols"
-import { logger } from "../../utils/logger"
-import { BadRequestError } from "../../errors"
-import { handleSuccessResponse } from "../../middleware/util/successHandler"
+import { NextFunction, Request, Response } from 'express'
+import { SENDGRID_TEST_EMAIL } from '../../config'
+import { TOKEN_TYPE } from '../../constants/database'
+import { TIMESPAN } from '../../constants/time'
+import { sendMail } from '../../mail/sendgrid'
+import SERVICES from '../../services'
+import { REQUEST_EMAIL } from '../../types/requestSymbols'
+import { logger } from '../../utils/logger'
+import { BadRequestError } from '../../errors'
+import { handleSuccessResponse } from '../../middleware/util/successHandler'
 
 /**
  * resetPassword
@@ -19,7 +19,9 @@ import { handleSuccessResponse } from "../../middleware/util/successHandler"
 export const resetPassword = async (req: Request, res: Response, next: NextFunction) => {
   // Email will be added to the request from the previous email validation middleware
   const email = req[REQUEST_EMAIL]
-  if (!email) throw new BadRequestError("User data missing.")
+  if (!email) {
+    throw new BadRequestError('User data missing.')
+  }
 
   const user = await SERVICES.getUserByEmail(email)
 
@@ -34,13 +36,13 @@ export const resetPassword = async (req: Request, res: Response, next: NextFunct
       expiry: TIMESPAN.HOUR,
     })
     sendMail({
-      to: SENDGRID_TEST_EMAIL ?? "", //userNoPW.email, - Faker might seed with real emails, be careful not to spam people
-      subject: "Reset your password",
+      to: SENDGRID_TEST_EMAIL ?? '', //userNoPW.email, - Faker might seed with real emails, be careful not to spam people
+      subject: 'Reset your password',
       body: `Click here to reset your password: http://localhost:3000/auth/reset-password/${tokenId}`,
       // Obviously this is a test link, in production you'd want to use a real domain
     })
     logger.info(`Reset email sent to ${email}, token id: ${tokenId}`)
   }
 
-  return handleSuccessResponse({ res, message: "Check your email for your reset password link." })
+  return handleSuccessResponse({ res, message: 'Check your email for your reset password link.' })
 }

@@ -1,10 +1,10 @@
-import { ROLES, STATUS } from "../../constants/database"
-import { logger } from "../../utils/logger"
-import { NewUser } from "../types"
-import SERVICES from "../../services"
+import { ROLES, STATUS } from '../../constants/database'
+import { logger } from '../../utils/logger'
+import { NewUser } from '../types'
+import SERVICES from '../../services'
 
 // Make this an EVN
-export const DEFAULT_SEED_PASSWORD = "R351D3NT!zero"
+export const DEFAULT_SEED_PASSWORD = 'R351D3NT!zero'
 
 /**
  * Seed the first user in the database
@@ -18,16 +18,16 @@ const seedUserZero = async (password: string = DEFAULT_SEED_PASSWORD) => {
 
     if (usersAlreadyExist) {
       logger.warn(
-        "This seeding script is only for setting the first user in an empty database, but the database already has users."
+        'This seeding script is only for setting the first user in an empty database, but the database already has users.'
       )
-      throw new Error("Cannot create owner/root user when the database already has users.")
+      throw new Error('Cannot create owner/root user when the database already has users.')
     }
 
     const userZero: NewUser = {
-      username: "resident",
-      firstName: "Resident",
-      lastName: "Zero",
-      email: "resident@resident.resident",
+      username: 'resident',
+      firstName: 'Resident',
+      lastName: 'Zero',
+      email: 'resident@resident.resident',
       password,
       role: ROLES.OWNER,
       status: STATUS.VERIFIED,
@@ -35,11 +35,13 @@ const seedUserZero = async (password: string = DEFAULT_SEED_PASSWORD) => {
 
     await SERVICES.createUser(userZero)
 
-    logger.info(`First user seeded with Owner role.`)
+    logger.info('First user seeded with Owner role.')
   } catch (error) {
     logger.error(error)
   } finally {
-    if (process.env.NODE_ENV !== "test") process.exit()
+    if (process.env.NODE_ENV !== 'test') {
+      process.exit()
+    }
   }
 }
 

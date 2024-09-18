@@ -1,9 +1,9 @@
-import { faker } from "@faker-js/faker"
-import { ROLES, STATUS_ARRAY } from "../../constants/database"
-import SERVICES from "../../services"
-import { createHash } from "../../utils/crypt"
-import { logger } from "../../utils/logger"
-import { NewUser } from "../types"
+import { faker } from '@faker-js/faker'
+import { ROLES, STATUS_ARRAY } from '../../constants/database'
+import SERVICES from '../../services'
+import { createHash } from '../../utils/crypt'
+import { logger } from '../../utils/logger'
+import { NewUser } from '../types'
 
 /**
  * Faker function to create a random users
@@ -14,7 +14,7 @@ import { NewUser } from "../types"
  */
 async function createRandomUsers(amount: number): Promise<NewUser[]> {
   const users: NewUser[] = []
-  logger.info("Creating users...")
+  logger.info('Creating users...')
 
   for (let i = 0; i < amount; i++) {
     const username = faker.internet.userName()
@@ -44,7 +44,9 @@ const seedUsers = async (amount: number) => {
   } catch (error) {
     logger.error(error)
   } finally {
-    if (process.env.NODE_ENV !== "test") process.exit()
+    if (process.env.NODE_ENV !== 'test') {
+      process.exit()
+    }
   }
 }
 

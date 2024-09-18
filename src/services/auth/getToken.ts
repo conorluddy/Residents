@@ -1,15 +1,17 @@
-import db from "../../db"
-import { eq, desc } from "drizzle-orm"
-import { tableTokens } from "../../db/schema"
-import { Token } from "../../db/types"
-import { TokenError } from "../../errors"
+import db from '../../db'
+import { eq, desc } from 'drizzle-orm'
+import { tableTokens } from '../../db/schema'
+import { Token } from '../../db/types'
+import { TokenError } from '../../errors'
 
 interface Props {
   tokenId: string
 }
 
 const getToken = async ({ tokenId }: Props): Promise<Token | null> => {
-  if (!tokenId) throw new TokenError("No token ID provided")
+  if (!tokenId) {
+    throw new TokenError('No token ID provided')
+  }
 
   const [token] = await db
     .select()

@@ -1,6 +1,6 @@
-import "express"
-import { JwtPayload } from "jsonwebtoken"
-import { User, SafeUser, PublicUser, Token } from "../db/types"
+import 'express'
+import { JwtPayload } from 'jsonwebtoken'
+import { User, SafeUser, PublicUser, Token } from '../db/types'
 import {
   REQUEST_USER,
   REQUEST_TOKEN,
@@ -9,9 +9,9 @@ import {
   REQUEST_DB,
   REQUEST_TARGET_USER,
   REQUEST_TARGET_USER_ID,
-} from "../types/requestSymbols"
+} from '../types/requestSymbols'
 
-declare module "express-serve-static-core" {
+declare module 'express-serve-static-core' {
   interface Request {
     // Symbols let us ensure that the key is unique
     // and won't clash with anything else
