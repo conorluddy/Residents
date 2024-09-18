@@ -11,7 +11,7 @@ const __dirname = path.dirname(__filename)
 const compat = new FlatCompat({
   baseDirectory: __dirname,
   recommendedConfig: js.configs.recommended,
-  allConfig: js.configs.all
+  allConfig: js.configs.all,
 })
 
 export default [
@@ -35,9 +35,12 @@ export default [
       'no-debugger': 'error',
       'no-unused-vars': 'error',
 
-      '@typescript-eslint/no-unused-vars': ['error', {
-        args: 'none',
-      }],
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          args: 'none',
+        },
+      ],
 
       eqeqeq: 'error',
       curly: 'error',
@@ -51,10 +54,13 @@ export default [
       'prefer-arrow-callback': 'error',
       'arrow-spacing': 'error',
 
-      'no-multiple-empty-lines': ['error', {
-        max: 1,
-        maxEOF: 0,
-      }],
+      'no-multiple-empty-lines': [
+        'error',
+        {
+          max: 1,
+          maxEOF: 0,
+        },
+      ],
 
       'no-mixed-spaces-and-tabs': 'error',
       'no-unexpected-multiline': 'error',

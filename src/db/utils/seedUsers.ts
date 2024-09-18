@@ -44,7 +44,9 @@ const seedUsers = async (amount: number) => {
   } catch (error) {
     logger.error(error)
   } finally {
-    if (process.env.NODE_ENV !== 'test') {process.exit()}
+    if (process.env.NODE_ENV !== 'test') {
+      process.exit()
+    }
   }
 }
 

@@ -8,7 +8,9 @@ interface Props {
 }
 
 const deleteAllUserTokens = async ({ userId }: Props): Promise<number> => {
-  if (!userId) {throw new TokenError('No user ID provided')}
+  if (!userId) {
+    throw new TokenError('No user ID provided')
+  }
 
   const deleted = await db.delete(tableTokens).where(eq(tableTokens.userId, userId)).returning()
 

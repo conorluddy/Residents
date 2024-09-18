@@ -11,11 +11,15 @@ import { BadRequestError } from '../../errors'
 const findUserByValidEmail: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
   const email = req[REQUEST_EMAIL]
 
-  if (!email) {throw new BadRequestError('Invalid email.')}
+  if (!email) {
+    throw new BadRequestError('Invalid email.')
+  }
 
   const user = await SERVICES.getUserByEmail(email)
 
-  if (!user) {throw new BadRequestError('User not found.')}
+  if (!user) {
+    throw new BadRequestError('User not found.')
+  }
 
   req[REQUEST_USER] = user
   next()

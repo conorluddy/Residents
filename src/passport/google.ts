@@ -38,7 +38,9 @@ if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET || !GOOGLE_CALLBACK_URL) {
 
         if (fedCreds[0].userId) {
           const user = await SERVICES.getUserById(fedCreds[0].userId)
-          if (!user) {throw new Error(`User not found matching federated credentials with ID:${ fedCreds[0].userId}`)}
+          if (!user) {
+            throw new Error(`User not found matching federated credentials with ID:${fedCreds[0].userId}`)
+          }
           return done(null, user)
         } else {
           try {
@@ -50,7 +52,9 @@ if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET || !GOOGLE_CALLBACK_URL) {
             }
 
             const newUserId = await SERVICES.createUser(user)
-            if (!newUserId) {throw new Error('Failed to create user')}
+            if (!newUserId) {
+              throw new Error('Failed to create user')
+            }
 
             const fedCreds = {
               userId: newUserId,
@@ -66,7 +70,9 @@ if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET || !GOOGLE_CALLBACK_URL) {
               })
               .returning()
 
-            if (!newFedCred) {throw new Error('Failed to create new federated credentials')}
+            if (!newFedCred) {
+              throw new Error('Failed to create new federated credentials')
+            }
 
             return done(null, { id: newUserId })
           } catch (error) {

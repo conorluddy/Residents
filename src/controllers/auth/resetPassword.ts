@@ -19,7 +19,9 @@ import { handleSuccessResponse } from '../../middleware/util/successHandler'
 export const resetPassword = async (req: Request, res: Response, next: NextFunction) => {
   // Email will be added to the request from the previous email validation middleware
   const email = req[REQUEST_EMAIL]
-  if (!email) {throw new BadRequestError('User data missing.')}
+  if (!email) {
+    throw new BadRequestError('User data missing.')
+  }
 
   const user = await SERVICES.getUserByEmail(email)
 

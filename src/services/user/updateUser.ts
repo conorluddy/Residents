@@ -16,11 +16,17 @@ interface Params {
 }
 
 const updateUser = async ({ userId, username, firstName, lastName, email, password }: Params): Promise<string> => {
-  if (!userId) {throw new BadRequestError('User ID must be provided.')}
-  if (email && !isEmail(email)) {throw new EmailError('Email is not valid.')}
+  if (!userId) {
+    throw new BadRequestError('User ID must be provided.')
+  }
+  if (email && !isEmail(email)) {
+    throw new EmailError('Email is not valid.')
+  }
 
   const emailNormalized = email ? normalizeEmail(email, { all_lowercase: true }) : null
-  if (email && !emailNormalized) {throw new EmailError('Requested email for updating is invalid.')}
+  if (email && !emailNormalized) {
+    throw new EmailError('Requested email for updating is invalid.')
+  }
 
   const updatedUserProperties: Partial<UserUpdate> = {
     ...(username && { username }),
@@ -30,11 +36,13 @@ const updateUser = async ({ userId, username, firstName, lastName, email, passwo
     ...(password && { password }),
   }
 
-  if (Object.keys(updatedUserProperties).length === 0)
-  {throw new BadRequestError('At least one property must be provided for update.')}
+  if (Object.keys(updatedUserProperties).length === 0) {
+    throw new BadRequestError('At least one property must be provided for update.')
+  }
 
-  if (updatedUserProperties.password && !isStrongPassword(updatedUserProperties.password, PASSWORD_STRENGTH_CONFIG))
-  {throw new PasswordStrengthError()}
+  if (updatedUserProperties.password && !isStrongPassword(updatedUserProperties.password, PASSWORD_STRENGTH_CONFIG)) {
+    throw new PasswordStrengthError()
+  }
 
   const [{ updatedUserId }] = await db
     .update(tableUsers)

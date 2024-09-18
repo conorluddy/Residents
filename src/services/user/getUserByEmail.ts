@@ -6,8 +6,12 @@ import { SafeUser } from '../../db/types'
 import { BadRequestError } from '../../errors'
 
 const getUserByEmail = async (email: string): Promise<SafeUser | null> => {
-  if (!email) {throw new BadRequestError('No email provided')}
-  if (!isEmail(email)) {throw new BadRequestError('Invalid email provided')}
+  if (!email) {
+    throw new BadRequestError('No email provided')
+  }
+  if (!isEmail(email)) {
+    throw new BadRequestError('Invalid email provided')
+  }
 
   const [user] = await db
     .select({

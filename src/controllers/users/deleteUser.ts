@@ -15,8 +15,12 @@ export const deleteUser = async (req: Request, res: Response, next: NextFunction
   // getTargetUser fn
   const targetUserId = req[REQUEST_TARGET_USER_ID]
 
-  if (!id || !targetUserId) {throw new BadRequestError('User ID is missing.')}
-  if (id !== targetUserId) {throw new ForbiddenError('User ID mismatch.')}
+  if (!id || !targetUserId) {
+    throw new BadRequestError('User ID is missing.')
+  }
+  if (id !== targetUserId) {
+    throw new ForbiddenError('User ID mismatch.')
+  }
 
   const deletedUserId = await SERVICES.deleteUser({ userId: id })
 

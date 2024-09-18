@@ -5,7 +5,9 @@ import { SafeUser } from '../../db/types'
 import { BadRequestError } from '../../errors'
 
 const getUserByUsername = async (username: string): Promise<SafeUser | null> => {
-  if (!username) {throw new BadRequestError('No username provided')}
+  if (!username) {
+    throw new BadRequestError('No username provided')
+  }
 
   const [user] = await db
     .select({

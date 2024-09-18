@@ -19,14 +19,19 @@ import { handleCreatedResponse } from '../../middleware/util/successHandler'
 export const createUser = async ({ body }: Request, res: Response, next: NextFunction) => {
   const { username, firstName, lastName, email, password, role }: NewUser = body
 
-  if (![username, firstName, lastName, email, password].every(Boolean))
-  {throw new BadRequestError('Missing required fields.')}
+  if (![username, firstName, lastName, email, password].every(Boolean)) {
+    throw new BadRequestError('Missing required fields.')
+  }
 
-  if (email && !isEmail(email)) {throw new EmailError('Invalid email address')}
+  if (email && !isEmail(email)) {
+    throw new EmailError('Invalid email address')
+  }
 
   const userId = await SERVICES.createUser({ username, firstName, lastName, email, password, role })
 
-  if (!userId) {throw new BadRequestError('Error creating new user.')}
+  if (!userId) {
+    throw new BadRequestError('Error creating new user.')
+  }
 
   await Promise.all([
     SERVICES.createUserMeta(userId),

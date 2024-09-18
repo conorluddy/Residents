@@ -39,7 +39,9 @@ const seedUserZero = async (password: string = DEFAULT_SEED_PASSWORD) => {
   } catch (error) {
     logger.error(error)
   } finally {
-    if (process.env.NODE_ENV !== 'test') {process.exit()}
+    if (process.env.NODE_ENV !== 'test') {
+      process.exit()
+    }
   }
 }
 

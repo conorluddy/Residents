@@ -38,7 +38,7 @@ async function canDeleteUser(req: Request, res: Response, next: NextFunction): P
     return next()
   }
 
-  throw new ForbiddenError('User doesn\'t have permission to delete this user.')
+  throw new ForbiddenError("User doesn't have permission to delete this user.")
 }
 
 export default canDeleteUser

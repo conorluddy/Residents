@@ -6,13 +6,23 @@ import generateXsrfToken from '../util/xsrfToken'
 
 const xsrfTokens = (req: Request, res: Response, next: NextFunction) => {
   // Return as early as possible, this will be called on most requests and only need apply to mutations
-  if (req.method === 'GET') {return next()}
-  if (req.path === '/auth') {return next()}
-  if (req.path === '/users/register') {return next()}
-  if (process.env.NODE_ENV === 'test') {return next()}
+  if (req.method === 'GET') {
+    return next()
+  }
+  if (req.path === '/auth') {
+    return next()
+  }
+  if (req.path === '/users/register') {
+    return next()
+  }
+  if (process.env.NODE_ENV === 'test') {
+    return next()
+  }
 
   const secret = JWT_TOKEN_SECRET
-  if (!secret) {throw new Error('JWT secret not found')}
+  if (!secret) {
+    throw new Error('JWT secret not found')
+  }
 
   // Look for token in cookies, if not found, generate a new one
   let xsrfToken = req.cookies['xsrfToken']
@@ -29,7 +39,9 @@ const xsrfTokens = (req: Request, res: Response, next: NextFunction) => {
     throw new UnauthorizedError('XSRF token is required.')
   } else {
     jwt.verify(String(requestHeadersXsrfToken), secret, (err, content) => {
-      if (err) {throw new UnauthorizedError('XSRF token is invalid.')}
+      if (err) {
+        throw new UnauthorizedError('XSRF token is invalid.')
+      }
       next()
     })
   }

@@ -9,7 +9,9 @@ interface Props {
 }
 
 const getToken = async ({ tokenId }: Props): Promise<Token | null> => {
-  if (!tokenId) {throw new TokenError('No token ID provided')}
+  if (!tokenId) {
+    throw new TokenError('No token ID provided')
+  }
 
   const [token] = await db
     .select()

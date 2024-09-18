@@ -6,7 +6,9 @@ const JWT_XSRF_TOKEN_DATA = { XSRF_TOKEN: '🔒' }
 
 const generateXsrfToken = () => {
   const secret = JWT_TOKEN_SECRET
-  if (secret == null) {throw new Error('JWT secret not found')}
+  if (secret == null) {
+    throw new Error('JWT secret not found')
+  }
   return jwt.sign(JWT_XSRF_TOKEN_DATA, secret, {
     expiresIn: JWT_XSRF_TOKEN_EXPIRY,
   })

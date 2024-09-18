@@ -13,10 +13,15 @@ export const validateAccount = async (req: Request, res: Response, next: NextFun
   const { tokenId, userId: userIdFromUrlParam } = req.params
   const token = req[REQUEST_TOKEN]
 
-  if (!userIdFromUrlParam) {throw new BadRequestError('Invalid user data.')} // probably redundant
-  if (!token) {throw new TokenError('Validation token missing.')}
-  if (token.type !== TOKEN_TYPE.VALIDATE || token.userId !== userIdFromUrlParam || tokenId !== token.id)
-  {throw new TokenError('Validation token invalid.')}
+  if (!userIdFromUrlParam) {
+    throw new BadRequestError('Invalid user data.')
+  } // probably redundant
+  if (!token) {
+    throw new TokenError('Validation token missing.')
+  }
+  if (token.type !== TOKEN_TYPE.VALIDATE || token.userId !== userIdFromUrlParam || tokenId !== token.id) {
+    throw new TokenError('Validation token invalid.')
+  }
 
   await Promise.all([
     SERVICES.updateUserStatus({ userId: userIdFromUrlParam, status: STATUS.VERIFIED }),

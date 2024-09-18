@@ -1,4 +1,4 @@
-import dotenv from "dotenv"
+import dotenv from 'dotenv'
 dotenv.config()
 
 const requiredEnvVars = [
@@ -16,8 +16,8 @@ const requiredEnvVars = [
 requiredEnvVars.forEach((_, index) => {
   if (!requiredEnvVars[index]) {
     // Codescan doesn't like us logging the names here, even though they're harmless
-    console.error("Missing some required environment variables.")
-    if (process.env.NODE_ENV !== "test") {
+    console.error('Missing some required environment variables.')
+    if (process.env.NODE_ENV !== 'test') {
       process.exit(1)
     }
   }

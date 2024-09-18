@@ -12,8 +12,12 @@ interface Props {
 }
 
 const createToken = async ({ userId, type, expiry = TIMESPAN.MINUTE }: Props): Promise<Token['id'] | null> => {
-  if (!userId) {throw new TokenError('Token requires a UserID, none provided')}
-  if (!type) {throw new TokenError('Token type is required, none provided')}
+  if (!userId) {
+    throw new TokenError('Token requires a UserID, none provided')
+  }
+  if (!type) {
+    throw new TokenError('Token type is required, none provided')
+  }
 
   const [token] = await db
     .insert(tableTokens)

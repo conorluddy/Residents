@@ -10,10 +10,14 @@ import { handleSuccessResponse } from '../../middleware/util/successHandler'
 export const getSelf = async (req: Request, res: Response, next: NextFunction) => {
   //
   const userId = req[REQUEST_USER]?.id
-  if (!userId) {throw new BadRequestError('User ID is missing.')}
+  if (!userId) {
+    throw new BadRequestError('User ID is missing.')
+  }
   //
   const user = await SERVICES.getUserById(userId)
-  if (!user) {throw new NotFoundError('User not found.')}
+  if (!user) {
+    throw new NotFoundError('User not found.')
+  }
   //
   return handleSuccessResponse({ res, user })
 }

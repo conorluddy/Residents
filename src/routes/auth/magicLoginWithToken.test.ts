@@ -18,7 +18,7 @@ app.use(express.json())
 app.use(magicLoginWithTokenRoute)
 
 describe.skip('GET /magicLoginWithToken', () => {
-  it('should call the magicLogin controller and do nothin because it\'s not implemented yet', async () => {
+  it("should call the magicLogin controller and do nothin because it's not implemented yet", async () => {
     const response = await request(app).get('/magic-login/tokenId')
     expect(response.status).toBe(HTTP_SERVER_ERROR.NOT_IMPLEMENTED)
   })

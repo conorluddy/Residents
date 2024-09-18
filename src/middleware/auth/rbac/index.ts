@@ -16,18 +16,36 @@ import getTargetUser from './getTargetUser'
 const checkPermission = (permission: PERMISSIONS) => (req: Request, res: Response, next: NextFunction) => {
   const user = req[REQUEST_USER]
 
-  if (!user) {throw new BadRequestError('User data is missing.')}
-  if (user.deletedAt) {throw new ForbiddenError('User was deleted.')}
-  if (!user.role) {throw new ForbiddenError('User has no role.')}
+  if (!user) {
+    throw new BadRequestError('User data is missing.')
+  }
+  if (user.deletedAt) {
+    throw new ForbiddenError('User was deleted.')
+  }
+  if (!user.role) {
+    throw new ForbiddenError('User has no role.')
+  }
 
-  if (ROLES.LOCKED === user.role) {throw new ForbiddenError('User account is locked.')}
-  if (STATUS.BANNED === user.status) {throw new ForbiddenError('User account is banned.')}
-  if (STATUS.DELETED === user.status) {throw new ForbiddenError('User account was deleted.')}
-  if (STATUS.SUSPENDED === user.status) {throw new ForbiddenError('User account is suspended.')}
-  if (STATUS.UNVERIFIED === user.status) {throw new ForbiddenError('User account is not verified.')}
+  if (ROLES.LOCKED === user.role) {
+    throw new ForbiddenError('User account is locked.')
+  }
+  if (STATUS.BANNED === user.status) {
+    throw new ForbiddenError('User account is banned.')
+  }
+  if (STATUS.DELETED === user.status) {
+    throw new ForbiddenError('User account was deleted.')
+  }
+  if (STATUS.SUSPENDED === user.status) {
+    throw new ForbiddenError('User account is suspended.')
+  }
+  if (STATUS.UNVERIFIED === user.status) {
+    throw new ForbiddenError('User account is not verified.')
+  }
 
   // Finally check the actual ACL
-  if (user.role && !ACL[user.role].includes(permission)) {throw new ForbiddenError('User cant perform this action.')}
+  if (user.role && !ACL[user.role].includes(permission)) {
+    throw new ForbiddenError('User cant perform this action.')
+  }
 
   next()
 }

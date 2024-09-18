@@ -18,8 +18,12 @@ export const refreshToken = async (req: Request, res: Response, next: NextFuncti
   const refreshTokenId = req.cookies?.[REFRESH_TOKEN]
   const userId = req.cookies?.[RESIDENT_TOKEN]
 
-  if (!refreshTokenId) {throw new TokenError('Refresh token is required.')}
-  if (!userId) {throw new TokenError('Refresh token counterpart is required.')}
+  if (!refreshTokenId) {
+    throw new TokenError('Refresh token is required.')
+  }
+  if (!userId) {
+    throw new TokenError('Refresh token counterpart is required.')
+  }
 
   // Get the refresh token from the DB if it exists
   const token = await SERVICES.getToken({ tokenId: refreshTokenId })
@@ -47,11 +51,15 @@ export const refreshToken = async (req: Request, res: Response, next: NextFuncti
     expiry: TIMESPAN.WEEK,
   })
 
-  if (!freshRefreshTokenId) {throw new ForbiddenError('Error creating refresh token.')}
+  if (!freshRefreshTokenId) {
+    throw new ForbiddenError('Error creating refresh token.')
+  }
 
   const user = await SERVICES.getUserById(userId)
 
-  if (!user) {throw new ForbiddenError('User not found.')}
+  if (!user) {
+    throw new ForbiddenError('User not found.')
+  }
 
   // Set the tokens in HTTP-only secure cookies
 

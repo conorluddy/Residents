@@ -46,7 +46,7 @@ async function canGetUser(req: Request, res: Response, next: NextFunction): Prom
     return next()
   }
 
-  throw new ForbiddenError('User doesn\'t have permission to get this user.')
+  throw new ForbiddenError("User doesn't have permission to get this user.")
 }
 
 export default canGetUser

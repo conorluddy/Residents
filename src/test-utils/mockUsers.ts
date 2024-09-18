@@ -40,7 +40,7 @@ const makeAFakeUser = ({
   firstName: firstName ?? faker.person.firstName(),
   lastName: lastName ?? faker.person.lastName(),
   password: password ?? faker.internet.password(),
-  role: role === null ? null : role ?? faker.helpers.arrayElement(ROLES_ARRAY),
+  role: role === null ? null : (role ?? faker.helpers.arrayElement(ROLES_ARRAY)),
   status: status ?? faker.helpers.arrayElement(STATUS_ARRAY),
   username: username ?? faker.internet.userName(),
   createdAt: createdAt ?? new Date(),
@@ -66,7 +66,7 @@ const makeAFakeUserWithHashedPassword = async ({
   firstName: firstName ?? faker.person.firstName(),
   lastName: lastName ?? faker.person.lastName(),
   password: await createHash(password ?? username ?? ''), // default password is username
-  role: role === null ? null : role ?? faker.helpers.arrayElement(ROLES_ARRAY),
+  role: role === null ? null : (role ?? faker.helpers.arrayElement(ROLES_ARRAY)),
   status: status ?? faker.helpers.arrayElement(STATUS_ARRAY),
   username: username ?? faker.internet.userName(),
   createdAt: createdAt ?? new Date(),
@@ -88,7 +88,7 @@ const makeAFakeSafeUser = ({
   email: email ?? faker.internet.email(),
   firstName: firstName ?? faker.person.firstName(),
   lastName: lastName ?? faker.person.lastName(),
-  role: role === null ? null : role ?? faker.helpers.arrayElement(ROLES_ARRAY),
+  role: role === null ? null : (role ?? faker.helpers.arrayElement(ROLES_ARRAY)),
   status: status ?? faker.helpers.arrayElement(STATUS_ARRAY),
   username: username ?? faker.internet.userName(),
   createdAt: createdAt ?? new Date(),
@@ -100,6 +100,6 @@ const makeAFakePublicUser = ({ id, email, firstName, lastName, role, username = 
   email: email ?? faker.internet.email(),
   firstName: firstName ?? faker.person.firstName(),
   lastName: lastName ?? faker.person.lastName(),
-  role: role === null ? null : role ?? faker.helpers.arrayElement(ROLES_ARRAY),
+  role: role === null ? null : (role ?? faker.helpers.arrayElement(ROLES_ARRAY)),
 })
 export { makeAFakeUser, makeAFakeUserWithHashedPassword, makeAFakeSafeUser, makeAFakePublicUser }

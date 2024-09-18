@@ -18,14 +18,20 @@ export const googleCallback = async (req: Request, res: Response, next: NextFunc
 
   const payload = ticket.getPayload()
 
-  if (!payload) {throw new UnauthorizedError('Invalid Google Callback token')}
+  if (!payload) {
+    throw new UnauthorizedError('Invalid Google Callback token')
+  }
 
   const userEmail = payload.email
-  if (!userEmail) {throw new EmailError('No email found in Google payload')}
+  if (!userEmail) {
+    throw new EmailError('No email found in Google payload')
+  }
 
   const user = await SERVICES.getUserByEmail(userEmail)
 
-  if (!user) {throw new NotFoundError('User not found')}
+  if (!user) {
+    throw new NotFoundError('User not found')
+  }
 
   const token = generateJwtFromUser(user)
 

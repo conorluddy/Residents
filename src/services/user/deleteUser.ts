@@ -9,7 +9,9 @@ interface Params {
 }
 
 const deleteUser = async ({ userId }: Params): Promise<string> => {
-  if (!userId) {throw new BadRequestError('User ID must be provided.')}
+  if (!userId) {
+    throw new BadRequestError('User ID must be provided.')
+  }
 
   const [{ updatedUserId }] = await db
     .update(tableUsers)

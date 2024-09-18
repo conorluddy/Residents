@@ -54,7 +54,6 @@ describe('Integration: Default User flow', () => {
     const response = await request(app).post('/auth').send(login)
     expect(response.status).toBe(HTTP_SUCCESS.OK)
     expect(response.body).toHaveProperty('token')
-    jwt = response.body.token
   })
 
   it('Logs in and gets own user object', async () => {

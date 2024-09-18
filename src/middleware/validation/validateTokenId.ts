@@ -5,8 +5,12 @@ import { BadRequestError } from '../../errors'
 
 const validateTokenId: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
   const tokenId: string | undefined = req.params?.tokenId || req.body?.tokenId || req.query?.tokenId
-  if (!tokenId) {throw new BadRequestError('A token is required.')}
-  if (!isCuid(tokenId)) {throw new BadRequestError('Invalid token provided.')}
+  if (!tokenId) {
+    throw new BadRequestError('A token is required.')
+  }
+  if (!isCuid(tokenId)) {
+    throw new BadRequestError('Invalid token provided.')
+  }
   req[REQUEST_TOKEN_ID] = tokenId
   next()
 }

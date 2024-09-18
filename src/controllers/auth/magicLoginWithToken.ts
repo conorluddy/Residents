@@ -22,7 +22,9 @@ export const magicLoginWithToken = async (req: Request, res: Response, next: Nex
     SERVICES.deleteToken({ tokenId: token.id }),
   ])
 
-  if (!user) {throw new ForbiddenError('No user found for that token.')}
+  if (!user) {
+    throw new ForbiddenError('No user found for that token.')
+  }
 
   logger.info(`Magic login by user: ${token.userId}`)
 
@@ -32,7 +34,9 @@ export const magicLoginWithToken = async (req: Request, res: Response, next: Nex
     expiry: TIMESPAN.WEEK,
   })
 
-  if (!refreshTokenId) {throw new ForbiddenError('Couldnt create refresh token.')}
+  if (!refreshTokenId) {
+    throw new ForbiddenError('Couldnt create refresh token.')
+  }
 
   // Set the tokens in HTTP-only secure cookies
 

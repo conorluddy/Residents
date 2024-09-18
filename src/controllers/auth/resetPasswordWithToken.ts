@@ -21,12 +21,17 @@ export const resetPasswordWithToken = async (req: Request, res: Response, next: 
   // and make that configurable for the app. Probably overlaps with magic login.
 
   // MW should guarantee we have this
-  if (!token || !token.userId) {throw new TokenError('Token missing.')}
-  if (token.type !== TOKEN_TYPE.RESET) {throw new TokenError('Invalid token type.')}
+  if (!token || !token.userId) {
+    throw new TokenError('Token missing.')
+  }
+  if (token.type !== TOKEN_TYPE.RESET) {
+    throw new TokenError('Invalid token type.')
+  }
 
   // Centralise configuration for this somewhere - can use it for registration too
-  if (!isStrongPassword(plainPassword, PASSWORD_STRENGTH_CONFIG))
-  {throw new PasswordStrengthError('Password not strong enough, try harder.')}
+  if (!isStrongPassword(plainPassword, PASSWORD_STRENGTH_CONFIG)) {
+    throw new PasswordStrengthError('Password not strong enough, try harder.')
+  }
 
   const password = await createHash(plainPassword)
 
@@ -36,10 +41,11 @@ export const resetPasswordWithToken = async (req: Request, res: Response, next: 
   ])
 
   // This case should never happen but will leave it here for now
-  if (updatedUserId !== token.userId)
-  {throw new DatabaseError(
-    `Error updating password for user: ${token.userId}, the DB update result should be the same as request ID: ${updatedUserId}`
-  )}
+  if (updatedUserId !== token.userId) {
+    throw new DatabaseError(
+      `Error updating password for user: ${token.userId}, the DB update result should be the same as request ID: ${updatedUserId}`
+    )
+  }
 
   logger.info(`Password was reset for USER:${token.userId}`)
 

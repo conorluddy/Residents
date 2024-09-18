@@ -15,7 +15,9 @@ import { logger } from '../../utils/logger'
 export const magicLogin = async (req: Request, res: Response, next: NextFunction) => {
   // Email will be added to the request from the previous email validation middleware
   const email = req[REQUEST_EMAIL]
-  if (!email) {throw new BadRequestError('User data missing.')}
+  if (!email) {
+    throw new BadRequestError('User data missing.')
+  }
 
   let debugTokenId
 
