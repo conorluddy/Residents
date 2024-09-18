@@ -54,7 +54,7 @@ describe('Integration: Owner flow from seeded default owner', () => {
 
     const jwt = loginResponse.body.token
 
-    const jwt = loginResponse.body.token
+    const response = await request(app).get('/users/self').set('Authorization', `Bearer ${jwt}`)
 
     expect(response.body.user).toMatchObject({
       firstName: 'Resident',
@@ -84,9 +84,7 @@ describe('Integration: Owner flow from seeded default owner', () => {
     const usersResponse = await request(app).get('/users').set('Authorization', `Bearer ${jwt}`)
     const userIdToDelete = usersResponse.body.users[3].id
 
-    const deleteResponse = await request(app)
-      .delete(`/users/${ userIdToDelete}`)
-      .set('Authorization', `Bearer ${jwt}`)
+    const deleteResponse = await request(app).delete(`/users/${userIdToDelete}`).set('Authorization', `Bearer ${jwt}`)
 
     expect(deleteResponse.body).toMatchObject({ message: `User ${userIdToDelete} deleted` })
     expect(deleteResponse.status).toBe(HTTP_SUCCESS.OK)
@@ -105,9 +103,7 @@ describe('Integration: Owner flow from seeded default owner', () => {
 
     const usersResponse = await request(app).get('/users').set('Authorization', `Bearer ${jwt}`)
     const userIdToGet = usersResponse.body.users[5].id
-    const userResponse = await request(app)
-      .get(`/users/${ userIdToGet}`)
-      .set('Authorization', `Bearer ${jwt}`)
+    const userResponse = await request(app).get(`/users/${userIdToGet}`).set('Authorization', `Bearer ${jwt}`)
     expect(userResponse.status).toBe(HTTP_SUCCESS.OK)
     expect(userResponse.body).toMatchObject({
       ...usersResponse.body[5],

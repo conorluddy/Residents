@@ -11,8 +11,6 @@ import { ROLES } from '../../src/constants/database'
  * - Reattempt to get data while authorised
  */
 describe('Integration: Default User flow', () => {
-  let jwt: string
-
   beforeAll(async () => {
     await dbClient.connect()
     await dbClient.query('BEGIN') // Transaction
