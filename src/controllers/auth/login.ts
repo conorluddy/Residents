@@ -4,7 +4,7 @@ import { TOKEN_TYPE } from "../../constants/database"
 import { HTTP_SUCCESS } from "../../constants/http"
 import { TIMESPAN } from "../../constants/time"
 import { User } from "../../db/schema"
-import { BadRequestError, ForbiddenError, PasswordError } from "../../errors"
+import { BadRequestError, ForbiddenError, LoginError } from "../../errors"
 import generateXsrfToken from "../../middleware/util/xsrfToken"
 import SERVICES from "../../services"
 import { validateHash } from "../../utils/crypt"
@@ -27,13 +27,13 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
   const getUserByUsernameOrEmail = username ? SERVICES.getUserByUsername : SERVICES.getUserByEmail
   const user = await getUserByUsernameOrEmail(username ?? email)
 
-  if (!user) throw new ForbiddenError("No user found for that username or email.") // Should probably clear any existing auth here
+  if (!user) throw new LoginError("No user found for that username or email.") // Should probably clear any existing auth here
 
   const passwordHash = await SERVICES.getUserPasswordHash(user.id)
 
-  if (!passwordHash) throw new PasswordError("No password hash found for that username or email.")
+  if (!passwordHash) throw new LoginError("No password hash found for that username or email.")
 
-  if (!(await validateHash(password, passwordHash))) throw new PasswordError("Incorrect password.")
+  if (!(await validateHash(password, passwordHash))) throw new LoginError("Incorrect password.")
 
   const refreshTokenId = await SERVICES.createToken({
     userId: user.id,
