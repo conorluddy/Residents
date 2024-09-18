@@ -7,6 +7,7 @@ import getSelfRoute from "./getSelf"
 import { makeAFakeUser } from "../../test-utils/mockUsers"
 import { generateJwtFromUser } from "../../utils/generateJwt"
 import { REQUEST_USER } from "../../types/requestSymbols"
+import { handleSuccessResponse } from "../../middleware/util/successHandler"
 
 let fakeUser = makeAFakeUser({ role: ROLES.DEFAULT })
 
@@ -43,8 +44,8 @@ app.use("/", getSelfRoute)
 describe("GET /self", () => {
   beforeAll(() => {
     process.env.JWT_TOKEN_SECRET = "TESTSECRET"
-    CONTROLLERS.USER.getSelf = jest.fn(async (req, res) => {
-      return res.status(HTTP_SUCCESS.OK).json(fakeUser)
+    CONTROLLERS.USER.getSelf = jest.fn(async (_req, res) => {
+      return handleSuccessResponse({ res, user: fakeUser })
     })
   })
 
@@ -52,7 +53,7 @@ describe("GET /self", () => {
     const response = await request(app)
       .get(`/self`)
       .set("Authorization", `Bearer ${generateJwtFromUser(fakeUser)}`)
-    expect(response.body.email).toBe(fakeUser.email)
+    expect(response.body.user.email).toBe(fakeUser.email)
     expect(response.status).toBe(HTTP_SUCCESS.OK)
   })
 })

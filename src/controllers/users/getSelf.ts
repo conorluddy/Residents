@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express"
-import { HTTP_SUCCESS } from "../../constants/http"
 import { REQUEST_USER } from "../../types/requestSymbols"
 import SERVICES from "../../services"
 import { BadRequestError, NotFoundError } from "../../errors"
+import { handleSuccessResponse } from "../../middleware/util/successHandler"
 
 /**
  * getSelf - gets own user record
@@ -15,7 +15,7 @@ export const getSelf = async (req: Request, res: Response, next: NextFunction) =
   const user = await SERVICES.getUserById(userId)
   if (!user) throw new NotFoundError("User not found.")
   //
-  return res.status(HTTP_SUCCESS.OK).json(user)
+  return handleSuccessResponse({ res, user })
 }
 
 export default getSelf

@@ -6,6 +6,7 @@ import { TIMESPAN } from "../../constants/time"
 import { BadRequestError, EmailError } from "../../errors"
 import SERVICES from "../../services"
 import { isEmail } from "validator"
+import { handleCreatedResponse } from "../../middleware/util/successHandler"
 
 // For dev - remove before flight
 // import { SENDGRID_TEST_EMAIL } from "../../config"
@@ -40,5 +41,5 @@ export const createUser = async ({ body }: Request, res: Response, next: NextFun
   //   })
   // }
 
-  return res.status(HTTP_SUCCESS.CREATED).json({ message: "User registered." })
+  return handleCreatedResponse({ res, message: "User registered." })
 }

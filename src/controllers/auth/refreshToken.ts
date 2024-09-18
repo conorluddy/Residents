@@ -2,12 +2,12 @@ import SERVICES from "../../services"
 import generateXsrfToken from "../../middleware/util/xsrfToken"
 import { NextFunction, Request, Response } from "express"
 import { TOKEN_TYPE } from "../../constants/database"
-import { HTTP_SUCCESS } from "../../constants/http"
 import { TIMESPAN } from "../../constants/time"
 import { ForbiddenError, TokenError } from "../../errors"
 import { generateJwtFromUser } from "../../utils/generateJwt"
 import { REFRESH_TOKEN, RESIDENT_TOKEN, XSRF_TOKEN } from "../../constants/keys"
 import { REFRESH_TOKEN_EXPIRY } from "../../constants/crypt"
+import { handleSuccessResponse } from "../../middleware/util/successHandler"
 
 /**
  * POST: refreshToken
@@ -80,5 +80,5 @@ export const refreshToken = async (req: Request, res: Response, next: NextFuncti
 
   await SERVICES.deleteToken({ tokenId: token.id })
 
-  return res.status(HTTP_SUCCESS.OK).json({ accessToken })
+  return handleSuccessResponse({ res, token: accessToken })
 }

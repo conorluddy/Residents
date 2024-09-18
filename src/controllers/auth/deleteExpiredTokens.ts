@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express"
-import { HTTP_SUCCESS } from "../../constants/http"
 import SERVICES from "../../services"
+import { handleSuccessResponse } from "../../middleware/util/successHandler"
 
 /**
  * deleteExpiredTokens
@@ -8,5 +8,5 @@ import SERVICES from "../../services"
  */
 export const deleteExpiredTokens = async (req: Request, res: Response, next: NextFunction) => {
   const count = await SERVICES.deleteExpiredTokens()
-  return res.status(HTTP_SUCCESS.OK).json({ message: `${count} expired tokens deleted.` })
+  return handleSuccessResponse({ res, message: `${count} expired tokens deleted.` })
 }

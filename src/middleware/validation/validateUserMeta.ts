@@ -24,6 +24,7 @@ const validateUserMeta: RequestHandler = async (req: Request, res: Response, nex
   if (!isValidPayload) throw new BadRequestError("Invalid data provided.")
 
   // If payload is valid, proceed to the next middleware/controller
+  // TODO: Attach the payload into a request symbol for use in the controller
   next()
 }
 

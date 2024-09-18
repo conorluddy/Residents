@@ -5,9 +5,10 @@ import CONTROLLERS from "../../controllers"
 import createUserRoute from "../../routes/users/createUser"
 import { logger } from "../../utils/logger"
 import { ROLES } from "../../constants/database"
+import { handleSuccessResponse } from "../../middleware/util/successHandler"
 
 CONTROLLERS.USER.createUser = jest.fn(async (req, res) => {
-  return res.status(HTTP_SUCCESS.OK).json({ message: "User created successfully" })
+  return handleSuccessResponse({ res, message: "User created successfully" })
 })
 
 jest.mock("../../services/index", () => ({

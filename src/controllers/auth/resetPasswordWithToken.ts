@@ -1,13 +1,13 @@
 import { NextFunction, Request, Response } from "express"
 import { isStrongPassword } from "validator"
 import { TOKEN_TYPE } from "../../constants/database"
-import { HTTP_SUCCESS } from "../../constants/http"
 import { PASSWORD_STRENGTH_CONFIG } from "../../constants/password"
 import { DatabaseError, PasswordStrengthError, TokenError } from "../../errors"
 import SERVICES from "../../services"
 import { REQUEST_TOKEN } from "../../types/requestSymbols"
 import { createHash } from "../../utils/crypt"
 import { logger } from "../../utils/logger"
+import { handleSuccessResponse } from "../../middleware/util/successHandler"
 
 /**
  * resetPasswordWithToken
@@ -43,5 +43,5 @@ export const resetPasswordWithToken = async (req: Request, res: Response, next: 
 
   logger.info(`Password was reset for USER:${token.userId}`)
 
-  return res.status(HTTP_SUCCESS.OK).json({ message: "Password successfully updated." })
+  return handleSuccessResponse({ res, message: "Password successfully updated." })
 }

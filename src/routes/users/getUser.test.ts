@@ -8,6 +8,7 @@ import { PublicUser, SafeUser } from "../../db/types"
 import { makeAFakeUser } from "../../test-utils/mockUsers"
 import { REQUEST_TARGET_USER, REQUEST_TARGET_USER_ID, REQUEST_USER } from "../../types/requestSymbols"
 import { generateJwtFromUser } from "../../utils/generateJwt"
+import { handleSuccessResponse } from "../../middleware/util/successHandler"
 
 let fakeUser: SafeUser = makeAFakeUser({ password: "$TR0ngP@$$W0rDz123!", id: "TARGET_USER_ID" })
 const app = express()
@@ -37,7 +38,7 @@ jest.mock("../../services/user/getUserById", () => ({
 }))
 
 CONTROLLERS.USER.getUser = jest.fn(async (_req, res) => {
-  return res.status(HTTP_SUCCESS.OK).json({ message: "User retrieved successfully" })
+  return handleSuccessResponse({ res, message: "User retrieved successfully" })
 })
 
 describe("GET /user/:id", () => {
@@ -55,6 +56,6 @@ describe("GET /user/:id", () => {
       .set("Authorization", `Bearer ${generateJwtFromUser(mockDefaultUser)}`)
 
     expect(response.status).toBe(HTTP_SUCCESS.OK)
-    expect(response.body.id).toBe("TARGET_USER_ID")
+    expect(response.body.user.id).toBe("TARGET_USER_ID")
   })
 })

@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken"
 import generateXsrfToken from "../util/xsrfToken"
 
 const xsrfTokens = (req: Request, res: Response, next: NextFunction) => {
-  // Return as early as possible, this will be called on most requests
+  // Return as early as possible, this will be called on most requests and only need apply to mutations
   if (req.method === "GET") return next()
   if (req.path === "/auth") return next()
   if (req.path === "/users/register") return next()

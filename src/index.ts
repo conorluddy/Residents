@@ -8,10 +8,9 @@ import cookieParser from "cookie-parser"
 import dotenv from "dotenv"
 import swaggerSetup from "./swagger"
 import rateLimiter from "./middleware/util/rateLimiter"
-import { HTTP_SUCCESS } from "./constants/http"
-import xsrfTokens from "./middleware/auth/xsrfTokens"
 import errorHandler from "./middleware/util/errorHandler"
 import path from "path"
+import { handleSuccessResponse } from "./middleware/util/successHandler"
 
 dotenv.config()
 
@@ -30,7 +29,7 @@ app.use(rateLimiter)
 app.use(express.json())
 
 // Health check
-app.get("/health", (_req, res) => res.status(HTTP_SUCCESS.OK).json({ status: "👌" }))
+app.get("/health", (_req, res) => handleSuccessResponse({ res, message: "👌" }))
 
 app.use(cookieParser())
 
