@@ -21,21 +21,23 @@ describe('Middleware: validateTokenId', () => {
   })
 
   it('should return 400 if the request token is missing', async () => {
-    await expect(validateTokenId(mockRequest as Request, mockResponse as Response, mockNext)).rejects.toThrow(
+    expect(() => validateTokenId(mockRequest as Request, mockResponse as Response, mockNext)).toThrow(
       MESSAGES.TOKEN_REQUIRED
     )
+    expect(mockNext).not.toHaveBeenCalled()
   })
 
   it('should return 400 if the request token is invalid', async () => {
     mockRequest.body.tokenId = 'invalid_token'
-    await expect(validateTokenId(mockRequest as Request, mockResponse as Response, mockNext)).rejects.toThrow(
-      'Invalid token provided.'
+    expect(() => validateTokenId(mockRequest as Request, mockResponse as Response, mockNext)).toThrow(
+      MESSAGES.TOKEN_INVALID
     )
+    expect(mockNext).not.toHaveBeenCalled()
   })
 
   it('should call next function if the request token is valid', async () => {
     mockRequest.body.tokenId = createId()
-    await validateTokenId(mockRequest as Request, mockResponse as Response, mockNext)
+    validateTokenId(mockRequest as Request, mockResponse as Response, mockNext)
     expect(mockNext).toHaveBeenCalled()
     expect(mockResponse.status).not.toHaveBeenCalled()
     expect(mockResponse.json).not.toHaveBeenCalled()

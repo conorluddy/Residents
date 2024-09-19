@@ -10,7 +10,7 @@ const validateTokenId: RequestHandler = (req: Request, res: Response, next: Next
     throw new BadRequestError(MESSAGES.TOKEN_REQUIRED)
   }
   if (!isCuid(tokenId)) {
-    throw new BadRequestError('Invalid token provided.')
+    throw new BadRequestError(MESSAGES.TOKEN_INVALID)
   }
   req[REQUEST_TOKEN_ID] = tokenId
   next()
