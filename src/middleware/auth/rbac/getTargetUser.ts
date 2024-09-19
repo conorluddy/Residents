@@ -3,6 +3,7 @@ import { ROLES, ROLES_ARRAY, STATUS } from '../../../constants/database'
 import { BadRequestError, ForbiddenError, NotFoundError, UnauthorizedError } from '../../../errors'
 import SERVICES from '../../../services'
 import { REQUEST_TARGET_USER, REQUEST_TARGET_USER_ID, REQUEST_USER } from '../../../types/requestSymbols'
+import MESSAGES from '../../../constants/messages'
 
 /**
  * Get the target user from the request params if the user has the required permissions
@@ -10,7 +11,7 @@ import { REQUEST_TARGET_USER, REQUEST_TARGET_USER_ID, REQUEST_USER } from '../..
  * @param res
  * @param next
  */
-async function getTargetUser(req: Request, _res: Response, next: NextFunction) {
+async function getTargetUser(req: Request, _res: Response, next: NextFunction): Promise<void> {
   const user = req[REQUEST_USER]
   if (!user) {
     throw new BadRequestError('Missing User data.')
@@ -27,22 +28,22 @@ async function getTargetUser(req: Request, _res: Response, next: NextFunction) {
 
   // OPTIMISATION: Make a map for these to make it more efficient sometime
   if (!ROLES_ARRAY.includes(user.role)) {
-    throw new ForbiddenError('Invalid user role.')
+    throw new ForbiddenError(MESSAGES.INVALID_ROLE)
   }
   if (ROLES.LOCKED === user.role) {
-    throw new ForbiddenError('User account is locked.')
+    throw new ForbiddenError(MESSAGES.ACCOUNT_LOCKED)
   }
   if (STATUS.BANNED === user.status) {
-    throw new ForbiddenError('User account is banned.')
+    throw new ForbiddenError(MESSAGES.ACCOUNT_BANNED)
   }
   if (STATUS.SUSPENDED === user.status) {
-    throw new ForbiddenError('User account is suspended.')
+    throw new ForbiddenError(MESSAGES.ACCOUNT_SUSPENDED)
   }
   if (STATUS.UNVERIFIED === user.status) {
-    throw new ForbiddenError('User account is not verified.')
+    throw new ForbiddenError(MESSAGES.ACCOUNT_NOT_VERIFIED)
   }
   if (STATUS.REJECTED === user.status) {
-    throw new ForbiddenError('User account is rejected.')
+    throw new ForbiddenError(MESSAGES.ACCOUNT_REJECTED)
   } // Not sure we need/use this
 
   // Go fetch the target user

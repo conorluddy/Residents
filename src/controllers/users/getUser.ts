@@ -3,6 +3,7 @@ import { BadRequestError, NotFoundError } from '../../errors'
 import SERVICES from '../../services'
 import { REQUEST_TARGET_USER_ID } from '../../types/requestSymbols'
 import { handleSuccessResponse } from '../../middleware/util/successHandler'
+import MESSAGES from '../../constants/messages'
 
 /**
  * getUser
@@ -12,12 +13,12 @@ export const getUser = async (req: Request, res: Response): Promise<Response> =>
   //
   const userId = req[REQUEST_TARGET_USER_ID]
   if (!userId) {
-    throw new BadRequestError('User ID is missing.')
+    throw new BadRequestError(MESSAGES.MISSING_USER_ID)
   }
   //
   const user = await SERVICES.getUserById(userId)
   if (!user) {
-    throw new NotFoundError('User not found.')
+    throw new NotFoundError(MESSAGES.USER_NOT_FOUND)
   }
   //
   return handleSuccessResponse({ res, user })

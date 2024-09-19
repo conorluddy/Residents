@@ -5,6 +5,7 @@ import { UserUpdate } from '../../db/types'
 import { isEmail, isStrongPassword, normalizeEmail } from 'validator'
 import { PASSWORD_STRENGTH_CONFIG } from '../../constants/password'
 import { BadRequestError, EmailError, PasswordStrengthError } from '../../errors'
+import MESSAGES from '../../constants/messages'
 
 interface Params {
   userId: string
@@ -20,7 +21,7 @@ const updateUser = async ({ userId, username, firstName, lastName, email, passwo
     throw new BadRequestError('User ID must be provided.')
   }
   if (email && !isEmail(email)) {
-    throw new EmailError('Email is not valid.')
+    throw new EmailError(MESSAGES.INVALID_EMAIL)
   }
 
   const emailNormalized = email ? normalizeEmail(email, { all_lowercase: true }) : null

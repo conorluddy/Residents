@@ -4,6 +4,7 @@ import { SafeUser } from '../../db/types'
 import { makeAFakeUser } from '../../test-utils/mockUsers'
 import findUserByValidEmail from './findUserByValidEmail'
 import { REQUEST_EMAIL, REQUEST_USER } from '../../types/requestSymbols'
+import MESSAGES from '../../constants/messages'
 
 jest.mock('../../services/index', () => ({
   getUserByEmail: jest
@@ -52,7 +53,7 @@ describe('Middleware:findUserByValidEmail', () => {
   it('[REQUEST_EMAIL] holds an invalid email address', async () => {
     mockRequest[REQUEST_EMAIL] = 'notAnEmail'
     await expect(findUserByValidEmail(mockRequest as Request, mockResponse as Response, nextFunction)).rejects.toThrow(
-      'User not found.'
+      MESSAGES.USER_NOT_FOUND
     )
   })
 })

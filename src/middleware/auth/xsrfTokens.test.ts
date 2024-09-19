@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import { ROLES } from '../../constants/database'
 import xsrfTokens from './xsrfTokens'
 import { UnauthorizedError } from '../../errors'
+import MESSAGES from '../../constants/messages'
 
 describe('Middleware: XSRF Tokens: ', () => {
   let mockRequest: Partial<Request>
@@ -49,7 +50,7 @@ describe('Middleware: XSRF Tokens: ', () => {
     process.env.NODE_ENV = 'not-test'
     mockRequest.headers = {}
     await expect(() => xsrfTokens(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
-      new UnauthorizedError('XSRF token is invalid.')
+      new UnauthorizedError(MESSAGES.XSRF_TOKEN_INVALID)
     )
     expect(nextFunction).not.toHaveBeenCalled()
   })
@@ -57,7 +58,7 @@ describe('Middleware: XSRF Tokens: ', () => {
   it('Requires a valid XSRF token in non-test environment', async () => {
     process.env.NODE_ENV = 'not-test'
     await expect(() => xsrfTokens(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
-      new UnauthorizedError('XSRF token is invalid.')
+      new UnauthorizedError(MESSAGES.XSRF_TOKEN_INVALID)
     )
     expect(nextFunction).not.toHaveBeenCalled()
   })

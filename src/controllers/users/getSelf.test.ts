@@ -1,9 +1,10 @@
-import { NextFunction, Request, Response } from 'express'
+import { Request, Response } from 'express'
 import { HTTP_SUCCESS } from '../../constants/http'
 import { SafeUser, User } from '../../db/types'
 import { makeAFakeSafeUser, makeAFakeUser } from '../../test-utils/mockUsers'
 import { REQUEST_USER } from '../../types/requestSymbols'
 import { getSelf } from './getSelf'
+import MESSAGES from '../../constants/messages'
 
 let fakeUser: Partial<User>
 
@@ -25,7 +26,6 @@ jest.mock('../../services/index', () => ({
 describe('Controller: GetSelf', () => {
   let mockRequest: Partial<Request> & { [REQUEST_USER]?: SafeUser }
   let mockResponse: Partial<Response>
-  const mockNext = jest.fn().mockReturnThis()
 
   beforeEach(() => {
     mockRequest = {
@@ -45,10 +45,10 @@ describe('Controller: GetSelf', () => {
 
   it('Missing ID is handled', async () => {
     mockRequest[REQUEST_USER] = undefined
-    await expect(getSelf(mockRequest as Request, mockResponse as Response)).rejects.toThrow('User ID is missing.')
+    await expect(getSelf(mockRequest as Request, mockResponse as Response)).rejects.toThrow(MESSAGES.MISSING_USER_ID)
   })
 
   it('User not found in DB (shouldnt happen for getSelf but o/)', async () => {
-    await expect(getSelf(mockRequest as Request, mockResponse as Response)).rejects.toThrow('User not found.')
+    await expect(getSelf(mockRequest as Request, mockResponse as Response)).rejects.toThrow(MESSAGES.USER_NOT_FOUND)
   })
 })

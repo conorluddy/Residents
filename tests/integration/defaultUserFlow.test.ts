@@ -3,6 +3,7 @@ import { app } from '../../src'
 import { dbClient } from '../../src/db'
 import { HTTP_SUCCESS } from '../../src/constants/http'
 import { ROLES } from '../../src/constants/database'
+import MESSAGES from '../../src/constants/messages'
 
 /**
  * - Create/Register a new user
@@ -35,14 +36,14 @@ describe('Integration: Default User flow', () => {
     const response = await request(app).post('/users/register').send(newUser)
     // expect(logger.info).toHaveBeenCalledWith("Creating new user.")
     expect(response.status).toBe(201)
-    expect(response.body).toHaveProperty('message', 'User registered.')
+    expect(response.body).toHaveProperty('message', MESSAGES.USER_REGISTERED)
   })
 
   it('Tries to hit a private endpoint without a token and gets bounced', async () => {
     const response = await request(app).get('/users/self')
     expect(response.status).toBe(401)
     expect(response.body).toMatchObject({
-      message: 'Unauthorized access.',
+      message: MESSAGES.UNAUTHORIZED,
     })
   })
 

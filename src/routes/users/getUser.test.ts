@@ -9,6 +9,7 @@ import { makeAFakeUser } from '../../test-utils/mockUsers'
 import { REQUEST_TARGET_USER, REQUEST_TARGET_USER_ID, REQUEST_USER } from '../../types/requestSymbols'
 import { generateJwtFromUser } from '../../utils/generateJwt'
 import { handleSuccessResponse } from '../../middleware/util/successHandler'
+import MESSAGES from '../../constants/messages'
 
 const fakeUser: SafeUser = makeAFakeUser({ password: '$TR0ngP@$$W0rDz123!', id: 'TARGET_USER_ID' })
 const app = express()
@@ -38,7 +39,7 @@ jest.mock('../../services/user/getUserById', () => ({
 }))
 
 CONTROLLERS.USER.getUser = jest.fn(async (_req, res) => {
-  return handleSuccessResponse({ res, message: 'User retrieved successfully' })
+  return handleSuccessResponse({ res, message: MESSAGES.USER_RETRIEVED })
 })
 
 describe('GET /user/:id', () => {

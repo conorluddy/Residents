@@ -1,8 +1,9 @@
-import { NextFunction, Request, Response } from 'express'
+import { Request, Response } from 'express'
 import { HTTP_SUCCESS } from '../../constants/http'
 import { User } from '../../db/types'
 import { makeAFakeUserWithHashedPassword } from '../../test-utils/mockUsers'
 import { login } from './login'
+import MESSAGES from '../../constants/messages'
 
 jest.mock('../../services/index', () => ({
   getUserByUsername: jest
@@ -24,7 +25,6 @@ jest.mock('../../utils/generateJwt', () => ({
 describe('Controller: Login', () => {
   let mockRequest: Partial<Request> & { body: Partial<User> }
   let mockResponse: Partial<Response>
-  const mockNext = jest.fn().mockReturnThis()
 
   beforeAll(() => {
     process.env.JWT_TOKEN_SECRET = 'TESTSECRET'
@@ -78,14 +78,14 @@ describe('Controller: Login', () => {
     mockRequest.body.email = null
     mockRequest.body.password = 'testpassword'
     await expect(login(mockRequest as Request, mockResponse as Response)).rejects.toThrow(
-      'Username or email is required'
+      MESSAGES.USERNAME_OR_EMAIL_REQUIRED
     )
   })
 
   it('should reject login with missing password', async () => {
     mockRequest.body.username = 'MrFake'
     mockRequest.body.password = null
-    await expect(login(mockRequest as Request, mockResponse as Response)).rejects.toThrow('Password is required')
+    await expect(login(mockRequest as Request, mockResponse as Response)).rejects.toThrow(MESSAGES.PASSWORD_REQUIRED)
   })
 
   it('should reject login with invalid email address', async () => {

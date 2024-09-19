@@ -8,6 +8,7 @@ import { TIMESPAN } from '../../constants/time'
 import { sendMail } from '../../mail/sendgrid'
 import { SENDGRID_TEST_EMAIL } from '../../config'
 import { logger } from '../../utils/logger'
+import MESSAGES from '../../constants/messages'
 
 /**
  * magicLogin
@@ -47,7 +48,7 @@ export const magicLogin = async (req: Request, res: Response): Promise<Response>
   }
 
   return res.status(HTTP_SUCCESS.OK).json({
-    message: 'Check your email for your magic login link.',
+    message: MESSAGES.CHECK_EMAIL_MAGIC_LINK,
     debug: `http://localhost:3000/auth/magic-login/${debugTokenId}`, // TODO: Remove
   })
 }

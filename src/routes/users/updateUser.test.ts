@@ -6,6 +6,7 @@ import updateUserRouter from '../../routes/users/updateUser'
 import { makeAFakeUser } from '../../test-utils/mockUsers'
 import { REQUEST_TARGET_USER_ID, REQUEST_USER } from '../../types/requestSymbols'
 import { logger } from '../../utils/logger'
+import MESSAGES from '../../constants/messages'
 
 const fakeUser = makeAFakeUser({ password: '$TR0ngP@$$W0rDz123!', role: ROLES.DEFAULT })
 
@@ -34,7 +35,7 @@ app.use(express.json())
 app.use(updateUserRouter)
 
 describe('Route: Update User', () => {
-  it('successfully updates a user', async () => {
+  it(MESSAGES.USER_UPDATED, async () => {
     const response = await request(app).patch(`/${fakeUser.id}`).send({ firstName: 'Banana Man' })
     expect(logger.error).not.toHaveBeenCalled()
     expect(response.body.message).toBe(`User ${fakeUser.id} updated successfully`)

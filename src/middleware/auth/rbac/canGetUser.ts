@@ -3,6 +3,7 @@ import { ACL, PERMISSIONS } from '../../../constants/accessControlList'
 import { ROLES_ARRAY } from '../../../constants/database'
 import { BadRequestError, ForbiddenError } from '../../../errors'
 import { REQUEST_TARGET_USER, REQUEST_USER } from '../../../types/requestSymbols'
+import MESSAGES from '../../../constants/messages'
 
 /**
  * Check if the user has the required permission to get the target user
@@ -15,7 +16,7 @@ function canGetUser(req: Request, res: Response, next: NextFunction): void {
   const targetUser = req[REQUEST_TARGET_USER]
 
   if (!user?.role) {
-    throw new BadRequestError('User data is missing.')
+    throw new BadRequestError(MESSAGES.MISSING_USER_DATA)
   }
 
   if (!targetUser?.role) {

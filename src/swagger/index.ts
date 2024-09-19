@@ -2,6 +2,7 @@ import { Express } from 'express' // Import the 'Express' type from the 'express
 import swaggerJsDoc from 'swagger-jsdoc'
 import swaggerUi from 'swagger-ui-express'
 import dotenv from 'dotenv'
+import MESSAGES from '../constants/messages'
 dotenv.config()
 
 const options = {
@@ -10,7 +11,7 @@ const options = {
     info: {
       title: 'Residents API',
       version: '0.0.1',
-      description: 'API documentation',
+      description: MESSAGES.API_DOCUMENTATION,
     },
     servers: [
       {
@@ -23,6 +24,6 @@ const options = {
 
 const specs = swaggerJsDoc(options)
 
-export default function swaggerSetup(app: Express) {
+export default function swaggerSetup(app: Express): void {
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs))
 }

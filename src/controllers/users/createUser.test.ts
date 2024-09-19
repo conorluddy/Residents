@@ -1,7 +1,8 @@
-import { NextFunction, Request, Response } from 'express'
+import { Request, Response } from 'express'
 import { HTTP_SUCCESS } from '../../constants/http'
 import { createUser } from './createUser'
 import { ROLES } from '../../constants/database'
+import MESSAGES from '../../constants/messages'
 
 jest.mock('../../services/index', () => ({
   createToken: jest.fn(),
@@ -12,7 +13,6 @@ jest.mock('../../services/index', () => ({
 describe('Controller: CreateUser', () => {
   let mockRequest: Partial<Request>
   let mockResponse: Partial<Response>
-  const mockNext: NextFunction = jest.fn().mockReturnThis()
 
   beforeEach(() => {
     mockRequest = {
@@ -34,7 +34,7 @@ describe('Controller: CreateUser', () => {
   it('Create User - Happy path', async () => {
     await createUser(mockRequest as Request, mockResponse as Response)
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.CREATED)
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: 'User registered.' })
+    expect(mockResponse.json).toHaveBeenCalledWith({ message: MESSAGES.USER_REGISTERED })
   })
 
   it('Create User - Missing data', async () => {

@@ -8,6 +8,7 @@ import { REQUEST_EMAIL } from '../../types/requestSymbols'
 import { logger } from '../../utils/logger'
 import { BadRequestError } from '../../errors'
 import { handleSuccessResponse } from '../../middleware/util/successHandler'
+import MESSAGES from '../../constants/messages'
 
 /**
  * resetPassword
@@ -44,5 +45,5 @@ export const resetPassword = async (req: Request, res: Response): Promise<Respon
     logger.info(`Reset email sent to ${email}, token id: ${tokenId}`)
   }
 
-  return handleSuccessResponse({ res, message: 'Check your email for your reset password link.' })
+  return handleSuccessResponse({ res, message: MESSAGES.CHECK_EMAIL_RESET_LINK })
 }

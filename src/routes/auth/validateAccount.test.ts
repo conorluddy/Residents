@@ -8,6 +8,7 @@ import { REQUEST_TOKEN, REQUEST_TOKEN_ID, REQUEST_USER } from '../../types/reque
 import validateAccountRoute from './validateAccount'
 import { createId } from '@paralleldrive/cuid2'
 import { logger } from '../../utils/logger'
+import MESSAGES from '../../constants/messages'
 
 const user = makeAFakeSafeUser({ email: 'bananaman@ireland.ie', id: 'UID123' })
 const validTokenId = createId()
@@ -41,7 +42,7 @@ describe('GET /validateAccount', () => {
   it('should call the validateAccount controller', async () => {
     const response = await request(app).patch(`/validate/${validTokenId}.${user.id}`)
     expect(logger.error).not.toHaveBeenCalled()
-    expect(response.body).toStrictEqual({ message: 'Account validated.' })
+    expect(response.body).toStrictEqual({ message: MESSAGES.ACCOUNT_VALIDATED })
     expect(response.status).toBe(HTTP_SUCCESS.OK)
   })
 })

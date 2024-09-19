@@ -6,9 +6,10 @@ import createUserRoute from '../../routes/users/createUser'
 import { logger } from '../../utils/logger'
 import { ROLES } from '../../constants/database'
 import { handleSuccessResponse } from '../../middleware/util/successHandler'
+import MESSAGES from '../../constants/messages'
 
 CONTROLLERS.USER.createUser = jest.fn(async (req, res) => {
-  return handleSuccessResponse({ res, message: 'User created successfully' })
+  return handleSuccessResponse({ res, message: MESSAGES.USER_CREATED })
 })
 
 jest.mock('../../services/index', () => ({
@@ -33,7 +34,7 @@ describe('POST /register', () => {
     }
     const response = await request(app).post('/register').send(requestBody)
     expect(logger.error).not.toHaveBeenCalled()
-    expect(response.body.message).toBe('User registered.')
+    expect(response.body.message).toBe(MESSAGES.USER_REGISTERED)
     expect(response.status).toBe(HTTP_SUCCESS.CREATED)
   })
 

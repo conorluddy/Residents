@@ -3,6 +3,7 @@ import { JWT_TOKEN_SECRET } from '../../config'
 import { UnauthorizedError } from '../../errors'
 import jwt from 'jsonwebtoken'
 import generateXsrfToken from '../util/xsrfToken'
+import MESSAGES from '../../constants/messages'
 
 const xsrfTokens = (req: Request, res: Response, next: NextFunction) => {
   // Return as early as possible, this will be called on most requests and only need apply to mutations
@@ -36,11 +37,11 @@ const xsrfTokens = (req: Request, res: Response, next: NextFunction) => {
   const requestHeadersXsrfToken = req.cookies?.['xsrfToken']
 
   if (!requestHeadersXsrfToken) {
-    throw new UnauthorizedError('XSRF token is required.')
+    throw new UnauthorizedError(MESSAGES.XSRF_TOKEN_REQUIRED)
   } else {
-    jwt.verify(String(requestHeadersXsrfToken), secret, (err, content) => {
+    jwt.verify(String(requestHeadersXsrfToken), secret, (err) => {
       if (err) {
-        throw new UnauthorizedError('XSRF token is invalid.')
+        throw new UnauthorizedError(MESSAGES.XSRF_TOKEN_INVALID)
       }
       next()
     })

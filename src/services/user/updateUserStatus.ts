@@ -3,6 +3,7 @@ import { STATUS, STATUS_ARRAY } from '../../constants/database'
 import db from '../../db'
 import { tableUsers } from '../../db/schema'
 import { BadRequestError, ValidationError } from '../../errors'
+import MESSAGES from '../../constants/messages'
 
 interface Params {
   userId: string
@@ -17,7 +18,7 @@ const updateUserStatus = async ({ userId, status }: Params): Promise<string> => 
     throw new BadRequestError('Status must be provided.')
   }
   if (!STATUS_ARRAY.includes(status)) {
-    throw new ValidationError('Invalid status provided.')
+    throw new ValidationError(MESSAGES.INVALID_STATUS)
   }
 
   const [{ updatedUserId }] = await db

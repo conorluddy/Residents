@@ -8,6 +8,7 @@ import { makeAFakeSafeUser } from '../../test-utils/mockUsers'
 import { REQUEST_TOKEN, REQUEST_TOKEN_ID, REQUEST_USER } from '../../types/requestSymbols'
 import { logger } from '../../utils/logger'
 import resetPasswordWithTokenRoute from './resetPasswordWithToken'
+import MESSAGES from '../../constants/messages'
 
 const user = makeAFakeSafeUser({ email: 'bananaman@ireland.ie', id: 'UID123' })
 const validTokenId = createId()
@@ -56,7 +57,7 @@ describe('Route: POST:resetPasswordWithToken', () => {
       .send({ password: 'the.NEWpassword_is-$3cuRE' })
 
     expect(logger.error).not.toHaveBeenCalled()
-    expect(response.body).toStrictEqual({ message: 'Password successfully updated.' })
+    expect(response.body).toStrictEqual({ message: MESSAGES.PASSWORD_RESET_SUCCESS })
     expect(response.status).toBe(HTTP_SUCCESS.OK)
   })
 })

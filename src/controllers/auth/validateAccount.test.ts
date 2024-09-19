@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express'
+import { Request, Response } from 'express'
 import { ROLES, TOKEN_TYPE } from '../../constants/database'
 import { HTTP_SUCCESS } from '../../constants/http'
 import { PublicUser, Token } from '../../db/types'
@@ -7,6 +7,7 @@ import { REQUEST_TOKEN, REQUEST_USER } from '../../types/requestSymbols'
 import { logger } from '../../utils/logger'
 import { validateAccount } from './validateAccount'
 import { TIMESPAN } from '../../constants/time'
+import MESSAGES from '../../constants/messages'
 
 const mockDefaultUser = makeAFakeSafeUser({ role: ROLES.DEFAULT })
 const mockToken: Token = {
@@ -32,7 +33,6 @@ jest.mock('../../utils/generateJwt', () => ({
 describe('Controller: Validate Account', () => {
   let mockRequest: Partial<Request> & { [REQUEST_USER]: PublicUser; [REQUEST_TOKEN]?: Token }
   let mockResponse: Partial<Response>
-  let mockNext: Partial<NextFunction>
 
   beforeEach(() => {
     mockRequest = {
@@ -51,7 +51,7 @@ describe('Controller: Validate Account', () => {
     expect(logger.error).not.toHaveBeenCalled()
     expect(logger.info).toHaveBeenCalledWith(`User ${mockDefaultUser.id} validated.`)
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.OK)
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: 'Account validated.' })
+    expect(mockResponse.json).toHaveBeenCalledWith({ message: MESSAGES.ACCOUNT_VALIDATED })
   })
 
   it('Returns forbidden when missing token', async () => {
@@ -64,7 +64,7 @@ describe('Controller: Validate Account', () => {
   it('Returns forbidden when missing userId from URL', async () => {
     mockRequest.params = { tokenId: 'TOKEN001' }
     await expect(validateAccount(mockRequest as Request, mockResponse as Response)).rejects.toThrow(
-      'Invalid user data.'
+      MESSAGES.INVALID_USER_DATA
     )
   })
 

@@ -7,6 +7,7 @@ import canDeleteUser from './canDeleteUser'
 import canGetUser from './canGetUser'
 import canUpdateUser from './canUpdateUser'
 import getTargetUser from './getTargetUser'
+import MESSAGES from '../../../constants/messages'
 
 /**
  * Check if the user has the required permission to access the resource
@@ -17,29 +18,29 @@ const checkPermission = (permission: PERMISSIONS) => (req: Request, res: Respons
   const user = req[REQUEST_USER]
 
   if (!user) {
-    throw new BadRequestError('User data is missing.')
+    throw new BadRequestError(MESSAGES.MISSING_USER_DATA)
   }
   if (user.deletedAt) {
-    throw new ForbiddenError('User was deleted.')
+    throw new ForbiddenError(MESSAGES.USER_DELETED)
   }
   if (!user.role) {
     throw new ForbiddenError('User has no role.')
   }
 
   if (ROLES.LOCKED === user.role) {
-    throw new ForbiddenError('User account is locked.')
+    throw new ForbiddenError(MESSAGES.ACCOUNT_LOCKED)
   }
   if (STATUS.BANNED === user.status) {
-    throw new ForbiddenError('User account is banned.')
+    throw new ForbiddenError(MESSAGES.ACCOUNT_BANNED)
   }
   if (STATUS.DELETED === user.status) {
-    throw new ForbiddenError('User account was deleted.')
+    throw new ForbiddenError(MESSAGES.ACCOUNT_DELETED)
   }
   if (STATUS.SUSPENDED === user.status) {
-    throw new ForbiddenError('User account is suspended.')
+    throw new ForbiddenError(MESSAGES.ACCOUNT_SUSPENDED)
   }
   if (STATUS.UNVERIFIED === user.status) {
-    throw new ForbiddenError('User account is not verified.')
+    throw new ForbiddenError(MESSAGES.ACCOUNT_NOT_VERIFIED)
   }
 
   // Finally check the actual ACL

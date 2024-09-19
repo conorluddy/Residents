@@ -1,10 +1,11 @@
-import { NextFunction, Request, Response } from 'express'
+import { Request, Response } from 'express'
 import { HTTP_SUCCESS } from '../../constants/http'
 import { User } from '../../db/types'
 import { makeAFakeUser } from '../../test-utils/mockUsers'
 import { REQUEST_TARGET_USER_ID } from '../../types/requestSymbols'
 import { logger } from '../../utils/logger'
 import { updateUser } from './updateUser'
+import MESSAGES from '../../constants/messages'
 
 const fakeUser: Partial<User> = makeAFakeUser({})
 
@@ -15,7 +16,6 @@ jest.mock('../../services/index', () => ({
 describe('Controller: UpdateUser', () => {
   let mockRequest: Partial<Request> & { params: { id?: string }; [REQUEST_TARGET_USER_ID]?: string }
   let mockResponse: Partial<Response>
-  const mockNext = jest.fn().mockReturnThis()
 
   beforeAll(() => {})
   beforeEach(() => {
@@ -37,7 +37,7 @@ describe('Controller: UpdateUser', () => {
     }
   })
 
-  it('Successfully updates a user', async () => {
+  it(MESSAGES.USER_UPDATED, async () => {
     await updateUser(mockRequest as Request, mockResponse as Response)
     expect(logger.error).not.toHaveBeenCalled()
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.OK)
@@ -60,7 +60,9 @@ describe('Controller: UpdateUser', () => {
       id: 'NotTheFakerUsersID',
     }
 
-    await expect(updateUser(mockRequest as Request, mockResponse as Response)).rejects.toThrow('User ID mismatch.')
+    await expect(updateUser(mockRequest as Request, mockResponse as Response)).rejects.toThrow(
+      MESSAGES.USER_ID_MISMATCH
+    )
   })
 
   it('Responds with Bad Request if no update data is provided', async () => {

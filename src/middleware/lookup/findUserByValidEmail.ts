@@ -2,6 +2,7 @@ import { NextFunction, Request, RequestHandler, Response } from 'express'
 import SERVICES from '../../services'
 import { REQUEST_EMAIL, REQUEST_USER } from '../../types/requestSymbols'
 import { BadRequestError } from '../../errors'
+import MESSAGES from '../../constants/messages'
 
 /**
  * Middleware for finding a user by their email address.
@@ -18,7 +19,7 @@ const findUserByValidEmail: RequestHandler = async (req: Request, res: Response,
   const user = await SERVICES.getUserByEmail(email)
 
   if (!user) {
-    throw new BadRequestError('User not found.')
+    throw new BadRequestError(MESSAGES.USER_NOT_FOUND)
   }
 
   req[REQUEST_USER] = user

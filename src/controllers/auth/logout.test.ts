@@ -1,9 +1,10 @@
-import { NextFunction, Request, Response } from 'express'
+import { Request, Response } from 'express'
 import { HTTP_SUCCESS } from '../../constants/http'
 import { SafeUser } from '../../db/types'
 import { logout } from './logout'
 import { REQUEST_USER } from '../../types/requestSymbols'
 import { RESIDENT_TOKEN, REFRESH_TOKEN, XSRF_TOKEN } from '../../constants/keys'
+import MESSAGES from '../../constants/messages'
 
 jest.mock('../../services/index', () => ({
   deleteRefreshTokensByUserId: jest.fn().mockImplementation(() => '123'),
@@ -12,7 +13,6 @@ jest.mock('../../services/index', () => ({
 describe('Controller: Logout', () => {
   let mockRequest: Partial<Request> & { [REQUEST_USER]?: SafeUser }
   let mockResponse: Partial<Response>
-  const mockNext = jest.fn().mockReturnThis()
 
   beforeEach(() => {
     mockRequest = {
@@ -31,12 +31,12 @@ describe('Controller: Logout', () => {
 
   it('Throws an error if missing the user data', async () => {
     mockRequest.cookies = undefined
-    await expect(logout(mockRequest as Request, mockResponse as Response)).rejects.toThrow('User ID is missing.')
+    await expect(logout(mockRequest as Request, mockResponse as Response)).rejects.toThrow(MESSAGES.MISSING_USER_ID)
   })
 
   it('logs out a user by deleting any of their refresh tokens', async () => {
     await logout(mockRequest as Request, mockResponse as Response)
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: 'Logged out successfully.' })
+    expect(mockResponse.json).toHaveBeenCalledWith({ message: MESSAGES.LOGOUT_SUCCESS })
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.OK)
     expect(mockResponse.cookie).toHaveBeenCalledWith('refreshToken', '', {
       httpOnly: true,

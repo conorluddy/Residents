@@ -2,11 +2,11 @@ import { NextFunction, Request, Response } from 'express'
 import { HTTP_SERVER_ERROR } from '../../constants/http'
 import { User } from '../../db/types'
 import { magicLogin } from './magicLogin'
+import MESSAGES from '../../constants/messages'
 
 describe.skip('Controller: Magic Login', () => {
   let mockRequest: Partial<Request> & { body: Partial<User> }
   let mockResponse: Partial<Response>
-  const mockNext = jest.fn().mockReturnThis()
 
   beforeEach(() => {
     mockRequest = {
@@ -29,6 +29,6 @@ describe.skip('Controller: Magic Login', () => {
 
   it('should bomb out early if you dont provide an email address', async () => {
     delete mockRequest.body.email
-    await expect(magicLogin(mockRequest as Request, mockResponse as Response)).rejects.toThrow('Email is required.')
+    await expect(magicLogin(mockRequest as Request, mockResponse as Response)).rejects.toThrow(MESSAGES.EMAIL_REQUIRED)
   })
 })

@@ -5,6 +5,7 @@ import { ROLES, STATUS } from '../../../constants/database'
 import { PublicUser, SafeUser } from '../../../db/types'
 import { REQUEST_TARGET_USER, REQUEST_USER } from '../../../types/requestSymbols'
 import { BadRequestError, ForbiddenError } from '../../../errors'
+import MESSAGES from '../../../constants/messages'
 
 jest.mock('../../../services/index', () => ({
   getUserById: jest
@@ -51,7 +52,7 @@ describe.skip('Middleware:RBAC:checkPermission', () => {
   it('should return early if theres no User data provided', () => {
     mockRequest[REQUEST_USER] = null as unknown as SafeUser
     expect(() => RBAC.checkCanGetUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
-      new BadRequestError('User data is missing.')
+      new BadRequestError(MESSAGES.MISSING_USER_DATA)
     )
     expect(nextFunction).not.toHaveBeenCalled()
   })
@@ -171,39 +172,39 @@ describe.skip('Middleware:RBAC:checkPermission', () => {
     it('can not GET OWN/SELF user', async () => {
       // TODO: Probably need to return limited data to them
       expect(() => RBAC.checkCanUpdateOwnUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
-        new ForbiddenError('User account is locked.')
+        new ForbiddenError(MESSAGES.ACCOUNT_LOCKED)
       )
       expect(nextFunction).not.toHaveBeenCalled()
     })
     it('can not UPDATE OWN/SELF user', async () => {
       expect(() => RBAC.checkCanUpdateOwnUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
-        new ForbiddenError('User account is locked.')
+        new ForbiddenError(MESSAGES.ACCOUNT_LOCKED)
       )
       expect(nextFunction).not.toHaveBeenCalled()
     })
     it('can not CREATE users if account is banned', async () => {
       expect(() => RBAC.checkCanCreateUsers(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
-        new ForbiddenError('User account is locked.')
+        new ForbiddenError(MESSAGES.ACCOUNT_LOCKED)
       )
       expect(nextFunction).not.toHaveBeenCalled()
     })
     it('can not GET users', async () => {
       expect(() => RBAC.checkCanGetUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
-        new ForbiddenError('User account is locked.')
+        new ForbiddenError(MESSAGES.ACCOUNT_LOCKED)
       )
       expect(nextFunction).not.toHaveBeenCalled()
     })
 
     it('can not UPDATE users', async () => {
       expect(() => RBAC.checkCanUpdateUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
-        new ForbiddenError('User account is locked.')
+        new ForbiddenError(MESSAGES.ACCOUNT_LOCKED)
       )
       expect(nextFunction).not.toHaveBeenCalled()
     })
 
     it('can not DELETE users', async () => {
       expect(() => RBAC.checkCanDeleteUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
-        new ForbiddenError('User account is locked.')
+        new ForbiddenError(MESSAGES.ACCOUNT_LOCKED)
       )
       expect(nextFunction).not.toHaveBeenCalled()
     })
@@ -217,39 +218,39 @@ describe.skip('Middleware:RBAC:checkPermission', () => {
     it('can not GET OWN/SELF user', async () => {
       // TODO: Probably need to return limited data to them
       expect(() => RBAC.checkCanGetOwnUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
-        new ForbiddenError('User account is banned.')
+        new ForbiddenError(MESSAGES.ACCOUNT_BANNED)
       )
       expect(nextFunction).not.toHaveBeenCalled()
     })
     it('can not UPDATE OWN/SELF user', () => {
       expect(() => RBAC.checkCanUpdateOwnUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
-        new ForbiddenError('User account is banned.')
+        new ForbiddenError(MESSAGES.ACCOUNT_BANNED)
       )
       expect(nextFunction).not.toHaveBeenCalled()
     })
     it('can not CREATE users', () => {
       expect(() => RBAC.checkCanCreateUsers(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
-        new ForbiddenError('User account is banned.')
+        new ForbiddenError(MESSAGES.ACCOUNT_BANNED)
       )
       expect(nextFunction).not.toHaveBeenCalled()
     })
     it('can not GET users', () => {
       expect(() => RBAC.checkCanGetUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
-        new ForbiddenError('User account is banned.')
+        new ForbiddenError(MESSAGES.ACCOUNT_BANNED)
       )
       expect(nextFunction).not.toHaveBeenCalled()
     })
 
     it('can not UPDATE users', () => {
       expect(() => RBAC.checkCanUpdateUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
-        new ForbiddenError('User account is banned.')
+        new ForbiddenError(MESSAGES.ACCOUNT_BANNED)
       )
       expect(nextFunction).not.toHaveBeenCalled()
     })
 
     it('can not DELETE users', () => {
       expect(() => RBAC.checkCanDeleteUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
-        new ForbiddenError('User account is banned.')
+        new ForbiddenError(MESSAGES.ACCOUNT_BANNED)
       )
       expect(nextFunction).not.toHaveBeenCalled()
     })
@@ -262,37 +263,37 @@ describe.skip('Middleware:RBAC:checkPermission', () => {
     })
     it('can not GET OWN/SELF user', () => {
       expect(() => RBAC.checkCanGetOwnUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
-        new ForbiddenError('User was deleted.')
+        new ForbiddenError(MESSAGES.USER_DELETED)
       )
       expect(nextFunction).not.toHaveBeenCalled()
     })
     it('can not UPDATE OWN/SELF user', () => {
       expect(() => RBAC.checkCanUpdateOwnUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
-        new ForbiddenError('User was deleted.')
+        new ForbiddenError(MESSAGES.USER_DELETED)
       )
       expect(nextFunction).not.toHaveBeenCalled()
     })
     it('can not CREATE users', () => {
       expect(() => RBAC.checkCanCreateUsers(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
-        new ForbiddenError('User was deleted.')
+        new ForbiddenError(MESSAGES.USER_DELETED)
       )
       expect(nextFunction).not.toHaveBeenCalled()
     })
     it('can not GET users', () => {
       expect(() => RBAC.checkCanGetUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
-        new ForbiddenError('User was deleted.')
+        new ForbiddenError(MESSAGES.USER_DELETED)
       )
       expect(nextFunction).not.toHaveBeenCalled()
     })
     it('can not UPDATE users', () => {
       expect(() => RBAC.checkCanUpdateUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
-        new ForbiddenError('User was deleted.')
+        new ForbiddenError(MESSAGES.USER_DELETED)
       )
       expect(nextFunction).not.toHaveBeenCalled()
     })
     it('can not DELETE users', () => {
       expect(() => RBAC.checkCanDeleteUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
-        new ForbiddenError('User was deleted.')
+        new ForbiddenError(MESSAGES.USER_DELETED)
       )
       expect(nextFunction).not.toHaveBeenCalled()
     })
@@ -305,37 +306,37 @@ describe.skip('Middleware:RBAC:checkPermission', () => {
     })
     it('can not GET OWN/SELF user', () => {
       expect(() => RBAC.checkCanGetOwnUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
-        new ForbiddenError('User was deleted.')
+        new ForbiddenError(MESSAGES.USER_DELETED)
       )
       expect(nextFunction).not.toHaveBeenCalled()
     })
     it('can not UPDATE OWN/SELF user', () => {
       expect(() => RBAC.checkCanUpdateOwnUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
-        new ForbiddenError('User was deleted.')
+        new ForbiddenError(MESSAGES.USER_DELETED)
       )
       expect(nextFunction).not.toHaveBeenCalled()
     })
     it('can not CREATE users', () => {
       expect(() => RBAC.checkCanCreateUsers(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
-        new ForbiddenError('User was deleted.')
+        new ForbiddenError(MESSAGES.USER_DELETED)
       )
       expect(nextFunction).not.toHaveBeenCalled()
     })
     it('can not GET users', () => {
       expect(() => RBAC.checkCanGetUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
-        new ForbiddenError('User was deleted.')
+        new ForbiddenError(MESSAGES.USER_DELETED)
       )
       expect(nextFunction).not.toHaveBeenCalled()
     })
     it('can not UPDATE users', () => {
       expect(() => RBAC.checkCanUpdateUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
-        new ForbiddenError('User was deleted.')
+        new ForbiddenError(MESSAGES.USER_DELETED)
       )
       expect(nextFunction).not.toHaveBeenCalled()
     })
     it('can not DELETE users', () => {
       expect(() => RBAC.checkCanDeleteUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
-        new ForbiddenError('User was deleted.')
+        new ForbiddenError(MESSAGES.USER_DELETED)
       )
       expect(nextFunction).not.toHaveBeenCalled()
     })
@@ -385,7 +386,7 @@ describe('Middleware:RBAC:getTargetUser', () => {
     mockRequest[REQUEST_USER] = { ...mockAdminUser, role: 'FAKE_ROLE' as ROLES }
     await expect(() =>
       RBAC.getTargetUser(mockRequest as Request, mockResponse as Response, nextFunction)
-    ).rejects.toThrow(new ForbiddenError('Invalid user role.'))
+    ).rejects.toThrow(new ForbiddenError(MESSAGES.INVALID_ROLE))
     expect(nextFunction).not.toHaveBeenCalled()
   })
 
@@ -401,7 +402,7 @@ describe('Middleware:RBAC:getTargetUser', () => {
     mockRequest[REQUEST_USER] = mockDefaultUser
     await expect(() =>
       RBAC.getTargetUser(mockRequest as Request, mockResponse as Response, nextFunction)
-    ).rejects.toThrow(new ForbiddenError('Role superiority is required for this operation.'))
+    ).rejects.toThrow(new ForbiddenError(MESSAGES.ROLE_SUPERIORITY_REQUIRED))
     expect(nextFunction).not.toHaveBeenCalled()
   })
 
@@ -409,7 +410,7 @@ describe('Middleware:RBAC:getTargetUser', () => {
     mockRequest[REQUEST_USER] = mockDefaultUser
     await expect(() =>
       RBAC.getTargetUser(mockRequest as Request, mockResponse as Response, nextFunction)
-    ).rejects.toThrow(new ForbiddenError('Role superiority is required for this operation.'))
+    ).rejects.toThrow(new ForbiddenError(MESSAGES.ROLE_SUPERIORITY_REQUIRED))
     expect(nextFunction).not.toHaveBeenCalled()
   })
 
@@ -417,7 +418,7 @@ describe('Middleware:RBAC:getTargetUser', () => {
     mockRequest[REQUEST_USER] = mockLockedUser
     await expect(() =>
       RBAC.getTargetUser(mockRequest as Request, mockResponse as Response, nextFunction)
-    ).rejects.toThrow(new ForbiddenError('User account is locked.'))
+    ).rejects.toThrow(new ForbiddenError(MESSAGES.ACCOUNT_LOCKED))
     expect(nextFunction).not.toHaveBeenCalled()
   })
 
@@ -425,7 +426,7 @@ describe('Middleware:RBAC:getTargetUser', () => {
     mockRequest[REQUEST_USER] = mockDefaultUser
     await expect(() =>
       RBAC.getTargetUser(mockRequest as Request, mockResponse as Response, nextFunction)
-    ).rejects.toThrow(new ForbiddenError('Role superiority is required for this operation.'))
+    ).rejects.toThrow(new ForbiddenError(MESSAGES.ROLE_SUPERIORITY_REQUIRED))
     expect(nextFunction).not.toHaveBeenCalled()
   })
 

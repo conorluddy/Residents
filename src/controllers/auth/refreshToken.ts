@@ -8,6 +8,7 @@ import { generateJwtFromUser } from '../../utils/generateJwt'
 import { REFRESH_TOKEN, RESIDENT_TOKEN, XSRF_TOKEN } from '../../constants/keys'
 import { REFRESH_TOKEN_EXPIRY } from '../../constants/crypt'
 import { handleSuccessResponse } from '../../middleware/util/successHandler'
+import MESSAGES from '../../constants/messages'
 
 /**
  * POST: refreshToken
@@ -32,16 +33,16 @@ export const refreshToken = async (req: Request, res: Response): Promise<Respons
   await SERVICES.deleteRefreshTokensByUserId({ userId })
 
   if (!token) {
-    throw new ForbiddenError('Token not found.')
+    throw new ForbiddenError(MESSAGES.TOKEN_NOT_FOUND)
   }
   if (token && userId && token?.userId !== userId) {
     throw new ForbiddenError('Token user not valid.')
   }
   if (token.used) {
-    throw new ForbiddenError('Token has already been used.')
+    throw new ForbiddenError(MESSAGES.TOKEN_USED)
   }
   if (token.expiresAt < new Date()) {
-    throw new ForbiddenError('Token has expired.')
+    throw new ForbiddenError(MESSAGES.TOKEN_EXPIRED)
   }
 
   // Create new JWT and RefreshToken and return them
@@ -58,7 +59,7 @@ export const refreshToken = async (req: Request, res: Response): Promise<Respons
   const user = await SERVICES.getUserById(userId)
 
   if (!user) {
-    throw new ForbiddenError('User not found.')
+    throw new ForbiddenError(MESSAGES.USER_NOT_FOUND)
   }
 
   // Set the tokens in HTTP-only secure cookies

@@ -1,6 +1,7 @@
 import { rateLimit } from 'express-rate-limit'
 import { TIMESPAN } from '../../constants/time'
 import { RateLimitError } from '../../errors'
+import MESSAGES from '../../constants/messages'
 
 // https://www.npmjs.com/package/express-rate-limit
 // TODO - Configure rate limiter in .env
@@ -23,7 +24,7 @@ const rateLimitOncePerTenMins = rateLimit({
   standardHeaders: 'draft-7',
   legacyHeaders: false,
   handler: () => {
-    throw new RateLimitError('You can only request this once every 10 minutes.')
+    throw new RateLimitError(MESSAGES.RATE_LIMIT_MESSAGE)
   },
 })
 
@@ -33,7 +34,7 @@ const rateLimitTenPerTenMins = rateLimit({
   standardHeaders: 'draft-7',
   legacyHeaders: false,
   handler: () => {
-    throw new RateLimitError('Too many requests, please try again after 10 minutes.')
+    throw new RateLimitError(MESSAGES.TOO_MANY_REQUESTS_TRY_AGAIN_IN_10)
   },
 })
 

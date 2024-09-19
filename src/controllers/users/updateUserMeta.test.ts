@@ -1,8 +1,9 @@
-import { NextFunction, Request, Response } from 'express'
+import { Request, Response } from 'express'
 import { HTTP_SUCCESS } from '../../constants/http'
 import { updateUserMeta } from './updateUserMeta'
 import { logger } from '../../utils/logger'
 import { REQUEST_TARGET_USER_ID } from '../../types/requestSymbols'
+import MESSAGES from '../../constants/messages'
 
 const FAKEID = '123'
 
@@ -13,7 +14,6 @@ jest.mock('../../services/index', () => ({
 describe('Controller: UpdateUserMeta', () => {
   let mockRequest: Partial<Request> & { params: { id?: string }; [REQUEST_TARGET_USER_ID]?: string }
   let mockResponse: Partial<Response>
-  const mockNext = jest.fn().mockReturnThis()
 
   beforeEach(() => {
     mockRequest = {
@@ -43,7 +43,9 @@ describe('Controller: UpdateUserMeta', () => {
 
   it('Responds with Forbidden if ID and verified target ID dont match', async () => {
     mockRequest.params = { ...mockRequest.params!, id: 'NotTheFakerUsersID' }
-    await expect(updateUserMeta(mockRequest as Request, mockResponse as Response)).rejects.toThrow('User ID mismatch.')
+    await expect(updateUserMeta(mockRequest as Request, mockResponse as Response)).rejects.toThrow(
+      MESSAGES.USER_ID_MISMATCH
+    )
   })
 
   it('Responds with Bad Request if no update data is provided', async () => {
