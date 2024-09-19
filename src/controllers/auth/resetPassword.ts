@@ -14,7 +14,7 @@ import { handleSuccessResponse } from '../../middleware/util/successHandler'
  * This controller is responsible for instigating the password reset process.
  * As a user won't be logged in, we'll need to take their email address
  * and send them a reset link with a token that will be used to verify their identity.
- * It's important to not disclose whether or not the email exists in the database.
+ * it is important to not disclose whether or not the email exists in the database.
  */
 export const resetPassword = async (req: Request, res: Response): Promise<Response> => {
   // Email will be added to the request from the previous email validation middleware

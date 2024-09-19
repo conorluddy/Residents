@@ -389,7 +389,7 @@ describe('Middleware:RBAC:getTargetUser', () => {
     expect(nextFunction).not.toHaveBeenCalled()
   })
 
-  it("should return early if there's no User data provided", async () => {
+  it('should return early if there is no User data provided', async () => {
     mockRequest[REQUEST_USER] = undefined
     await expect(() =>
       RBAC.getTargetUser(mockRequest as Request, mockResponse as Response, nextFunction)
