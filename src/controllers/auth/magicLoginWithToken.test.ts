@@ -16,8 +16,8 @@ describe.skip('Controller: MagicLoginWithToken', () => {
   })
 
   it('NOT IMPLEMENTED YET: TODO', async () => {
-    await expect(
-      magicLoginWithToken(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
-    ).rejects.toThrow('Not implemented yet.')
+    await expect(magicLoginWithToken(mockRequest as Request, mockResponse as Response)).rejects.toThrow(
+      'Not implemented yet.'
+    )
   })
 })

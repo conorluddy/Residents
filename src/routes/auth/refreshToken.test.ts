@@ -5,9 +5,9 @@ import CONTROLLERS from '../../controllers'
 import { HTTP_CLIENT_ERROR } from '../../constants/http'
 import { handleSuccessResponse } from '../../middleware/util/successHandler'
 
-CONTROLLERS.AUTH.refreshToken = jest.fn(async (req, res) => {
-  return handleSuccessResponse({ res, message: 'Logged in successfully' })
-})
+CONTROLLERS.AUTH.refreshToken = jest.fn((_req, res) =>
+  Promise.resolve(handleSuccessResponse({ res, message: 'Logged in successfully' }))
+)
 
 jest.mock('../../services/index', () => ({
   select: jest.fn().mockResolvedValue([]),

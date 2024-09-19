@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express'
+import { Request, Response } from 'express'
 import { UserUpdate } from '../../db/types'
 import { BadRequestError, ForbiddenError } from '../../errors'
 import SERVICES from '../../services'
@@ -8,7 +8,7 @@ import { handleSuccessResponse } from '../../middleware/util/successHandler'
 /**
  * updateUser
  */
-export const updateUser = async (req: Request, res: Response, next: NextFunction) => {
+export const updateUser = async (req: Request, res: Response): Promise<Response> => {
   const { id } = req.params
   const targetUserId = req[REQUEST_TARGET_USER_ID]
   //

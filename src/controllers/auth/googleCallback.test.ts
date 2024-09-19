@@ -44,7 +44,7 @@ describe('Controller: GoogleCallback', () => {
     ;(OAuth2Client.prototype.verifyIdToken as jest.Mock).mockResolvedValue({
       getPayload: jest.fn().mockReturnValue(fakePayload),
     })
-    await googleCallback(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
+    await googleCallback(mockRequest as Request, mockResponse as Response)
 
     expect(OAuth2Client.prototype.verifyIdToken).toHaveBeenCalledWith({
       idToken: 'fake-id-token',
@@ -58,9 +58,7 @@ describe('Controller: GoogleCallback', () => {
     ;(OAuth2Client.prototype.verifyIdToken as jest.Mock).mockResolvedValue({
       getPayload: jest.fn().mockReturnValue(null),
     })
-    await expect(
-      googleCallback(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
-    ).rejects.toThrow(UnauthorizedError)
+    await expect(googleCallback(mockRequest as Request, mockResponse as Response)).rejects.toThrow(UnauthorizedError)
   })
 
   it('throws EmailError when no email is found in Google payload', async () => {
@@ -70,9 +68,7 @@ describe('Controller: GoogleCallback', () => {
       getPayload: jest.fn().mockReturnValue(fakePayload),
     })
 
-    await expect(
-      googleCallback(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
-    ).rejects.toThrow(EmailError)
+    await expect(googleCallback(mockRequest as Request, mockResponse as Response)).rejects.toThrow(EmailError)
   })
 
   it('throws NotFoundError when user is not found', async () => {
@@ -82,8 +78,6 @@ describe('Controller: GoogleCallback', () => {
       getPayload: jest.fn().mockReturnValue(fakePayload),
     })
 
-    await expect(
-      googleCallback(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
-    ).rejects.toThrow(NotFoundError)
+    await expect(googleCallback(mockRequest as Request, mockResponse as Response)).rejects.toThrow(NotFoundError)
   })
 })

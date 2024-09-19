@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express'
+import { Request, Response } from 'express'
 import { HTTP_SUCCESS } from '../../constants/http'
 import { BadRequestError } from '../../errors'
 import { REQUEST_EMAIL } from '../../types/requestSymbols'
@@ -12,7 +12,7 @@ import { logger } from '../../utils/logger'
 /**
  * magicLogin
  */
-export const magicLogin = async (req: Request, res: Response, next: NextFunction) => {
+export const magicLogin = async (req: Request, res: Response): Promise<Response> => {
   // Email will be added to the request from the previous email validation middleware
   const email = req[REQUEST_EMAIL]
   if (!email) {
@@ -24,7 +24,7 @@ export const magicLogin = async (req: Request, res: Response, next: NextFunction
   const user = await SERVICES.getUserByEmail(email)
 
   // Only set up token and send email if the user exists,
-  // but this endpoint doesnt require auth, so we don't
+  // but this endpoint does not require auth, so we don't
   // disclose whether or not the email exists in the system.
   if (user) {
     await SERVICES.deleteMagicTokensByUserId({ userId: user.id }) // Clean as you go

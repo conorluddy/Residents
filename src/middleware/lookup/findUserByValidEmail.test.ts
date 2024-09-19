@@ -43,7 +43,7 @@ describe('Middleware:findUserByValidEmail', () => {
     expect(mockRequest[REQUEST_USER]).toHaveProperty('username', 'MrFake')
     expect(nextFunction).toHaveBeenCalled()
   })
-  it("[REQUEST_EMAIL] doesn't exist in the request", async () => {
+  it('[REQUEST_EMAIL] does not exist in the request', async () => {
     mockRequest[REQUEST_EMAIL] = undefined
     await expect(findUserByValidEmail(mockRequest as Request, mockResponse as Response, nextFunction)).rejects.toThrow(
       'Invalid email.'

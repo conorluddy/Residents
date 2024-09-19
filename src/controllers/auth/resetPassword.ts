@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express'
+import { Request, Response } from 'express'
 import { SENDGRID_TEST_EMAIL } from '../../config'
 import { TOKEN_TYPE } from '../../constants/database'
 import { TIMESPAN } from '../../constants/time'
@@ -16,7 +16,7 @@ import { handleSuccessResponse } from '../../middleware/util/successHandler'
  * and send them a reset link with a token that will be used to verify their identity.
  * It's important to not disclose whether or not the email exists in the database.
  */
-export const resetPassword = async (req: Request, res: Response, next: NextFunction) => {
+export const resetPassword = async (req: Request, res: Response): Promise<Response> => {
   // Email will be added to the request from the previous email validation middleware
   const email = req[REQUEST_EMAIL]
   if (!email) {
@@ -26,7 +26,7 @@ export const resetPassword = async (req: Request, res: Response, next: NextFunct
   const user = await SERVICES.getUserByEmail(email)
 
   // Only set up token and send email if the user exists,
-  // but this endpoint doesnt require auth, so we don't
+  // but this endpoint does not require auth, so we don't
   // disclose whether or not the email exists in the system.
   if (user) {
     // TODO Delete older reset tokens before creating new one (see magic login)

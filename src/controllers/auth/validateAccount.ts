@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express'
+import { Request, Response } from 'express'
 import { STATUS, TOKEN_TYPE } from '../../constants/database'
 import { BadRequestError, TokenError } from '../../errors'
 import SERVICES from '../../services'
@@ -9,7 +9,7 @@ import { handleSuccessResponse } from '../../middleware/util/successHandler'
 /**
  * validateAccount
  */
-export const validateAccount = async (req: Request, res: Response, next: NextFunction) => {
+export const validateAccount = async (req: Request, res: Response): Promise<Response> => {
   const { tokenId, userId: userIdFromUrlParam } = req.params
   const token = req[REQUEST_TOKEN]
 

@@ -39,27 +39,21 @@ describe('Controller: GetUser', () => {
   })
 
   it('Happy path', async () => {
-    await getUser(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
+    await getUser(mockRequest as Request, mockResponse as Response)
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.OK)
     expect(mockResponse.json).toHaveBeenCalledWith({ user: fakeUser })
   })
 
   it('Missing User ID', async () => {
     delete mockRequest[REQUEST_TARGET_USER_ID]
-    await expect(getUser(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)).rejects.toThrow(
-      'User ID is missing.'
-    )
+    await expect(getUser(mockRequest as Request, mockResponse as Response)).rejects.toThrow('User ID is missing.')
   })
 
   it('User not found', async () => {
-    await expect(getUser(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)).rejects.toThrow(
-      'User not found.'
-    )
+    await expect(getUser(mockRequest as Request, mockResponse as Response)).rejects.toThrow('User not found.')
   })
 
   it('Error handling', async () => {
-    await expect(getUser(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)).rejects.toThrow(
-      'DB error.'
-    )
+    await expect(getUser(mockRequest as Request, mockResponse as Response)).rejects.toThrow('DB error.')
   })
 })

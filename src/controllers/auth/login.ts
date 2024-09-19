@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express'
+import { Request, Response } from 'express'
 import { isEmail } from 'validator'
 import { TOKEN_TYPE } from '../../constants/database'
 import { TIMESPAN } from '../../constants/time'
@@ -15,7 +15,7 @@ import { handleSuccessResponse } from '../../middleware/util/successHandler'
 /**
  * login
  */
-export const login = async (req: Request, res: Response, next: NextFunction) => {
+export const login = async (req: Request, res: Response): Promise<Response> => {
   const { username, email, password } = (req.body ?? {}) as Pick<User, 'username' | 'email' | 'password'>
 
   if (!username && !email) {

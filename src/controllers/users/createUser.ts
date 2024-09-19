@@ -1,6 +1,5 @@
-import { NextFunction, Request, Response } from 'express'
+import { Request, Response } from 'express'
 import { TOKEN_TYPE } from '../../constants/database'
-import { HTTP_SUCCESS } from '../../constants/http'
 import { NewUser } from '../../db/types'
 import { TIMESPAN } from '../../constants/time'
 import { BadRequestError, EmailError } from '../../errors'
@@ -16,7 +15,7 @@ import { handleCreatedResponse } from '../../middleware/util/successHandler'
 /**
  * createUser
  */
-export const createUser = async ({ body }: Request, res: Response, next: NextFunction) => {
+export const createUser = async ({ body }: Request, res: Response): Promise<Response> => {
   const { username, firstName, lastName, email, password, role }: NewUser = body
 
   if (![username, firstName, lastName, email, password].every(Boolean)) {

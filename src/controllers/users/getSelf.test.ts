@@ -38,21 +38,17 @@ describe('Controller: GetSelf', () => {
   })
 
   it('Happy path', async () => {
-    await getSelf(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
+    await getSelf(mockRequest as Request, mockResponse as Response)
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.OK)
     expect(mockResponse.json).toHaveBeenCalledWith({ user: fakeUser })
   })
 
   it('Missing ID is handled', async () => {
     mockRequest[REQUEST_USER] = undefined
-    await expect(getSelf(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)).rejects.toThrow(
-      'User ID is missing.'
-    )
+    await expect(getSelf(mockRequest as Request, mockResponse as Response)).rejects.toThrow('User ID is missing.')
   })
 
   it('User not found in DB (shouldnt happen for getSelf but o/)', async () => {
-    await expect(getSelf(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)).rejects.toThrow(
-      'User not found.'
-    )
+    await expect(getSelf(mockRequest as Request, mockResponse as Response)).rejects.toThrow('User not found.')
   })
 })

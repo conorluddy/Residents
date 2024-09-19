@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express'
+import { Request, Response } from 'express'
 import { isStrongPassword } from 'validator'
 import { TOKEN_TYPE } from '../../constants/database'
 import { PASSWORD_STRENGTH_CONFIG } from '../../constants/password'
@@ -13,7 +13,7 @@ import { handleSuccessResponse } from '../../middleware/util/successHandler'
  * resetPasswordWithToken
  * POST
  */
-export const resetPasswordWithToken = async (req: Request, res: Response, next: NextFunction) => {
+export const resetPasswordWithToken = async (req: Request, res: Response): Promise<Response> => {
   const token = req[REQUEST_TOKEN]
   const plainPassword: string = req.body.password
 
@@ -35,7 +35,7 @@ export const resetPasswordWithToken = async (req: Request, res: Response, next: 
 
   const password = await createHash(plainPassword)
 
-  const [updatedUserId, _deletedTokenId] = await Promise.all([
+  const [updatedUserId] = await Promise.all([
     SERVICES.updateUserPassword({ userId: token.userId, password }),
     SERVICES.deleteToken({ tokenId: token.id }),
   ])

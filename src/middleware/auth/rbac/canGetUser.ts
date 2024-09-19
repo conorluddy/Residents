@@ -10,7 +10,7 @@ import { REQUEST_TARGET_USER, REQUEST_USER } from '../../../types/requestSymbols
  * @param res
  * @param next
  */
-async function canGetUser(req: Request, res: Response, next: NextFunction): Promise<void> {
+function canGetUser(req: Request, res: Response, next: NextFunction): void {
   const user = req[REQUEST_USER]
   const targetUser = req[REQUEST_TARGET_USER]
 
@@ -46,7 +46,7 @@ async function canGetUser(req: Request, res: Response, next: NextFunction): Prom
     return next()
   }
 
-  throw new ForbiddenError("User doesn't have permission to get this user.")
+  throw new ForbiddenError('User does not have permission to get this user.')
 }
 
 export default canGetUser

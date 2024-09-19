@@ -58,7 +58,7 @@ if (isDevEnv) {
     // - script-src 'self': Only allow scripts from the same origin
     // - style-src 'self' 'unsafe-inline': Allow styles from the same origin and inline styles
     // This helps prevent various types of attacks, such as XSS (Cross-Site Scripting)
-    res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'")
+    res.setHeader('Content-Security-Policy', 'default-src \'self\'; script-src \'self\'; style-src \'self\' \'unsafe-inline\'')
     next()
   })
   // Serve static files from the 'examples' directory

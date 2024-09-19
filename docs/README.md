@@ -94,7 +94,7 @@ There's a Postman collection in the postman directory that I've been trying to k
 
 #### CI/CD
 
-There's a Github Action that installs, tests and builds this on Node versions 16, 18, 20 and 22 on each commit. It also runs a code coverage report with CodeCov. It doesn't get deployed anywhere at the moment. 
+There's a Github Action that installs, tests and builds this on Node versions 16, 18, 20 and 22 on each commit. It also runs a code coverage report with CodeCov. It does not get deployed anywhere at the moment. 
 
 ### Robustness
 

@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express'
+import { Request, Response } from 'express'
 import { generateJwtFromUser } from '../../utils/generateJwt'
 import { OAuth2Client } from 'google-auth-library'
 import { EmailError, NotFoundError, UnauthorizedError } from '../../errors'
@@ -10,7 +10,7 @@ const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
 /**
  * googleCallback
  */
-export const googleCallback = async (req: Request, res: Response, next: NextFunction) => {
+export const googleCallback = async (req: Request, res: Response): Promise<Response> => {
   const ticket = await client.verifyIdToken({
     idToken: req.body.idToken,
     audience: process.env.GOOGLE_CLIENT_ID,

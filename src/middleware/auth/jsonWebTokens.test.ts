@@ -39,7 +39,7 @@ describe('Middleware:JWT', () => {
     expect(nextFunction).toHaveBeenCalled()
   })
 
-  it("Should reject as unauthorized if there's no token in the request", async () => {
+  it('Should reject as unauthorized if there\'s no token in the request', async () => {
     mockRequest[REQUEST_USER] = makeAFakeSafeUser(mockDefaultUser)
     delete mockRequest?.headers?.authorization
 

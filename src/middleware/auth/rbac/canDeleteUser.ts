@@ -10,7 +10,7 @@ import { REQUEST_TARGET_USER, REQUEST_USER } from '../../../types/requestSymbols
  * @param res
  * @param next
  */
-async function canDeleteUser(req: Request, res: Response, next: NextFunction): Promise<void> {
+function canDeleteUser(req: Request, res: Response, next: NextFunction): void {
   const user = req[REQUEST_USER]
   const targetUser = req[REQUEST_TARGET_USER]
 
@@ -38,7 +38,7 @@ async function canDeleteUser(req: Request, res: Response, next: NextFunction): P
     return next()
   }
 
-  throw new ForbiddenError("User doesn't have permission to delete this user.")
+  throw new ForbiddenError('User does not have permission to delete this user.')
 }
 
 export default canDeleteUser
