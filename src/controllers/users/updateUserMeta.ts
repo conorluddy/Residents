@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express'
+import { Request, Response } from 'express'
 import { Meta } from '../../db/types'
 import { BadRequestError } from '../../errors'
 import SERVICES from '../../services'
@@ -8,7 +8,7 @@ import { handleSuccessResponse } from '../../middleware/util/successHandler'
 /**
  * updateUserMeta
  */
-export const updateUserMeta = async (req: Request, res: Response, next: NextFunction) => {
+export const updateUserMeta = async (req: Request, res: Response): Promise<Response> => {
   const { id } = req.params
   const targetUserId = req[REQUEST_TARGET_USER_ID]
 

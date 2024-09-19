@@ -45,25 +45,23 @@ describe('Controller: Reset Password With Token', () => {
   })
 
   it('Happy path: Reset Password With Token', async () => {
-    await resetPasswordWithToken(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
+    await resetPasswordWithToken(mockRequest as Request, mockResponse as Response)
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.OK)
     expect(mockResponse.json).toHaveBeenCalledWith({ message: 'Password successfully updated.' })
     expect(logger.info).toHaveBeenCalledWith('Password was reset for USER:UID123')
   })
 
   it('Unhappy path: Reset Password With Token', async () => {
-    await expect(
-      resetPasswordWithToken(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
-    ).rejects.toThrow(
+    await expect(resetPasswordWithToken(mockRequest as Request, mockResponse as Response)).rejects.toThrow(
       'Error updating password for user: UID123, the DB update result should be the same as request ID: NOT_SAME'
     )
   })
 
   it('Returns forbidden when missing token', async () => {
     mockRequest[REQUEST_TOKEN] = undefined
-    await expect(
-      resetPasswordWithToken(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
-    ).rejects.toThrow('Token missing.')
+    await expect(resetPasswordWithToken(mockRequest as Request, mockResponse as Response)).rejects.toThrow(
+      'Token missing.'
+    )
   })
 
   it('Returns forbidden when an incorrect type of token is used', async () => {
@@ -71,15 +69,15 @@ describe('Controller: Reset Password With Token', () => {
       ...mockRequest[REQUEST_TOKEN]!,
       type: TOKEN_TYPE.MAGIC,
     }
-    await expect(
-      resetPasswordWithToken(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
-    ).rejects.toThrow('Invalid token type.')
+    await expect(resetPasswordWithToken(mockRequest as Request, mockResponse as Response)).rejects.toThrow(
+      'Invalid token type.'
+    )
   })
 
   it('Returns bad request when the requested new password fails password strength test', async () => {
     mockRequest.body.password = 'password1'
-    await expect(
-      resetPasswordWithToken(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
-    ).rejects.toThrow('Password not strong enough, try harder.')
+    await expect(resetPasswordWithToken(mockRequest as Request, mockResponse as Response)).rejects.toThrow(
+      'Password not strong enough, try harder.'
+    )
   })
 })

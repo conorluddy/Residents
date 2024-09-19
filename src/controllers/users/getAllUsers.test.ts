@@ -31,20 +31,18 @@ describe('Controller: GetAllUsers', () => {
   })
 
   it('Gets All Users', async () => {
-    await getAllUsers(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
+    await getAllUsers(mockRequest as Request, mockResponse as Response)
     expect(mockResponse.json).toHaveBeenCalledWith({ users: [fakeUser, fakeUser, fakeUser] })
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.OK)
   })
 
   it('Gets No Users', async () => {
-    await getAllUsers(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
+    await getAllUsers(mockRequest as Request, mockResponse as Response)
     expect(mockResponse.json).toHaveBeenCalledWith({ users: [] })
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.OK)
   })
 
   it('Handles an error from the service', async () => {
-    await expect(
-      getAllUsers(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
-    ).rejects.toThrow('S.N.A.F.U')
+    await expect(getAllUsers(mockRequest as Request, mockResponse as Response)).rejects.toThrow('S.N.A.F.U')
   })
 })

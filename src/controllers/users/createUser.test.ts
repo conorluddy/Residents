@@ -32,22 +32,20 @@ describe('Controller: CreateUser', () => {
   })
 
   it('Create User - Happy path', async () => {
-    await createUser(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
+    await createUser(mockRequest as Request, mockResponse as Response)
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.CREATED)
     expect(mockResponse.json).toHaveBeenCalledWith({ message: 'User registered.' })
   })
 
   it('Create User - Missing data', async () => {
     mockRequest.body = {}
-    await expect(
-      createUser(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
-    ).rejects.toThrow('Missing required fields.')
+    await expect(createUser(mockRequest as Request, mockResponse as Response)).rejects.toThrow(
+      'Missing required fields.'
+    )
   })
 
   it('Create User - Invalid email', async () => {
     mockRequest.body.email = 'invalid-email'
-    await expect(
-      createUser(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
-    ).rejects.toThrow('Invalid email address')
+    await expect(createUser(mockRequest as Request, mockResponse as Response)).rejects.toThrow('Invalid email address')
   })
 })

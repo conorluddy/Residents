@@ -44,7 +44,7 @@ describe('Controller: Delete User', () => {
   })
 
   it('Happy path', async () => {
-    await deleteUser(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
+    await deleteUser(mockRequest as Request, mockResponse as Response)
     expect(logger.error).not.toHaveBeenCalled()
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.OK)
     expect(mockResponse.json).toHaveBeenCalledWith({ message: `User ${fakeUser.id} deleted` })
@@ -52,23 +52,17 @@ describe('Controller: Delete User', () => {
 
   it('Missing ID', async () => {
     mockRequest.params = {}
-    await expect(
-      deleteUser(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
-    ).rejects.toThrow('User ID is missing.')
+    await expect(deleteUser(mockRequest as Request, mockResponse as Response)).rejects.toThrow('User ID is missing.')
   })
 
   it('Missing [REQUEST_TARGET_USER_ID]', async () => {
     mockRequest[REQUEST_TARGET_USER_ID] = ''
-    await expect(
-      deleteUser(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
-    ).rejects.toThrow('User ID is missing.')
+    await expect(deleteUser(mockRequest as Request, mockResponse as Response)).rejects.toThrow('User ID is missing.')
   })
 
-  it('target user ID doesnt match url param user ID', async () => {
+  it('target user ID does not match url param user ID', async () => {
     mockRequest[REQUEST_TARGET_USER_ID] = 'PersonToDelete'
     mockRequest.params = { id: 'OtherPersonInURL' }
-    await expect(
-      deleteUser(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
-    ).rejects.toThrow('User ID mismatch.')
+    await expect(deleteUser(mockRequest as Request, mockResponse as Response)).rejects.toThrow('User ID mismatch.')
   })
 })

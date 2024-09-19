@@ -10,7 +10,7 @@ import { REQUEST_TARGET_USER, REQUEST_USER } from '../../../types/requestSymbols
  * @param res
  * @param next
  */
-async function canUpdateUser(req: Request, res: Response, next: NextFunction): Promise<void> {
+function canUpdateUser(req: Request, res: Response, next: NextFunction): void {
   const user = req[REQUEST_USER]
   const targetUser = req[REQUEST_TARGET_USER]
 
@@ -38,7 +38,7 @@ async function canUpdateUser(req: Request, res: Response, next: NextFunction): P
     return next()
   }
 
-  throw new ForbiddenError("User doesn't have permission to update this user.")
+  throw new ForbiddenError('User does not have permission to update this user.')
 }
 
 export default canUpdateUser

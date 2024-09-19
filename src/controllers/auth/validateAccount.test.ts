@@ -47,7 +47,7 @@ describe('Controller: Validate Account', () => {
   })
 
   it('Validates a users account when the token is found and matches the user', async () => {
-    await validateAccount(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
+    await validateAccount(mockRequest as Request, mockResponse as Response)
     expect(logger.error).not.toHaveBeenCalled()
     expect(logger.info).toHaveBeenCalledWith(`User ${mockDefaultUser.id} validated.`)
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.OK)
@@ -56,16 +56,16 @@ describe('Controller: Validate Account', () => {
 
   it('Returns forbidden when missing token', async () => {
     mockRequest[REQUEST_TOKEN] = undefined
-    await expect(
-      validateAccount(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
-    ).rejects.toThrow('Validation token missing.')
+    await expect(validateAccount(mockRequest as Request, mockResponse as Response)).rejects.toThrow(
+      'Validation token missing.'
+    )
   })
 
   it('Returns forbidden when missing userId from URL', async () => {
     mockRequest.params = { tokenId: 'TOKEN001' }
-    await expect(
-      validateAccount(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
-    ).rejects.toThrow('Invalid user data.')
+    await expect(validateAccount(mockRequest as Request, mockResponse as Response)).rejects.toThrow(
+      'Invalid user data.'
+    )
   })
 
   it('Returns forbidden when missing userId from URL', async () => {
@@ -77,12 +77,12 @@ describe('Controller: Validate Account', () => {
       createdAt: new Date(),
       expiresAt: new Date(Date.now() + TIMESPAN.HOUR),
     }
-    await expect(
-      validateAccount(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
-    ).rejects.toThrow('Validation token invalid.')
+    await expect(validateAccount(mockRequest as Request, mockResponse as Response)).rejects.toThrow(
+      'Validation token invalid.'
+    )
   })
 
-  it('Returns forbidden when the token ID doesnt match the user ID', async () => {
+  it('Returns forbidden when the token ID does not match the user ID', async () => {
     mockRequest[REQUEST_TOKEN] = {
       id: 'XXX-XXX-XXX-XXX-XXX-XXX-XXX-XXX',
       type: TOKEN_TYPE.VALIDATE,
@@ -91,8 +91,8 @@ describe('Controller: Validate Account', () => {
       createdAt: new Date(),
       expiresAt: new Date(Date.now() + TIMESPAN.HOUR),
     }
-    await expect(
-      validateAccount(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
-    ).rejects.toThrow('Validation token invalid.')
+    await expect(validateAccount(mockRequest as Request, mockResponse as Response)).rejects.toThrow(
+      'Validation token invalid.'
+    )
   })
 })

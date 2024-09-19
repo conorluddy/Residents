@@ -22,15 +22,13 @@ describe.skip('Controller: Magic Login', () => {
   })
 
   it('NOT IMPLEMENTED YET: TODO', async () => {
-    await magicLogin(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
+    await magicLogin(mockRequest as Request, mockResponse as Response)
     expect(mockResponse.json).toHaveBeenCalledWith({ message: 'Not implemented yet.' })
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SERVER_ERROR.NOT_IMPLEMENTED)
   })
 
   it('should bomb out early if you dont provide an email address', async () => {
     delete mockRequest.body.email
-    await expect(
-      magicLogin(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
-    ).rejects.toThrow('Email is required.')
+    await expect(magicLogin(mockRequest as Request, mockResponse as Response)).rejects.toThrow('Email is required.')
   })
 })

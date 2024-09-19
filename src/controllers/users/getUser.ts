@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express'
+import { Request, Response } from 'express'
 import { BadRequestError, NotFoundError } from '../../errors'
 import SERVICES from '../../services'
 import { REQUEST_TARGET_USER_ID } from '../../types/requestSymbols'
@@ -8,7 +8,7 @@ import { handleSuccessResponse } from '../../middleware/util/successHandler'
  * getUser
  * @param req[REQUEST_TARGET_USER_ID] - The ID of the user to get, provided by upstream middleware
  */
-export const getUser = async (req: Request, res: Response, next: NextFunction) => {
+export const getUser = async (req: Request, res: Response): Promise<Response> => {
   //
   const userId = req[REQUEST_TARGET_USER_ID]
   if (!userId) {

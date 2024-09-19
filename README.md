@@ -94,7 +94,7 @@ There's a Postman collection in the postman directory that I've been trying to k
 
 #### CI/CD
 
-There's a Github Action that installs, tests and builds this on Node versions 16, 18, 20 and 22 on each commit. It also runs a code coverage report with CodeCov. It doesn't get deployed anywhere at the moment. 
+There's a Github Action that installs, tests and builds this on Node versions 16, 18, 20 and 22 on each commit. It also runs a code coverage report with CodeCov. It does not get deployed anywhere at the moment. 
 
 ### Robustness
 
@@ -198,7 +198,7 @@ This is the sort of project that started off as a quick little tool, yet the mor
 - GDPR related data-request / data-erase
 - i18n for any returned strings
 
-But there's a bunch of core features, fixes and refactoring I need to hit up first.
+But there is a bunch of core features, fixes and refactoring I need to hit up first.
 
 If you got this far, drop a star ⭐️
 

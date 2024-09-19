@@ -1,6 +1,6 @@
 import SERVICES from '../../services'
 import generateXsrfToken from '../../middleware/util/xsrfToken'
-import { NextFunction, Request, Response } from 'express'
+import { Request, Response } from 'express'
 import { TOKEN_TYPE } from '../../constants/database'
 import { TIMESPAN } from '../../constants/time'
 import { ForbiddenError, TokenError } from '../../errors'
@@ -14,7 +14,7 @@ import { handleSuccessResponse } from '../../middleware/util/successHandler'
  *
  * Refreshes the access token using the refresh token.
  */
-export const refreshToken = async (req: Request, res: Response, next: NextFunction) => {
+export const refreshToken = async (req: Request, res: Response): Promise<Response> => {
   const refreshTokenId = req.cookies?.[REFRESH_TOKEN]
   const userId = req.cookies?.[RESIDENT_TOKEN]
 

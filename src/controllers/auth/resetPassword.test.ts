@@ -35,7 +35,7 @@ describe('Controller: Reset Password', () => {
   })
 
   it('Happy path - reset email gets sent', async () => {
-    await resetPassword(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
+    await resetPassword(mockRequest as Request, mockResponse as Response)
     expect(sendMail).toHaveBeenCalled()
     expect(logger.error).not.toHaveBeenCalled()
     expect(logger.info).toHaveBeenCalledWith('Reset email sent to bananaman@ireland.ie, token id: tok1')
@@ -45,8 +45,6 @@ describe('Controller: Reset Password', () => {
 
   it('missing user data', async () => {
     mockRequest[REQUEST_EMAIL] = undefined
-    await expect(
-      resetPassword(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
-    ).rejects.toThrow('User data missing.')
+    await expect(resetPassword(mockRequest as Request, mockResponse as Response)).rejects.toThrow('User data missing.')
   })
 })

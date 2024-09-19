@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express'
+import { Request, Response } from 'express'
 import { REQUEST_USER } from '../../types/requestSymbols'
 import SERVICES from '../../services'
 import { BadRequestError, NotFoundError } from '../../errors'
@@ -7,7 +7,7 @@ import { handleSuccessResponse } from '../../middleware/util/successHandler'
 /**
  * getSelf - gets own user record
  */
-export const getSelf = async (req: Request, res: Response, next: NextFunction) => {
+export const getSelf = async (req: Request, res: Response): Promise<Response> => {
   //
   const userId = req[REQUEST_USER]?.id
   if (!userId) {

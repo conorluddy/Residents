@@ -61,7 +61,7 @@ describe('Middleware:findValidTokenById', () => {
     expect(nextFunction).toHaveBeenCalled()
   })
 
-  it("ValidatedToken doesn't exist in the request, return bad request", async () => {
+  it('ValidatedToken does not exist in the request, return bad request', async () => {
     mockRequest[REQUEST_TOKEN_ID] = undefined as unknown as string
     await expect(findValidTokenById(mockRequest as Request, mockResponse as Response, nextFunction)).rejects.toThrow(
       'A valid token is required.'

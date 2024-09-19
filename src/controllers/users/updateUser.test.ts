@@ -38,7 +38,7 @@ describe('Controller: UpdateUser', () => {
   })
 
   it('Successfully updates a user', async () => {
-    await updateUser(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
+    await updateUser(mockRequest as Request, mockResponse as Response)
     expect(logger.error).not.toHaveBeenCalled()
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.OK)
     expect(mockResponse.json).toHaveBeenCalledWith({ message: `User ${fakeUser.id} updated successfully` })
@@ -49,9 +49,9 @@ describe('Controller: UpdateUser', () => {
       ...mockRequest.params!,
       id: '',
     }
-    await expect(
-      updateUser(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
-    ).rejects.toThrow('User ID is missing in the request.')
+    await expect(updateUser(mockRequest as Request, mockResponse as Response)).rejects.toThrow(
+      'User ID is missing in the request.'
+    )
   })
 
   it('Responds with Forbidden if ID and verified target ID dont match', async () => {
@@ -60,16 +60,14 @@ describe('Controller: UpdateUser', () => {
       id: 'NotTheFakerUsersID',
     }
 
-    await expect(
-      updateUser(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
-    ).rejects.toThrow('User ID mismatch.')
+    await expect(updateUser(mockRequest as Request, mockResponse as Response)).rejects.toThrow('User ID mismatch.')
   })
 
   it('Responds with Bad Request if no update data is provided', async () => {
     mockRequest.body = {}
 
-    await expect(
-      updateUser(mockRequest as Request, mockResponse as Response, mockNext as NextFunction)
-    ).rejects.toThrow('No udpate data provided.')
+    await expect(updateUser(mockRequest as Request, mockResponse as Response)).rejects.toThrow(
+      'No udpate data provided.'
+    )
   })
 })

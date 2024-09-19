@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express'
+import { Request, Response } from 'express'
 import SERVICES from '../../services'
 import { REQUEST_TOKEN } from '../../types/requestSymbols'
 import { logger } from '../../utils/logger'
@@ -14,7 +14,7 @@ import { handleSuccessResponse } from '../../middleware/util/successHandler'
 /**
  * GET: magicLoginWithToken
  */
-export const magicLoginWithToken = async (req: Request, res: Response, next: NextFunction) => {
+export const magicLoginWithToken = async (req: Request, res: Response): Promise<Response> => {
   const token = req[REQUEST_TOKEN]!
 
   const [user, _deletedTokenId] = await Promise.all([
