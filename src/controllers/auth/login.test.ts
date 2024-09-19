@@ -78,14 +78,14 @@ describe('Controller: Login', () => {
     mockRequest.body.email = null
     mockRequest.body.password = 'testpassword'
     await expect(login(mockRequest as Request, mockResponse as Response)).rejects.toThrow(
-      'Username or email is required'
+      MESSAGES.USERNAME_OR_EMAIL_REQUIRED
     )
   })
 
   it('should reject login with missing password', async () => {
     mockRequest.body.username = 'MrFake'
     mockRequest.body.password = null
-    await expect(login(mockRequest as Request, mockResponse as Response)).rejects.toThrow('Password is required')
+    await expect(login(mockRequest as Request, mockResponse as Response)).rejects.toThrow(MESSAGES.PASSWORD_REQUIRED)
   })
 
   it('should reject login with invalid email address', async () => {

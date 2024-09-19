@@ -34,7 +34,7 @@ app.use(express.json())
 app.use(updateUserRouter)
 
 describe('Route: Update User', () => {
-  it('successfully updates a user', async () => {
+  it(MESSAGES.USER_UPDATED, async () => {
     const response = await request(app).patch(`/${fakeUser.id}`).send({ firstName: 'Banana Man' })
     expect(logger.error).not.toHaveBeenCalled()
     expect(response.body.message).toBe(`User ${fakeUser.id} updated successfully`)

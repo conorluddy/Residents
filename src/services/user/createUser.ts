@@ -18,7 +18,7 @@ const createUser = async (userProps: NewUser): Promise<User['id'] | null> => {
   }
 
   if (!isStrongPassword(password, PASSWORD_STRENGTH_CONFIG)) {
-    throw new PasswordStrengthError('Password not strong enough, try harder.')
+    throw new PasswordStrengthError(MESSAGES.WEAK_PASSWORD)
   }
 
   if (!isEmail(email)) {

@@ -41,7 +41,7 @@ describe('GET /validateAccount', () => {
   it('should call the validateAccount controller', async () => {
     const response = await request(app).patch(`/validate/${validTokenId}.${user.id}`)
     expect(logger.error).not.toHaveBeenCalled()
-    expect(response.body).toStrictEqual({ message: 'Account validated.' })
+    expect(response.body).toStrictEqual({ message: MESSAGES.ACCOUNT_VALIDATED })
     expect(response.status).toBe(HTTP_SUCCESS.OK)
   })
 })

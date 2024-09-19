@@ -10,18 +10,18 @@ const findValidTokenById: RequestHandler = async (req: Request, res: Response, n
   const tokenId = req[REQUEST_TOKEN_ID]
 
   if (!tokenId) {
-    throw new BadRequestError('A valid token is required.')
+    throw new BadRequestError(MESSAGES.VALID_TOKEN_REQUIRED)
   }
   const token = await SERVICES.getToken({ tokenId })
 
   if (!token) {
-    throw new BadRequestError('A valid token is required.')
+    throw new BadRequestError(MESSAGES.VALID_TOKEN_REQUIRED)
   }
   if (token.used) {
-    throw new ForbiddenError('Token has already been used.')
+    throw new ForbiddenError(MESSAGES.TOKEN_USED)
   }
   if (token.expiresAt < new Date()) {
-    throw new ForbiddenError('Token has expired.')
+    throw new ForbiddenError(MESSAGES.TOKEN_EXPIRED)
   }
 
   req[REQUEST_TOKEN] = token

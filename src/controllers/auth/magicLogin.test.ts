@@ -29,6 +29,6 @@ describe.skip('Controller: Magic Login', () => {
 
   it('should bomb out early if you dont provide an email address', async () => {
     delete mockRequest.body.email
-    await expect(magicLogin(mockRequest as Request, mockResponse as Response)).rejects.toThrow('Email is required.')
+    await expect(magicLogin(mockRequest as Request, mockResponse as Response)).rejects.toThrow(MESSAGES.EMAIL_REQUIRED)
   })
 })

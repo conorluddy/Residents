@@ -15,7 +15,7 @@ function canUpdateUser(req: Request, res: Response, next: NextFunction): void {
   const targetUser = req[REQUEST_TARGET_USER]
 
   if (!user || !targetUser || !user.role || !targetUser.role) {
-    throw new BadRequestError('User data is missing.')
+    throw new BadRequestError(MESSAGES.MISSING_USER_DATA)
   }
 
   if (user.id === targetUser.id && ACL[user.role].includes(PERMISSIONS.CAN_UPDATE_OWN_USER)) {

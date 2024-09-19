@@ -25,7 +25,7 @@ describe('Integration: Can CreateUser', () => {
     }
     const response = await request(app).post('/users/register').send(newUser)
     expect(response.status).toBe(201)
-    expect(response.body).toHaveProperty('message', 'User registered.')
+    expect(response.body).toHaveProperty('message', MESSAGES.USER_REGISTERED)
   })
 
   it('should return an error if email is missing', async () => {
@@ -39,7 +39,7 @@ describe('Integration: Can CreateUser', () => {
     }
     const response = await request(app).post('/users/register').send(incompleteUser)
     expect(response.status).toBe(400)
-    expect(response.body).toStrictEqual({ message: 'Bad request.' })
+    expect(response.body).toStrictEqual({ message: MESSAGES.BAD_REQUEST })
   })
 
   it('should return an error if email isnt an email', async () => {
@@ -53,7 +53,7 @@ describe('Integration: Can CreateUser', () => {
     }
     const response = await request(app).post('/users/register').send(incompleteUser)
     expect(response.status).toBe(400)
-    expect(response.body).toStrictEqual({ message: 'Bad request.' })
+    expect(response.body).toStrictEqual({ message: MESSAGES.BAD_REQUEST })
   })
 
   it('should return an error if password is weak', async () => {

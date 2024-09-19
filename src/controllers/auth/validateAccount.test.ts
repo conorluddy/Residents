@@ -51,7 +51,7 @@ describe('Controller: Validate Account', () => {
     expect(logger.error).not.toHaveBeenCalled()
     expect(logger.info).toHaveBeenCalledWith(`User ${mockDefaultUser.id} validated.`)
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.OK)
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: 'Account validated.' })
+    expect(mockResponse.json).toHaveBeenCalledWith({ message: MESSAGES.ACCOUNT_VALIDATED })
   })
 
   it('Returns forbidden when missing token', async () => {
@@ -64,7 +64,7 @@ describe('Controller: Validate Account', () => {
   it('Returns forbidden when missing userId from URL', async () => {
     mockRequest.params = { tokenId: 'TOKEN001' }
     await expect(validateAccount(mockRequest as Request, mockResponse as Response)).rejects.toThrow(
-      'Invalid user data.'
+      MESSAGES.INVALID_USER_DATA
     )
   })
 

@@ -37,7 +37,7 @@ describe('Controller: UpdateUser', () => {
     }
   })
 
-  it('Successfully updates a user', async () => {
+  it(MESSAGES.USER_UPDATED, async () => {
     await updateUser(mockRequest as Request, mockResponse as Response)
     expect(logger.error).not.toHaveBeenCalled()
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.OK)
@@ -60,7 +60,9 @@ describe('Controller: UpdateUser', () => {
       id: 'NotTheFakerUsersID',
     }
 
-    await expect(updateUser(mockRequest as Request, mockResponse as Response)).rejects.toThrow('User ID mismatch.')
+    await expect(updateUser(mockRequest as Request, mockResponse as Response)).rejects.toThrow(
+      MESSAGES.USER_ID_MISMATCH
+    )
   })
 
   it('Responds with Bad Request if no update data is provided', async () => {

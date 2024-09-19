@@ -18,7 +18,7 @@ const findUserByValidEmail: RequestHandler = async (req: Request, res: Response,
   const user = await SERVICES.getUserByEmail(email)
 
   if (!user) {
-    throw new BadRequestError('User not found.')
+    throw new BadRequestError(MESSAGES.USER_NOT_FOUND)
   }
 
   req[REQUEST_USER] = user

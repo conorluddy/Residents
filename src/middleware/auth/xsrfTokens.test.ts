@@ -49,7 +49,7 @@ describe('Middleware: XSRF Tokens: ', () => {
     process.env.NODE_ENV = 'not-test'
     mockRequest.headers = {}
     await expect(() => xsrfTokens(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
-      new UnauthorizedError('XSRF token is invalid.')
+      new UnauthorizedError(MESSAGES.XSRF_TOKEN_INVALID)
     )
     expect(nextFunction).not.toHaveBeenCalled()
   })
@@ -57,7 +57,7 @@ describe('Middleware: XSRF Tokens: ', () => {
   it('Requires a valid XSRF token in non-test environment', async () => {
     process.env.NODE_ENV = 'not-test'
     await expect(() => xsrfTokens(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
-      new UnauthorizedError('XSRF token is invalid.')
+      new UnauthorizedError(MESSAGES.XSRF_TOKEN_INVALID)
     )
     expect(nextFunction).not.toHaveBeenCalled()
   })

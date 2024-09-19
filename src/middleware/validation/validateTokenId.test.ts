@@ -21,7 +21,7 @@ describe('Middleware: validateTokenId', () => {
 
   it('should return 400 if the request token is missing', async () => {
     await expect(validateTokenId(mockRequest as Request, mockResponse as Response, mockNext)).rejects.toThrow(
-      'A token is required.'
+      MESSAGES.TOKEN_REQUIRED
     )
   })
 

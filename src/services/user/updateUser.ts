@@ -20,7 +20,7 @@ const updateUser = async ({ userId, username, firstName, lastName, email, passwo
     throw new BadRequestError('User ID must be provided.')
   }
   if (email && !isEmail(email)) {
-    throw new EmailError('Email is not valid.')
+    throw new EmailError(MESSAGES.INVALID_EMAIL)
   }
 
   const emailNormalized = email ? normalizeEmail(email, { all_lowercase: true }) : null

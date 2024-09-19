@@ -7,7 +7,7 @@ const validateEmail: RequestHandler = async (req: Request, res: Response, next: 
   const email: string | undefined = req.params?.email || req.body?.email || req.query?.email
 
   if (!email) {
-    throw new BadRequestError('Email is required.')
+    throw new BadRequestError(MESSAGES.EMAIL_REQUIRED)
   }
   if (!isEmail(email)) {
     throw new BadRequestError('Invalid email address.')

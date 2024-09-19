@@ -144,7 +144,9 @@ describe('Should return errors if', () => {
     )
   })
   it('the token isnt found in the database', async () => {
-    await expect(refreshToken(mockRequest as Request, mockResponse as Response)).rejects.toThrow('Token not found.')
+    await expect(refreshToken(mockRequest as Request, mockResponse as Response)).rejects.toThrow(
+      MESSAGES.TOKEN_NOT_FOUND
+    )
   })
   it('the token user does not match the JWT user', async () => {
     await expect(refreshToken(mockRequest as Request, mockResponse as Response)).rejects.toThrow(
@@ -152,11 +154,9 @@ describe('Should return errors if', () => {
     )
   })
   it('the token has a USED flag set', async () => {
-    await expect(refreshToken(mockRequest as Request, mockResponse as Response)).rejects.toThrow(
-      'Token has already been used.'
-    )
+    await expect(refreshToken(mockRequest as Request, mockResponse as Response)).rejects.toThrow(MESSAGES.TOKEN_USED)
   })
   it('the token has expired', async () => {
-    await expect(refreshToken(mockRequest as Request, mockResponse as Response)).rejects.toThrow('Token has expired.')
+    await expect(refreshToken(mockRequest as Request, mockResponse as Response)).rejects.toThrow(MESSAGES.TOKEN_EXPIRED)
   })
 })

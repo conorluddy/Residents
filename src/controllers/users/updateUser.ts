@@ -19,7 +19,7 @@ export const updateUser = async (req: Request, res: Response): Promise<Response>
   // Possibly redundant, as the RBAC middleware will have found the user
   // and only set the [REQUEST_TARGET_USER_ID] on the request if it is valid
   if (id !== targetUserId) {
-    throw new ForbiddenError('User ID mismatch.')
+    throw new ForbiddenError(MESSAGES.USER_ID_MISMATCH)
   }
 
   // TODO: This is a check that should be done way before even looking up the target user

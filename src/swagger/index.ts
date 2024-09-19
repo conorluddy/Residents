@@ -10,7 +10,7 @@ const options = {
     info: {
       title: 'Residents API',
       version: '0.0.1',
-      description: 'API documentation',
+      description: MESSAGES.API_DOCUMENTATION,
     },
     servers: [
       {

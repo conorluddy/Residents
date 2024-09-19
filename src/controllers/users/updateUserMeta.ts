@@ -16,7 +16,7 @@ export const updateUserMeta = async (req: Request, res: Response): Promise<Respo
     throw new BadRequestError('User ID is missing in the request.')
   }
   if (id !== targetUserId) {
-    throw new BadRequestError('User ID mismatch.')
+    throw new BadRequestError(MESSAGES.USER_ID_MISMATCH)
   }
 
   // TODO: Use a request symbol for this

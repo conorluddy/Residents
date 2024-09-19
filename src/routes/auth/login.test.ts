@@ -6,7 +6,7 @@ import { HTTP_CLIENT_ERROR } from '../../constants/http'
 import { handleSuccessResponse } from '../../middleware/util/successHandler'
 
 CONTROLLERS.AUTH.login = jest.fn(async (_req, res) => {
-  return handleSuccessResponse({ res, message: 'Logged in successfully' })
+  return handleSuccessResponse({ res, message: MESSAGES.LOGIN_SUCCESS })
 })
 
 jest.mock('../../db', () => ({

@@ -45,10 +45,10 @@ describe('Controller: GetSelf', () => {
 
   it('Missing ID is handled', async () => {
     mockRequest[REQUEST_USER] = undefined
-    await expect(getSelf(mockRequest as Request, mockResponse as Response)).rejects.toThrow('User ID is missing.')
+    await expect(getSelf(mockRequest as Request, mockResponse as Response)).rejects.toThrow(MESSAGES.MISSING_USER_ID)
   })
 
   it('User not found in DB (shouldnt happen for getSelf but o/)', async () => {
-    await expect(getSelf(mockRequest as Request, mockResponse as Response)).rejects.toThrow('User not found.')
+    await expect(getSelf(mockRequest as Request, mockResponse as Response)).rejects.toThrow(MESSAGES.USER_NOT_FOUND)
   })
 })

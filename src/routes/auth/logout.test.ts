@@ -7,7 +7,7 @@ import logoutRoute from './logout'
 import { handleSuccessResponse } from '../../middleware/util/successHandler'
 
 CONTROLLERS.AUTH.logout = jest.fn(async (req, res) => {
-  return handleSuccessResponse({ res, message: 'Logged in successfully' })
+  return handleSuccessResponse({ res, message: MESSAGES.LOGIN_SUCCESS })
 })
 
 jest.mock('../../services', () => ({
@@ -26,7 +26,7 @@ describe.skip('GET /logout', () => {
       .set('Cookie', [`${RESIDENT_TOKEN}=123`, `${REFRESH_TOKEN}=456`])
 
     // Update the expectation to match your actual implementation
-    expect(response.body).toEqual({ message: 'Logged in successfully' })
+    expect(response.body).toEqual({ message: MESSAGES.LOGIN_SUCCESS })
 
     expect(response.status).toBe(HTTP_SUCCESS.OK)
   })

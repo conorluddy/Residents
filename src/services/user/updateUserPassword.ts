@@ -15,7 +15,7 @@ const updateUserPassword = async ({ userId, password }: Params): Promise<string>
     throw new BadRequestError('User ID must be provided.')
   }
   if (!password) {
-    throw new BadRequestError('You need a password.')
+    throw new BadRequestError(MESSAGES.PASSWORD_NEEDED)
   }
   if (!isStrongPassword(password, PASSWORD_STRENGTH_CONFIG)) {
     throw new PasswordStrengthError()

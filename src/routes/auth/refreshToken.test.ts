@@ -6,7 +6,7 @@ import { HTTP_CLIENT_ERROR } from '../../constants/http'
 import { handleSuccessResponse } from '../../middleware/util/successHandler'
 
 CONTROLLERS.AUTH.refreshToken = jest.fn((_req, res) =>
-  Promise.resolve(handleSuccessResponse({ res, message: 'Logged in successfully' }))
+  Promise.resolve(handleSuccessResponse({ res, message: MESSAGES.LOGIN_SUCCESS }))
 )
 
 jest.mock('../../services/index', () => ({

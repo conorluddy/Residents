@@ -23,7 +23,7 @@ const rateLimitOncePerTenMins = rateLimit({
   standardHeaders: 'draft-7',
   legacyHeaders: false,
   handler: () => {
-    throw new RateLimitError('You can only request this once every 10 minutes.')
+    throw new RateLimitError(MESSAGES.RATE_LIMIT_MESSAGE)
   },
 })
 
@@ -33,7 +33,7 @@ const rateLimitTenPerTenMins = rateLimit({
   standardHeaders: 'draft-7',
   legacyHeaders: false,
   handler: () => {
-    throw new RateLimitError('Too many requests, please try again after 10 minutes.')
+    throw new RateLimitError(MESSAGES.TOO_MANY_REQUESTS_TRY_AGAIN_IN_10)
   },
 })
 

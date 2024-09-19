@@ -20,7 +20,7 @@ export const authenticateToken = (req: Request, res: Response, next: NextFunctio
 
   jwt.verify(token, secret, (err, user) => {
     if (err) {
-      throw new UnauthorizedError('Token is invalid or expired.')
+      throw new UnauthorizedError(MESSAGES.TOKEN_INVALID)
     }
     if (!TYPEGUARD.isJwtUser(user)) {
       throw new UnauthorizedError('JWT contains invalid user data.')

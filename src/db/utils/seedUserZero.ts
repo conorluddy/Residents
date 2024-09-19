@@ -35,7 +35,7 @@ const seedUserZero = async (password: string = DEFAULT_SEED_PASSWORD) => {
 
     await SERVICES.createUser(userZero)
 
-    logger.info('First user seeded with Owner role.')
+    logger.info(MESSAGES.FIRST_USER_SEEDED)
   } catch (error) {
     logger.error(error)
   } finally {

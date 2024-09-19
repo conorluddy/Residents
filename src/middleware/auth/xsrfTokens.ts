@@ -36,11 +36,11 @@ const xsrfTokens = (req: Request, res: Response, next: NextFunction) => {
   const requestHeadersXsrfToken = req.cookies?.['xsrfToken']
 
   if (!requestHeadersXsrfToken) {
-    throw new UnauthorizedError('XSRF token is required.')
+    throw new UnauthorizedError(MESSAGES.XSRF_TOKEN_REQUIRED)
   } else {
     jwt.verify(String(requestHeadersXsrfToken), secret, (err, content) => {
       if (err) {
-        throw new UnauthorizedError('XSRF token is invalid.')
+        throw new UnauthorizedError(MESSAGES.XSRF_TOKEN_INVALID)
       }
       next()
     })

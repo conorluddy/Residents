@@ -46,11 +46,11 @@ describe('Controller: GetUser', () => {
 
   it('Missing User ID', async () => {
     delete mockRequest[REQUEST_TARGET_USER_ID]
-    await expect(getUser(mockRequest as Request, mockResponse as Response)).rejects.toThrow('User ID is missing.')
+    await expect(getUser(mockRequest as Request, mockResponse as Response)).rejects.toThrow(MESSAGES.MISSING_USER_ID)
   })
 
   it('User not found', async () => {
-    await expect(getUser(mockRequest as Request, mockResponse as Response)).rejects.toThrow('User not found.')
+    await expect(getUser(mockRequest as Request, mockResponse as Response)).rejects.toThrow(MESSAGES.USER_NOT_FOUND)
   })
 
   it('Error handling', async () => {

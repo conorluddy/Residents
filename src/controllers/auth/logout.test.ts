@@ -31,12 +31,12 @@ describe('Controller: Logout', () => {
 
   it('Throws an error if missing the user data', async () => {
     mockRequest.cookies = undefined
-    await expect(logout(mockRequest as Request, mockResponse as Response)).rejects.toThrow('User ID is missing.')
+    await expect(logout(mockRequest as Request, mockResponse as Response)).rejects.toThrow(MESSAGES.MISSING_USER_ID)
   })
 
   it('logs out a user by deleting any of their refresh tokens', async () => {
     await logout(mockRequest as Request, mockResponse as Response)
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: 'Logged out successfully.' })
+    expect(mockResponse.json).toHaveBeenCalledWith({ message: MESSAGES.LOGOUT_SUCCESS })
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.OK)
     expect(mockResponse.cookie).toHaveBeenCalledWith('refreshToken', '', {
       httpOnly: true,

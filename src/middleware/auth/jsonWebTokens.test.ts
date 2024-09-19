@@ -55,7 +55,7 @@ describe('Middleware:JWT', () => {
     mockRequest.headers = { authorization: `Bearer ${generateJwtFromUser(mockDefaultUser, '1ms')}` }
 
     await expect(() => authenticateToken(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
-      new UnauthorizedError('Token is invalid or expired.')
+      new UnauthorizedError(MESSAGES.TOKEN_INVALID)
     )
 
     expect(nextFunction).not.toHaveBeenCalled()
@@ -69,7 +69,7 @@ describe('Middleware:JWT', () => {
     }
 
     await expect(() => authenticateToken(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
-      new UnauthorizedError('Token is invalid or expired.')
+      new UnauthorizedError(MESSAGES.TOKEN_INVALID)
     )
 
     expect(nextFunction).not.toHaveBeenCalled()

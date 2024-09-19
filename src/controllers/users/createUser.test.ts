@@ -34,7 +34,7 @@ describe('Controller: CreateUser', () => {
   it('Create User - Happy path', async () => {
     await createUser(mockRequest as Request, mockResponse as Response)
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.CREATED)
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: 'User registered.' })
+    expect(mockResponse.json).toHaveBeenCalledWith({ message: MESSAGES.USER_REGISTERED })
   })
 
   it('Create User - Missing data', async () => {

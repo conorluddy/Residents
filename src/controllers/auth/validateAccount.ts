@@ -14,7 +14,7 @@ export const validateAccount = async (req: Request, res: Response): Promise<Resp
   const token = req[REQUEST_TOKEN]
 
   if (!userIdFromUrlParam) {
-    throw new BadRequestError('Invalid user data.')
+    throw new BadRequestError(MESSAGES.INVALID_USER_DATA)
   } // probably redundant
   if (!token) {
     throw new TokenError('Validation token missing.')
@@ -30,5 +30,5 @@ export const validateAccount = async (req: Request, res: Response): Promise<Resp
 
   logger.info(`User ${userIdFromUrlParam} validated.`)
 
-  return handleSuccessResponse({ res, message: 'Account validated.' })
+  return handleSuccessResponse({ res, message: MESSAGES.ACCOUNT_VALIDATED })
 }

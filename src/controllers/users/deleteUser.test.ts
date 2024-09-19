@@ -52,17 +52,19 @@ describe('Controller: Delete User', () => {
 
   it('Missing ID', async () => {
     mockRequest.params = {}
-    await expect(deleteUser(mockRequest as Request, mockResponse as Response)).rejects.toThrow('User ID is missing.')
+    await expect(deleteUser(mockRequest as Request, mockResponse as Response)).rejects.toThrow(MESSAGES.MISSING_USER_ID)
   })
 
   it('Missing [REQUEST_TARGET_USER_ID]', async () => {
     mockRequest[REQUEST_TARGET_USER_ID] = ''
-    await expect(deleteUser(mockRequest as Request, mockResponse as Response)).rejects.toThrow('User ID is missing.')
+    await expect(deleteUser(mockRequest as Request, mockResponse as Response)).rejects.toThrow(MESSAGES.MISSING_USER_ID)
   })
 
   it('target user ID does not match url param user ID', async () => {
     mockRequest[REQUEST_TARGET_USER_ID] = 'PersonToDelete'
     mockRequest.params = { id: 'OtherPersonInURL' }
-    await expect(deleteUser(mockRequest as Request, mockResponse as Response)).rejects.toThrow('User ID mismatch.')
+    await expect(deleteUser(mockRequest as Request, mockResponse as Response)).rejects.toThrow(
+      MESSAGES.USER_ID_MISMATCH
+    )
   })
 })

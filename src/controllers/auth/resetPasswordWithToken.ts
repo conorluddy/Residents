@@ -22,7 +22,7 @@ export const resetPasswordWithToken = async (req: Request, res: Response): Promi
 
   // MW should guarantee we have this
   if (!token || !token.userId) {
-    throw new TokenError('Token missing.')
+    throw new TokenError(MESSAGES.TOKEN_MISSING)
   }
   if (token.type !== TOKEN_TYPE.RESET) {
     throw new TokenError('Invalid token type.')
@@ -30,7 +30,7 @@ export const resetPasswordWithToken = async (req: Request, res: Response): Promi
 
   // Centralise configuration for this somewhere - can use it for registration too
   if (!isStrongPassword(plainPassword, PASSWORD_STRENGTH_CONFIG)) {
-    throw new PasswordStrengthError('Password not strong enough, try harder.')
+    throw new PasswordStrengthError(MESSAGES.WEAK_PASSWORD)
   }
 
   const password = await createHash(plainPassword)
@@ -49,5 +49,5 @@ export const resetPasswordWithToken = async (req: Request, res: Response): Promi
 
   logger.info(`Password was reset for USER:${token.userId}`)
 
-  return handleSuccessResponse({ res, message: 'Password successfully updated.' })
+  return handleSuccessResponse({ res, message: MESSAGES.PASSWORD_RESET_SUCCESS })
 }

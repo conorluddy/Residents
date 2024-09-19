@@ -40,7 +40,7 @@ describe('Controller: Reset Password', () => {
     expect(logger.error).not.toHaveBeenCalled()
     expect(logger.info).toHaveBeenCalledWith('Reset email sent to bananaman@ireland.ie, token id: tok1')
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.OK)
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: 'Check your email for your reset password link.' })
+    expect(mockResponse.json).toHaveBeenCalledWith({ message: CHECK_EMAIL_RESET_LINK })
   })
 
   it('missing user data', async () => {

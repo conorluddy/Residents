@@ -86,7 +86,7 @@ logoutButton.addEventListener('click', async () => {
     if (response.ok) {
       residentAccessToken = null
       updateLoggedInContent()
-      document.getElementById('message').textContent = 'Logged out successfully.'
+      document.getElementById('message').textContent = MESSAGES.LOGOUT_SUCCESS
       document.getElementById('message').style.color = 'green'
     } else {
       throw new Error('Logout failed')

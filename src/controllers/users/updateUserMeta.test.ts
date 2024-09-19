@@ -43,7 +43,9 @@ describe('Controller: UpdateUserMeta', () => {
 
   it('Responds with Forbidden if ID and verified target ID dont match', async () => {
     mockRequest.params = { ...mockRequest.params!, id: 'NotTheFakerUsersID' }
-    await expect(updateUserMeta(mockRequest as Request, mockResponse as Response)).rejects.toThrow('User ID mismatch.')
+    await expect(updateUserMeta(mockRequest as Request, mockResponse as Response)).rejects.toThrow(
+      MESSAGES.USER_ID_MISMATCH
+    )
   })
 
   it('Responds with Bad Request if no update data is provided', async () => {

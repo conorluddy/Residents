@@ -64,19 +64,19 @@ describe('Middleware:findValidTokenById', () => {
   it('ValidatedToken does not exist in the request, return bad request', async () => {
     mockRequest[REQUEST_TOKEN_ID] = undefined as unknown as string
     await expect(findValidTokenById(mockRequest as Request, mockResponse as Response, nextFunction)).rejects.toThrow(
-      'A valid token is required.'
+      MESSAGES.VALID_TOKEN_REQUIRED
     )
   })
 
   it('Token is flagged as used, return forbidden', async () => {
     await expect(findValidTokenById(mockRequest as Request, mockResponse as Response, nextFunction)).rejects.toThrow(
-      'Token has already been used.'
+      MESSAGES.TOKEN_USED
     )
   })
 
   it('Token has expired, return forbidden', async () => {
     await expect(findValidTokenById(mockRequest as Request, mockResponse as Response, nextFunction)).rejects.toThrow(
-      'Token has expired.'
+      MESSAGES.TOKEN_EXPIRED
     )
   })
 })

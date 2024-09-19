@@ -27,7 +27,7 @@ describe('Create the first user, assumed to be the owner.', () => {
   it('should insert users into the database', async () => {
     await seedUserZero('password')
     expect(logger.error).not.toHaveBeenCalled()
-    expect(logger.info).toHaveBeenCalledWith('First user seeded with Owner role.')
+    expect(logger.info).toHaveBeenCalledWith(MESSAGES.FIRST_USER_SEEDED)
     expect(SERVICES.createUser).toHaveBeenCalled()
   })
 })

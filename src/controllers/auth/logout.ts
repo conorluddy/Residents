@@ -3,6 +3,7 @@ import { Request, Response } from 'express'
 import { BadRequestError } from '../../errors'
 import { REFRESH_TOKEN, RESIDENT_TOKEN, XSRF_TOKEN } from '../../constants/keys'
 import { handleSuccessResponse } from '../../middleware/util/successHandler'
+import MESSAGES from '../../constants/messages'
 
 /**
  * logout
@@ -34,9 +35,9 @@ export const logout = async (req: Request, res: Response) => {
   // Delete the refresh tokens from the database
   const userId = req.cookies?.[RESIDENT_TOKEN]
   if (!userId) {
-    throw new BadRequestError('User ID is missing.')
+    throw new BadRequestError(MESSAGES.MISSING_USER_ID)
   }
   await SERVICES.deleteRefreshTokensByUserId({ userId })
 
-  return handleSuccessResponse({ res, message: 'Logged out successfully.' })
+  return handleSuccessResponse({ res, message: MESSAGES.LOGOUT_SUCCESS })
 }

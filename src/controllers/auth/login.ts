@@ -19,11 +19,11 @@ export const login = async (req: Request, res: Response): Promise<Response> => {
   const { username, email, password } = (req.body ?? {}) as Pick<User, 'username' | 'email' | 'password'>
 
   if (!username && !email) {
-    throw new BadRequestError('Username or email is required')
+    throw new BadRequestError(MESSAGES.USERNAME_OR_EMAIL_REQUIRED)
   }
 
   if (!password) {
-    throw new BadRequestError('Password is required')
+    throw new BadRequestError(MESSAGES.PASSWORD_REQUIRED)
   }
 
   if (email && !isEmail(email)) {
@@ -44,7 +44,7 @@ export const login = async (req: Request, res: Response): Promise<Response> => {
   }
 
   if (!(await validateHash(password, passwordHash))) {
-    throw new LoginError('Incorrect password.')
+    throw new LoginError(MESSAGES.INCORRECT_PASSWORD)
   }
 
   const refreshTokenId = await SERVICES.createToken({

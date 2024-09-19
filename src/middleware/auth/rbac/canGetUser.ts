@@ -15,7 +15,7 @@ function canGetUser(req: Request, res: Response, next: NextFunction): void {
   const targetUser = req[REQUEST_TARGET_USER]
 
   if (!user?.role) {
-    throw new BadRequestError('User data is missing.')
+    throw new BadRequestError(MESSAGES.MISSING_USER_DATA)
   }
 
   if (!targetUser?.role) {

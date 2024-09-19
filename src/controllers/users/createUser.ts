@@ -45,5 +45,5 @@ export const createUser = async ({ body }: Request, res: Response): Promise<Resp
   //   })
   // }
 
-  return handleCreatedResponse({ res, message: 'User registered.' })
+  return handleCreatedResponse({ res, message: MESSAGES.USER_REGISTERED })
 }

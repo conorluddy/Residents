@@ -27,22 +27,22 @@ async function getTargetUser(req: Request, _res: Response, next: NextFunction) {
 
   // OPTIMISATION: Make a map for these to make it more efficient sometime
   if (!ROLES_ARRAY.includes(user.role)) {
-    throw new ForbiddenError('Invalid user role.')
+    throw new ForbiddenError(MESSAGES.INVALID_ROLE)
   }
   if (ROLES.LOCKED === user.role) {
-    throw new ForbiddenError('User account is locked.')
+    throw new ForbiddenError(MESSAGES.ACCOUNT_LOCKED)
   }
   if (STATUS.BANNED === user.status) {
-    throw new ForbiddenError('User account is banned.')
+    throw new ForbiddenError(MESSAGES.ACCOUNT_BANNED)
   }
   if (STATUS.SUSPENDED === user.status) {
-    throw new ForbiddenError('User account is suspended.')
+    throw new ForbiddenError(MESSAGES.ACCOUNT_SUSPENDED)
   }
   if (STATUS.UNVERIFIED === user.status) {
-    throw new ForbiddenError('User account is not verified.')
+    throw new ForbiddenError(MESSAGES.ACCOUNT_NOT_VERIFIED)
   }
   if (STATUS.REJECTED === user.status) {
-    throw new ForbiddenError('User account is rejected.')
+    throw new ForbiddenError(MESSAGES.ACCOUNT_REJECTED)
   } // Not sure we need/use this
 
   // Go fetch the target user
