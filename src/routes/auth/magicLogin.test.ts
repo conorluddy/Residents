@@ -4,6 +4,7 @@ import magicLoginRoute from './magicLogin'
 import CONTROLLERS from '../../controllers'
 import { HTTP_SERVER_ERROR } from '../../constants/http'
 import { handleSuccessResponse } from '../../middleware/util/successHandler'
+import MESSAGES from '../../constants/messages'
 
 CONTROLLERS.AUTH.magicLogin = jest.fn(async (_req, res) => {
   return handleSuccessResponse({ res, message: MESSAGES.LOGIN_SUCCESS })

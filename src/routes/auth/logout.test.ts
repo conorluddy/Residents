@@ -5,6 +5,7 @@ import { REFRESH_TOKEN, RESIDENT_TOKEN } from '../../constants/keys'
 import CONTROLLERS from '../../controllers'
 import logoutRoute from './logout'
 import { handleSuccessResponse } from '../../middleware/util/successHandler'
+import MESSAGES from '../../constants/messages'
 
 CONTROLLERS.AUTH.logout = jest.fn(async (req, res) => {
   return handleSuccessResponse({ res, message: MESSAGES.LOGIN_SUCCESS })

@@ -9,6 +9,7 @@ import { logger } from '../../utils/logger'
 import generateXsrfToken from '../../middleware/util/xsrfToken'
 import jwt from 'jsonwebtoken'
 import { RESIDENT_TOKEN } from '../../constants/keys'
+import MESSAGES from '../../constants/messages'
 
 const mockDefaultUser = makeAFakeUser({ role: ROLES.DEFAULT })
 

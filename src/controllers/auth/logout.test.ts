@@ -1,9 +1,10 @@
-import { NextFunction, Request, Response } from 'express'
+import { Request, Response } from 'express'
 import { HTTP_SUCCESS } from '../../constants/http'
 import { SafeUser } from '../../db/types'
 import { logout } from './logout'
 import { REQUEST_USER } from '../../types/requestSymbols'
 import { RESIDENT_TOKEN, REFRESH_TOKEN, XSRF_TOKEN } from '../../constants/keys'
+import MESSAGES from '../../constants/messages'
 
 jest.mock('../../services/index', () => ({
   deleteRefreshTokensByUserId: jest.fn().mockImplementation(() => '123'),
@@ -12,7 +13,6 @@ jest.mock('../../services/index', () => ({
 describe('Controller: Logout', () => {
   let mockRequest: Partial<Request> & { [REQUEST_USER]?: SafeUser }
   let mockResponse: Partial<Response>
-  const mockNext = jest.fn().mockReturnThis()
 
   beforeEach(() => {
     mockRequest = {

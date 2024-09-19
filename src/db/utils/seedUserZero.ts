@@ -2,6 +2,7 @@ import { ROLES, STATUS } from '../../constants/database'
 import { logger } from '../../utils/logger'
 import { NewUser } from '../types'
 import SERVICES from '../../services'
+import MESSAGES from '../../constants/messages'
 
 // Make this an EVN
 export const DEFAULT_SEED_PASSWORD = 'R351D3NT!zero'

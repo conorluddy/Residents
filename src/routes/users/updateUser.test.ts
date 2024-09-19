@@ -6,6 +6,7 @@ import updateUserRouter from '../../routes/users/updateUser'
 import { makeAFakeUser } from '../../test-utils/mockUsers'
 import { REQUEST_TARGET_USER_ID, REQUEST_USER } from '../../types/requestSymbols'
 import { logger } from '../../utils/logger'
+import MESSAGES from '../../constants/messages'
 
 const fakeUser = makeAFakeUser({ password: '$TR0ngP@$$W0rDz123!', role: ROLES.DEFAULT })
 

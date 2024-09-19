@@ -5,6 +5,7 @@ import { UserUpdate } from '../../db/types'
 import { isEmail, isStrongPassword, normalizeEmail } from 'validator'
 import { PASSWORD_STRENGTH_CONFIG } from '../../constants/password'
 import { BadRequestError, EmailError, PasswordStrengthError } from '../../errors'
+import MESSAGES from '../../constants/messages'
 
 interface Params {
   userId: string

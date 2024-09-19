@@ -3,6 +3,7 @@ import { STATUS, STATUS_ARRAY } from '../../constants/database'
 import db from '../../db'
 import { tableUsers } from '../../db/schema'
 import { BadRequestError, ValidationError } from '../../errors'
+import MESSAGES from '../../constants/messages'
 
 interface Params {
   userId: string

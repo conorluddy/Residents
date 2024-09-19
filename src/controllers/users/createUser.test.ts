@@ -1,7 +1,8 @@
-import { NextFunction, Request, Response } from 'express'
+import { Request, Response } from 'express'
 import { HTTP_SUCCESS } from '../../constants/http'
 import { createUser } from './createUser'
 import { ROLES } from '../../constants/database'
+import MESSAGES from '../../constants/messages'
 
 jest.mock('../../services/index', () => ({
   createToken: jest.fn(),
@@ -12,7 +13,6 @@ jest.mock('../../services/index', () => ({
 describe('Controller: CreateUser', () => {
   let mockRequest: Partial<Request>
   let mockResponse: Partial<Response>
-  const mockNext: NextFunction = jest.fn().mockReturnThis()
 
   beforeEach(() => {
     mockRequest = {

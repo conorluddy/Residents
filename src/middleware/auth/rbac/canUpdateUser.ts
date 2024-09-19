@@ -3,6 +3,7 @@ import { ACL, PERMISSIONS } from '../../../constants/accessControlList'
 import { ROLES_ARRAY } from '../../../constants/database'
 import { BadRequestError, ForbiddenError } from '../../../errors'
 import { REQUEST_TARGET_USER, REQUEST_USER } from '../../../types/requestSymbols'
+import MESSAGES from '../../../constants/messages'
 
 /**
  * Check if the user has the required permission

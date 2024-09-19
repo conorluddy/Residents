@@ -5,6 +5,7 @@ import { ROLES, STATUS } from '../../../constants/database'
 import { PublicUser, SafeUser } from '../../../db/types'
 import { REQUEST_TARGET_USER, REQUEST_USER } from '../../../types/requestSymbols'
 import { BadRequestError, ForbiddenError } from '../../../errors'
+import MESSAGES from '../../../constants/messages'
 
 jest.mock('../../../services/index', () => ({
   getUserById: jest

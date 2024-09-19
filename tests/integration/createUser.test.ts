@@ -2,6 +2,7 @@ import request from 'supertest'
 import { app } from '../../src'
 import { dbClient } from '../../src/db'
 import { ROLES } from '../../src/constants/database'
+import MESSAGES from '../../src/constants/messages'
 
 describe('Integration: Can CreateUser', () => {
   beforeAll(async () => {

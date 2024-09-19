@@ -4,6 +4,7 @@ import { JWT_TOKEN_SECRET } from '../../config'
 import TYPEGUARD from '../../types/typeguards'
 import { REQUEST_USER } from '../../types/requestSymbols'
 import { InternalServerError, UnauthorizedError } from '../../errors'
+import MESSAGES from '../../constants/messages'
 
 export const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers['authorization']

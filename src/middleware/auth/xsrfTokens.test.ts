@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import { ROLES } from '../../constants/database'
 import xsrfTokens from './xsrfTokens'
 import { UnauthorizedError } from '../../errors'
+import MESSAGES from '../../constants/messages'
 
 describe('Middleware: XSRF Tokens: ', () => {
   let mockRequest: Partial<Request>

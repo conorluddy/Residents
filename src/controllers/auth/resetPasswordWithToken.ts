@@ -8,6 +8,7 @@ import { REQUEST_TOKEN } from '../../types/requestSymbols'
 import { createHash } from '../../utils/crypt'
 import { logger } from '../../utils/logger'
 import { handleSuccessResponse } from '../../middleware/util/successHandler'
+import MESSAGES from '../../constants/messages'
 
 /**
  * resetPasswordWithToken

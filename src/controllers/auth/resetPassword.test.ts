@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express'
+import { Request, Response } from 'express'
 import { makeAFakeUser } from '../../test-utils/mockUsers'
 import { HTTP_SUCCESS } from '../../constants/http'
 import { resetPassword } from './resetPassword'
@@ -6,6 +6,7 @@ import { sendMail } from '../../mail/sendgrid'
 import { logger } from '../../utils/logger'
 import { SafeUser } from '../../db/types'
 import { REQUEST_EMAIL } from '../../types/requestSymbols'
+import MESSAGES from '../../constants/messages'
 
 const user: SafeUser = makeAFakeUser({ email: 'bananaman@ireland.ie' })
 
@@ -21,7 +22,6 @@ jest.mock('../../services/index', () => ({
 describe('Controller: Reset Password', () => {
   let mockRequest: Partial<Request> & { [REQUEST_EMAIL]?: SafeUser['email'] }
   let mockResponse: Partial<Response>
-  const mockNext = jest.fn().mockReturnThis()
 
   beforeAll(() => {})
   beforeEach(() => {
@@ -40,7 +40,7 @@ describe('Controller: Reset Password', () => {
     expect(logger.error).not.toHaveBeenCalled()
     expect(logger.info).toHaveBeenCalledWith('Reset email sent to bananaman@ireland.ie, token id: tok1')
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.OK)
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: CHECK_EMAIL_RESET_LINK })
+    expect(mockResponse.json).toHaveBeenCalledWith({ message: MESSAGES.CHECK_EMAIL_RESET_LINK })
   })
 
   it('missing user data', async () => {

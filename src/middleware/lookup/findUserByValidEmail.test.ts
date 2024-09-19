@@ -4,6 +4,7 @@ import { SafeUser } from '../../db/types'
 import { makeAFakeUser } from '../../test-utils/mockUsers'
 import findUserByValidEmail from './findUserByValidEmail'
 import { REQUEST_EMAIL, REQUEST_USER } from '../../types/requestSymbols'
+import MESSAGES from '../../constants/messages'
 
 jest.mock('../../services/index', () => ({
   getUserByEmail: jest

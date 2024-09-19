@@ -4,6 +4,7 @@ import { BadRequestError } from '../../errors'
 import SERVICES from '../../services'
 import { REQUEST_TARGET_USER_ID } from '../../types/requestSymbols'
 import { handleSuccessResponse } from '../../middleware/util/successHandler'
+import MESSAGES from '../../constants/messages'
 
 /**
  * updateUserMeta

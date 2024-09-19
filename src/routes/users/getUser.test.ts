@@ -9,6 +9,7 @@ import { makeAFakeUser } from '../../test-utils/mockUsers'
 import { REQUEST_TARGET_USER, REQUEST_TARGET_USER_ID, REQUEST_USER } from '../../types/requestSymbols'
 import { generateJwtFromUser } from '../../utils/generateJwt'
 import { handleSuccessResponse } from '../../middleware/util/successHandler'
+import MESSAGES from '../../constants/messages'
 
 const fakeUser: SafeUser = makeAFakeUser({ password: '$TR0ngP@$$W0rDz123!', id: 'TARGET_USER_ID' })
 const app = express()

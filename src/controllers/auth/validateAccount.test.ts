@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express'
+import { Request, Response } from 'express'
 import { ROLES, TOKEN_TYPE } from '../../constants/database'
 import { HTTP_SUCCESS } from '../../constants/http'
 import { PublicUser, Token } from '../../db/types'
@@ -7,6 +7,7 @@ import { REQUEST_TOKEN, REQUEST_USER } from '../../types/requestSymbols'
 import { logger } from '../../utils/logger'
 import { validateAccount } from './validateAccount'
 import { TIMESPAN } from '../../constants/time'
+import MESSAGES from '../../constants/messages'
 
 const mockDefaultUser = makeAFakeSafeUser({ role: ROLES.DEFAULT })
 const mockToken: Token = {
@@ -32,7 +33,6 @@ jest.mock('../../utils/generateJwt', () => ({
 describe('Controller: Validate Account', () => {
   let mockRequest: Partial<Request> & { [REQUEST_USER]: PublicUser; [REQUEST_TOKEN]?: Token }
   let mockResponse: Partial<Response>
-  let mockNext: Partial<NextFunction>
 
   beforeEach(() => {
     mockRequest = {

@@ -4,6 +4,7 @@ import { TIMESPAN } from '../../constants/time'
 import { Token } from '../../db/types'
 import { REQUEST_TOKEN, REQUEST_TOKEN_ID } from '../../types/requestSymbols'
 import findValidTokenById from './findValidTokenById'
+import MESSAGES from '../../constants/messages'
 
 jest.mock('../../services/index', () => ({
   getToken: jest

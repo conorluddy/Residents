@@ -8,6 +8,7 @@ import { REQUEST_TOKEN, REQUEST_TOKEN_ID, REQUEST_USER } from '../../types/reque
 import validateAccountRoute from './validateAccount'
 import { createId } from '@paralleldrive/cuid2'
 import { logger } from '../../utils/logger'
+import MESSAGES from '../../constants/messages'
 
 const user = makeAFakeSafeUser({ email: 'bananaman@ireland.ie', id: 'UID123' })
 const validTokenId = createId()

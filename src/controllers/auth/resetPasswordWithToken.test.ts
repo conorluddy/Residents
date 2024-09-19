@@ -1,10 +1,11 @@
-import { NextFunction, Request, Response } from 'express'
+import { Request, Response } from 'express'
 import { TOKEN_TYPE } from '../../constants/database'
 import { HTTP_SUCCESS } from '../../constants/http'
 import { Token } from '../../db/types'
 import { REQUEST_TOKEN } from '../../types/requestSymbols'
 import { logger } from '../../utils/logger'
 import { resetPasswordWithToken } from './resetPasswordWithToken'
+import MESSAGES from '../../constants/messages'
 
 jest.mock('../../mail/sendgrid', () => ({
   sendMail: jest.fn(),
@@ -21,7 +22,6 @@ jest.mock('../../services/index', () => ({
 describe('Controller: Reset Password With Token', () => {
   let mockRequest: Partial<Request> & { [REQUEST_TOKEN]?: Token }
   let mockResponse: Partial<Response>
-  let mockNext: Partial<NextFunction>
 
   beforeAll(() => {})
   beforeEach(() => {

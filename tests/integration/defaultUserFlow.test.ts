@@ -3,6 +3,7 @@ import { app } from '../../src'
 import { dbClient } from '../../src/db'
 import { HTTP_SUCCESS } from '../../src/constants/http'
 import { ROLES } from '../../src/constants/database'
+import MESSAGES from '../../src/constants/messages'
 
 /**
  * - Create/Register a new user

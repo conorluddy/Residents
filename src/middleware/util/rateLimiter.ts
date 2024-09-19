@@ -1,6 +1,7 @@
 import { rateLimit } from 'express-rate-limit'
 import { TIMESPAN } from '../../constants/time'
 import { RateLimitError } from '../../errors'
+import MESSAGES from '../../constants/messages'
 
 // https://www.npmjs.com/package/express-rate-limit
 // TODO - Configure rate limiter in .env

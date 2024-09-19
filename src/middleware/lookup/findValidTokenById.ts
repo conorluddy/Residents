@@ -2,6 +2,7 @@ import { NextFunction, Request, RequestHandler, Response } from 'express'
 import SERVICES from '../../services'
 import { REQUEST_TOKEN, REQUEST_TOKEN_ID } from '../../types/requestSymbols'
 import { BadRequestError, ForbiddenError } from '../../errors'
+import MESSAGES from '../../constants/messages'
 
 /**
  * Middleware for finding a token and the user it belongs to.

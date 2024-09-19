@@ -6,6 +6,7 @@ import createUserRoute from '../../routes/users/createUser'
 import { logger } from '../../utils/logger'
 import { ROLES } from '../../constants/database'
 import { handleSuccessResponse } from '../../middleware/util/successHandler'
+import MESSAGES from '../../constants/messages'
 
 CONTROLLERS.USER.createUser = jest.fn(async (req, res) => {
   return handleSuccessResponse({ res, message: MESSAGES.USER_CREATED })

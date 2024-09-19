@@ -19,6 +19,7 @@ import {
   ValidationError,
   LoginError,
 } from '../../errors'
+import MESSAGES from '../../constants/messages'
 
 const errorHandler = (err: Error, _req: Request, res: Response, next: NextFunction) => {
   if (!err) {

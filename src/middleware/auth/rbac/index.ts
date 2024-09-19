@@ -7,6 +7,7 @@ import canDeleteUser from './canDeleteUser'
 import canGetUser from './canGetUser'
 import canUpdateUser from './canUpdateUser'
 import getTargetUser from './getTargetUser'
+import MESSAGES from '../../../constants/messages'
 
 /**
  * Check if the user has the required permission to access the resource

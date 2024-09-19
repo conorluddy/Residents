@@ -2,11 +2,11 @@ import { NextFunction, Request, Response } from 'express'
 import { HTTP_SERVER_ERROR } from '../../constants/http'
 import { User } from '../../db/types'
 import { magicLogin } from './magicLogin'
+import MESSAGES from '../../constants/messages'
 
 describe.skip('Controller: Magic Login', () => {
   let mockRequest: Partial<Request> & { body: Partial<User> }
   let mockResponse: Partial<Response>
-  const mockNext = jest.fn().mockReturnThis()
 
   beforeEach(() => {
     mockRequest = {

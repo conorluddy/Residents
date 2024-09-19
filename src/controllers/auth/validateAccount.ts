@@ -5,6 +5,7 @@ import SERVICES from '../../services'
 import { REQUEST_TOKEN } from '../../types/requestSymbols'
 import { logger } from '../../utils/logger'
 import { handleSuccessResponse } from '../../middleware/util/successHandler'
+import MESSAGES from '../../constants/messages'
 
 /**
  * validateAccount

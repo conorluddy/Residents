@@ -1,9 +1,10 @@
-import { NextFunction, Request, Response } from 'express'
+import { Request, Response } from 'express'
 import { HTTP_SUCCESS } from '../../constants/http'
 import { User } from '../../db/types'
 import { makeAFakeUser } from '../../test-utils/mockUsers'
 import { getUser } from './getUser'
 import { REQUEST_TARGET_USER_ID } from '../../types/requestSymbols'
+import MESSAGES from '../../constants/messages'
 
 let fakeUser: Partial<User>
 
@@ -25,7 +26,6 @@ jest.mock('../../services/user/getUserById', () => ({
 describe('Controller: GetUser', () => {
   let mockRequest: Partial<Request> & { [REQUEST_TARGET_USER_ID]?: string }
   let mockResponse: Partial<Response>
-  const mockNext = jest.fn().mockReturnThis()
 
   beforeAll(() => {})
   beforeEach(() => {

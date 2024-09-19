@@ -1,6 +1,7 @@
-import { Request, Response, NextFunction } from 'express'
+import { Request, Response } from 'express'
 import { createId } from '@paralleldrive/cuid2'
 import validateTokenId from './validateTokenId'
+import MESSAGES from '../../constants/messages'
 
 describe('Middleware: validateTokenId', () => {
   let mockRequest: Partial<Request>

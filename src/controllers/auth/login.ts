@@ -11,6 +11,7 @@ import { generateJwtFromUser } from '../../utils/generateJwt'
 import { REFRESH_TOKEN, XSRF_TOKEN, RESIDENT_TOKEN } from '../../constants/keys'
 import { REFRESH_TOKEN_EXPIRY } from '../../constants/crypt'
 import { handleSuccessResponse } from '../../middleware/util/successHandler'
+import MESSAGES from '../../constants/messages'
 
 /**
  * login

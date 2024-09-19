@@ -1,3 +1,4 @@
+import MESSAGES from '../../constants/messages'
 import SERVICES from '../../services'
 import { logger } from '../../utils/logger'
 import { seedUserZero } from './seedUserZero'

@@ -4,6 +4,7 @@ import { PASSWORD_STRENGTH_CONFIG } from '../../constants/password'
 import db from '../../db'
 import { tableUsers } from '../../db/schema'
 import { BadRequestError, PasswordStrengthError } from '../../errors'
+import MESSAGES from '../../constants/messages'
 
 interface Params {
   userId: string

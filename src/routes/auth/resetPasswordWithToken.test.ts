@@ -8,6 +8,7 @@ import { makeAFakeSafeUser } from '../../test-utils/mockUsers'
 import { REQUEST_TOKEN, REQUEST_TOKEN_ID, REQUEST_USER } from '../../types/requestSymbols'
 import { logger } from '../../utils/logger'
 import resetPasswordWithTokenRoute from './resetPasswordWithToken'
+import MESSAGES from '../../constants/messages'
 
 const user = makeAFakeSafeUser({ email: 'bananaman@ireland.ie', id: 'UID123' })
 const validTokenId = createId()

@@ -4,6 +4,7 @@ import { NewUser, tableUsers, User } from '../../db/schema'
 import { PASSWORD_STRENGTH_CONFIG } from '../../constants/password'
 import { createHash } from '../../utils/crypt'
 import { EmailError, PasswordStrengthError, ValidationError } from '../../errors'
+import MESSAGES from '../../constants/messages'
 
 /**
  * createUser - Service to create a new user.

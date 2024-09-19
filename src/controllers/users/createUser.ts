@@ -6,6 +6,7 @@ import { BadRequestError, EmailError } from '../../errors'
 import SERVICES from '../../services'
 import { isEmail } from 'validator'
 import { handleCreatedResponse } from '../../middleware/util/successHandler'
+import MESSAGES from '../../constants/messages'
 
 // For dev - remove before flight
 // import { SENDGRID_TEST_EMAIL } from "../../config"
