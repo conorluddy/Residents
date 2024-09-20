@@ -27,7 +27,7 @@ jest.mock('../../middleware/auth/rbac', () => ({
 }))
 
 jest.mock('../../services/index', () => ({
-  updateUser: jest.fn().mockImplementationOnce(async () => fakeUser.id),
+  updateUser: jest.fn().mockImplementationOnce(() => fakeUser.id),
 }))
 
 const app = express()

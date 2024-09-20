@@ -7,7 +7,7 @@ import { handleSuccessResponse } from '../../middleware/util/successHandler'
 import MESSAGES from '../../constants/messages'
 
 CONTROLLERS.AUTH.magicLogin = jest.fn(async (_req, res) => {
-  return handleSuccessResponse({ res, message: MESSAGES.LOGIN_SUCCESS })
+  return await handleSuccessResponse({ res, message: MESSAGES.LOGIN_SUCCESS })
 })
 
 jest.mock('../../db', () => ({

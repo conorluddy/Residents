@@ -28,13 +28,13 @@ jest.mock('../../middleware/auth/rbac', () => ({
 jest.mock('../../db', () => ({
   select: jest.fn().mockReturnValue({
     from: jest.fn().mockReturnValue({
-      where: jest.fn().mockImplementationOnce(async () => [fakeUser]),
+      where: jest.fn().mockImplementationOnce(() => [fakeUser]),
     }),
   }),
 }))
 
 jest.mock('../../services/index', () => ({
-  getUserById: jest.fn().mockImplementationOnce(async () => fakeUser),
+  getUserById: jest.fn().mockImplementationOnce(() => fakeUser),
 }))
 
 const app = express()
@@ -45,7 +45,7 @@ describe('GET /self', () => {
   beforeAll(() => {
     process.env.JWT_TOKEN_SECRET = 'TESTSECRET'
     CONTROLLERS.USER.getSelf = jest.fn(async (_req, res) => {
-      return handleSuccessResponse({ res, user: fakeUser })
+      return await handleSuccessResponse({ res, user: fakeUser })
     })
   })
 

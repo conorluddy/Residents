@@ -1,4 +1,4 @@
-import { ROLES, STATUS } from '../constants/database'
+import { ROLES } from '../constants/database'
 import { PublicUser } from '../db/types'
 import jwt from 'jsonwebtoken'
 import { generateJwtFromUser } from './generateJwt'
@@ -16,7 +16,7 @@ describe('generateJwtFromUser', () => {
 
   it('should generate a JWT with the correct payload and options', () => {
     const signSpy = jest.spyOn(jwt, 'sign') as jest.MockedFunction<typeof jwt.sign>
-    signSpy.mockReturnValue('testtoken' as any)
+    signSpy.mockImplementation(() => 'testtoken')
     const token = generateJwtFromUser(userPayload)
     expect(token).toBe('testtoken')
   })

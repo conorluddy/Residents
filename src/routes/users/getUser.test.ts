@@ -35,11 +35,11 @@ jest.mock('../../middleware/auth/rbac', () => ({
 }))
 
 jest.mock('../../services/user/getUserById', () => ({
-  getUserById: jest.fn().mockImplementationOnce(async () => fakeUser),
+  getUserById: jest.fn().mockImplementationOnce(() => fakeUser),
 }))
 
 CONTROLLERS.USER.getUser = jest.fn(async (_req, res) => {
-  return handleSuccessResponse({ res, message: MESSAGES.USER_RETRIEVED })
+  return await handleSuccessResponse({ res, message: MESSAGES.USER_RETRIEVED })
 })
 
 describe('GET /user/:id', () => {

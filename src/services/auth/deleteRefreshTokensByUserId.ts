@@ -2,7 +2,6 @@ import { and, eq } from 'drizzle-orm'
 import { TOKEN_TYPE } from '../../constants/database'
 import db from '../../db'
 import { tableTokens } from '../../db/schema'
-import { Token } from '../../db/types'
 import { TokenError } from '../../errors'
 
 interface Props {

@@ -20,14 +20,14 @@ describe('Middleware: validateTokenId', () => {
     jest.clearAllMocks()
   })
 
-  it('should return 400 if the request token is missing', async () => {
+  it('should return 400 if the request token is missing', () => {
     expect(() => validateTokenId(mockRequest as Request, mockResponse as Response, mockNext)).toThrow(
       MESSAGES.TOKEN_REQUIRED
     )
     expect(mockNext).not.toHaveBeenCalled()
   })
 
-  it('should return 400 if the request token is invalid', async () => {
+  it('should return 400 if the request token is invalid', () => {
     mockRequest.body.tokenId = 'invalid_token'
     expect(() => validateTokenId(mockRequest as Request, mockResponse as Response, mockNext)).toThrow(
       MESSAGES.TOKEN_INVALID
@@ -35,7 +35,7 @@ describe('Middleware: validateTokenId', () => {
     expect(mockNext).not.toHaveBeenCalled()
   })
 
-  it('should call next function if the request token is valid', async () => {
+  it('should call next function if the request token is valid', () => {
     mockRequest.body.tokenId = createId()
     validateTokenId(mockRequest as Request, mockResponse as Response, mockNext)
     expect(mockNext).toHaveBeenCalled()

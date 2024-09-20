@@ -4,9 +4,9 @@ import { JWT_TOKEN_SECRET } from '../../config'
 const JWT_XSRF_TOKEN_EXPIRY = '1d' // Make me configurable - should probably match refresh token expiry
 const JWT_XSRF_TOKEN_DATA = { XSRF_TOKEN: '🔒' }
 
-const generateXsrfToken = () => {
+const generateXsrfToken = (): string => {
   const secret = JWT_TOKEN_SECRET
-  if (secret == null) {
+  if (!secret) {
     throw new Error('JWT secret not found')
   }
   return jwt.sign(JWT_XSRF_TOKEN_DATA, secret, {

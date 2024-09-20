@@ -1,5 +1,20 @@
 #!/bin/sh
-echo "Running type coverage check... 🕵🏼‍♀️"
-npx type-coverage --json-output > .github/type-coverage.json
+
+# Function to run a command and exit if it fails
+run_command() {
+  echo "Running $1... 🕵🏼‍♀️"
+  if ! $1; then
+    echo "$1 failed ❌"
+    exit 1
+  fi
+  echo "$1 done ✅"
+}
+
+# Run type coverage check
+run_command "npx type-coverage --json-output > .github/type-coverage.json"
+
+# Add type coverage output to the commit
 git add .github/type-coverage.json
-echo "Done ✅"
+
+# Run linting check
+run_command "npm run lint"
