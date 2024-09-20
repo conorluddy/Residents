@@ -54,9 +54,7 @@ const makeAFakeUserWithHashedPassword = async ({
   firstName,
   lastName,
   password,
-  rank,
   role,
-  referredBy,
   status,
   username = 'U53rn4m3',
 }: Params): Promise<User> => ({

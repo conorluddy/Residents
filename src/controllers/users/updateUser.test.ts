@@ -10,7 +10,7 @@ import MESSAGES from '../../constants/messages'
 const fakeUser: Partial<User> = makeAFakeUser({})
 
 jest.mock('../../services/index', () => ({
-  updateUser: jest.fn().mockImplementationOnce(async () => fakeUser.id),
+  updateUser: jest.fn().mockImplementationOnce(() => fakeUser.id),
 }))
 
 describe('Controller: UpdateUser', () => {

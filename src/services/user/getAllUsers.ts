@@ -24,7 +24,10 @@ const getAllUsers = async ({ page, limit }: PaginationProps = { page: 0, limit: 
       deletedAt: tableUsers.deletedAt,
     })
     .from(tableUsers)
-    .limit(MAX_LIMIT)
+    .limit(limit)
+
+  // eslint-disable-next-line no-console
+  console.info('TODO: Implement pagination ', page)
 
   return users
 }

@@ -7,7 +7,7 @@ let fakeUser: SafeUser
 jest.mock('../../db', () => ({
   select: jest.fn().mockReturnValue({
     from: jest.fn().mockReturnValue({
-      limit: jest.fn().mockImplementation(async () => {
+      limit: jest.fn().mockImplementation(() => {
         fakeUser = makeAFakeSafeUser({ id: 'USERID' })
         return [fakeUser, fakeUser, fakeUser, fakeUser]
       }),

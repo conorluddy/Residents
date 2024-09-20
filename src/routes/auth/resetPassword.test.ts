@@ -14,14 +14,14 @@ jest.mock('../../db', () => ({
   },
   insert: jest.fn().mockReturnValue({
     values: jest.fn().mockReturnValue({
-      returning: jest.fn().mockImplementationOnce(async () => {
+      returning: jest.fn().mockImplementationOnce(() => {
         return [{ id: 'tok1' }]
       }),
     }),
   }),
   select: jest.fn().mockReturnValue({
     from: jest.fn().mockReturnValue({
-      where: jest.fn().mockImplementationOnce(async () => {
+      where: jest.fn().mockImplementationOnce(() => {
         return [makeAFakeUser({ role: ROLES.DEFAULT })]
       }),
     }),

@@ -1,6 +1,8 @@
 import { PublicUser, SafeUser } from '../db/types'
 
 // Need to strip this back to id and role and maybe name
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function isJwtUser(jwt: any): jwt is SafeUser {
   return (
     typeof jwt === 'object' &&
@@ -16,6 +18,7 @@ function isJwtUser(jwt: any): jwt is SafeUser {
   )
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function isSafeUser(user: any): user is SafeUser {
   return (
     typeof user === 'object' &&
@@ -32,6 +35,7 @@ function isSafeUser(user: any): user is SafeUser {
   )
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function isPublicUser(user: any): user is PublicUser {
   return (
     typeof user === 'object' &&

@@ -8,11 +8,11 @@ jest.mock('../../utils/crypt', () => ({
 }))
 
 jest.mock('../../services/index', () => ({
-  createUser: jest.fn().mockImplementation(async () => '123'),
+  createUser: jest.fn().mockImplementation(() => '123'),
   getUserCount: jest
     .fn()
-    .mockImplementationOnce(async () => [{ count: 0 }])
-    .mockImplementationOnce(async () => [{ count: 1 }]),
+    .mockImplementationOnce(() => [{ count: 0 }])
+    .mockImplementationOnce(() => [{ count: 1 }]),
 }))
 
 describe('Create the first user, assumed to be the owner.', () => {

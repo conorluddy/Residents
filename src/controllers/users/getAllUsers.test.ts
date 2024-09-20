@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express'
+import { Request, Response } from 'express'
 import { makeAFakeUser } from '../../test-utils/mockUsers'
 import { HTTP_SUCCESS } from '../../constants/http'
 import { getAllUsers } from './getAllUsers'
@@ -19,7 +19,6 @@ jest.mock('../../services/index', () => ({
 describe('Controller: GetAllUsers', () => {
   let mockRequest: Partial<Request>
   let mockResponse: Partial<Response>
-  const mockNext = jest.fn().mockReturnThis()
 
   beforeAll(() => {})
   beforeEach(() => {

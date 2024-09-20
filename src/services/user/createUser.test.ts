@@ -10,7 +10,7 @@ jest.mock('../../db', () => ({
   insert: jest.fn().mockReturnValue({
     values: jest.fn().mockReturnValue({
       onConflictDoNothing: jest.fn().mockReturnValue({
-        returning: jest.fn().mockImplementation(async () => {
+        returning: jest.fn().mockImplementation(() => {
           fakeUser = makeAFakeSafeUser({ id: 'USERID' })
           return [fakeUser]
         }),

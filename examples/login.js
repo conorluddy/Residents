@@ -1,6 +1,10 @@
-let residentAccessToken = null
+/* eslint-disable no-console */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 
-document.getElementById('loginForm').addEventListener('submit', async (e) => {
+let residentAccessToken = null
+const loginForm = document.getElementById('loginForm')
+
+loginForm.addEventListener('submit', async (e) => {
   e.preventDefault()
   const username = document.getElementById('username').value
   const password = document.getElementById('password').value
@@ -20,10 +24,8 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     if (response.ok) {
       messageElement.textContent = 'Login successful!'
       messageElement.style.color = 'green'
-
       residentAccessToken = data.accessToken
       console.log('Access token stored in memory')
-
       updateLoggedInContent()
     } else {
       messageElement.textContent = data.message || 'Login failed. Please try again.'

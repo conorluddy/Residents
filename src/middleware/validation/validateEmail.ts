@@ -4,7 +4,7 @@ import { REQUEST_EMAIL } from '../../types/requestSymbols'
 import { BadRequestError } from '../../errors'
 import MESSAGES from '../../constants/messages'
 
-const validateEmail: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
+const validateEmail: RequestHandler = (req: Request, res: Response, next: NextFunction) => {
   const email: string | undefined = req.params?.email || req.body?.email || req.query?.email
 
   if (!email) {

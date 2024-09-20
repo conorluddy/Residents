@@ -6,7 +6,7 @@ import { REQUEST_USER } from '../../types/requestSymbols'
 import { InternalServerError, UnauthorizedError } from '../../errors'
 import MESSAGES from '../../constants/messages'
 
-export const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
+export const authenticateToken = (req: Request, res: Response, next: NextFunction): void => {
   const authHeader = req.headers['authorization']
   const token = authHeader && authHeader.split(' ')[1]
   const secret = JWT_TOKEN_SECRET

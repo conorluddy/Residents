@@ -21,7 +21,7 @@ import {
 } from '../../errors'
 import MESSAGES from '../../constants/messages'
 
-const errorHandler = (err: Error, _req: Request, res: Response, next: NextFunction) => {
+const errorHandler = (err: Error, _req: Request, res: Response, next: NextFunction): Response | void | undefined => {
   if (!err) {
     next()
   }

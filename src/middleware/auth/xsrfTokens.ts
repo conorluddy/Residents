@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken'
 import generateXsrfToken from '../util/xsrfToken'
 import MESSAGES from '../../constants/messages'
 
-const xsrfTokens = (req: Request, res: Response, next: NextFunction) => {
+const xsrfTokens = (req: Request, res: Response, next: NextFunction): void => {
   // Return as early as possible, this will be called on most requests and only need apply to mutations
   if (req.method === 'GET') {
     return next()

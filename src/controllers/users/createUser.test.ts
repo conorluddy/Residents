@@ -7,7 +7,7 @@ import MESSAGES from '../../constants/messages'
 jest.mock('../../services/index', () => ({
   createToken: jest.fn(),
   createUserMeta: jest.fn(),
-  createUser: jest.fn().mockImplementation(async () => '123'),
+  createUser: jest.fn().mockImplementation(() => '123'),
 }))
 
 describe('Controller: CreateUser', () => {

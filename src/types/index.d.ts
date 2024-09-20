@@ -1,6 +1,5 @@
 import 'express'
-import { JwtPayload } from 'jsonwebtoken'
-import { User, SafeUser, PublicUser, Token } from '../db/types'
+import { SafeUser, Token } from '../db/types'
 import {
   REQUEST_USER,
   REQUEST_TOKEN,

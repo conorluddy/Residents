@@ -7,8 +7,8 @@ import logoutRoute from './logout'
 import { handleSuccessResponse } from '../../middleware/util/successHandler'
 import MESSAGES from '../../constants/messages'
 
-CONTROLLERS.AUTH.logout = jest.fn(async (req, res) => {
-  return handleSuccessResponse({ res, message: MESSAGES.LOGIN_SUCCESS })
+CONTROLLERS.AUTH.logout = jest.fn(async (_req, res) => {
+  return await handleSuccessResponse({ res, message: MESSAGES.LOGIN_SUCCESS })
 })
 
 jest.mock('../../services', () => ({

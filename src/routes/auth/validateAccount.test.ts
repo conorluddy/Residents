@@ -24,8 +24,8 @@ const token = {
 
 jest.mock('../../services/index', () => ({
   getToken: jest.fn().mockImplementationOnce(() => token),
-  deleteToken: jest.fn().mockImplementationOnce(async () => validTokenId),
-  updateUserStatus: jest.fn().mockImplementationOnce(async () => user.id),
+  deleteToken: jest.fn().mockImplementationOnce(() => validTokenId),
+  updateUserStatus: jest.fn().mockImplementationOnce(() => user.id),
 }))
 
 const app = express()

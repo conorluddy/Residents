@@ -8,14 +8,14 @@ import { ROLES } from '../../constants/database'
 import { handleSuccessResponse } from '../../middleware/util/successHandler'
 import MESSAGES from '../../constants/messages'
 
-CONTROLLERS.USER.createUser = jest.fn(async (req, res) => {
-  return handleSuccessResponse({ res, message: MESSAGES.USER_CREATED })
+CONTROLLERS.USER.createUser = jest.fn(async (_req, res) => {
+  return await handleSuccessResponse({ res, message: MESSAGES.USER_CREATED })
 })
 
 jest.mock('../../services/index', () => ({
   createToken: jest.fn(),
   createUserMeta: jest.fn(),
-  createUser: jest.fn().mockImplementation(async () => '123'),
+  createUser: jest.fn().mockImplementation(() => '123'),
 }))
 
 const app = express()
