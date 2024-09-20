@@ -8,7 +8,7 @@ import MESSAGES from '../../constants/messages'
 const FAKEID = '123'
 
 jest.mock('../../services/index', () => ({
-  updateUserMeta: jest.fn().mockImplementationOnce(() => FAKEID),
+  updateUserMeta: jest.fn().mockImplementationOnce(async () => FAKEID),
 }))
 
 describe('Controller: UpdateUserMeta', () => {

@@ -20,10 +20,10 @@ const mockToken: Token = {
 }
 
 jest.mock('../../services/index', () => ({
-  deleteToken: jest.fn().mockImplementation(() => '123'),
-  getToken: jest.fn().mockImplementationOnce(() => mockToken),
-  updateUserRole: jest.fn().mockImplementation(() => mockDefaultUser.id),
-  updateUserStatus: jest.fn().mockImplementation(() => mockDefaultUser.id),
+  deleteToken: jest.fn().mockImplementation(async () => '123'),
+  getToken: jest.fn().mockImplementationOnce(async () => mockToken),
+  updateUserRole: jest.fn().mockImplementation(async () => mockDefaultUser.id),
+  updateUserStatus: jest.fn().mockImplementation(async () => mockDefaultUser.id),
 }))
 
 jest.mock('../../utils/generateJwt', () => ({

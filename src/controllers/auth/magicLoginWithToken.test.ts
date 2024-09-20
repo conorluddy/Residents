@@ -1,10 +1,11 @@
-import { Request, Response } from 'express'
+import { NextFunction, Request, Response } from 'express'
 import { User } from '../../db/types'
 import { magicLoginWithToken } from './magicLoginWithToken'
 
 describe.skip('Controller: MagicLoginWithToken', () => {
   let mockRequest: Partial<Request> & { body: Partial<User> }
   let mockResponse: Partial<Response>
+  const mockNext = jest.fn().mockReturnThis()
 
   beforeEach(() => {
     mockRequest = { body: { token: '123' } }

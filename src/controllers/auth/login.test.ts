@@ -8,12 +8,14 @@ import MESSAGES from '../../constants/messages'
 jest.mock('../../services/index', () => ({
   getUserByUsername: jest
     .fn()
-    .mockImplementationOnce(() => makeAFakeUserWithHashedPassword({ password: 'testpassword' })),
-  getUserByEmail: jest.fn().mockImplementationOnce(() => makeAFakeUserWithHashedPassword({ password: 'testpassword' })),
+    .mockImplementationOnce(async () => makeAFakeUserWithHashedPassword({ password: 'testpassword' })),
+  getUserByEmail: jest
+    .fn()
+    .mockImplementationOnce(async () => makeAFakeUserWithHashedPassword({ password: 'testpassword' })),
   getUserPasswordHash: jest
     .fn()
     .mockImplementationOnce(async () => (await makeAFakeUserWithHashedPassword({ password: 'testpassword' })).password),
-  createToken: jest.fn().mockImplementation(() => 'token123'),
+  createToken: jest.fn().mockImplementation(async () => 'token123'),
 }))
 
 jest.mock('../../utils/generateJwt', () => ({

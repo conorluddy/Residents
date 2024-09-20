@@ -15,7 +15,7 @@ interface MailProps {
   body: string
 }
 
-export const sendMail = async ({ to, subject, body }: MailProps): Promise<[ClientResponse, object] | undefined> => {
+export const sendMail = async ({ to, subject, body }: MailProps): Promise<[ClientResponse, {}] | undefined> => {
   try {
     const msg = {
       to,
@@ -25,7 +25,7 @@ export const sendMail = async ({ to, subject, body }: MailProps): Promise<[Clien
       // html: "<strong>Test</strong>",
     }
 
-    return await sgMail.send(msg)
+    return sgMail.send(msg)
   } catch (error: unknown) {
     if (isSendGridError(error)) {
       logger.error('Error Message:', error.message)
@@ -39,7 +39,7 @@ export const sendMail = async ({ to, subject, body }: MailProps): Promise<[Clien
   }
 }
 
-const isSendGridError = (error: unknown): error is SendGridError =>
+const isSendGridError = (error: any): error is SendGridError =>
   typeof error === 'object' &&
   error !== null &&
   'message' in error &&

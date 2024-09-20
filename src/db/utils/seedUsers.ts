@@ -33,7 +33,7 @@ async function createRandomUsers(amount: number): Promise<NewUser[]> {
   return users
 }
 
-const seedUsers = async (amount: number): Promise<void> => {
+const seedUsers = async (amount: number) => {
   try {
     const users = await createRandomUsers(amount)
     for (const user of users) {

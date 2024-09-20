@@ -8,7 +8,7 @@ import MESSAGES from '../../constants/messages'
 /**
  * logout
  */
-export const logout = async (req: Request, res: Response): Promise<Response> => {
+export const logout = async (req: Request, res: Response) => {
   // Clear the cookies regardless of whether we have any existing ones
 
   res.cookie(REFRESH_TOKEN, '', {
@@ -37,7 +37,6 @@ export const logout = async (req: Request, res: Response): Promise<Response> => 
   if (!userId) {
     throw new BadRequestError(MESSAGES.MISSING_USER_ID)
   }
-
   await SERVICES.deleteRefreshTokensByUserId({ userId })
 
   return handleSuccessResponse({ res, message: MESSAGES.LOGOUT_SUCCESS })

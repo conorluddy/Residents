@@ -15,8 +15,8 @@ jest.mock('../../services/index', () => ({
   deleteToken: jest.fn(),
   updateUserPassword: jest
     .fn()
-    .mockImplementationOnce(() => 'UID123')
-    .mockImplementationOnce(() => 'NOT_SAME'),
+    .mockImplementationOnce(async () => 'UID123')
+    .mockImplementationOnce(async () => 'NOT_SAME'),
 }))
 
 describe('Controller: Reset Password With Token', () => {

@@ -1,6 +1,6 @@
 import { createId } from '@paralleldrive/cuid2'
 import { relations, sql } from 'drizzle-orm'
-import { pgEnum, pgTable, pgView, text, timestamp } from 'drizzle-orm/pg-core'
+import { pgEnum, pgTable, pgView, serial, text, timestamp } from 'drizzle-orm/pg-core'
 import { ROLES, ROLES_ARRAY, STATUS, STATUS_ARRAY } from '../../constants/database'
 import { tableTokens } from './Tokens'
 import { tableUserMeta } from './UserMeta'

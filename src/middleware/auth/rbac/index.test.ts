@@ -64,7 +64,7 @@ describe.skip('Middleware:RBAC:checkPermission', () => {
     expect(mockResponse.status).not.toHaveBeenCalled()
   })
 
-  it('should return 403 if the user lacks the required permission', () => {
+  it('should return 403 if the user lacks the required permission', async () => {
     mockRequest[REQUEST_USER] = mockDefaultUser
     expect(() => RBAC.checkCanGetUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
       new ForbiddenError('User cant perform this action.')
@@ -130,33 +130,33 @@ describe.skip('Middleware:RBAC:checkPermission', () => {
       mockRequest[REQUEST_USER] = mockDefaultUser
       RBAC.checkCanUpdateOwnUser(mockRequest as Request, mockResponse as Response, nextFunction)
     })
-    it('can not CREATE users', () => {
+    it('can not CREATE users', async () => {
       mockRequest[REQUEST_USER] = mockDefaultUser
       expect(() => RBAC.checkCanCreateUsers(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
         new ForbiddenError('User cant perform this action.')
       )
     })
-    it('can not GET users', () => {
+    it('can not GET users', async () => {
       mockRequest[REQUEST_USER] = mockDefaultUser
       expect(() => RBAC.checkCanGetUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
         new ForbiddenError('User cant perform this action.')
       )
     })
 
-    it('can not UPDATE users', () => {
+    it('can not UPDATE users', async () => {
       mockRequest[REQUEST_USER] = mockDefaultUser
       expect(() => RBAC.checkCanUpdateUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
         new ForbiddenError('User cant perform this action.')
       )
     })
-    it('can not UPDATE other users status', () => {
+    it('can not UPDATE other users status', async () => {
       mockRequest[REQUEST_USER] = mockDefaultUser
       expect(() =>
         RBAC.checkCanUpdateAnyUserStatus(mockRequest as Request, mockResponse as Response, nextFunction)
       ).toThrow(new ForbiddenError('User cant perform this action.'))
     })
 
-    it('can not DELETE users', () => {
+    it('can not DELETE users', async () => {
       mockRequest[REQUEST_USER] = mockDefaultUser
       expect(() => RBAC.checkCanDeleteUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
         new ForbiddenError('User cant perform this action.')
@@ -169,40 +169,40 @@ describe.skip('Middleware:RBAC:checkPermission', () => {
       mockRequest[REQUEST_USER] = mockLockedUser
       mockRequest[REQUEST_TARGET_USER] = mockDefaultUser
     })
-    it('can not GET OWN/SELF user', () => {
+    it('can not GET OWN/SELF user', async () => {
       // TODO: Probably need to return limited data to them
       expect(() => RBAC.checkCanUpdateOwnUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
         new ForbiddenError(MESSAGES.ACCOUNT_LOCKED)
       )
       expect(nextFunction).not.toHaveBeenCalled()
     })
-    it('can not UPDATE OWN/SELF user', () => {
+    it('can not UPDATE OWN/SELF user', async () => {
       expect(() => RBAC.checkCanUpdateOwnUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
         new ForbiddenError(MESSAGES.ACCOUNT_LOCKED)
       )
       expect(nextFunction).not.toHaveBeenCalled()
     })
-    it('can not CREATE users if account is banned', () => {
+    it('can not CREATE users if account is banned', async () => {
       expect(() => RBAC.checkCanCreateUsers(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
         new ForbiddenError(MESSAGES.ACCOUNT_LOCKED)
       )
       expect(nextFunction).not.toHaveBeenCalled()
     })
-    it('can not GET users', () => {
+    it('can not GET users', async () => {
       expect(() => RBAC.checkCanGetUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
         new ForbiddenError(MESSAGES.ACCOUNT_LOCKED)
       )
       expect(nextFunction).not.toHaveBeenCalled()
     })
 
-    it('can not UPDATE users', () => {
+    it('can not UPDATE users', async () => {
       expect(() => RBAC.checkCanUpdateUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
         new ForbiddenError(MESSAGES.ACCOUNT_LOCKED)
       )
       expect(nextFunction).not.toHaveBeenCalled()
     })
 
-    it('can not DELETE users', () => {
+    it('can not DELETE users', async () => {
       expect(() => RBAC.checkCanDeleteUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
         new ForbiddenError(MESSAGES.ACCOUNT_LOCKED)
       )
@@ -215,7 +215,7 @@ describe.skip('Middleware:RBAC:checkPermission', () => {
       mockRequest[REQUEST_USER] = mockBannedUser
       mockRequest[REQUEST_TARGET_USER] = mockDefaultUser
     })
-    it('can not GET OWN/SELF user', () => {
+    it('can not GET OWN/SELF user', async () => {
       // TODO: Probably need to return limited data to them
       expect(() => RBAC.checkCanGetOwnUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
         new ForbiddenError(MESSAGES.ACCOUNT_BANNED)

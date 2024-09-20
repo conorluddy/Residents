@@ -13,7 +13,7 @@ export const DEFAULT_SEED_PASSWORD = 'R351D3NT!zero'
  *
  * @param {string} password - The password to use for the first user
  */
-const seedUserZero = async (password: string = DEFAULT_SEED_PASSWORD): Promise<void> => {
+const seedUserZero = async (password: string = DEFAULT_SEED_PASSWORD) => {
   try {
     const usersAlreadyExist = (await SERVICES.getUserCount()) > 0
 
