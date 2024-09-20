@@ -28,20 +28,20 @@ export const login = async (req: Request, res: Response): Promise<Response> => {
   }
 
   if (email && !isEmail(email)) {
-    throw new BadRequestError('Invalid email address')
+    throw new BadRequestError(MESSAGES.INVALID_EMAIL)
   }
 
   const getUserByUsernameOrEmail = username ? SERVICES.getUserByUsername : SERVICES.getUserByEmail
   const user = await getUserByUsernameOrEmail(username ?? email)
 
   if (!user) {
-    throw new LoginError('No user found for that username or email.')
+    throw new LoginError(MESSAGES.USER_NOT_FOUND)
   } // Should probably clear any existing auth here
 
   const passwordHash = await SERVICES.getUserPasswordHash(user.id)
 
   if (!passwordHash) {
-    throw new LoginError('No password hash found for that username or email.')
+    throw new LoginError(MESSAGES.NO_PASSWORD_HASH_FOUND)
   }
 
   if (!(await validateHash(password, passwordHash))) {
@@ -55,7 +55,7 @@ export const login = async (req: Request, res: Response): Promise<Response> => {
   })
 
   if (!refreshTokenId) {
-    throw new ForbiddenError('Couldnt create refresh token.')
+    throw new ForbiddenError(MESSAGES.REFRESH_TOKEN_CREATION_FAILED)
   }
 
   // Set the tokens in HTTP-only secure cookies

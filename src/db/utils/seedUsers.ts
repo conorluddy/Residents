@@ -4,6 +4,7 @@ import SERVICES from '../../services'
 import { createHash } from '../../utils/crypt'
 import { logger } from '../../utils/logger'
 import { NewUser } from '../types'
+import MESSAGES from '../../constants/messages'
 
 /**
  * Faker function to create a random users
@@ -14,7 +15,7 @@ import { NewUser } from '../types'
  */
 async function createRandomUsers(amount: number): Promise<NewUser[]> {
   const users: NewUser[] = []
-  logger.info('Creating users...')
+  logger.info(MESSAGES.CREATING_USERS)
 
   for (let i = 0; i < amount; i++) {
     const username = faker.internet.userName()

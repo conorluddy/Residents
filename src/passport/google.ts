@@ -7,6 +7,7 @@ import { tableFederatedCredentials } from '../db/schema'
 import { NewUser } from '../db/types'
 import SERVICES from '../services'
 import { logger } from '../utils/logger'
+import MESSAGES from '../constants/messages'
 
 dotenv.config()
 
@@ -17,7 +18,7 @@ const PROVIDER = 'google'
 const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_CALLBACK_URL } = process.env
 
 if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET || !GOOGLE_CALLBACK_URL) {
-  logger.error('Missing Google OAuth environment variables')
+  logger.error(MESSAGES.MISSING_GOOGLE_OAUTH_ENV_VARS)
 } else {
   passport.use(
     new GoogleStrategy(
@@ -53,7 +54,7 @@ if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET || !GOOGLE_CALLBACK_URL) {
 
             const newUserId = await SERVICES.createUser(user)
             if (!newUserId) {
-              throw new Error('Failed to create user')
+              throw new Error(MESSAGES.FAILED_CREATING_USER)
             }
 
             const fedCreds = {
@@ -71,12 +72,12 @@ if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET || !GOOGLE_CALLBACK_URL) {
               .returning()
 
             if (!newFedCred) {
-              throw new Error('Failed to create new federated credentials')
+              throw new Error(MESSAGES.FAILED_CREATING_FEDERATED_CREDENTIALS)
             }
 
             return done(null, { id: newUserId })
           } catch (error) {
-            logger.error('Failed to create user', error)
+            logger.error(MESSAGES.FAILED_CREATING_USER, error)
           }
         }
       }

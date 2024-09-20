@@ -23,7 +23,7 @@ describe.skip('Controller: Magic Login', () => {
 
   it('NOT IMPLEMENTED YET: TODO', async () => {
     await magicLogin(mockRequest as Request, mockResponse as Response)
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: 'Not implemented yet.' })
+    expect(mockResponse.json).toHaveBeenCalledWith({ message: MESSAGES.FEATURE_NOT_IMPLEMENTED })
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SERVER_ERROR.NOT_IMPLEMENTED)
   })
 

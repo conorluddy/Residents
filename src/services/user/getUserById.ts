@@ -3,10 +3,11 @@ import db from '../../db'
 import { tableUsers } from '../../db/schema'
 import { SafeUser } from '../../db/types'
 import { BadRequestError } from '../../errors'
+import MESSAGES from '../../constants/messages'
 
 const getUserById = async (id: string): Promise<SafeUser | null> => {
   if (!id) {
-    throw new BadRequestError('No User ID provided.')
+    throw new BadRequestError(MESSAGES.MISSING_USER_ID)
   }
 
   const [user] = await db

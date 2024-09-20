@@ -68,6 +68,6 @@ describe('Integration: Can CreateUser', () => {
     }
     const response = await request(app).post('/users/register').send(weakPasswordUser)
     expect(response.status).toBe(400)
-    expect(response.body).toHaveProperty('message', 'Password strength insufficient.')
+    expect(response.body).toHaveProperty('message', MESSAGES.WEAK_PASSWORD)
   })
 })

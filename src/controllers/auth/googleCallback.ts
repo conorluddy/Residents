@@ -4,6 +4,7 @@ import { OAuth2Client } from 'google-auth-library'
 import { EmailError, NotFoundError, UnauthorizedError } from '../../errors'
 import { handleSuccessResponse } from '../../middleware/util/successHandler'
 import SERVICES from '../../services'
+import MESSAGES from '../../constants/messages'
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
 
@@ -19,12 +20,12 @@ export const googleCallback = async (req: Request, res: Response): Promise<Respo
   const payload = ticket.getPayload()
 
   if (!payload) {
-    throw new UnauthorizedError('Invalid Google Callback token')
+    throw new UnauthorizedError(MESSAGES.INVALID_GOOGLE_CALLBACK_TOKEN)
   }
 
   const userEmail = payload.email
   if (!userEmail) {
-    throw new EmailError('No email found in Google payload')
+    throw new EmailError(MESSAGES.NO_EMAIL_IN_GOOGLE_PAYLOAD)
   }
 
   const user = await SERVICES.getUserByEmail(userEmail)

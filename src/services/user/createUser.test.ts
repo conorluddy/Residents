@@ -33,6 +33,6 @@ describe('Services: CreateUser', () => {
   })
 
   it('Missing required data', async () => {
-    await expect(createUser({} as NewUser)).rejects.toThrow('Missing required fields.')
+    await expect(createUser({} as NewUser)).rejects.toThrow(MESSAGES.MISSING_REQUIRED_FIELDS)
   })
 })

@@ -26,7 +26,7 @@ export const resetPasswordWithToken = async (req: Request, res: Response): Promi
     throw new TokenError(MESSAGES.TOKEN_MISSING)
   }
   if (token.type !== TOKEN_TYPE.RESET) {
-    throw new TokenError('Invalid token type.')
+    throw new TokenError(MESSAGES.INVALID_TOKEN_TYPE)
   }
 
   // Centralise configuration for this somewhere - can use it for registration too

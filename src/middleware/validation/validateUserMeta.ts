@@ -1,6 +1,7 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express'
 import { Meta } from '../../db/types'
 import { BadRequestError } from '../../errors'
+import MESSAGES from '../../constants/messages'
 
 // Define the valid keys for updating user meta
 type ValidMutableMetaProps = Exclude<keyof Meta, 'id' | 'userId'>
@@ -15,7 +16,7 @@ const validateUserMeta: RequestHandler = (req: Request, res: Response, next: Nex
 
   // Ensure the payload is an object
   if (typeof updateUserMetaPayload !== 'object' || updateUserMetaPayload === null) {
-    throw new BadRequestError('Invalid data provided.')
+    throw new BadRequestError(MESSAGES.INVALID_DATA_PROVIDED)
   }
 
   // Validate that all keys in the payload are allowed
@@ -23,7 +24,7 @@ const validateUserMeta: RequestHandler = (req: Request, res: Response, next: Nex
   const isValidPayload = payloadKeys.every((key) => validUserMetaKeys.includes(key as ValidMutableMetaProps))
 
   if (!isValidPayload) {
-    throw new BadRequestError('Invalid data provided.')
+    throw new BadRequestError(MESSAGES.INVALID_DATA_PROVIDED)
   }
 
   // If payload is valid, proceed to the next middleware/controller

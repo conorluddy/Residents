@@ -1,5 +1,6 @@
 import dotenv from 'dotenv'
 import { logger } from './utils/logger'
+import MESSAGES from './constants/messages'
 dotenv.config()
 
 const requiredEnvVars = [
@@ -17,7 +18,7 @@ const requiredEnvVars = [
 requiredEnvVars.forEach((_, index) => {
   if (!requiredEnvVars[index]) {
     // Codescan does not like us logging the names here, even though they're harmless
-    logger.error('Missing some required environment variables.')
+    logger.error(MESSAGES.MISSING_REQUIRED_ENV_VARS)
     if (process.env.NODE_ENV !== 'test') {
       process.exit(1)
     }

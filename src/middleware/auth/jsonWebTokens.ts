@@ -12,11 +12,11 @@ export const authenticateToken = (req: Request, res: Response, next: NextFunctio
   const secret = JWT_TOKEN_SECRET
 
   if (!token) {
-    throw new UnauthorizedError('JWT token is not provided in the request headers.')
+    throw new UnauthorizedError(MESSAGES.JWT_TOKEN_NOT_PROVIDED)
   }
 
   if (!secret || secret === '') {
-    throw new InternalServerError('JWT token secret is not defined in your environment variables.')
+    throw new InternalServerError(MESSAGES.JWT_SECRET_NOT_DEFINED)
   }
 
   jwt.verify(token, secret, (err, user) => {
@@ -24,7 +24,7 @@ export const authenticateToken = (req: Request, res: Response, next: NextFunctio
       throw new UnauthorizedError(MESSAGES.TOKEN_INVALID)
     }
     if (!TYPEGUARD.isJwtUser(user)) {
-      throw new UnauthorizedError('JWT contains invalid user data.')
+      throw new UnauthorizedError(MESSAGES.JWT_INVALID_USER_DATA)
     }
     req[REQUEST_USER] = user
     next()

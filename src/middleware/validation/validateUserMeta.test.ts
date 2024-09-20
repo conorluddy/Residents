@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
 import validateUserMeta from './validateUserMeta'
 import { BadRequestError } from '../../errors'
+import MESSAGES from '../../constants/messages'
 
 describe('Middleware: validateUserMeta', () => {
   let mockRequest: Partial<Request>
@@ -24,21 +25,21 @@ describe('Middleware: validateUserMeta', () => {
 
   it('should return 400 if the request body is missing', () => {
     expect(() => validateUserMeta(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
-      new BadRequestError('Invalid data provided.')
+      new BadRequestError(MESSAGES.INVALID_DATA_PROVIDED)
     )
   })
 
   it('should return 400 if the request body is null', () => {
     mockRequest.body = null
     expect(() => validateUserMeta(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
-      new BadRequestError('Invalid data provided.')
+      new BadRequestError(MESSAGES.INVALID_DATA_PROVIDED)
     )
   })
 
   it('should return 400 if the request body is invalid', () => {
     mockRequest.body = { randomProperty: 'randomValue' }
     expect(() => validateUserMeta(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
-      new BadRequestError('Invalid data provided.')
+      new BadRequestError(MESSAGES.INVALID_DATA_PROVIDED)
     )
   })
 

@@ -17,7 +17,7 @@ export const magicLogin = async (req: Request, res: Response): Promise<Response>
   // Email will be added to the request from the previous email validation middleware
   const email = req[REQUEST_EMAIL]
   if (!email) {
-    throw new BadRequestError('User data missing.')
+    throw new BadRequestError(MESSAGES.MISSING_USER_DATA)
   }
 
   let debugTokenId
@@ -38,7 +38,7 @@ export const magicLogin = async (req: Request, res: Response): Promise<Response>
 
     sendMail({
       to: SENDGRID_TEST_EMAIL ?? '', //userNoPW.email, - Faker might seed with real emails, be careful not to spam people
-      subject: 'Magic login link',
+      subject: MESSAGES.MAGIC_LOGIN_LINK_MESSAGE,
       body: `Magic link - Click to magically log in: http://localhost:3000/auth/magic-login/${tokenId}`,
       // Obviously this is a test link, in production you'd want to use a real domain
     })

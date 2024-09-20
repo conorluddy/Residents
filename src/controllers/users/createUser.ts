@@ -20,17 +20,17 @@ export const createUser = async ({ body }: Request, res: Response): Promise<Resp
   const { username, firstName, lastName, email, password, role }: NewUser = body
 
   if (![username, firstName, lastName, email, password].every(Boolean)) {
-    throw new BadRequestError('Missing required fields.')
+    throw new BadRequestError(MESSAGES.MISSING_REQUIRED_FIELDS)
   }
 
   if (email && !isEmail(email)) {
-    throw new EmailError('Invalid email address')
+    throw new EmailError(MESSAGES.INVALID_EMAIL)
   }
 
   const userId = await SERVICES.createUser({ username, firstName, lastName, email, password, role })
 
   if (!userId) {
-    throw new BadRequestError('Error creating new user.')
+    throw new BadRequestError(MESSAGES.ERROR_CREATING_NEW_USER)
   }
 
   await Promise.all([

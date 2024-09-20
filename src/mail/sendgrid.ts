@@ -2,6 +2,7 @@ import sgMail, { ClientResponse } from '@sendgrid/mail'
 import { logger } from '../utils/logger'
 import { SENDGRID_API_KEY, SENDGRID_VERIFIED_EMAIL } from '../config'
 import { EmailError } from '../errors'
+import MESSAGES from '../constants/messages'
 
 // using Twilio SendGrid's v3 Node.js Library
 // https://github.com/sendgrid/sendgrid-nodejs
@@ -35,7 +36,7 @@ export const sendMail = async ({ to, subject, body }: MailProps): Promise<[Clien
         logger.error('Help:', err.help)
       })
     }
-    throw new EmailError('An error occurred while sending email.')
+    throw new EmailError(MESSAGES.EMAIL_ERROR)
   }
 }
 

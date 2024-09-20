@@ -20,10 +20,10 @@ export const refreshToken = async (req: Request, res: Response): Promise<Respons
   const userId = req.cookies?.[RESIDENT_TOKEN]
 
   if (!refreshTokenId) {
-    throw new TokenError('Refresh token is required.')
+    throw new TokenError(MESSAGES.REFRESH_TOKEN_REQUIRED)
   }
   if (!userId) {
-    throw new TokenError('Refresh token counterpart is required.')
+    throw new TokenError(MESSAGES.REFRESH_TOKEN_COUNTERPART_REQUIRED)
   }
 
   // Get the refresh token from the DB if it exists
@@ -36,7 +36,7 @@ export const refreshToken = async (req: Request, res: Response): Promise<Respons
     throw new ForbiddenError(MESSAGES.TOKEN_NOT_FOUND)
   }
   if (token && userId && token?.userId !== userId) {
-    throw new ForbiddenError('Token user not valid.')
+    throw new ForbiddenError(MESSAGES.TOKEN_USER_INVALID)
   }
   if (token.used) {
     throw new ForbiddenError(MESSAGES.TOKEN_USED)
@@ -53,7 +53,7 @@ export const refreshToken = async (req: Request, res: Response): Promise<Respons
   })
 
   if (!freshRefreshTokenId) {
-    throw new ForbiddenError('Error creating refresh token.')
+    throw new ForbiddenError(MESSAGES.ERROR_CREATING_REFRESH_TOKEN)
   }
 
   const user = await SERVICES.getUserById(userId)

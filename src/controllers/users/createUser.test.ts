@@ -40,12 +40,12 @@ describe('Controller: CreateUser', () => {
   it('Create User - Missing data', async () => {
     mockRequest.body = {}
     await expect(createUser(mockRequest as Request, mockResponse as Response)).rejects.toThrow(
-      'Missing required fields.'
+      MESSAGES.MISSING_REQUIRED_FIELDS
     )
   })
 
   it('Create User - Invalid email', async () => {
     mockRequest.body.email = 'invalid-email'
-    await expect(createUser(mockRequest as Request, mockResponse as Response)).rejects.toThrow('Invalid email address')
+    await expect(createUser(mockRequest as Request, mockResponse as Response)).rejects.toThrow(MESSAGES.INVALID_EMAIL)
   })
 })

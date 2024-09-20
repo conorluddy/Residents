@@ -70,7 +70,7 @@ describe('Controller: Reset Password With Token', () => {
       type: TOKEN_TYPE.MAGIC,
     }
     await expect(resetPasswordWithToken(mockRequest as Request, mockResponse as Response)).rejects.toThrow(
-      'Invalid token type.'
+      MESSAGES.INVALID_TOKEN_TYPE
     )
   })
 

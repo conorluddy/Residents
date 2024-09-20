@@ -5,6 +5,7 @@ import { REQUEST_TOKEN } from '../../types/requestSymbols'
 import discardToken from './discardToken'
 import { ForbiddenError } from '../../errors'
 import SERVICES from '../../services'
+import MESSAGES from '../../constants/messages'
 
 const testToken: Token = {
   id: 'XXX',
@@ -46,7 +47,7 @@ describe('Middleware: discardToken', () => {
   it('returns a 403 if missing token in request', async () => {
     mockRequest[REQUEST_TOKEN] = undefined as unknown as Token
     await expect(() => discardToken(mockRequest as Request, mockResponse as Response, nextFunction)).rejects.toThrow(
-      new ForbiddenError('Missing token in discardToken middleware.')
+      new ForbiddenError(MESSAGES.MISSING_TOKEN_IN_DISCARD_TOKEN_MIDDLEWARE)
     )
     expect(nextFunction).not.toHaveBeenCalled()
   })

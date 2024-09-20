@@ -57,7 +57,7 @@ describe('Controller: Validate Account', () => {
   it('Returns forbidden when missing token', async () => {
     mockRequest[REQUEST_TOKEN] = undefined
     await expect(validateAccount(mockRequest as Request, mockResponse as Response)).rejects.toThrow(
-      'Validation token missing.'
+      MESSAGES.TOKEN_MISSING
     )
   })
 
@@ -78,7 +78,7 @@ describe('Controller: Validate Account', () => {
       expiresAt: new Date(Date.now() + TIMESPAN.HOUR),
     }
     await expect(validateAccount(mockRequest as Request, mockResponse as Response)).rejects.toThrow(
-      'Validation token invalid.'
+      MESSAGES.VALIDATION_TOKEN_INVALID
     )
   })
 
@@ -92,7 +92,7 @@ describe('Controller: Validate Account', () => {
       expiresAt: new Date(Date.now() + TIMESPAN.HOUR),
     }
     await expect(validateAccount(mockRequest as Request, mockResponse as Response)).rejects.toThrow(
-      'Validation token invalid.'
+      MESSAGES.VALIDATION_TOKEN_INVALID
     )
   })
 })

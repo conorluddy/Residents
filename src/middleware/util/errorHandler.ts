@@ -47,7 +47,7 @@ const errorHandler = (err: Error, _req: Request, res: Response, next: NextFuncti
     return res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: MESSAGES.INTERNAL_SERVER_ERROR })
   }
   if (err instanceof NotAcceptableError) {
-    return res.status(HTTP_CLIENT_ERROR.NOT_ACCEPTABLE).json({ message: 'Request not acceptable.' })
+    return res.status(HTTP_CLIENT_ERROR.NOT_ACCEPTABLE).json({ message: MESSAGES.NOT_ACCEPTABLE })
   }
   if (err instanceof NotFoundError) {
     return res.status(HTTP_CLIENT_ERROR.NOT_FOUND).json({ message: MESSAGES.NOT_FOUND })
@@ -63,15 +63,15 @@ const errorHandler = (err: Error, _req: Request, res: Response, next: NextFuncti
     return res.status(HTTP_CLIENT_ERROR.FORBIDDEN).json({ message: MESSAGES.ACCESS_DENIED })
   }
   if (err instanceof PasswordStrengthError) {
-    return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: 'Password strength insufficient.' })
+    return res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: MESSAGES.WEAK_PASSWORD })
   }
   if (err instanceof RateLimitError) {
     return res
       .status(HTTP_CLIENT_ERROR.TOO_MANY_REQUESTS)
-      .json({ message: err.message ? err.message : 'Too many requests, slow down!' })
+      .json({ message: err.message ? err.message : MESSAGES.TOO_MANY_REQUESTS })
   }
   if (err instanceof TokenError) {
-    return res.status(HTTP_CLIENT_ERROR.UNAUTHORIZED).json({ message: 'Invalid or expired token.' })
+    return res.status(HTTP_CLIENT_ERROR.UNAUTHORIZED).json({ message: MESSAGES.TOKEN_INVALID })
   }
   if (err instanceof UnauthorizedError) {
     return res.status(HTTP_CLIENT_ERROR.UNAUTHORIZED).json({ message: MESSAGES.UNAUTHORIZED })
@@ -80,7 +80,7 @@ const errorHandler = (err: Error, _req: Request, res: Response, next: NextFuncti
     return res.status(HTTP_CLIENT_ERROR.UNPROCESSABLE_ENTITY).json({ message: MESSAGES.VALIDATION_FAILED })
   }
 
-  res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: 'Something went kaput...' })
+  res.status(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR).json({ message: MESSAGES.SOMETHING_WENT_WRONG })
 
   next(err)
 }

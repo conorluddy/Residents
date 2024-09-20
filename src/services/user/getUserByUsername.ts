@@ -3,10 +3,11 @@ import { eq } from 'drizzle-orm'
 import { tableUsers } from '../../db/schema'
 import { SafeUser } from '../../db/types'
 import { BadRequestError } from '../../errors'
+import MESSAGES from '../../constants/messages'
 
 const getUserByUsername = async (username: string): Promise<SafeUser | null> => {
   if (!username) {
-    throw new BadRequestError('No username provided')
+    throw new BadRequestError(MESSAGES.USERNAME_REQUIRED)
   }
 
   const [user] = await db

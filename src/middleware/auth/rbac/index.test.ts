@@ -67,7 +67,7 @@ describe.skip('Middleware:RBAC:checkPermission', () => {
   it('should return 403 if the user lacks the required permission', () => {
     mockRequest[REQUEST_USER] = mockDefaultUser
     expect(() => RBAC.checkCanGetUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
-      new ForbiddenError('User cant perform this action.')
+      new ForbiddenError(MESSAGES.INSUFFICIENT_PERMISSIONS)
     )
     expect(nextFunction).not.toHaveBeenCalled()
   })
@@ -133,33 +133,33 @@ describe.skip('Middleware:RBAC:checkPermission', () => {
     it('can not CREATE users', () => {
       mockRequest[REQUEST_USER] = mockDefaultUser
       expect(() => RBAC.checkCanCreateUsers(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
-        new ForbiddenError('User cant perform this action.')
+        new ForbiddenError(MESSAGES.INSUFFICIENT_PERMISSIONS)
       )
     })
     it('can not GET users', () => {
       mockRequest[REQUEST_USER] = mockDefaultUser
       expect(() => RBAC.checkCanGetUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
-        new ForbiddenError('User cant perform this action.')
+        new ForbiddenError(MESSAGES.INSUFFICIENT_PERMISSIONS)
       )
     })
 
     it('can not UPDATE users', () => {
       mockRequest[REQUEST_USER] = mockDefaultUser
       expect(() => RBAC.checkCanUpdateUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
-        new ForbiddenError('User cant perform this action.')
+        new ForbiddenError(MESSAGES.INSUFFICIENT_PERMISSIONS)
       )
     })
     it('can not UPDATE other users status', () => {
       mockRequest[REQUEST_USER] = mockDefaultUser
       expect(() =>
         RBAC.checkCanUpdateAnyUserStatus(mockRequest as Request, mockResponse as Response, nextFunction)
-      ).toThrow(new ForbiddenError('User cant perform this action.'))
+      ).toThrow(new ForbiddenError(MESSAGES.INSUFFICIENT_PERMISSIONS))
     })
 
     it('can not DELETE users', () => {
       mockRequest[REQUEST_USER] = mockDefaultUser
       expect(() => RBAC.checkCanDeleteUser(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
-        new ForbiddenError('User cant perform this action.')
+        new ForbiddenError(MESSAGES.INSUFFICIENT_PERMISSIONS)
       )
     })
   })
@@ -394,7 +394,7 @@ describe('Middleware:RBAC:getTargetUser', () => {
     mockRequest[REQUEST_USER] = undefined
     await expect(() =>
       RBAC.getTargetUser(mockRequest as Request, mockResponse as Response, nextFunction)
-    ).rejects.toThrow(new ForbiddenError('Missing User data.'))
+    ).rejects.toThrow(new ForbiddenError(MESSAGES.MISSING_USER_DATA))
     expect(nextFunction).not.toHaveBeenCalled()
   })
 
@@ -440,7 +440,7 @@ describe('Middleware:RBAC:getTargetUser', () => {
     mockRequest[REQUEST_USER] = mockDeletedAdminUser
     await expect(() =>
       RBAC.getTargetUser(mockRequest as Request, mockResponse as Response, nextFunction)
-    ).rejects.toThrow(new ForbiddenError('User account is deleted.'))
+    ).rejects.toThrow(new ForbiddenError(MESSAGES.ACCOUNT_DELETED))
     expect(nextFunction).not.toHaveBeenCalled()
   })
 
@@ -448,7 +448,7 @@ describe('Middleware:RBAC:getTargetUser', () => {
     mockRequest[REQUEST_USER] = mockUserNoRole
     await expect(() =>
       RBAC.getTargetUser(mockRequest as Request, mockResponse as Response, nextFunction)
-    ).rejects.toThrow(new ForbiddenError('User has no role.'))
+    ).rejects.toThrow(new ForbiddenError(MESSAGES.USER_HAS_NO_ROLE))
     expect(nextFunction).not.toHaveBeenCalled()
   })
 })

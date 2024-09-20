@@ -1,4 +1,5 @@
 import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from '../constants/http'
+import MESSAGES from '../constants/messages'
 
 type ClientErrorCodes = (typeof HTTP_CLIENT_ERROR)[keyof typeof HTTP_CLIENT_ERROR]
 type ServerErrorCodes = (typeof HTTP_SERVER_ERROR)[keyof typeof HTTP_SERVER_ERROR]
@@ -17,7 +18,7 @@ class PasswordStrengthError extends Error {
 
 class BadRequestError extends Error {
   public statusCode: ClientErrorCodes
-  constructor(message = 'Bad Request') {
+  constructor(message = MESSAGES.BAD_REQUEST) {
     super(message)
     this.name = 'BadRequestError'
     this.statusCode = HTTP_CLIENT_ERROR.BAD_REQUEST
@@ -27,7 +28,7 @@ class BadRequestError extends Error {
 
 class UnauthorizedError extends Error {
   public statusCode: ClientErrorCodes
-  constructor(message = 'Unauthorized') {
+  constructor(message = MESSAGES.UNAUTHORIZED) {
     super(message)
     this.name = 'UnauthorizedError'
     this.statusCode = HTTP_CLIENT_ERROR.UNAUTHORIZED
@@ -47,7 +48,7 @@ class ForbiddenError extends Error {
 
 class NotFoundError extends Error {
   public statusCode: ClientErrorCodes
-  constructor(message = 'Not Found') {
+  constructor(message = MESSAGES.NOT_FOUND) {
     super(message)
     this.name = 'NotFoundError'
     this.statusCode = HTTP_CLIENT_ERROR.NOT_FOUND
@@ -57,7 +58,7 @@ class NotFoundError extends Error {
 
 class InternalServerError extends Error {
   public statusCode: ServerErrorCodes
-  constructor(message = 'Internal Server Error') {
+  constructor(message = MESSAGES.INTERNAL_SERVER_ERROR) {
     super(message)
     this.name = 'InternalServerError'
     this.statusCode = HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR
@@ -67,7 +68,7 @@ class InternalServerError extends Error {
 
 class NotImplementedError extends Error {
   public statusCode: ServerErrorCodes
-  constructor(message = 'Not Implemented') {
+  constructor(message = MESSAGES.FEATURE_NOT_IMPLEMENTED) {
     super(message)
     this.name = 'NotImplementedError'
     this.statusCode = HTTP_SERVER_ERROR.NOT_IMPLEMENTED
@@ -77,7 +78,7 @@ class NotImplementedError extends Error {
 
 class ValidationError extends Error {
   public statusCode: ClientErrorCodes
-  constructor(message = 'Validation Error') {
+  constructor(message = MESSAGES.VALIDATION_FAILED) {
     super(message)
     this.name = 'ValidationError'
     this.statusCode = HTTP_CLIENT_ERROR.UNPROCESSABLE_ENTITY
@@ -97,7 +98,7 @@ class EmailError extends Error {
 
 class TokenError extends Error {
   public statusCode: ClientErrorCodes
-  constructor(message = 'Token Error') {
+  constructor(message = MESSAGES.TOKEN_ERROR) {
     super(message)
     this.name = 'TokenError'
     this.statusCode = HTTP_CLIENT_ERROR.UNAUTHORIZED
@@ -107,7 +108,7 @@ class TokenError extends Error {
 
 class DatabaseError extends Error {
   public statusCode: ServerErrorCodes
-  constructor(message = 'Database Error') {
+  constructor(message = MESSAGES.DATABASE_ERROR) {
     super(message)
     this.name = 'DatabaseError'
     this.statusCode = HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR
@@ -117,7 +118,7 @@ class DatabaseError extends Error {
 
 class PasswordError extends Error {
   public statusCode: ClientErrorCodes
-  constructor(message = 'Password Error') {
+  constructor(message = MESSAGES.PASSWORD_ERROR) {
     super(message)
     this.name = 'PasswordError'
     this.statusCode = HTTP_CLIENT_ERROR.BAD_REQUEST
@@ -127,7 +128,7 @@ class PasswordError extends Error {
 
 class ConflictError extends Error {
   public statusCode: ClientErrorCodes
-  constructor(message = 'Conflict Error') {
+  constructor(message = MESSAGES.CONFLICT_ERROR) {
     super(message)
     this.name = 'ConflictError'
     this.statusCode = HTTP_CLIENT_ERROR.CONFLICT
@@ -137,7 +138,7 @@ class ConflictError extends Error {
 
 class NotAcceptableError extends Error {
   public statusCode: ClientErrorCodes
-  constructor(message = 'Not Acceptable') {
+  constructor(message = MESSAGES.NOT_ACCEPTABLE) {
     super(message)
     this.name = 'NotAcceptableError'
     this.statusCode = HTTP_CLIENT_ERROR.NOT_ACCEPTABLE
@@ -147,7 +148,7 @@ class NotAcceptableError extends Error {
 
 class RateLimitError extends Error {
   public statusCode: ClientErrorCodes
-  constructor(message = 'Too Many Requests') {
+  constructor(message = MESSAGES.TOO_MANY_REQUESTS) {
     super(message)
     this.name = 'RateLimitError'
     this.statusCode = HTTP_CLIENT_ERROR.TOO_MANY_REQUESTS
@@ -157,7 +158,7 @@ class RateLimitError extends Error {
 
 class LoginError extends Error {
   public statusCode: ClientErrorCodes
-  constructor(message = 'Error logging in.') {
+  constructor(message = MESSAGES.ERROR_LOGGING_IN) {
     super(message)
     this.name = 'LoginError'
     this.statusCode = HTTP_CLIENT_ERROR.UNAUTHORIZED

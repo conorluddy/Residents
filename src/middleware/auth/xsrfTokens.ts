@@ -22,7 +22,7 @@ const xsrfTokens = (req: Request, res: Response, next: NextFunction): void => {
 
   const secret = JWT_TOKEN_SECRET
   if (!secret) {
-    throw new Error('JWT secret not found')
+    throw new Error(MESSAGES.JWT_SECRET_NOT_FOUND)
   }
 
   // Look for token in cookies, if not found, generate a new one

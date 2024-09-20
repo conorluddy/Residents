@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import { User } from '../../db/types'
 import { magicLoginWithToken } from './magicLoginWithToken'
+import MESSAGES from '../../constants/messages'
 
 describe.skip('Controller: MagicLoginWithToken', () => {
   let mockRequest: Partial<Request> & { body: Partial<User> }
@@ -16,7 +17,7 @@ describe.skip('Controller: MagicLoginWithToken', () => {
 
   it('NOT IMPLEMENTED YET: TODO', async () => {
     await expect(magicLoginWithToken(mockRequest as Request, mockResponse as Response)).rejects.toThrow(
-      'Not implemented yet.'
+      MESSAGES.FEATURE_NOT_IMPLEMENTED
     )
   })
 })

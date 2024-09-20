@@ -21,7 +21,7 @@ export const resetPassword = async (req: Request, res: Response): Promise<Respon
   // Email will be added to the request from the previous email validation middleware
   const email = req[REQUEST_EMAIL]
   if (!email) {
-    throw new BadRequestError('User data missing.')
+    throw new BadRequestError(MESSAGES.MISSING_USER_DATA)
   }
 
   const user = await SERVICES.getUserByEmail(email)
@@ -38,8 +38,8 @@ export const resetPassword = async (req: Request, res: Response): Promise<Respon
     })
     sendMail({
       to: SENDGRID_TEST_EMAIL ?? '', //userNoPW.email, - Faker might seed with real emails, be careful not to spam people
-      subject: 'Reset your password',
-      body: `Click here to reset your password: http://localhost:3000/auth/reset-password/${tokenId}`,
+      subject: MESSAGES.RESET_PASSWORD_PROMPT,
+      body: `${MESSAGES.CLICK_RESET_PASSWORD} http://localhost:3000/auth/reset-password/${tokenId}`,
       // Obviously this is a test link, in production you'd want to use a real domain
     })
     logger.info(`Reset email sent to ${email}, token id: ${tokenId}`)

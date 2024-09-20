@@ -20,7 +20,7 @@ function canGetUser(req: Request, res: Response, next: NextFunction): void {
   }
 
   if (!targetUser?.role) {
-    throw new BadRequestError('Target user data is missing.')
+    throw new BadRequestError(MESSAGES.TARGET_USER_DATA_MISSING)
   }
 
   if (user.id === targetUser.id && ACL[user.role].includes(PERMISSIONS.CAN_GET_OWN_USER)) {
@@ -47,7 +47,7 @@ function canGetUser(req: Request, res: Response, next: NextFunction): void {
     return next()
   }
 
-  throw new ForbiddenError('User does not have permission to get this user.')
+  throw new ForbiddenError(MESSAGES.USER_GET_PERMISSION_DENIED)
 }
 
 export default canGetUser

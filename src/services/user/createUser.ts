@@ -15,7 +15,7 @@ const createUser = async (userProps: NewUser): Promise<User['id'] | null> => {
   const { username, firstName, lastName, email, password, role } = userProps
 
   if (!username || !firstName || !lastName || !email || !password || !role) {
-    throw new ValidationError('Missing required fields.')
+    throw new ValidationError(MESSAGES.MISSING_REQUIRED_FIELDS)
   }
 
   if (!isStrongPassword(password, PASSWORD_STRENGTH_CONFIG)) {
@@ -23,7 +23,7 @@ const createUser = async (userProps: NewUser): Promise<User['id'] | null> => {
   }
 
   if (!isEmail(email)) {
-    throw new EmailError('Email needs to be a valid email.')
+    throw new EmailError(MESSAGES.INVALID_EMAIL)
   }
 
   const normalisedEmail = normalizeEmail(email, { all_lowercase: true })

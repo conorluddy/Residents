@@ -1,3 +1,4 @@
+import MESSAGES from '../../constants/messages'
 import db from '../../db'
 import { tableTokens } from '../../db/schema'
 import { Token } from '../../db/types'
@@ -10,7 +11,7 @@ interface Props {
 
 const deleteToken = async ({ tokenId }: Props): Promise<Token['id'] | null> => {
   if (!tokenId) {
-    throw new TokenError('No token ID provided')
+    throw new TokenError(MESSAGES.NO_TOKEN_ID_PROVIDED)
   }
   const [deleted] = await db.delete(tableTokens).where(eq(tableTokens.id, tokenId)).returning()
   return deleted?.id ?? null
