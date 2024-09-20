@@ -39,7 +39,8 @@ export const sendMail = async ({ to, subject, body }: MailProps): Promise<[Clien
   }
 }
 
-const isSendGridError = (error: unknown): error is SendGridError =>
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const isSendGridError = (error: any): error is SendGridError =>
   typeof error === 'object' &&
   error !== null &&
   'message' in error &&

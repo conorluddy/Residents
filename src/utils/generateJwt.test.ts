@@ -16,7 +16,7 @@ describe('generateJwtFromUser', () => {
 
   it('should generate a JWT with the correct payload and options', () => {
     const signSpy = jest.spyOn(jwt, 'sign') as jest.MockedFunction<typeof jwt.sign>
-    signSpy.mockReturnValueOnce('testtoken')
+    signSpy.mockImplementation(() => 'testtoken')
     const token = generateJwtFromUser(userPayload)
     expect(token).toBe('testtoken')
   })

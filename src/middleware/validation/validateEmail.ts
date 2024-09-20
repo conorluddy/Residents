@@ -11,7 +11,7 @@ const validateEmail: RequestHandler = (req: Request, res: Response, next: NextFu
     throw new BadRequestError(MESSAGES.EMAIL_REQUIRED)
   }
   if (!isEmail(email)) {
-    throw new BadRequestError('Invalid email address.')
+    throw new BadRequestError(MESSAGES.INVALID_EMAIL)
   }
 
   req[REQUEST_EMAIL] = email

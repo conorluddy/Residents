@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 import validateUserMeta from './validateUserMeta'
+import { BadRequestError } from '../../errors'
 
 describe('Middleware: validateUserMeta', () => {
   let mockRequest: Partial<Request>
@@ -21,23 +22,23 @@ describe('Middleware: validateUserMeta', () => {
     jest.clearAllMocks()
   })
 
-  it('should return 400 if the request body is missing', async () => {
-    await expect(validateUserMeta(mockRequest as Request, mockResponse as Response, nextFunction)).rejects.toThrow(
-      'Invalid data provided.'
+  it('should return 400 if the request body is missing', () => {
+    expect(() => validateUserMeta(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
+      new BadRequestError('Invalid data provided.')
     )
   })
 
-  it('should return 400 if the request body is null', async () => {
+  it('should return 400 if the request body is null', () => {
     mockRequest.body = null
-    await expect(validateUserMeta(mockRequest as Request, mockResponse as Response, nextFunction)).rejects.toThrow(
-      'Invalid data provided.'
+    expect(() => validateUserMeta(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
+      new BadRequestError('Invalid data provided.')
     )
   })
 
-  it('should return 400 if the request body is invalid', async () => {
+  it('should return 400 if the request body is invalid', () => {
     mockRequest.body = { randomProperty: 'randomValue' }
-    await expect(validateUserMeta(mockRequest as Request, mockResponse as Response, nextFunction)).rejects.toThrow(
-      'Invalid data provided.'
+    expect(() => validateUserMeta(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
+      new BadRequestError('Invalid data provided.')
     )
   })
 
