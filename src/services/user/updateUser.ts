@@ -26,7 +26,7 @@ const updateUser = async ({ userId, username, firstName, lastName, email, passwo
 
   const emailNormalized = email ? normalizeEmail(email, { all_lowercase: true }) : null
   if (email && !emailNormalized) {
-    throw new EmailError('Requested email for updating is invalid.')
+    throw new EmailError(MESSAGES.INVALID_EMAIL)
   }
 
   const updatedUserProperties: Partial<UserUpdate> = {
@@ -38,7 +38,7 @@ const updateUser = async ({ userId, username, firstName, lastName, email, passwo
   }
 
   if (Object.keys(updatedUserProperties).length === 0) {
-    throw new BadRequestError('At least one property must be provided for update.')
+    throw new BadRequestError(MESSAGES.AT_LEAST_ONE_PROPERTY_REQUIRED)
   }
 
   if (updatedUserProperties.password && !isStrongPassword(updatedUserProperties.password, PASSWORD_STRENGTH_CONFIG)) {

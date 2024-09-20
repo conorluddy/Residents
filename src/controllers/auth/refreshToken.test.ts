@@ -134,14 +134,14 @@ describe('Should return errors if', () => {
   it('theres no refresh token in the request body', async () => {
     delete mockRequest.cookies?.refreshToken
     await expect(refreshToken(mockRequest as Request, mockResponse as Response)).rejects.toThrow(
-      'Refresh token is required'
+      MESSAGES.REFRESH_TOKEN_REQUIRED
     )
   })
 
   it('theres no UserId in the cookies', async () => {
     delete mockRequest.cookies?.[RESIDENT_TOKEN]
     await expect(refreshToken(mockRequest as Request, mockResponse as Response)).rejects.toThrow(
-      'Refresh token counterpart is required.'
+      MESSAGES.REFRESH_TOKEN_COUNTERPART_REQUIRED
     )
   })
   it('the token isnt found in the database', async () => {
@@ -151,7 +151,7 @@ describe('Should return errors if', () => {
   })
   it('the token user does not match the JWT user', async () => {
     await expect(refreshToken(mockRequest as Request, mockResponse as Response)).rejects.toThrow(
-      'Token user not valid.'
+      MESSAGES.TOKEN_USER_INVALID
     )
   })
   it('the token has a USED flag set', async () => {

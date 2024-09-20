@@ -11,6 +11,7 @@ import rateLimiter from './middleware/util/rateLimiter'
 import errorHandler from './middleware/util/errorHandler'
 import path from 'path'
 import { handleSuccessResponse } from './middleware/util/successHandler'
+import MESSAGES from './constants/messages'
 
 dotenv.config()
 
@@ -58,7 +59,8 @@ if (isDevEnv) {
     // - script-src 'self': Only allow scripts from the same origin
     // - style-src 'self' 'unsafe-inline': Allow styles from the same origin and inline styles
     // This helps prevent various types of attacks, such as XSS (Cross-Site Scripting)
-    res.setHeader('Content-Security-Policy', 'default-src \'self\'; script-src \'self\'; style-src \'self\' \'unsafe-inline\'')
+    // eslint-disable-next-line quotes
+    res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'")
     next()
   })
   // Serve static files from the 'examples' directory
@@ -83,7 +85,7 @@ const server = app.listen(serverPort, () => {
 
 // Graceful shutdown
 process.on('SIGTERM', () => {
-  logger.info('SIGTERM signal received: closing HTTP server')
+  logger.info(MESSAGES.SIGTERM_RECEIVED_CLOSING_SERVER)
   server.close(() => logger.info('HTTP server closed'))
 })
 

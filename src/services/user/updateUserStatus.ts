@@ -15,7 +15,7 @@ const updateUserStatus = async ({ userId, status }: Params): Promise<string> => 
     throw new BadRequestError('User ID must be provided.')
   }
   if (!status) {
-    throw new BadRequestError('Status must be provided.')
+    throw new BadRequestError(MESSAGES.STATUS_REQUIRED)
   }
   if (!STATUS_ARRAY.includes(status)) {
     throw new ValidationError(MESSAGES.INVALID_STATUS)

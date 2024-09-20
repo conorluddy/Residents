@@ -4,6 +4,7 @@ import { TIMESPAN } from '../../constants/time'
 import { tableTokens } from '../../db/schema'
 import { Token } from '../../db/types'
 import { TokenError } from '../../errors'
+import MESSAGES from '../../constants/messages'
 
 interface Props {
   userId: string
@@ -13,10 +14,10 @@ interface Props {
 
 const createToken = async ({ userId, type, expiry = TIMESPAN.MINUTE }: Props): Promise<Token['id'] | null> => {
   if (!userId) {
-    throw new TokenError('Token requires a UserID, none provided')
+    throw new TokenError(MESSAGES.TOKEN_REQUIRES_USER_ID)
   }
   if (!type) {
-    throw new TokenError('Token type is required, none provided')
+    throw new TokenError(MESSAGES.TOKEN_TYPE_REQUIRED)
   }
 
   const [token] = await db

@@ -45,7 +45,7 @@ describe('Middleware:JWT', () => {
     delete mockRequest?.headers?.authorization
 
     await expect(() => authenticateToken(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
-      new UnauthorizedError('JWT token is not provided in the request headers.')
+      new UnauthorizedError(MESSAGES.JWT_TOKEN_NOT_PROVIDED)
     )
 
     expect(nextFunction).not.toHaveBeenCalled()

@@ -1,3 +1,4 @@
+import MESSAGES from '../constants/messages'
 import { User, SafeUser, PublicUser } from '../db/types'
 
 /**
@@ -6,7 +7,7 @@ import { User, SafeUser, PublicUser } from '../db/types'
 export function userToPublicUser(user: User | SafeUser | PublicUser): PublicUser {
   const { username, firstName, lastName, email, role, id } = user
   if (!username || !firstName || !lastName || !email || !role || !id) {
-    throw new Error('User is missing required fields')
+    throw new Error(MESSAGES.USER_MISSING_REQUIRED_FIELDS)
   }
   return {
     username,

@@ -26,7 +26,7 @@ const checkPermission =
         throw new ForbiddenError(MESSAGES.USER_DELETED)
       }
       if (!user.role) {
-        throw new ForbiddenError('User has no role.')
+        throw new ForbiddenError(MESSAGES.USER_HAS_NO_ROLE)
       }
 
       if (ROLES.LOCKED === user.role) {
@@ -47,7 +47,7 @@ const checkPermission =
 
       // Finally check the actual ACL
       if (user.role && !ACL[user.role].includes(permission)) {
-        throw new ForbiddenError('User cant perform this action.')
+        throw new ForbiddenError(MESSAGES.INSUFFICIENT_PERMISSIONS)
       }
 
       next()

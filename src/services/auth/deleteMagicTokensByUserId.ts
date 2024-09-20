@@ -3,6 +3,7 @@ import { TOKEN_TYPE } from '../../constants/database'
 import db from '../../db'
 import { tableTokens } from '../../db/schema'
 import { TokenError } from '../../errors'
+import MESSAGES from '../../constants/messages'
 
 interface Props {
   userId: string
@@ -10,7 +11,7 @@ interface Props {
 
 const deleteMagicTokensByUserId = async ({ userId }: Props): Promise<number> => {
   if (!userId) {
-    throw new TokenError('No user ID provided')
+    throw new TokenError(MESSAGES.MISSING_USER_ID)
   }
 
   const deleted = await db

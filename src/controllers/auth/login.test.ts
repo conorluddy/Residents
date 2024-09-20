@@ -58,17 +58,13 @@ describe('Controller: Login', () => {
   it('should reject login with incorrect username', async () => {
     mockRequest.body.username = 'MrsFake'
     mockRequest.body.password = 'testpassword'
-    await expect(login(mockRequest as Request, mockResponse as Response)).rejects.toThrow(
-      'No user found for that username or email.'
-    )
+    await expect(login(mockRequest as Request, mockResponse as Response)).rejects.toThrow(MESSAGES.USER_NOT_FOUND)
   })
 
   it('should reject login with incorrect password', async () => {
     mockRequest.body.username = 'MrFake'
     mockRequest.body.password = 'wrongpassword'
-    await expect(login(mockRequest as Request, mockResponse as Response)).rejects.toThrow(
-      'No user found for that username or email.'
-    )
+    await expect(login(mockRequest as Request, mockResponse as Response)).rejects.toThrow(MESSAGES.USER_NOT_FOUND)
   })
 
   it('should reject login with missing username/password', async () => {
@@ -90,13 +86,11 @@ describe('Controller: Login', () => {
     mockRequest.body.username = null
     mockRequest.body.email = 'notanemailaddress'
     mockRequest.body.password = 'testpassword'
-    await expect(login(mockRequest as Request, mockResponse as Response)).rejects.toThrow('Invalid email address')
+    await expect(login(mockRequest as Request, mockResponse as Response)).rejects.toThrow(MESSAGES.INVALID_EMAIL)
   })
 
   it('should catch errors', async () => {
     delete mockRequest.cookies
-    await expect(login(mockRequest as Request, mockResponse as Response)).rejects.toThrow(
-      'No user found for that username or email.'
-    )
+    await expect(login(mockRequest as Request, mockResponse as Response)).rejects.toThrow(MESSAGES.USER_NOT_FOUND)
   })
 })

@@ -3,6 +3,7 @@ import { ROLES, ROLES_ARRAY } from '../../constants/database'
 import db from '../../db'
 import { tableUsers } from '../../db/schema'
 import { BadRequestError, ValidationError } from '../../errors'
+import MESSAGES from '../../constants/messages'
 
 interface Params {
   userId: string
@@ -14,10 +15,10 @@ const updateUserRole = async ({ userId, role }: Params): Promise<string> => {
     throw new BadRequestError('User ID must be provided.')
   }
   if (!role) {
-    throw new BadRequestError('Role must be provided.')
+    throw new BadRequestError(MESSAGES.ROLE_REQUIRED)
   }
   if (!ROLES_ARRAY.includes(role)) {
-    throw new ValidationError('Invalid role provided.')
+    throw new ValidationError(MESSAGES.INVALID_ROLE)
   }
 
   const [{ updatedUserId }] = await db

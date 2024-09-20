@@ -18,10 +18,10 @@ export const validateAccount = async (req: Request, res: Response): Promise<Resp
     throw new BadRequestError(MESSAGES.INVALID_USER_DATA)
   } // probably redundant
   if (!token) {
-    throw new TokenError('Validation token missing.')
+    throw new TokenError(MESSAGES.TOKEN_MISSING)
   }
   if (token.type !== TOKEN_TYPE.VALIDATE || token.userId !== userIdFromUrlParam || tokenId !== token.id) {
-    throw new TokenError('Validation token invalid.')
+    throw new TokenError(MESSAGES.VALIDATION_TOKEN_INVALID)
   }
 
   await Promise.all([
@@ -29,7 +29,7 @@ export const validateAccount = async (req: Request, res: Response): Promise<Resp
     SERVICES.deleteToken({ tokenId: token.id }),
   ])
 
-  logger.info(`User ${userIdFromUrlParam} validated.`)
+  logger.info(`${MESSAGES.USER_VALIDATED} ${userIdFromUrlParam}`)
 
   return handleSuccessResponse({ res, message: MESSAGES.ACCOUNT_VALIDATED })
 }

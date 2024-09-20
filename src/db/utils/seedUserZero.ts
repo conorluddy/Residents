@@ -18,10 +18,8 @@ const seedUserZero = async (password: string = DEFAULT_SEED_PASSWORD): Promise<v
     const usersAlreadyExist = (await SERVICES.getUserCount()) > 0
 
     if (usersAlreadyExist) {
-      logger.warn(
-        'This seeding script is only for setting the first user in an empty database, but the database already has users.'
-      )
-      throw new Error('Cannot create owner/root user when the database already has users.')
+      logger.warn(MESSAGES.SEEDING_SCRIPT_FIRST_USER_EXISTS)
+      throw new Error(MESSAGES.CANNOT_CREATE_OWNER_USER_WHEN_USERS_EXIST)
     }
 
     const userZero: NewUser = {

@@ -45,6 +45,8 @@ describe('Controller: Reset Password', () => {
 
   it('missing user data', async () => {
     mockRequest[REQUEST_EMAIL] = undefined
-    await expect(resetPassword(mockRequest as Request, mockResponse as Response)).rejects.toThrow('User data missing.')
+    await expect(resetPassword(mockRequest as Request, mockResponse as Response)).rejects.toThrow(
+      MESSAGES.MISSING_USER_DATA
+    )
   })
 })

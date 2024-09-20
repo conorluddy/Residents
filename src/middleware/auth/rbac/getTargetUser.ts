@@ -14,13 +14,13 @@ import MESSAGES from '../../../constants/messages'
 async function getTargetUser(req: Request, _res: Response, next: NextFunction): Promise<void> {
   const user = req[REQUEST_USER]
   if (!user) {
-    throw new BadRequestError('Missing User data.')
+    throw new BadRequestError(MESSAGES.MISSING_USER_DATA)
   }
   if (!user.role) {
-    throw new ForbiddenError('User has no role.')
+    throw new ForbiddenError(MESSAGES.USER_HAS_NO_ROLE)
   }
   if (user.deletedAt) {
-    throw new UnauthorizedError('User account is deleted.')
+    throw new UnauthorizedError(MESSAGES.ACCOUNT_DELETED)
   }
 
   const isSelfLookup = req.url === '/self'
@@ -50,13 +50,13 @@ async function getTargetUser(req: Request, _res: Response, next: NextFunction): 
   const targetUser = await SERVICES.getUserById(targetUserId)
 
   if (!targetUser) {
-    throw new NotFoundError('Target user not found.')
+    throw new NotFoundError(MESSAGES.USER_NOT_FOUND)
   }
   if (!targetUser.role) {
-    throw new ForbiddenError('Target user role not found.')
+    throw new ForbiddenError(MESSAGES.INVALID_TARGET_USER_ROLE)
   }
   if (!ROLES_ARRAY.includes(targetUser.role)) {
-    throw new ForbiddenError('Invalid target user role.')
+    throw new ForbiddenError(MESSAGES.INVALID_TARGET_USER_ROLE)
   }
 
   // All good, set the target user on the request object

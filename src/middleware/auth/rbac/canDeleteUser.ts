@@ -39,7 +39,7 @@ function canDeleteUser(req: Request, res: Response, next: NextFunction): void {
     return next()
   }
 
-  throw new ForbiddenError('User does not have permission to delete this user.')
+  throw new ForbiddenError(MESSAGES.USER_DELETE_PERMISSION_DENIED)
 }
 
 export default canDeleteUser

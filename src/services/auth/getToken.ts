@@ -3,6 +3,7 @@ import { eq, desc } from 'drizzle-orm'
 import { tableTokens } from '../../db/schema'
 import { Token } from '../../db/types'
 import { TokenError } from '../../errors'
+import MESSAGES from '../../constants/messages'
 
 interface Props {
   tokenId: string
@@ -10,7 +11,7 @@ interface Props {
 
 const getToken = async ({ tokenId }: Props): Promise<Token | null> => {
   if (!tokenId) {
-    throw new TokenError('No token ID provided')
+    throw new TokenError(MESSAGES.NO_TOKEN_ID_PROVIDED)
   }
 
   const [token] = await db

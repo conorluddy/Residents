@@ -13,7 +13,7 @@ const rateLimiter = rateLimit({
   standardHeaders: 'draft-7', // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
   handler: () => {
-    throw new RateLimitError('Too many requests, please chill for a bit.')
+    throw new RateLimitError(MESSAGES.TOO_MANY_REQUESTS_TRY_AGAIN_IN_10)
   },
   // store: ... , // Redis, Memcached, etc. - for rate limiting across distributed systems when you scale.
 })
@@ -24,7 +24,7 @@ const rateLimitOncePerTenMins = rateLimit({
   standardHeaders: 'draft-7',
   legacyHeaders: false,
   handler: () => {
-    throw new RateLimitError(MESSAGES.RATE_LIMIT_MESSAGE)
+    throw new RateLimitError(MESSAGES.TOO_MANY_REQUESTS_TRY_AGAIN_IN_10)
   },
 })
 

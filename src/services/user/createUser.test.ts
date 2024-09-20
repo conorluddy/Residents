@@ -2,6 +2,7 @@ import { makeAFakeSafeUser } from '../../test-utils/mockUsers'
 import { NewUser, User } from '../../db/types'
 import { createUser } from './createUser'
 import { ROLES } from '../../constants/database'
+import MESSAGES from '../../constants/messages'
 
 let fakeUser: Partial<User>
 
@@ -33,6 +34,6 @@ describe('Services: CreateUser', () => {
   })
 
   it('Missing required data', async () => {
-    await expect(createUser({} as NewUser)).rejects.toThrow('Missing required fields.')
+    await expect(createUser({} as NewUser)).rejects.toThrow(MESSAGES.MISSING_REQUIRED_FIELDS)
   })
 })

@@ -2,6 +2,7 @@ import db from '../../db'
 import { eq } from 'drizzle-orm'
 import { tableUserMeta } from '../../db/schema'
 import { BadRequestError } from '../../errors'
+import MESSAGES from '../../constants/messages'
 
 interface Params {
   userId: string
@@ -13,7 +14,7 @@ const updateUserMeta = async ({ userId, metaItem }: Params): Promise<string> => 
     throw new BadRequestError('User ID must be provided.')
   }
   if (!metaItem) {
-    throw new BadRequestError('No meta data provided to update.')
+    throw new BadRequestError(MESSAGES.NO_METADATA_PROVIDED_FOR_UPDATE)
   }
 
   const [updatedMeta] = await db
