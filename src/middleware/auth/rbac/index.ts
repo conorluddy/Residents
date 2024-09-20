@@ -14,42 +14,44 @@ import MESSAGES from '../../../constants/messages'
  * @param permission PERMISSIONS
  * @param matchId boolean - If true then the user id must match the resource id (can only edit self etc)
  */
-const checkPermission = (permission: PERMISSIONS) => (req: Request, res: Response, next: NextFunction) => {
-  const user = req[REQUEST_USER]
+const checkPermission =
+  (permission: PERMISSIONS) =>
+  (req: Request, res: Response, next: NextFunction): void => {
+    const user = req[REQUEST_USER]
 
-  if (!user) {
-    throw new BadRequestError(MESSAGES.MISSING_USER_DATA)
-  }
-  if (user.deletedAt) {
-    throw new ForbiddenError(MESSAGES.USER_DELETED)
-  }
-  if (!user.role) {
-    throw new ForbiddenError('User has no role.')
-  }
+    if (!user) {
+      throw new BadRequestError(MESSAGES.MISSING_USER_DATA)
+    }
+    if (user.deletedAt) {
+      throw new ForbiddenError(MESSAGES.USER_DELETED)
+    }
+    if (!user.role) {
+      throw new ForbiddenError('User has no role.')
+    }
 
-  if (ROLES.LOCKED === user.role) {
-    throw new ForbiddenError(MESSAGES.ACCOUNT_LOCKED)
-  }
-  if (STATUS.BANNED === user.status) {
-    throw new ForbiddenError(MESSAGES.ACCOUNT_BANNED)
-  }
-  if (STATUS.DELETED === user.status) {
-    throw new ForbiddenError(MESSAGES.ACCOUNT_DELETED)
-  }
-  if (STATUS.SUSPENDED === user.status) {
-    throw new ForbiddenError(MESSAGES.ACCOUNT_SUSPENDED)
-  }
-  if (STATUS.UNVERIFIED === user.status) {
-    throw new ForbiddenError(MESSAGES.ACCOUNT_NOT_VERIFIED)
-  }
+    if (ROLES.LOCKED === user.role) {
+      throw new ForbiddenError(MESSAGES.ACCOUNT_LOCKED)
+    }
+    if (STATUS.BANNED === user.status) {
+      throw new ForbiddenError(MESSAGES.ACCOUNT_BANNED)
+    }
+    if (STATUS.DELETED === user.status) {
+      throw new ForbiddenError(MESSAGES.ACCOUNT_DELETED)
+    }
+    if (STATUS.SUSPENDED === user.status) {
+      throw new ForbiddenError(MESSAGES.ACCOUNT_SUSPENDED)
+    }
+    if (STATUS.UNVERIFIED === user.status) {
+      throw new ForbiddenError(MESSAGES.ACCOUNT_NOT_VERIFIED)
+    }
 
-  // Finally check the actual ACL
-  if (user.role && !ACL[user.role].includes(permission)) {
-    throw new ForbiddenError('User cant perform this action.')
-  }
+    // Finally check the actual ACL
+    if (user.role && !ACL[user.role].includes(permission)) {
+      throw new ForbiddenError('User cant perform this action.')
+    }
 
-  next()
-}
+    next()
+  }
 
 const RBAC = {
   getTargetUser,

@@ -17,10 +17,7 @@ import { handleSuccessResponse } from '../../middleware/util/successHandler'
 export const magicLoginWithToken = async (req: Request, res: Response): Promise<Response> => {
   const token = req[REQUEST_TOKEN]!
 
-  const [user, _deletedTokenId] = await Promise.all([
-    SERVICES.getUserById(token.userId),
-    SERVICES.deleteToken({ tokenId: token.id }),
-  ])
+  const [user] = await Promise.all([SERVICES.getUserById(token.userId), SERVICES.deleteToken({ tokenId: token.id })])
 
   if (!user) {
     throw new ForbiddenError('No user found for that token.')
@@ -56,7 +53,6 @@ export const magicLoginWithToken = async (req: Request, res: Response): Promise<
     maxAge: REFRESH_TOKEN_EXPIRY,
   })
 
-  const userIdToken = refreshTokenId
   res.cookie(RESIDENT_TOKEN, user.id, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',

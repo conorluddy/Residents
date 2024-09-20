@@ -12,11 +12,11 @@ let fakeUser: Partial<User>
 jest.mock('../../services/index', () => ({
   deleteUser: jest
     .fn()
-    .mockImplementationOnce(async () => {
+    .mockImplementationOnce(() => {
       fakeUser = makeAFakeUser({})
       return fakeUser.id
     })
-    .mockImplementationOnce(async () => {
+    .mockImplementationOnce(() => {
       throw new Error('Error deleting user')
     }),
 }))

@@ -11,14 +11,14 @@ let fakeUser: Partial<User>
 jest.mock('../../services/index', () => ({
   getUserById: jest
     .fn()
-    .mockImplementationOnce(async () => {
+    .mockImplementationOnce(() => {
       fakeUser = makeAFakeUser({ id: 'SELF_ID' })
       return fakeUser
     })
-    .mockImplementationOnce(async () => {
+    .mockImplementationOnce(() => {
       return undefined
     })
-    .mockImplementationOnce(async () => {
+    .mockImplementationOnce(() => {
       throw new Error('DB error')
     }),
 }))

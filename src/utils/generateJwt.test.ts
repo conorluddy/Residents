@@ -1,4 +1,4 @@
-import { ROLES, STATUS } from '../constants/database'
+import { ROLES } from '../constants/database'
 import { PublicUser } from '../db/types'
 import jwt from 'jsonwebtoken'
 import { generateJwtFromUser } from './generateJwt'

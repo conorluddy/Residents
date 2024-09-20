@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express'
+import { Request, Response } from 'express'
 import { HTTP_SERVER_ERROR } from '../../constants/http'
 import { User } from '../../db/types'
 import { magicLogin } from './magicLogin'
