@@ -49,7 +49,7 @@ describe('Controller: Validate Account', () => {
   it('Validates a users account when the token is found and matches the user', async () => {
     await validateAccount(mockRequest as Request, mockResponse as Response)
     expect(logger.error).not.toHaveBeenCalled()
-    expect(logger.info).toHaveBeenCalledWith(`User ${mockDefaultUser.id} validated.`)
+    expect(logger.info).toHaveBeenCalledWith(`${MESSAGES.USER_VALIDATED} ${mockDefaultUser.id}`)
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.OK)
     expect(mockResponse.json).toHaveBeenCalledWith({ message: MESSAGES.ACCOUNT_VALIDATED })
   })
