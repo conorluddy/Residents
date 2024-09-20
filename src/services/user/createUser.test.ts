@@ -2,6 +2,7 @@ import { makeAFakeSafeUser } from '../../test-utils/mockUsers'
 import { NewUser, User } from '../../db/types'
 import { createUser } from './createUser'
 import { ROLES } from '../../constants/database'
+import MESSAGES from '../../constants/messages'
 
 let fakeUser: Partial<User>
 
