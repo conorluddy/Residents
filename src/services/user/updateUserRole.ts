@@ -12,7 +12,7 @@ interface Params {
 
 const updateUserRole = async ({ userId, role }: Params): Promise<string> => {
   if (!userId) {
-    throw new BadRequestError('User ID must be provided.')
+    throw new BadRequestError(MESSAGES.MISSING_USER_ID)
   }
   if (!role) {
     throw new BadRequestError(MESSAGES.ROLE_REQUIRED)

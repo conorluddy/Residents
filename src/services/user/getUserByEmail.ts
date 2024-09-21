@@ -11,7 +11,7 @@ const getUserByEmail = async (email: string): Promise<SafeUser | null> => {
     throw new BadRequestError(MESSAGES.EMAIL_REQUIRED)
   }
   if (!isEmail(email)) {
-    throw new BadRequestError('Invalid email provided')
+    throw new BadRequestError(MESSAGES.INVALID_EMAIL)
   }
 
   const [user] = await db

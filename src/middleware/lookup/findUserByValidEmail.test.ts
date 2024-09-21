@@ -47,13 +47,13 @@ describe('Middleware:findUserByValidEmail', () => {
   it('[REQUEST_EMAIL] does not exist in the request', async () => {
     mockRequest[REQUEST_EMAIL] = undefined
     await expect(findUserByValidEmail(mockRequest as Request, mockResponse as Response, nextFunction)).rejects.toThrow(
-      'Invalid email.'
+      MESSAGES.EMAIL_REQUIRED
     )
   })
   it('[REQUEST_EMAIL] holds an invalid email address', async () => {
     mockRequest[REQUEST_EMAIL] = 'notAnEmail'
     await expect(findUserByValidEmail(mockRequest as Request, mockResponse as Response, nextFunction)).rejects.toThrow(
-      MESSAGES.USER_NOT_FOUND
+      MESSAGES.INVALID_EMAIL
     )
   })
 })

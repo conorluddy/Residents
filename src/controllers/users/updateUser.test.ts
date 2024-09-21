@@ -49,9 +49,7 @@ describe('Controller: UpdateUser', () => {
       ...mockRequest.params!,
       id: '',
     }
-    await expect(updateUser(mockRequest as Request, mockResponse as Response)).rejects.toThrow(
-      'User ID is missing in the request.'
-    )
+    await expect(updateUser(mockRequest as Request, mockResponse as Response)).rejects.toThrow(MESSAGES.MISSING_USER_ID)
   })
 
   it('Responds with Forbidden if ID and verified target ID dont match', async () => {
@@ -68,8 +66,6 @@ describe('Controller: UpdateUser', () => {
   it('Responds with Bad Request if no update data is provided', async () => {
     mockRequest.body = {}
 
-    await expect(updateUser(mockRequest as Request, mockResponse as Response)).rejects.toThrow(
-      'No udpate data provided.'
-    )
+    await expect(updateUser(mockRequest as Request, mockResponse as Response)).rejects.toThrow(MESSAGES.NO_UPDATE_DATA)
   })
 })

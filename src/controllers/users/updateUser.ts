@@ -14,7 +14,7 @@ export const updateUser = async (req: Request, res: Response): Promise<Response>
   const targetUserId = req[REQUEST_TARGET_USER_ID]
   //
   if (!id || !targetUserId) {
-    throw new BadRequestError('User ID is missing in the request.')
+    throw new BadRequestError(MESSAGES.MISSING_USER_ID)
   }
 
   // Possibly redundant, as the RBAC middleware will have found the user
@@ -26,7 +26,7 @@ export const updateUser = async (req: Request, res: Response): Promise<Response>
   // TODO: This is a check that should be done way before even looking up the target user
   // TODO: Needs to be done in a payload validation middleware
   if (!req.body || Object.keys(req.body).length === 0) {
-    throw new BadRequestError('No udpate data provided.')
+    throw new BadRequestError(MESSAGES.NO_UPDATE_DATA)
   }
   // TODO: Once the validation middlewares run they should put the payload into a request suymbol
   const { username, firstName, lastName, email, password }: Partial<UserUpdate> = req.body ?? {}

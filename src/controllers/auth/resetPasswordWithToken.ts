@@ -43,12 +43,10 @@ export const resetPasswordWithToken = async (req: Request, res: Response): Promi
 
   // This case should never happen but will leave it here for now
   if (updatedUserId !== token.userId) {
-    throw new DatabaseError(
-      `Error updating password for user: ${token.userId}, the DB update result should be the same as request ID: ${updatedUserId}`
-    )
+    throw new DatabaseError(`${MESSAGES.PASSWORD_UPDATE_ERROR} UID:${token.userId}`)
   }
 
-  logger.info(`Password was reset for USER:${token.userId}`)
+  logger.info(`${MESSAGES.PASSWORD_WAS_RESET} UID:${token.userId}`)
 
   return handleSuccessResponse({ res, message: MESSAGES.PASSWORD_RESET_SUCCESS })
 }

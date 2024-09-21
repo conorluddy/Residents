@@ -13,6 +13,9 @@
  * @throws {Error} - Throws an error if the format is invalid.
  */
 
+import MESSAGES from '../constants/messages'
+import { ValidationError } from '../errors'
+
 const timeToMs = (timeString: string): number => {
   // Maybe use this instead - https://github.com/vercel/ms
 
@@ -28,7 +31,7 @@ const timeToMs = (timeString: string): number => {
   const match = timeString.match(/^(\d+)([smhdwy])$/)
 
   if (!match) {
-    throw new Error(`Invalid time format: ${timeString}`)
+    throw new ValidationError(`${MESSAGES.INVALID_TIME_FORMAT} ${timeString}`)
   }
 
   const value = parseInt(match[1], 10)

@@ -13,7 +13,7 @@ interface Params {
 
 const updateUserPassword = async ({ userId, password }: Params): Promise<string> => {
   if (!userId) {
-    throw new BadRequestError('User ID must be provided.')
+    throw new BadRequestError(MESSAGES.MISSING_USER_ID)
   }
   if (!password) {
     throw new BadRequestError(MESSAGES.PASSWORD_NEEDED)

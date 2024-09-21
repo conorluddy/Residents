@@ -3,6 +3,7 @@ import { STATUS } from '../../constants/database'
 import db from '../../db'
 import { tableUsers } from '../../db/schema'
 import { BadRequestError } from '../../errors'
+import MESSAGES from '../../constants/messages'
 
 interface Params {
   userId: string
@@ -10,7 +11,7 @@ interface Params {
 
 const deleteUser = async ({ userId }: Params): Promise<string> => {
   if (!userId) {
-    throw new BadRequestError('User ID must be provided.')
+    throw new BadRequestError(MESSAGES.MISSING_USER_ID)
   }
 
   const [{ updatedUserId }] = await db

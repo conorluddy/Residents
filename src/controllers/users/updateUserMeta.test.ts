@@ -31,13 +31,13 @@ describe('Controller: UpdateUserMeta', () => {
     await updateUserMeta(mockRequest as Request, mockResponse as Response)
     expect(logger.error).not.toHaveBeenCalled()
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.OK)
-    expect(mockResponse.json).toHaveBeenCalledWith({ message: `User meta for ${FAKEID} updated successfully` })
+    expect(mockResponse.json).toHaveBeenCalledWith({ message: MESSAGES.USER_META_UPDATED })
   })
 
   it('Responds with Bad Request when IDs are missing', async () => {
     mockRequest.params = { ...mockRequest.params!, id: '' }
     await expect(updateUserMeta(mockRequest as Request, mockResponse as Response)).rejects.toThrow(
-      'User ID is missing in the request.'
+      MESSAGES.MISSING_USER_ID
     )
   })
 
@@ -51,7 +51,7 @@ describe('Controller: UpdateUserMeta', () => {
   it('Responds with Bad Request if no update data is provided', async () => {
     mockRequest.body = {}
     await expect(updateUserMeta(mockRequest as Request, mockResponse as Response)).rejects.toThrow(
-      'No udpate data provided.'
+      MESSAGES.NO_UPDATE_DATA
     )
   })
 })
