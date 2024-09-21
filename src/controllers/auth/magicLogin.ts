@@ -43,7 +43,7 @@ export const magicLogin = async (req: Request, res: Response): Promise<Response>
       // Obviously this is a test link, in production you'd want to use a real domain
     })
 
-    logger.info(`Magic login email sent to ${email}, token id: ${tokenId}`)
+    logger.info(`${MESSAGES.MAGIC_LOGIN_EMAIL_SENT} ${email}, token id: ${tokenId}`)
     debugTokenId = tokenId
   }
 

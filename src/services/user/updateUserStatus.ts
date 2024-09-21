@@ -12,7 +12,7 @@ interface Params {
 
 const updateUserStatus = async ({ userId, status }: Params): Promise<string> => {
   if (!userId) {
-    throw new BadRequestError('User ID must be provided.')
+    throw new BadRequestError(MESSAGES.MISSING_USER_ID)
   }
   if (!status) {
     throw new BadRequestError(MESSAGES.STATUS_REQUIRED)

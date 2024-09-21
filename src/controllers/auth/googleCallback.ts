@@ -31,7 +31,7 @@ export const googleCallback = async (req: Request, res: Response): Promise<Respo
   const user = await SERVICES.getUserByEmail(userEmail)
 
   if (!user) {
-    throw new NotFoundError('User not found')
+    throw new NotFoundError(MESSAGES.USER_NOT_FOUND)
   }
 
   const token = generateJwtFromUser(user)

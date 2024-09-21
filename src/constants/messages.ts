@@ -27,6 +27,7 @@ const MESSAGES = {
   USER_UPDATED: 'Successfully updated user.',
   USER_DELETED: 'User was deleted.',
   USER_NOT_FOUND: 'User not found.',
+  USER_META_UPDATED: 'Successfully updated user meta.',
   INVALID_USER_DATA: 'Invalid user data.',
   MISSING_USER_DATA: 'User data is missing.',
   MISSING_USER_ID: 'User ID is missing.',
@@ -92,11 +93,13 @@ const MESSAGES = {
   ERROR_CREATING_REFRESH_TOKEN: 'Error creating refresh token.',
   ERROR_LOGGING_IN: 'Error logging in.',
   FAILED_CREATING_FEDERATED_CREDENTIALS: 'Failed to create new federated credentials.',
+  USER_NOT_FOUND_FEDERATED_CREDENTIALS: 'User not found matching federated credentials.',
   FAILED_CREATING_USER: 'Failed to create user.',
   INVALID_DATA_PROVIDED: 'Invalid data provided.',
   INVALID_GOOGLE_CALLBACK_TOKEN: 'Invalid Google Callback token.',
   INVALID_TARGET_USER_ROLE: 'Invalid target user role.',
   INVALID_TOKEN_TYPE: 'Invalid token type.',
+  INVALID_TIME_FORMAT: 'Invalid time format.',
   JWT_INVALID_USER_DATA: 'JWT contains invalid user data.',
   JWT_SECRET_NOT_FOUND: 'JWT secret not found.',
   JWT_TOKEN_NOT_PROVIDED: 'JWT token is not provided in the request headers.',
@@ -113,6 +116,8 @@ const MESSAGES = {
   NO_TOKEN_ID_PROVIDED: 'No token ID provided.',
   USER_NOT_FOUND_FOR_TOKEN: 'No user found for that token.',
   PASSWORD_ERROR: 'Password Error.',
+  PASSWORD_WAS_RESET: 'Password was reset.',
+  PASSWORD_UPDATE_ERROR: 'Error updating password.',
   REFRESH_TOKEN_COUNTERPART_REQUIRED: 'Refresh token counterpart is required.',
   REFRESH_TOKEN_REQUIRED: 'Refresh token is required.',
   RESET_PASSWORD_PROMPT: 'Reset your password.',
@@ -127,12 +132,33 @@ const MESSAGES = {
   TOKEN_REQUIRES_USER_ID: 'Token requires a UserID, none provided.',
   TOKEN_TYPE_REQUIRED: 'Token type is required, none provided.',
   TOKEN_USER_INVALID: 'Token user not valid.',
+  EXPIRED_TOKENS_DELETED: 'Expired tokens deleted.',
+  ERROR_DISCARDING_TOKEN: 'Error discarding token.',
   USER_VALIDATED: 'User validated.',
   USER_DELETE_PERMISSION_DENIED: 'User does not have permission to delete this user.',
+  USER_UPDATE_PERMISSION_DENIED: 'User does not have permission to update this user.',
   USER_GET_PERMISSION_DENIED: 'User does not have permission to get this user.',
   USER_HAS_NO_ROLE: 'User has no role.',
   USER_MISSING_REQUIRED_FIELDS: 'User is missing required fields.',
   VALIDATION_TOKEN_INVALID: 'Validation token invalid.',
+
+  MAGIC_LOGIN_EMAIL_SENT: 'Magic login email sent.',
 }
 
 export default MESSAGES
+
+/**  TODO
+Problem with email normalization for
+Click here to validate your account
+Magic login email sent to
+Error Code
+Error Message
+Error updating password for user: ${token.userId}, the DB update result should be the same as request ID: ${updatedUserId}
+Field:'
+Help:'
+HTTP server closed
+Running: http://localhost:${serverPort}
+Swagger API docs are available at http://localhost:${serverPort}/api-docs
+User ${deletedUserId} deleted
+User ${updatedUserId} updated successfully
+*/

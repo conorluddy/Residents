@@ -11,7 +11,7 @@ interface Params {
 
 const updateUserMeta = async ({ userId, metaItem }: Params): Promise<string> => {
   if (!userId) {
-    throw new BadRequestError('User ID must be provided.')
+    throw new BadRequestError(MESSAGES.MISSING_USER_ID)
   }
   if (!metaItem) {
     throw new BadRequestError(MESSAGES.NO_METADATA_PROVIDED_FOR_UPDATE)

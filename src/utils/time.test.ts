@@ -28,10 +28,10 @@ describe('Utils: Time', () => {
     })
 
     it('should throw an error for invalid format', () => {
-      expect(() => timeToMs('10')).toThrow('Invalid time format: 10')
-      expect(() => timeToMs('abc')).toThrow('Invalid time format: abc')
-      expect(() => timeToMs('10x')).toThrow('Invalid time format: 10x')
-      expect(() => timeToMs('')).toThrow('Invalid time format: ')
+      expect(() => timeToMs('10')).toThrow('Invalid time format. 10')
+      expect(() => timeToMs('abc')).toThrow('Invalid time format. abc')
+      expect(() => timeToMs('10x')).toThrow('Invalid time format. 10x')
+      expect(() => timeToMs('')).toThrow('Invalid time format. ')
     })
 
     it('should handle edge case with zero value', () => {

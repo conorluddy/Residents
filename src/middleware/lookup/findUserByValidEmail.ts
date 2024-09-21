@@ -3,6 +3,7 @@ import SERVICES from '../../services'
 import { REQUEST_EMAIL, REQUEST_USER } from '../../types/requestSymbols'
 import { BadRequestError } from '../../errors'
 import MESSAGES from '../../constants/messages'
+import { isEmail } from 'validator'
 
 /**
  * Middleware for finding a user by their email address.
@@ -13,7 +14,11 @@ const findUserByValidEmail: RequestHandler = async (req: Request, res: Response,
   const email = req[REQUEST_EMAIL]
 
   if (!email) {
-    throw new BadRequestError('Invalid email.')
+    throw new BadRequestError(MESSAGES.EMAIL_REQUIRED)
+  }
+
+  if (!isEmail(email)) {
+    throw new BadRequestError(MESSAGES.INVALID_EMAIL)
   }
 
   const user = await SERVICES.getUserByEmail(email)

@@ -8,7 +8,7 @@ type ServerErrorCodes = (typeof HTTP_SERVER_ERROR)[keyof typeof HTTP_SERVER_ERRO
 
 class PasswordStrengthError extends Error {
   public statusCode: ClientErrorCodes
-  constructor(message = 'Password strength is insufficient.') {
+  constructor(message = MESSAGES.WEAK_PASSWORD) {
     super(message)
     this.name = 'PasswordStrengthError'
     this.statusCode = HTTP_CLIENT_ERROR.BAD_REQUEST

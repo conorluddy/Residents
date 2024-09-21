@@ -48,12 +48,12 @@ describe('Controller: Reset Password With Token', () => {
     await resetPasswordWithToken(mockRequest as Request, mockResponse as Response)
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.OK)
     expect(mockResponse.json).toHaveBeenCalledWith({ message: MESSAGES.PASSWORD_RESET_SUCCESS })
-    expect(logger.info).toHaveBeenCalledWith('Password was reset for USER:UID123')
+    expect(logger.info).toHaveBeenCalledWith(`${MESSAGES.PASSWORD_WAS_RESET} UID:UID123`)
   })
 
   it('Unhappy path: Reset Password With Token', async () => {
     await expect(resetPasswordWithToken(mockRequest as Request, mockResponse as Response)).rejects.toThrow(
-      'Error updating password for user: UID123, the DB update result should be the same as request ID: NOT_SAME'
+      `${MESSAGES.PASSWORD_UPDATE_ERROR} UID:UID123`
     )
   })
 

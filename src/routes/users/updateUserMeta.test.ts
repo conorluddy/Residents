@@ -5,6 +5,7 @@ import { HTTP_SUCCESS } from '../../constants/http'
 import updateUserMetaRouter from '../../routes/users/updateUserMeta'
 import { makeAFakeUser } from '../../test-utils/mockUsers'
 import { REQUEST_TARGET_USER_ID, REQUEST_USER } from '../../types/requestSymbols'
+import MESSAGES from '../../constants/messages'
 
 const fakeUser = makeAFakeUser({ password: '$TR0ngP@$$W0rDz123!', role: ROLES.DEFAULT })
 
@@ -34,7 +35,7 @@ app.use(updateUserMetaRouter)
 describe('Route: Update User Meta', () => {
   it('successfully updates user meta', async () => {
     const response = await request(app).patch(`/meta/${fakeUser.id}`).send({ metaItem: 'Meta Update' })
-    expect(response.body.message).toBe(`User meta for ${fakeUser.id} updated successfully`)
+    expect(response.body.message).toBe(MESSAGES.USER_META_UPDATED)
     expect(response.status).toBe(HTTP_SUCCESS.OK)
   })
 })

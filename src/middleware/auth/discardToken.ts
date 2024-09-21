@@ -17,7 +17,7 @@ const discardToken: RequestHandler = async (req: Request, res: Response, next: N
   const deletedTokenId = await SERVICES.deleteToken({ tokenId: requestToken.id })
 
   if (!deletedTokenId || deletedTokenId !== requestToken?.id) {
-    throw new ForbiddenError(`Error expiring token ID: ${requestToken.id}`)
+    throw new ForbiddenError(`${MESSAGES.ERROR_DISCARDING_TOKEN} ${requestToken.id}`)
   }
 
   next()

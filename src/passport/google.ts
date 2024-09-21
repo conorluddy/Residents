@@ -8,6 +8,7 @@ import { NewUser } from '../db/types'
 import SERVICES from '../services'
 import { logger } from '../utils/logger'
 import MESSAGES from '../constants/messages'
+import { LoginError } from '../errors'
 
 dotenv.config()
 
@@ -40,7 +41,7 @@ if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET || !GOOGLE_CALLBACK_URL) {
         if (fedCreds[0].userId) {
           const user = await SERVICES.getUserById(fedCreds[0].userId)
           if (!user) {
-            throw new Error(`User not found matching federated credentials with ID:${fedCreds[0].userId}`)
+            throw new LoginError(`${MESSAGES.USER_NOT_FOUND_FEDERATED_CREDENTIALS}: ${fedCreds[0].userId}`)
           }
           return done(null, user)
         } else {

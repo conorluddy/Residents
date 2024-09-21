@@ -39,7 +39,7 @@ function canUpdateUser(req: Request, res: Response, next: NextFunction): void {
     return next()
   }
 
-  throw new ForbiddenError('User does not have permission to update this user.')
+  throw new ForbiddenError(MESSAGES.USER_UPDATE_PERMISSION_DENIED)
 }
 
 export default canUpdateUser
