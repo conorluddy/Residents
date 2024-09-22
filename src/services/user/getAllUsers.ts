@@ -19,6 +19,8 @@ const getAllUsers = async (
   // Cap the limit - can move these limits to .env
   const cappedLimit = Math.min(limit, MAX_PAGE_SIZE_ROW_LIMIT)
   //
+
+  // TODO: Role based filtering, possibly
   const users: SafeUser[] = await db
     .select({
       id: tableUsers.id,

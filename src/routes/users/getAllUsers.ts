@@ -5,9 +5,6 @@ import CONTROLLERS from '../../controllers'
 
 const router = Router()
 
-// Overwriting /self
-router.get('/:limit/:offset', authenticateToken, RBAC.checkCanGetAllUsers, CONTROLLERS.USER.getAllUsers)
-router.get('/:limit', authenticateToken, RBAC.checkCanGetAllUsers, CONTROLLERS.USER.getAllUsers)
 router.get('/', authenticateToken, RBAC.checkCanGetAllUsers, CONTROLLERS.USER.getAllUsers)
 
 export default router
