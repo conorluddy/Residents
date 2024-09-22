@@ -1,16 +1,24 @@
 import { tableUsers } from '../../db/schema'
 import { SafeUser } from '../../db/types'
 import db from '../../db'
+import { asc } from 'drizzle-orm'
 
 interface PaginationProps {
-  page: number
+  offset: number
   limit: number
 }
 
 // Hard limit until we have pagination
-const MAX_LIMIT = 1000
+export const DEFAULT_PAGE_SIZE_ROW_LIMIT = 100
+export const MAX_PAGE_SIZE_ROW_LIMIT = 1000
 
-const getAllUsers = async ({ page, limit }: PaginationProps = { page: 0, limit: MAX_LIMIT }): Promise<SafeUser[]> => {
+const getAllUsers = async (
+  { offset, limit }: PaginationProps = { offset: 0, limit: DEFAULT_PAGE_SIZE_ROW_LIMIT }
+): Promise<SafeUser[]> => {
+  //
+  // Cap the limit - can move these limits to .env
+  const cappedLimit = Math.min(limit, MAX_PAGE_SIZE_ROW_LIMIT)
+  //
   const users: SafeUser[] = await db
     .select({
       id: tableUsers.id,
@@ -24,10 +32,9 @@ const getAllUsers = async ({ page, limit }: PaginationProps = { page: 0, limit: 
       deletedAt: tableUsers.deletedAt,
     })
     .from(tableUsers)
-    .limit(limit)
-
-  // eslint-disable-next-line no-console
-  console.info('TODO: Implement pagination ', page)
+    .orderBy(asc(tableUsers.id))
+    .limit(cappedLimit)
+    .offset(offset)
 
   return users
 }
