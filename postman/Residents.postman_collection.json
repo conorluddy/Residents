@@ -87,8 +87,8 @@
 								"exec": [
 									"",
 									"const jsonData = pm.response.json();",
-									"if (jsonData.accessToken) {",
-									"    pm.environment.set(\"JWT\", jsonData.accessToken);",
+									"if (jsonData.token) {",
+									"    pm.environment.set(\"JWT\", jsonData.token);",
 									"} else {",
 									"    console.error(\"JWT not found in response.\");",
 									"}",
@@ -201,7 +201,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"conorluddy@gmail.com\"\n}",
+							"raw": "{\n    \"email\": \"resident@resident.resident\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -224,6 +224,38 @@
 				},
 				{
 					"name": "Magic login token [auth]",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"",
+									"const jsonData = pm.response.json();",
+									"if (jsonData.token) {",
+									"    pm.environment.set(\"JWT\", jsonData.token);",
+									"} else {",
+									"    console.error(\"JWT not found in response.\");",
+									"}",
+									"",
+									"const xsrfToken = pm.cookies.get(\"xsrfToken\");",
+									"if (xsrfToken) {",
+									"    pm.environment.set(\"XSRF-TOKEN\", xsrfToken);",
+									"} else {",
+									"    console.error(\"XSRF token not found in cookies.\");",
+									"}",
+									"",
+									"const refreshToken = pm.cookies.get(\"refreshToken\");",
+									"if (refreshToken) {",
+									"    pm.environment.set(\"REFRESH-TOKEN\", refreshToken)",
+									"} else {",
+									"    console.error(\"Refresh token not found in cookies.\");",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -238,7 +270,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:3000/auth/magic-login/123",
+							"raw": "localhost:3000/auth/magic-login/zrbq0bilxr7nvu48i56jt4uw",
 							"host": [
 								"localhost"
 							],
@@ -246,7 +278,7 @@
 							"path": [
 								"auth",
 								"magic-login",
-								"123"
+								"zrbq0bilxr7nvu48i56jt4uw"
 							]
 						}
 					},
@@ -651,13 +683,23 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:3000/users",
+							"raw": "localhost:3000/users?limit=1&offset=2",
 							"host": [
 								"localhost"
 							],
 							"port": "3000",
 							"path": [
 								"users"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "1"
+								},
+								{
+									"key": "offset",
+									"value": "2"
+								}
 							]
 						}
 					},
@@ -679,14 +721,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:3000/users/e6os0az2mqtnt7yynmnuhbzl",
+							"raw": "localhost:3000/users/z97jcbkor2nvjmp4zz2bto3g",
 							"host": [
 								"localhost"
 							],
 							"port": "3000",
 							"path": [
 								"users",
-								"e6os0az2mqtnt7yynmnuhbzl"
+								"z97jcbkor2nvjmp4zz2bto3g"
 							]
 						}
 					},

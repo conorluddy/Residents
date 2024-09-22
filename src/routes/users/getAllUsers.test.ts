@@ -48,11 +48,11 @@ describe('GET /users', () => {
     mockAdmin = makeAFakeSafeUser({ role: ROLES.ADMIN })
   })
 
-  it('should call the getAllUsers controller with valid data', async () => {
+  it('should call the getAllUsers controller with valid jwt', async () => {
     const response = await request(app)
       .get('/')
       .set('Authorization', `Bearer ${generateJwtFromUser(mockAdmin)}`)
-    expect(response.status).toBe(HTTP_SUCCESS.OK)
     expect(response.body).toStrictEqual({})
+    expect(response.status).toBe(HTTP_SUCCESS.OK)
   })
 })

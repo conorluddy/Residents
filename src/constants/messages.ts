@@ -19,6 +19,7 @@ const MESSAGES = {
   FEATURE_NOT_IMPLEMENTED: 'Feature not implemented.',
   TOO_MANY_REQUESTS: 'Too many requests.',
   TOO_MANY_REQUESTS_TRY_AGAIN_IN_10: 'Too many requests, please try again after 10 minutes.',
+  INVALID_PAGINATION_PARAMS: 'Invalid pagination params provided.',
 
   // User Management
   USER_CREATED: 'User created successfully.',
