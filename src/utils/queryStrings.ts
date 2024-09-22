@@ -4,7 +4,7 @@
  * @param defaultValue - The default value to return if the query parameter is not a string
  * @returns The string value of the query parameter or the default value
  */
-export const getStringFromQuery = (queryParam: unknown, defaultValue: string): string =>
+export const getStringFromQuery = (queryParam: unknown, defaultValue?: string | undefined): string | undefined =>
   typeof queryParam === 'string' ? queryParam : defaultValue
 
 /**
