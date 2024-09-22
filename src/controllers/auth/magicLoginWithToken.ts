@@ -1,15 +1,15 @@
 import { Request, Response } from 'express'
+import { EXPIRATION_REFRESH_TOKEN_MS } from '../../config'
+import { TOKEN_TYPE } from '../../constants/database'
+import { REFRESH_TOKEN, RESIDENT_TOKEN, XSRF_TOKEN } from '../../constants/keys'
+import MESSAGES from '../../constants/messages'
+import { TIMESPAN } from '../../constants/time'
+import { ForbiddenError } from '../../errors'
+import { handleSuccessResponse } from '../../middleware/util/successHandler'
+import generateXsrfToken from '../../middleware/util/xsrfToken'
 import SERVICES from '../../services'
 import { REQUEST_TOKEN } from '../../types/requestSymbols'
-import { ForbiddenError } from '../../errors'
-import { TOKEN_TYPE } from '../../constants/database'
-import { TIMESPAN } from '../../constants/time'
-import { REFRESH_TOKEN_EXPIRY } from '../../constants/crypt'
-import { REFRESH_TOKEN, XSRF_TOKEN, RESIDENT_TOKEN } from '../../constants/keys'
-import generateXsrfToken from '../../middleware/util/xsrfToken'
 import { generateJwtFromUser } from '../../utils/generateJwt'
-import { handleSuccessResponse } from '../../middleware/util/successHandler'
-import MESSAGES from '../../constants/messages'
 
 /**
  * GET: magicLoginWithToken
@@ -40,7 +40,7 @@ export const magicLoginWithToken = async (req: Request, res: Response): Promise<
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',
-    maxAge: REFRESH_TOKEN_EXPIRY,
+    maxAge: EXPIRATION_REFRESH_TOKEN_MS,
   })
 
   const xsrfToken = generateXsrfToken()
@@ -48,14 +48,14 @@ export const magicLoginWithToken = async (req: Request, res: Response): Promise<
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',
-    maxAge: REFRESH_TOKEN_EXPIRY,
+    maxAge: EXPIRATION_REFRESH_TOKEN_MS,
   })
 
   res.cookie(RESIDENT_TOKEN, user.id, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',
-    maxAge: REFRESH_TOKEN_EXPIRY,
+    maxAge: EXPIRATION_REFRESH_TOKEN_MS,
   })
 
   return handleSuccessResponse({ res, token: jwt })

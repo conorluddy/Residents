@@ -6,9 +6,9 @@ import { TIMESPAN } from '../../constants/time'
 import { ForbiddenError, TokenError } from '../../errors'
 import { generateJwtFromUser } from '../../utils/generateJwt'
 import { REFRESH_TOKEN, RESIDENT_TOKEN, XSRF_TOKEN } from '../../constants/keys'
-import { REFRESH_TOKEN_EXPIRY } from '../../constants/crypt'
 import { handleSuccessResponse } from '../../middleware/util/successHandler'
 import MESSAGES from '../../constants/messages'
+import { EXPIRATION_REFRESH_TOKEN_MS } from '../../config'
 
 /**
  * POST: refreshToken
@@ -69,7 +69,7 @@ export const refreshToken = async (req: Request, res: Response): Promise<Respons
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',
-    maxAge: REFRESH_TOKEN_EXPIRY,
+    maxAge: EXPIRATION_REFRESH_TOKEN_MS,
   })
 
   const xsrfToken = generateXsrfToken()
@@ -77,14 +77,14 @@ export const refreshToken = async (req: Request, res: Response): Promise<Respons
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',
-    maxAge: REFRESH_TOKEN_EXPIRY,
+    maxAge: EXPIRATION_REFRESH_TOKEN_MS,
   })
 
   res.cookie(RESIDENT_TOKEN, userId, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',
-    maxAge: REFRESH_TOKEN_EXPIRY,
+    maxAge: EXPIRATION_REFRESH_TOKEN_MS,
   })
 
   await SERVICES.deleteToken({ tokenId: token.id })
