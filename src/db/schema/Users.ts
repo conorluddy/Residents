@@ -25,7 +25,6 @@ const tableUsers = pgTable(
     deletedAt: timestamp('deleted_at'),
   },
   (table) => ({
-    idIdx: index('username_idx').on(table.id),
     usernameIdx: index('username_idx').on(table.username),
     emailIdx: index('email_idx').on(table.email),
   })
