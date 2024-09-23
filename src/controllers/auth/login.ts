@@ -8,9 +8,9 @@ import SERVICES from '../../services'
 import { validateHash } from '../../utils/crypt'
 import { generateJwtFromUser } from '../../utils/generateJwt'
 import { REFRESH_TOKEN, XSRF_TOKEN, RESIDENT_TOKEN } from '../../constants/keys'
+import { EXPIRATION_REFRESH_TOKEN_MS } from '../../config'
 import { handleSuccessResponse } from '../../middleware/util/successHandler'
 import MESSAGES from '../../constants/messages'
-import { EXPIRATION_REFRESH_TOKEN_MS } from '../../config'
 
 /**
  * login

@@ -5,13 +5,22 @@ import { timeToMs } from './utils/time'
 dotenv.config()
 
 const requiredEnvVars = [
+  // Postgres
+  process.env.POSTGRES_DB,
+  process.env.POSTGRES_USER,
+  process.env.POSTGRES_PASSWORD,
+  process.env.POSTGRES_URL,
+  process.env.POSTGRES_PORT,
+  // Tokens
   process.env.JWT_TOKEN_SECRET,
+  // Expirations
   process.env.EXPIRATION_JWT_TOKEN,
   process.env.EXPIRATION_REFRESH_TOKEN,
   process.env.EXPIRATION_XSRF_TOKEN,
   process.env.EXPIRATION_PASSWORD_RESET_TOKEN,
   process.env.EXPIRATION_MAGIC_LOGIN_TOKEN,
   process.env.EXPIRATION_VALIDATION_TOKEN,
+  // Sendgrid
   process.env.SENDGRID_API_KEY,
   process.env.SENDGRID_VERIFIED_EMAIL,
   process.env.SENDGRID_TEST_EMAIL,
@@ -20,7 +29,7 @@ const requiredEnvVars = [
 requiredEnvVars.forEach((_, index) => {
   if (!requiredEnvVars[index]) {
     // Codescan does not like us logging the names here, even though they're harmless
-    logger.error(MESSAGES.MISSING_REQUIRED_ENV_VARS)
+    logger.error(`${MESSAGES.MISSING_REQUIRED_ENV_VARS} ${requiredEnvVars[index]} ${index}`)
     if (process.env.NODE_ENV !== 'test') {
       process.exit(1)
     }
@@ -28,7 +37,16 @@ requiredEnvVars.forEach((_, index) => {
 })
 
 const config: Config = {
+  // Database
+
+  POSTGRES_DB: process.env.POSTGRES_DB!,
+  POSTGRES_USER: process.env.POSTGRES_USER!,
+  POSTGRES_PASSWORD: process.env.POSTGRES_PASSWORD!,
+  POSTGRES_URL: process.env.POSTGRES_URL!,
+  POSTGRES_PORT: process.env.POSTGRES_PORT!,
+
   // Tokens
+
   JWT_TOKEN_SECRET: process.env.JWT_TOKEN_SECRET!,
   EXPIRATION_JWT_TOKEN: process.env.EXPIRATION_JWT_TOKEN!,
   EXPIRATION_REFRESH_TOKEN: process.env.EXPIRATION_REFRESH_TOKEN!,
@@ -36,20 +54,29 @@ const config: Config = {
   EXPIRATION_PASSWORD_RESET_TOKEN: process.env.EXPIRATION_PASSWORD_RESET_TOKEN!,
   EXPIRATION_MAGIC_LOGIN_TOKEN: process.env.EXPIRATION_MAGIC_LOGIN_TOKEN!,
   EXPIRATION_VALIDATION_TOKEN: process.env.EXPIRATION_VALIDATION_TOKEN!,
+
   // Token Expirations in Milliseconds
+
   EXPIRATION_JWT_TOKEN_MS: timeToMs(process.env.EXPIRATION_JWT_TOKEN!),
   EXPIRATION_REFRESH_TOKEN_MS: timeToMs(process.env.EXPIRATION_REFRESH_TOKEN!),
   EXPIRATION_XSRF_TOKEN_MS: timeToMs(process.env.EXPIRATION_XSRF_TOKEN!),
   EXPIRATION_PASSWORD_RESET_TOKEN_MS: timeToMs(process.env.EXPIRATION_PASSWORD_RESET_TOKEN!),
   EXPIRATION_MAGIC_LOGIN_TOKEN_MS: timeToMs(process.env.EXPIRATION_MAGIC_LOGIN_TOKEN!),
   EXPIRATION_VALIDATION_TOKEN_MS: timeToMs(process.env.EXPIRATION_VALIDATION_TOKEN!),
+
   // Sendgrid
+
   SENDGRID_API_KEY: process.env.SENDGRID_API_KEY!,
   SENDGRID_VERIFIED_EMAIL: process.env.SENDGRID_VERIFIED_EMAIL!,
   SENDGRID_TEST_EMAIL: process.env.SENDGRID_TEST_EMAIL!,
 }
 
 export const {
+  POSTGRES_DB,
+  POSTGRES_USER,
+  POSTGRES_PASSWORD,
+  POSTGRES_URL,
+  POSTGRES_PORT,
   JWT_TOKEN_SECRET,
   EXPIRATION_JWT_TOKEN,
   EXPIRATION_REFRESH_TOKEN,
@@ -71,6 +98,11 @@ export const {
 export default config
 
 interface Config {
+  POSTGRES_DB: string
+  POSTGRES_USER: string
+  POSTGRES_PASSWORD: string
+  POSTGRES_URL: string
+  POSTGRES_PORT: string
   JWT_TOKEN_SECRET: string
   EXPIRATION_JWT_TOKEN: string
   EXPIRATION_REFRESH_TOKEN: string

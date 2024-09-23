@@ -1,17 +1,17 @@
 import { drizzle } from 'drizzle-orm/node-postgres'
 import { Client } from 'pg'
 import * as schema from './schema/index'
+import { POSTGRES_URL, POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB, POSTGRES_PORT } from '../config'
+
 import dotenv from 'dotenv'
 dotenv.config()
 
-const POSTGRES_PORT = 5432 // move to env
-
 const dbClient = new Client({
-  port: POSTGRES_PORT,
-  host: process.env.POSTGRES_URL,
-  user: process.env.POSTGRES_USER,
-  password: process.env.POSTGRES_PASSWORD,
-  database: process.env.POSTGRES_DB,
+  port: parseInt(POSTGRES_PORT, 10),
+  host: POSTGRES_URL,
+  user: POSTGRES_USER,
+  password: POSTGRES_PASSWORD,
+  database: POSTGRES_DB,
 })
 
 if (process.env.NODE_ENV !== 'test') {
