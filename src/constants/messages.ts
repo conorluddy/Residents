@@ -132,6 +132,7 @@ const MESSAGES = {
   TOKEN_ERROR: 'Token Error.',
   TOKEN_REQUIRES_USER_ID: 'Token requires a UserID, none provided.',
   TOKEN_TYPE_REQUIRED: 'Token type is required, none provided.',
+  TOKEN_TYPE_INVALID: 'Token type is invalid.',
   TOKEN_USER_INVALID: 'Token user not valid.',
   EXPIRED_TOKENS_DELETED: 'Expired tokens deleted.',
   ERROR_DISCARDING_TOKEN: 'Error discarding token.',

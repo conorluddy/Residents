@@ -10,6 +10,11 @@ import {
   SENDGRID_API_KEY,
   SENDGRID_VERIFIED_EMAIL,
   SENDGRID_TEST_EMAIL,
+  EXPIRATION_JWT_TOKEN_MS,
+  EXPIRATION_REFRESH_TOKEN_MS,
+  EXPIRATION_XSRF_TOKEN_MS,
+  EXPIRATION_PASSWORD_RESET_TOKEN_MS,
+  EXPIRATION_MAGIC_LOGIN_TOKEN_MS,
 } from './config'
 
 describe('Configuration Module', () => {
@@ -21,10 +26,17 @@ describe('Configuration Module', () => {
   })
 
   it('should correctly parse expiration times', () => {
-    expect(EXPIRATION_JWT_TOKEN).toBe(timeToMs('1m'))
-    expect(EXPIRATION_REFRESH_TOKEN).toBe(timeToMs('1m'))
-    expect(EXPIRATION_XSRF_TOKEN).toBe(timeToMs('1m'))
-    expect(EXPIRATION_PASSWORD_RESET_TOKEN).toBe(timeToMs('1m'))
-    expect(EXPIRATION_MAGIC_LOGIN_TOKEN).toBe(timeToMs('1m'))
+    //
+    expect(EXPIRATION_JWT_TOKEN).toBe('1m')
+    expect(EXPIRATION_REFRESH_TOKEN).toBe('1m')
+    expect(EXPIRATION_XSRF_TOKEN).toBe('1m')
+    expect(EXPIRATION_PASSWORD_RESET_TOKEN).toBe('1m')
+    expect(EXPIRATION_MAGIC_LOGIN_TOKEN).toBe('1m')
+    // Milliseconds
+    expect(EXPIRATION_JWT_TOKEN_MS).toBe(timeToMs('1m'))
+    expect(EXPIRATION_REFRESH_TOKEN_MS).toBe(timeToMs('1m'))
+    expect(EXPIRATION_XSRF_TOKEN_MS).toBe(timeToMs('1m'))
+    expect(EXPIRATION_PASSWORD_RESET_TOKEN_MS).toBe(timeToMs('1m'))
+    expect(EXPIRATION_MAGIC_LOGIN_TOKEN_MS).toBe(timeToMs('1m'))
   })
 })

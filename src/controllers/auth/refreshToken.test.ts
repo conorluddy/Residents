@@ -82,19 +82,19 @@ describe('Controller: Refresh token: Happy path', () => {
     expect(mockResponse.cookie).toHaveBeenCalledTimes(3)
     expect(mockResponse.cookie).toHaveBeenNthCalledWith(1, 'refreshToken', 'tok1', {
       httpOnly: true,
-      maxAge: 604800000,
+      maxAge: 60000,
       sameSite: 'strict',
       secure: false,
     })
     expect(mockResponse.cookie).toHaveBeenNthCalledWith(2, 'xsrfToken', xsrf, {
       httpOnly: true,
-      maxAge: 604800000,
+      maxAge: 60000,
       sameSite: 'strict',
       secure: false,
     })
     expect(mockResponse.cookie).toHaveBeenNthCalledWith(3, 'residentToken', mockDefaultUser.id, {
       httpOnly: true,
-      maxAge: 604800000,
+      maxAge: 60000,
       sameSite: 'strict',
       secure: false,
     })
