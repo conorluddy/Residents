@@ -49,7 +49,7 @@ describe('Controller: Login', () => {
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.OK)
     expect(mockResponse.cookie).toHaveBeenCalledWith('refreshToken', 'token123', {
       httpOnly: true,
-      maxAge: 604800000,
+      maxAge: 60000,
       sameSite: 'strict',
       secure: false,
     })

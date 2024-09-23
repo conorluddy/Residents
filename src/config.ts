@@ -11,12 +11,12 @@ const requiredEnvVars = [
   process.env.POSTGRES_PASSWORD,
   process.env.POSTGRES_URL,
   process.env.POSTGRES_PORT,
-  // Tokens
+  // JWT
   process.env.JWT_TOKEN_SECRET,
-  // Expirations
   process.env.EXPIRATION_JWT_TOKEN,
-  process.env.EXPIRATION_REFRESH_TOKEN,
+  // Expirations
   process.env.EXPIRATION_XSRF_TOKEN,
+  process.env.EXPIRATION_REFRESH_TOKEN,
   process.env.EXPIRATION_PASSWORD_RESET_TOKEN,
   process.env.EXPIRATION_MAGIC_LOGIN_TOKEN,
   process.env.EXPIRATION_VALIDATION_TOKEN,
