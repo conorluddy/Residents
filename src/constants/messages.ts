@@ -111,6 +111,7 @@ const MESSAGES = {
   MISSING_REQUIRED_ENV_VARS: 'Missing some required environment variables.',
   MISSING_TOKEN_IN_DISCARD_TOKEN_MIDDLEWARE: 'Missing token in discardToken middleware.',
   NO_EMAIL_IN_GOOGLE_PAYLOAD: 'No email found in Google payload.',
+  INVALID_EMAIL_IN_GOOGLE_PAYLOAD: 'Invalid email found in Google payload.',
   NO_ID_PROVIDED: 'No ID provided.',
   NO_METADATA_PROVIDED_FOR_UPDATE: 'No meta data provided to update.',
   NO_PASSWORD_HASH_FOUND: 'No password hash found for that username or email.',
@@ -143,7 +144,8 @@ const MESSAGES = {
   USER_HAS_NO_ROLE: 'User has no role.',
   USER_MISSING_REQUIRED_FIELDS: 'User is missing required fields.',
   VALIDATION_TOKEN_INVALID: 'Validation token invalid.',
-
+  MISSING_PASSPORT_PROFILE_ID: 'Missing passport profile ID.',
+  MISSING_PASSPORT_PROVIDER: 'Missing passport provider.',
   MAGIC_LOGIN_EMAIL_SENT: 'Magic login email sent.',
 }
 
