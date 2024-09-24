@@ -34,6 +34,7 @@ const MESSAGES = {
   MISSING_USER_ID: 'User ID is missing.',
   USER_ID_MISMATCH: 'User ID mismatch.',
   CANT_SELF_DELETE: 'Users can not self-delete.',
+  ERROR_CREATING_USERNAME: 'Error generating username.',
 
   // Permissions
   INSUFFICIENT_PERMISSIONS: 'User can not perform this action.',
@@ -81,8 +82,6 @@ const MESSAGES = {
   USERNAME_REQUIRED: 'Username is required.',
   PASSWORD_NEEDED: 'You need a password.',
   YOU_CAN_ONLY_REQUEST_ONCE_EVERY_10_MINUTES: 'You can only request this once every 10 minutes.',
-
-  // New Keys Added
   AT_LEAST_ONE_PROPERTY_REQUIRED: 'At least one property must be provided for update.',
   CANNOT_CREATE_OWNER_USER_WHEN_USERS_EXIST: 'Cannot create owner/root user when the database already has users.',
   CLICK_RESET_PASSWORD_LINK: 'Click here to reset your password: {url}',
@@ -111,6 +110,7 @@ const MESSAGES = {
   MISSING_REQUIRED_ENV_VARS: 'Missing some required environment variables.',
   MISSING_TOKEN_IN_DISCARD_TOKEN_MIDDLEWARE: 'Missing token in discardToken middleware.',
   NO_EMAIL_IN_GOOGLE_PAYLOAD: 'No email found in Google payload.',
+  INVALID_EMAIL_IN_GOOGLE_PAYLOAD: 'Invalid email found in Google payload.',
   NO_ID_PROVIDED: 'No ID provided.',
   NO_METADATA_PROVIDED_FOR_UPDATE: 'No meta data provided to update.',
   NO_PASSWORD_HASH_FOUND: 'No password hash found for that username or email.',
@@ -143,8 +143,13 @@ const MESSAGES = {
   USER_HAS_NO_ROLE: 'User has no role.',
   USER_MISSING_REQUIRED_FIELDS: 'User is missing required fields.',
   VALIDATION_TOKEN_INVALID: 'Validation token invalid.',
-
   MAGIC_LOGIN_EMAIL_SENT: 'Magic login email sent.',
+  // Passport
+  MISSING_PASSPORT_PROFILE_ID: 'Missing passport profile ID.',
+  MISSING_PASSPORT_PROVIDER: 'Missing passport provider.',
+  MISSING_PASSPORT_USER_ID: 'Missing passport user ID.',
+  FEDERATED_CREDENTIALS_NOT_FOUND: 'Federated credentials not found.',
+  FEDERATED_CREDENTIALS_NOT_CREATED: 'Federated credentials not created.',
 }
 
 export default MESSAGES

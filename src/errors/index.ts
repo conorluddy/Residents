@@ -162,7 +162,7 @@ class LoginError extends Error {
     super(message)
     this.name = 'LoginError'
     this.statusCode = HTTP_CLIENT_ERROR.UNAUTHORIZED
-    Object.setPrototypeOf(this, RateLimitError.prototype)
+    Object.setPrototypeOf(this, LoginError.prototype)
   }
 }
 

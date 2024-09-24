@@ -1,40 +1,30 @@
 import { Request, Response } from 'express'
-import { generateJwtFromUser } from '../../utils/generateJwt'
-import { OAuth2Client } from 'google-auth-library'
-import { EmailError, NotFoundError, UnauthorizedError } from '../../errors'
-import { handleSuccessResponse } from '../../middleware/util/successHandler'
-import SERVICES from '../../services'
 import MESSAGES from '../../constants/messages'
-
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
+import { LoginError } from '../../errors'
+import { handleSuccessResponse } from '../../middleware/util/successHandler'
+import { generateJwtFromUser } from '../../utils/generateJwt'
+import { SafeUser } from '../../db/types'
 
 /**
  * googleCallback
  */
-export const googleCallback = async (req: Request, res: Response): Promise<Response> => {
-  const ticket = await client.verifyIdToken({
-    idToken: req.body.idToken,
-    audience: process.env.GOOGLE_CLIENT_ID,
-  })
-
-  const payload = ticket.getPayload()
-
-  if (!payload) {
-    throw new UnauthorizedError(MESSAGES.INVALID_GOOGLE_CALLBACK_TOKEN)
-  }
-
-  const userEmail = payload.email
-  if (!userEmail) {
-    throw new EmailError(MESSAGES.NO_EMAIL_IN_GOOGLE_PAYLOAD)
-  }
-
-  const user = await SERVICES.getUserByEmail(userEmail)
+export const googleCallback = (req: Request, res: Response): Response => {
+  const user = req.user as SafeUser
 
   if (!user) {
-    throw new NotFoundError(MESSAGES.USER_NOT_FOUND)
+    throw new LoginError(MESSAGES.USER_NOT_FOUND_FEDERATED_CREDENTIALS)
   }
 
-  const token = generateJwtFromUser(user)
+  const { id, username, firstName, lastName, email, role } = user
+
+  const token = generateJwtFromUser({
+    id,
+    username,
+    firstName,
+    lastName,
+    email,
+    role,
+  })
 
   return handleSuccessResponse({ res, token })
 }
