@@ -1,5 +1,6 @@
 import { SALT_ROUNDS } from '../constants/crypt'
 import * as bcrypt from 'bcrypt'
+import { randomBytes } from 'crypto'
 
 export async function createHash(input: string): Promise<string> {
   return await bcrypt.hash(input, SALT_ROUNDS)
@@ -17,17 +18,17 @@ export function generatePassword(length: number = 16): string {
   const allChars = upperCase + lowerCase + numbers + symbols
   let password = ''
   // Ensure at least one of each required type
-  password += upperCase[Math.floor(Math.random() * upperCase.length)]
-  password += lowerCase[Math.floor(Math.random() * lowerCase.length)]
-  password += numbers[Math.floor(Math.random() * numbers.length)]
-  password += symbols[Math.floor(Math.random() * symbols.length)]
+  password += upperCase[randomBytes(1)[0] % upperCase.length]
+  password += lowerCase[randomBytes(1)[0] % lowerCase.length]
+  password += numbers[randomBytes(1)[0] % numbers.length]
+  password += symbols[randomBytes(1)[0] % symbols.length]
   // Fill
   for (let i = password.length; i < length; i++) {
-    password += allChars[Math.floor(Math.random() * allChars.length)]
+    password += allChars[randomBytes(1)[0] % allChars.length]
   }
   // Shuffle
   return password
     .split('')
-    .sort(() => 0.5 - Math.random())
+    .sort(() => 0.5 - (randomBytes(1)[0] / 256))
     .join('')
 }
