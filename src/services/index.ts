@@ -19,12 +19,15 @@ import { getUserPasswordHash } from './user/getUserPasswordHash'
 import { deleteExpiredTokens } from './auth/deleteExpiredTokens'
 import { deleteMagicTokensByUserId } from './auth/deleteMagicTokensByUserId'
 import { deleteAllUserTokens } from './auth/deleteAllUserTokens'
+import { getFederatedCredentials } from './auth/getFederatedCredentials'
+import { createFederatedCredentials } from './auth/createFederatedCredentials'
 
 const SERVICES = {
   // C
   createToken,
   createUser,
   createUserMeta,
+  createFederatedCredentials,
   // R
   getAllUsers,
   getToken,
@@ -33,6 +36,7 @@ const SERVICES = {
   getUserByUsername,
   getUserPasswordHash,
   getUserCount,
+  getFederatedCredentials,
   // U
   updateUser,
   updateUserMeta,

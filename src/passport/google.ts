@@ -1,15 +1,15 @@
 import dotenv from 'dotenv'
 import passport, { Profile } from 'passport'
 import Google from 'passport-google-oauth20'
-import db from '../db'
-import { tableFederatedCredentials } from '../db/schema'
 import { NewUser } from '../db/types'
 import SERVICES from '../services'
 import { logger } from '../utils/logger'
 import MESSAGES from '../constants/messages'
 import { LoginError } from '../errors'
-import { getFederatedCredentials } from '../services/auth/getFederatedCredentials'
 import { isEmail } from 'validator'
+import { ROLES } from '../constants/database'
+import { generatePassword } from '../utils/crypt'
+import { generateUniqueUsername } from '../utils/user'
 
 dotenv.config()
 
@@ -33,15 +33,19 @@ if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET || !GOOGLE_CALLBACK_URL) {
         state: false,
       },
       async (_accessToken, _refreshToken, profile, done) => {
-        const federatedUserId = await getFederatedCredentials({ provider: PROVIDER, profileId: profile.id })
+        const federatedUserIdIfExists = await SERVICES.getFederatedCredentials({
+          provider: PROVIDER,
+          profileId: profile.id,
+        })
 
-        if (federatedUserId) {
-          const user = await SERVICES.getUserById(federatedUserId)
+        if (federatedUserIdIfExists) {
+          const user = await SERVICES.getUserById(federatedUserIdIfExists)
 
           if (!user) {
-            throw new LoginError(`${MESSAGES.USER_NOT_FOUND_FEDERATED_CREDENTIALS}: ${federatedUserId}`)
+            throw new LoginError(`${MESSAGES.USER_NOT_FOUND_FEDERATED_CREDENTIALS}: ${federatedUserIdIfExists}`)
           }
 
+          // Existing User found - return User
           return done(null, user)
         } else {
           try {
@@ -56,9 +60,11 @@ if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET || !GOOGLE_CALLBACK_URL) {
 
             const user: NewUser = {
               email,
+              role: ROLES.DEFAULT,
               firstName: profile.name?.familyName ?? email.split('@')[0],
               lastName: profile.name?.givenName,
-              username: profile.displayName ?? email,
+              username: await generateUniqueUsername(profile.displayName),
+              password: generatePassword(16),
             }
 
             const newUserId = await SERVICES.createUser(user)
@@ -67,25 +73,13 @@ if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET || !GOOGLE_CALLBACK_URL) {
               throw new Error(MESSAGES.FAILED_CREATING_USER)
             }
 
-            const newFederatedCredentials = {
+            const newFeds = await SERVICES.createFederatedCredentials({
               userId: newUserId,
               provider: PROVIDER,
-              subject: profile.id,
-            }
-            /////  /////  /////  /////  /////  /////  /////  /////
+              profileId: profile.id,
+            })
 
-            /////  /////  /////  /////  /////  /////  /////  /////
-            const newFedCred = await db
-              .insert(tableFederatedCredentials)
-              .values(newFederatedCredentials)
-              .onConflictDoNothing({
-                target: tableFederatedCredentials.userId,
-              })
-              .returning()
-            /////  /////  /////  /////  /////  /////  /////  /////
-
-            /////  /////  /////  /////  /////  /////  /////  /////
-            if (!newFedCred) {
+            if (!newFeds) {
               throw new Error(MESSAGES.FAILED_CREATING_FEDERATED_CREDENTIALS)
             }
 
