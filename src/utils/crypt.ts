@@ -18,17 +18,26 @@ export function generatePassword(length: number = 16): string {
   const allChars = upperCase + lowerCase + numbers + symbols
   let password = ''
   // Ensure at least one of each required type
-  password += upperCase[randomBytes(1)[0] % upperCase.length]
-  password += lowerCase[randomBytes(1)[0] % lowerCase.length]
-  password += numbers[randomBytes(1)[0] % numbers.length]
-  password += symbols[randomBytes(1)[0] % symbols.length]
+  password += upperCase[getRandomIndex(upperCase.length)]
+  password += lowerCase[getRandomIndex(lowerCase.length)]
+  password += numbers[getRandomIndex(numbers.length)]
+  password += symbols[getRandomIndex(symbols.length)]
   // Fill
   for (let i = password.length; i < length; i++) {
-    password += allChars[randomBytes(1)[0] % allChars.length]
+    password += allChars[getRandomIndex(allChars.length)]
   }
   // Shuffle
   return password
     .split('')
-    .sort(() => 0.5 - (randomBytes(1)[0] / 256))
+    .sort(() => 0.5 - (getRandomIndex(256) / 256))
     .join('')
+}
+
+function getRandomIndex(max: number): number {
+  let randomNumber;
+  const limit = 256 - (256 % max);
+  do {
+    randomNumber = randomBytes(1)[0];
+  } while (randomNumber >= limit);
+  return randomNumber % max;
 }
