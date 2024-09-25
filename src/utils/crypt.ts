@@ -29,15 +29,15 @@ export function generatePassword(length: number = 16): string {
   // Shuffle
   return password
     .split('')
-    .sort(() => 0.5 - (getRandomIndex(256) / 256))
+    .sort(() => 0.5 - getRandomIndex(256) / 256)
     .join('')
 }
 
 function getRandomIndex(max: number): number {
-  let randomNumber;
-  const limit = 256 - (256 % max);
+  let randomNumber
+  const limit = 256 - (256 % max)
   do {
-    randomNumber = randomBytes(1)[0];
-  } while (randomNumber >= limit);
-  return randomNumber % max;
+    randomNumber = randomBytes(1)[0]
+  } while (randomNumber >= limit)
+  return randomNumber % max
 }
