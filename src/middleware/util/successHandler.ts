@@ -1,9 +1,10 @@
 import { Response } from 'express'
 import { HTTP_SUCCESS } from '../../constants/http'
 import { PublicUser } from '../../db/types'
+import { ResidentResponse } from '../../types'
 
 interface Props {
-  res: Response
+  res: Response<ResidentResponse>
   message?: string
   token?: string
   user?: PublicUser

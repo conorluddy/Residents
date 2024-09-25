@@ -9,14 +9,14 @@ import { REFRESH_TOKEN, RESIDENT_TOKEN, XSRF_TOKEN } from '../../constants/keys'
 import { handleSuccessResponse } from '../../middleware/util/successHandler'
 import MESSAGES from '../../constants/messages'
 import { EXPIRATION_REFRESH_TOKEN_MS } from '../../config'
-import { ResidentRequest } from '../../types'
+import { ResidentRequest, ResidentResponse } from '../../types'
 
 /**
  * POST: refreshToken
  *
  * Refreshes the access token using the refresh token.
  */
-export const refreshToken = async (req: ResidentRequest, res: Response): Promise<Response> => {
+export const refreshToken = async (req: ResidentRequest, res: Response<ResidentResponse>): Promise<Response> => {
   const refreshTokenId = req.cookies?.[REFRESH_TOKEN]
   const userId = req.cookies?.[RESIDENT_TOKEN]
 

@@ -39,3 +39,9 @@ export interface ResidentRequest extends ExpressRequest {
   [REQUEST_EMAIL]?: string | null
   [REQUEST_DB]: NodePgDatabase<Record<string, never>>
 }
+
+export interface ResidentResponse {
+  data?: Record<string, unknown>
+  message?: string
+  error?: string
+}

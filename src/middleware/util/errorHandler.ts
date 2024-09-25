@@ -20,12 +20,12 @@ import {
   LoginError,
 } from '../../errors'
 import MESSAGES from '../../constants/messages'
-import { ResidentRequest } from '../../types'
+import { ResidentResponse, ResidentRequest } from '../../types'
 
 const errorHandler = (
   err: Error,
   _req: ResidentRequest,
-  res: Response,
+  res: Response<ResidentResponse>,
   next: NextFunction
 ): Response | void | undefined => {
   if (!err) {

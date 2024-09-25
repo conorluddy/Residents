@@ -4,12 +4,12 @@ import SERVICES from '../../services'
 import { BadRequestError, NotFoundError } from '../../errors'
 import { handleSuccessResponse } from '../../middleware/util/successHandler'
 import MESSAGES from '../../constants/messages'
-import { ResidentRequest } from '../../types'
+import { ResidentRequest, ResidentResponse } from '../../types'
 
 /**
  * getSelf - gets own user record
  */
-export const getSelf = async (req: ResidentRequest, res: Response): Promise<Response> => {
+export const getSelf = async (req: ResidentRequest, res: Response<ResidentResponse>): Promise<Response> => {
   //
   const userId = req[REQUEST_USER]?.id
   if (!userId) {

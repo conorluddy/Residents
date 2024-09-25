@@ -1,8 +1,8 @@
 import { NextFunction, RequestHandler, Response } from 'express'
-import { Meta } from '../../db/types'
+import { Meta, UserUpdate } from '../../db/types'
 import { BadRequestError } from '../../errors'
 import MESSAGES from '../../constants/messages'
-import { ResidentRequest } from '../../types'
+import { ResidentRequest, ResidentResponse } from '../../types'
 
 // Define the valid keys for updating user meta
 type ValidMutableMetaProps = Exclude<keyof Meta, 'id' | 'userId'>
@@ -12,8 +12,12 @@ const validUserMetaKeys: ValidMutableMetaProps[] = [
   // List other mutable metadata keys here
 ]
 
-const validateUserMeta: RequestHandler = (req: ResidentRequest, res: Response, next: NextFunction) => {
-  const updateUserMetaPayload = req.body
+const validateUserMeta: RequestHandler = (
+  req: ResidentRequest,
+  _res: Response<ResidentResponse>,
+  next: NextFunction
+) => {
+  const updateUserMetaPayload: UserUpdate = req.body
 
   // Ensure the payload is an object
   if (typeof updateUserMetaPayload !== 'object' || updateUserMetaPayload === null) {

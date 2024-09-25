@@ -9,7 +9,7 @@ import { logger } from '../../utils/logger'
 import { BadRequestError } from '../../errors'
 import { handleSuccessResponse } from '../../middleware/util/successHandler'
 import MESSAGES from '../../constants/messages'
-import { ResidentRequest } from '../../types'
+import { ResidentRequest, ResidentResponse } from '../../types'
 
 /**
  * resetPassword
@@ -18,7 +18,7 @@ import { ResidentRequest } from '../../types'
  * and send them a reset link with a token that will be used to verify their identity.
  * it is important to not disclose whether or not the email exists in the database.
  */
-export const resetPassword = async (req: ResidentRequest, res: Response): Promise<Response> => {
+export const resetPassword = async (req: ResidentRequest, res: Response<ResidentResponse>): Promise<Response> => {
   // Email will be added to the request from the previous email validation middleware
   const email = req[REQUEST_EMAIL]
   if (!email) {

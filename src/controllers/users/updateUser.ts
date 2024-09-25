@@ -5,12 +5,12 @@ import SERVICES from '../../services'
 import { REQUEST_TARGET_USER_ID } from '../../types/requestSymbols'
 import { handleSuccessResponse } from '../../middleware/util/successHandler'
 import MESSAGES from '../../constants/messages'
-import { ResidentRequest } from '../../types'
+import { ResidentRequest, ResidentResponse } from '../../types'
 
 /**
  * updateUser
  */
-export const updateUser = async (req: ResidentRequest, res: Response): Promise<Response> => {
+export const updateUser = async (req: ResidentRequest, res: Response<ResidentResponse>): Promise<Response> => {
   const { id } = req.params
   const targetUserId = req[REQUEST_TARGET_USER_ID]
   //

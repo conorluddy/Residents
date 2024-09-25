@@ -9,13 +9,16 @@ import { createHash } from '../../utils/crypt'
 import { logger } from '../../utils/logger'
 import { handleSuccessResponse } from '../../middleware/util/successHandler'
 import MESSAGES from '../../constants/messages'
-import { ResidentRequest } from '../../types'
+import { ResidentRequest, ResidentResponse } from '../../types'
 
 /**
  * resetPasswordWithToken
  * POST
  */
-export const resetPasswordWithToken = async (req: ResidentRequest, res: Response): Promise<Response> => {
+export const resetPasswordWithToken = async (
+  req: ResidentRequest,
+  res: Response<ResidentResponse>
+): Promise<Response> => {
   const token = req[REQUEST_TOKEN]
   const plainPassword: string = req.body.password
 

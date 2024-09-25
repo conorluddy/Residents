@@ -27,7 +27,8 @@ const xsrfTokens = (req: ResidentRequest, res: Response, next: NextFunction): vo
   }
 
   // Look for token in cookies, if not found, generate a new one
-  let xsrfToken = req.cookies['xsrfToken']
+  let xsrfToken: string = req.cookies['xsrfToken']
+
   if (!xsrfToken) {
     xsrfToken = generateXsrfToken()
     res.cookie('xsrfToken', xsrfToken, { httpOnly: true, secure: process.env.NODE_ENV === 'production' })
@@ -35,7 +36,7 @@ const xsrfTokens = (req: ResidentRequest, res: Response, next: NextFunction): vo
 
   // XSRF-Token should actually be checked in the headers.
   // Client should take it from cookie and add it to headers.
-  const requestHeadersXsrfToken = req.cookies?.['xsrfToken']
+  const requestHeadersXsrfToken: string = req.cookies?.['xsrfToken']
 
   if (!requestHeadersXsrfToken) {
     throw new UnauthorizedError(MESSAGES.XSRF_TOKEN_REQUIRED)

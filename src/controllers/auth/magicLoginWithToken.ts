@@ -10,12 +10,12 @@ import generateXsrfToken from '../../middleware/util/xsrfToken'
 import SERVICES from '../../services'
 import { REQUEST_TOKEN } from '../../types/requestSymbols'
 import { generateJwtFromUser } from '../../utils/generateJwt'
-import { ResidentRequest } from '../../types'
+import { ResidentRequest, ResidentResponse } from '../../types'
 
 /**
  * GET: magicLoginWithToken
  */
-export const magicLoginWithToken = async (req: ResidentRequest, res: Response): Promise<Response> => {
+export const magicLoginWithToken = async (req: ResidentRequest, res: Response<ResidentResponse>): Promise<Response> => {
   const token = req[REQUEST_TOKEN]!
 
   const [user] = await Promise.all([SERVICES.getUserById(token.userId), SERVICES.deleteToken({ tokenId: token.id })])

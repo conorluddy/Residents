@@ -4,12 +4,12 @@ import { LoginError } from '../../errors'
 import { handleSuccessResponse } from '../../middleware/util/successHandler'
 import { generateJwtFromUser } from '../../utils/generateJwt'
 import { SafeUser } from '../../db/types'
-import { ResidentRequest } from '../../types'
+import { ResidentRequest, ResidentResponse } from '../../types'
 
 /**
  * googleCallback
  */
-export const googleCallback = (req: ResidentRequest, res: Response): Response => {
+export const googleCallback = (req: ResidentRequest, res: Response<ResidentResponse>): Response => {
   const user = req.user as SafeUser
 
   if (!user) {
