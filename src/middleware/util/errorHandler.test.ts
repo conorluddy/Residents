@@ -1,8 +1,9 @@
-import { Request, Response } from 'express'
+import { Response } from 'express'
 import { HTTP_SERVER_ERROR } from '../../constants/http'
 import { logger } from '../../utils/logger'
 import errorHandler from './errorHandler'
 import MESSAGES from '../../constants/messages'
+import { ResidentRequest } from '../../types'
 
 jest.mock('../../utils/logger', () => ({
   logger: {
@@ -13,7 +14,7 @@ jest.mock('../../utils/logger', () => ({
 
 describe('Middleware: errorHandler', () => {
   let mockErr: Error
-  let mockRequest: Partial<Request>
+  let mockRequest: Partial<ResidentRequest>
   let mockResponse: Partial<Response>
   const nextFunction = jest.fn()
 
@@ -29,8 +30,8 @@ describe('Middleware: errorHandler', () => {
     jest.clearAllMocks()
   })
 
-  it('Send the correct error response and logs the error', async () => {
-    await errorHandler(mockErr, mockRequest as Request, mockResponse as Response, nextFunction)
+  it('Send the correct error response and logs the error', () => {
+    errorHandler(mockErr, mockRequest as ResidentRequest, mockResponse as Response, nextFunction)
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SERVER_ERROR.INTERNAL_SERVER_ERROR)
     expect(mockResponse.json).toHaveBeenCalledWith({ message: MESSAGES.SOMETHING_WENT_WRONG })
     expect(logger.error).toHaveBeenCalledWith('Test error')

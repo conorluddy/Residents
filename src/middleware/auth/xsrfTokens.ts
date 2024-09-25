@@ -1,11 +1,12 @@
-import { NextFunction, Request, Response } from 'express'
+import { NextFunction, Response } from 'express'
 import { JWT_TOKEN_SECRET } from '../../config'
 import { UnauthorizedError } from '../../errors'
 import jwt from 'jsonwebtoken'
 import generateXsrfToken from '../util/xsrfToken'
 import MESSAGES from '../../constants/messages'
+import { ResidentRequest } from '../../types'
 
-const xsrfTokens = (req: Request, res: Response, next: NextFunction): void => {
+const xsrfTokens = (req: ResidentRequest, res: Response, next: NextFunction): void => {
   // Return as early as possible, this will be called on most requests and only need apply to mutations
   if (req.method === 'GET') {
     return next()

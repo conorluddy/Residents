@@ -1,10 +1,11 @@
-import { Request, Response } from 'express'
+import { Response } from 'express'
 import { User } from '../../db/types'
 import { magicLoginWithToken } from './magicLoginWithToken'
 import MESSAGES from '../../constants/messages'
+import { ResidentRequest } from '../../types'
 
 describe.skip('Controller: MagicLoginWithToken', () => {
-  let mockRequest: Partial<Request> & { body: Partial<User> }
+  let mockRequest: Partial<ResidentRequest> & { body: Partial<User> }
   let mockResponse: Partial<Response>
 
   beforeEach(() => {
@@ -16,7 +17,7 @@ describe.skip('Controller: MagicLoginWithToken', () => {
   })
 
   it('NOT IMPLEMENTED YET: TODO', async () => {
-    await expect(magicLoginWithToken(mockRequest as Request, mockResponse as Response)).rejects.toThrow(
+    await expect(magicLoginWithToken(mockRequest as ResidentRequest, mockResponse as Response)).rejects.toThrow(
       MESSAGES.FEATURE_NOT_IMPLEMENTED
     )
   })

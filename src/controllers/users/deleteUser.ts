@@ -1,14 +1,15 @@
-import { Request, Response } from 'express'
+import { Response } from 'express'
 import { BadRequestError, ForbiddenError } from '../../errors'
 import { REQUEST_TARGET_USER_ID } from '../../types/requestSymbols'
 import SERVICES from '../../services'
 import { handleSuccessResponse } from '../../middleware/util/successHandler'
 import MESSAGES from '../../constants/messages'
+import { ResidentRequest } from '../../types'
 
 /**
  * deleteUser
  */
-export const deleteUser = async (req: Request, res: Response): Promise<Response> => {
+export const deleteUser = async (req: ResidentRequest, res: Response): Promise<Response> => {
   // The param ID is the ID of the user to be deleted from the URL
   const { id } = req.params
   // The targetUserId is the same ID of the user to be deleted, but will

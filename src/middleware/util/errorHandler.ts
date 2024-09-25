@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express'
+import { NextFunction, Response } from 'express'
 import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from '../../constants/http'
 import { logger } from '../../utils/logger'
 import {
@@ -20,8 +20,14 @@ import {
   LoginError,
 } from '../../errors'
 import MESSAGES from '../../constants/messages'
+import { ResidentRequest } from '../../types'
 
-const errorHandler = (err: Error, _req: Request, res: Response, next: NextFunction): Response | void | undefined => {
+const errorHandler = (
+  err: Error,
+  _req: ResidentRequest,
+  res: Response,
+  next: NextFunction
+): Response | void | undefined => {
   if (!err) {
     next()
   }

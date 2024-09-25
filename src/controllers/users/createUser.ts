@@ -1,4 +1,4 @@
-import { Request, Response } from 'express'
+import { Response } from 'express'
 import { TOKEN_TYPE } from '../../constants/database'
 import { NewUser } from '../../db/types'
 import { TIMESPAN } from '../../constants/time'
@@ -7,6 +7,7 @@ import SERVICES from '../../services'
 import { isEmail } from 'validator'
 import { handleCreatedResponse } from '../../middleware/util/successHandler'
 import MESSAGES from '../../constants/messages'
+import { ResidentRequest } from '../../types'
 
 // For dev - remove before flight
 // import { SENDGRID_TEST_EMAIL } from "../../config"
@@ -16,7 +17,7 @@ import MESSAGES from '../../constants/messages'
 /**
  * createUser
  */
-export const createUser = async ({ body }: Request, res: Response): Promise<Response> => {
+export const createUser = async ({ body }: ResidentRequest, res: Response): Promise<Response> => {
   const { username, firstName, lastName, email, password, role }: NewUser = body
 
   if (![username, firstName, lastName, email, password].every(Boolean)) {

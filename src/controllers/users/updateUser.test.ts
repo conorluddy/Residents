@@ -1,4 +1,4 @@
-import { Request, Response } from 'express'
+import { Response } from 'express'
 import { HTTP_SUCCESS } from '../../constants/http'
 import { User } from '../../db/types'
 import { makeAFakeUser } from '../../test-utils/mockUsers'
@@ -6,6 +6,7 @@ import { REQUEST_TARGET_USER_ID } from '../../types/requestSymbols'
 import { logger } from '../../utils/logger'
 import { updateUser } from './updateUser'
 import MESSAGES from '../../constants/messages'
+import { ResidentRequest } from '../../types'
 
 const fakeUser: Partial<User> = makeAFakeUser({})
 
@@ -14,7 +15,7 @@ jest.mock('../../services/index', () => ({
 }))
 
 describe('Controller: UpdateUser', () => {
-  let mockRequest: Partial<Request> & { params: { id?: string }; [REQUEST_TARGET_USER_ID]?: string }
+  let mockRequest: Partial<ResidentRequest> & { params: { id?: string }; [REQUEST_TARGET_USER_ID]?: string }
   let mockResponse: Partial<Response>
 
   beforeAll(() => {})
@@ -38,7 +39,7 @@ describe('Controller: UpdateUser', () => {
   })
 
   it(MESSAGES.USER_UPDATED, async () => {
-    await updateUser(mockRequest as Request, mockResponse as Response)
+    await updateUser(mockRequest as ResidentRequest, mockResponse as Response)
     expect(logger.error).not.toHaveBeenCalled()
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.OK)
     expect(mockResponse.json).toHaveBeenCalledWith({ message: `User ${fakeUser.id} updated successfully` })
@@ -49,7 +50,9 @@ describe('Controller: UpdateUser', () => {
       ...mockRequest.params!,
       id: '',
     }
-    await expect(updateUser(mockRequest as Request, mockResponse as Response)).rejects.toThrow(MESSAGES.MISSING_USER_ID)
+    await expect(updateUser(mockRequest as ResidentRequest, mockResponse as Response)).rejects.toThrow(
+      MESSAGES.MISSING_USER_ID
+    )
   })
 
   it('Responds with Forbidden if ID and verified target ID dont match', async () => {
@@ -58,7 +61,7 @@ describe('Controller: UpdateUser', () => {
       id: 'NotTheFakerUsersID',
     }
 
-    await expect(updateUser(mockRequest as Request, mockResponse as Response)).rejects.toThrow(
+    await expect(updateUser(mockRequest as ResidentRequest, mockResponse as Response)).rejects.toThrow(
       MESSAGES.USER_ID_MISMATCH
     )
   })
@@ -66,6 +69,8 @@ describe('Controller: UpdateUser', () => {
   it('Responds with Bad Request if no update data is provided', async () => {
     mockRequest.body = {}
 
-    await expect(updateUser(mockRequest as Request, mockResponse as Response)).rejects.toThrow(MESSAGES.NO_UPDATE_DATA)
+    await expect(updateUser(mockRequest as ResidentRequest, mockResponse as Response)).rejects.toThrow(
+      MESSAGES.NO_UPDATE_DATA
+    )
   })
 })

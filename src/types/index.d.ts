@@ -1,4 +1,6 @@
 import 'express'
+import { Request as ExpressRequest } from 'express'
+
 import { SafeUser, Token } from '../db/types'
 import {
   REQUEST_USER,
@@ -22,4 +24,18 @@ declare module 'express-serve-static-core' {
     [REQUEST_EMAIL]?: string | null
     [REQUEST_DB]: NodePgDatabase<Record<string, never>>
   }
+}
+
+declare const process: {
+  env: Record<string, string | undefined>
+}
+
+export interface ResidentRequest extends ExpressRequest {
+  [REQUEST_TOKEN_ID]?: string
+  [REQUEST_TOKEN]?: Token | null
+  [REQUEST_USER]?: SafeUser | null
+  [REQUEST_TARGET_USER]?: SafeUser | null
+  [REQUEST_TARGET_USER_ID]?: string
+  [REQUEST_EMAIL]?: string | null
+  [REQUEST_DB]: NodePgDatabase<Record<string, never>>
 }

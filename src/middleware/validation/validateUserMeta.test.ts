@@ -1,17 +1,18 @@
-import { Request, Response, NextFunction } from 'express'
+import { Response, NextFunction } from 'express'
 import validateUserMeta from './validateUserMeta'
 import { BadRequestError } from '../../errors'
 import MESSAGES from '../../constants/messages'
+import { ResidentRequest } from '../../types'
 
 describe('Middleware: validateUserMeta', () => {
-  let mockRequest: Partial<Request>
+  let mockRequest: Partial<ResidentRequest>
   let mockResponse: Partial<Response>
   let nextFunction: NextFunction
 
   beforeEach(() => {
     mockRequest = {
       body: undefined,
-    } as Request
+    } as ResidentRequest
     mockResponse = {
       json: jest.fn(),
       status: jest.fn().mockReturnThis(),
@@ -24,21 +25,21 @@ describe('Middleware: validateUserMeta', () => {
   })
 
   it('should return 400 if the request body is missing', () => {
-    expect(() => validateUserMeta(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
+    expect(() => validateUserMeta(mockRequest as ResidentRequest, mockResponse as Response, nextFunction)).toThrow(
       new BadRequestError(MESSAGES.INVALID_DATA_PROVIDED)
     )
   })
 
   it('should return 400 if the request body is null', () => {
     mockRequest.body = null
-    expect(() => validateUserMeta(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
+    expect(() => validateUserMeta(mockRequest as ResidentRequest, mockResponse as Response, nextFunction)).toThrow(
       new BadRequestError(MESSAGES.INVALID_DATA_PROVIDED)
     )
   })
 
   it('should return 400 if the request body is invalid', () => {
     mockRequest.body = { randomProperty: 'randomValue' }
-    expect(() => validateUserMeta(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
+    expect(() => validateUserMeta(mockRequest as ResidentRequest, mockResponse as Response, nextFunction)).toThrow(
       new BadRequestError(MESSAGES.INVALID_DATA_PROVIDED)
     )
   })
@@ -47,7 +48,7 @@ describe('Middleware: validateUserMeta', () => {
     mockRequest.body = {
       metaItem: 'metaItem',
     }
-    validateUserMeta(mockRequest as Request, mockResponse as Response, nextFunction)
+    validateUserMeta(mockRequest as ResidentRequest, mockResponse as Response, nextFunction)
     expect(nextFunction).toHaveBeenCalled()
     expect(mockResponse.status).not.toHaveBeenCalled()
     expect(mockResponse.json).not.toHaveBeenCalled()

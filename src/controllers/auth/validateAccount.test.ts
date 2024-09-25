@@ -1,4 +1,4 @@
-import { Request, Response } from 'express'
+import { Response } from 'express'
 import { ROLES, TOKEN_TYPE } from '../../constants/database'
 import { HTTP_SUCCESS } from '../../constants/http'
 import { PublicUser, Token } from '../../db/types'
@@ -8,6 +8,7 @@ import { logger } from '../../utils/logger'
 import { validateAccount } from './validateAccount'
 import { TIMESPAN } from '../../constants/time'
 import MESSAGES from '../../constants/messages'
+import { ResidentRequest } from '../../types'
 
 const mockDefaultUser = makeAFakeSafeUser({ role: ROLES.DEFAULT })
 const mockToken: Token = {
@@ -31,7 +32,7 @@ jest.mock('../../utils/generateJwt', () => ({
 }))
 
 describe('Controller: Validate Account', () => {
-  let mockRequest: Partial<Request> & { [REQUEST_USER]: PublicUser; [REQUEST_TOKEN]?: Token }
+  let mockRequest: Partial<ResidentRequest> & { [REQUEST_USER]: PublicUser; [REQUEST_TOKEN]?: Token }
   let mockResponse: Partial<Response>
 
   beforeEach(() => {
@@ -47,7 +48,7 @@ describe('Controller: Validate Account', () => {
   })
 
   it('Validates a users account when the token is found and matches the user', async () => {
-    await validateAccount(mockRequest as Request, mockResponse as Response)
+    await validateAccount(mockRequest as ResidentRequest, mockResponse as Response)
     expect(logger.error).not.toHaveBeenCalled()
     expect(logger.info).toHaveBeenCalledWith(`${MESSAGES.USER_VALIDATED} ${mockDefaultUser.id}`)
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.OK)
@@ -56,14 +57,14 @@ describe('Controller: Validate Account', () => {
 
   it('Returns forbidden when missing token', async () => {
     mockRequest[REQUEST_TOKEN] = undefined
-    await expect(validateAccount(mockRequest as Request, mockResponse as Response)).rejects.toThrow(
+    await expect(validateAccount(mockRequest as ResidentRequest, mockResponse as Response)).rejects.toThrow(
       MESSAGES.TOKEN_MISSING
     )
   })
 
   it('Returns forbidden when missing userId from URL', async () => {
     mockRequest.params = { tokenId: 'TOKEN001' }
-    await expect(validateAccount(mockRequest as Request, mockResponse as Response)).rejects.toThrow(
+    await expect(validateAccount(mockRequest as ResidentRequest, mockResponse as Response)).rejects.toThrow(
       MESSAGES.INVALID_USER_DATA
     )
   })
@@ -77,7 +78,7 @@ describe('Controller: Validate Account', () => {
       createdAt: new Date(),
       expiresAt: new Date(Date.now() + TIMESPAN.HOUR),
     }
-    await expect(validateAccount(mockRequest as Request, mockResponse as Response)).rejects.toThrow(
+    await expect(validateAccount(mockRequest as ResidentRequest, mockResponse as Response)).rejects.toThrow(
       MESSAGES.VALIDATION_TOKEN_INVALID
     )
   })
@@ -91,7 +92,7 @@ describe('Controller: Validate Account', () => {
       createdAt: new Date(),
       expiresAt: new Date(Date.now() + TIMESPAN.HOUR),
     }
-    await expect(validateAccount(mockRequest as Request, mockResponse as Response)).rejects.toThrow(
+    await expect(validateAccount(mockRequest as ResidentRequest, mockResponse as Response)).rejects.toThrow(
       MESSAGES.VALIDATION_TOKEN_INVALID
     )
   })

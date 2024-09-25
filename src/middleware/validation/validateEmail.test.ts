@@ -1,10 +1,11 @@
-import { Request, Response, NextFunction } from 'express'
+import { Response, NextFunction } from 'express'
 import validateEmail from './validateEmail'
 import MESSAGES from '../../constants/messages'
 import { BadRequestError } from '../../errors'
+import { ResidentRequest } from '../../types'
 
 describe('Middleware: validateEmail', () => {
-  let mockRequest: Partial<Request>
+  let mockRequest: Partial<ResidentRequest>
   let mockResponse: Partial<Response>
   let nextFunction: NextFunction
 
@@ -13,7 +14,7 @@ describe('Middleware: validateEmail', () => {
       body: {
         email: null,
       },
-    } as Request
+    } as ResidentRequest
 
     mockResponse = {
       json: jest.fn(),
@@ -30,7 +31,7 @@ describe('Middleware: validateEmail', () => {
 
   it('should return 400 if the request email is missing', () => {
     expect(() => {
-      validateEmail(mockRequest as Request, mockResponse as Response, nextFunction)
+      validateEmail(mockRequest as ResidentRequest, mockResponse as Response, nextFunction)
     }).toThrow(new BadRequestError(MESSAGES.EMAIL_REQUIRED))
     expect(nextFunction).not.toHaveBeenCalled()
     expect(mockResponse.status).not.toHaveBeenCalled()
@@ -40,7 +41,7 @@ describe('Middleware: validateEmail', () => {
   it('should return 400 if the request email is invalid', () => {
     mockRequest.body.email = 'thatsnotanemail'
     expect(() => {
-      validateEmail(mockRequest as Request, mockResponse as Response, nextFunction)
+      validateEmail(mockRequest as ResidentRequest, mockResponse as Response, nextFunction)
     }).toThrow(new BadRequestError(MESSAGES.INVALID_EMAIL))
     expect(nextFunction).not.toHaveBeenCalled()
     expect(mockResponse.status).not.toHaveBeenCalled()
@@ -49,7 +50,7 @@ describe('Middleware: validateEmail', () => {
 
   it('should call next function if email is valid', async () => {
     mockRequest.body.email = 'thats@anemail.com'
-    await validateEmail(mockRequest as Request, mockResponse as Response, nextFunction)
+    await validateEmail(mockRequest as ResidentRequest, mockResponse as Response, nextFunction)
     expect(nextFunction).toHaveBeenCalled()
     expect(mockResponse.status).not.toHaveBeenCalled()
     expect(mockResponse.json).not.toHaveBeenCalled()

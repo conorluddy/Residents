@@ -1,4 +1,4 @@
-import { Request, Response } from 'express'
+import { Response } from 'express'
 import { HTTP_SUCCESS } from '../../constants/http'
 import { BadRequestError } from '../../errors'
 import { REQUEST_EMAIL } from '../../types/requestSymbols'
@@ -9,11 +9,12 @@ import { sendMail } from '../../mail/sendgrid'
 import { SENDGRID_TEST_EMAIL } from '../../config'
 import { logger } from '../../utils/logger'
 import MESSAGES from '../../constants/messages'
+import { ResidentRequest } from '../../types'
 
 /**
  * magicLogin
  */
-export const magicLogin = async (req: Request, res: Response): Promise<Response> => {
+export const magicLogin = async (req: ResidentRequest, res: Response): Promise<Response> => {
   // Email will be added to the request from the previous email validation middleware
   const email = req[REQUEST_EMAIL]
   if (!email) {

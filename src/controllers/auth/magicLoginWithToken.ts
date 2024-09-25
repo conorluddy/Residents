@@ -1,4 +1,4 @@
-import { Request, Response } from 'express'
+import { Response } from 'express'
 import { EXPIRATION_REFRESH_TOKEN_MS } from '../../config'
 import { TOKEN_TYPE } from '../../constants/database'
 import { REFRESH_TOKEN, RESIDENT_TOKEN, XSRF_TOKEN } from '../../constants/keys'
@@ -10,11 +10,12 @@ import generateXsrfToken from '../../middleware/util/xsrfToken'
 import SERVICES from '../../services'
 import { REQUEST_TOKEN } from '../../types/requestSymbols'
 import { generateJwtFromUser } from '../../utils/generateJwt'
+import { ResidentRequest } from '../../types'
 
 /**
  * GET: magicLoginWithToken
  */
-export const magicLoginWithToken = async (req: Request, res: Response): Promise<Response> => {
+export const magicLoginWithToken = async (req: ResidentRequest, res: Response): Promise<Response> => {
   const token = req[REQUEST_TOKEN]!
 
   const [user] = await Promise.all([SERVICES.getUserById(token.userId), SERVICES.deleteToken({ tokenId: token.id })])

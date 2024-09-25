@@ -1,4 +1,4 @@
-import { Request, Response } from 'express'
+import { Response } from 'express'
 import { SENDGRID_TEST_EMAIL } from '../../config'
 import { TOKEN_TYPE } from '../../constants/database'
 import { TIMESPAN } from '../../constants/time'
@@ -9,6 +9,7 @@ import { logger } from '../../utils/logger'
 import { BadRequestError } from '../../errors'
 import { handleSuccessResponse } from '../../middleware/util/successHandler'
 import MESSAGES from '../../constants/messages'
+import { ResidentRequest } from '../../types'
 
 /**
  * resetPassword
@@ -17,7 +18,7 @@ import MESSAGES from '../../constants/messages'
  * and send them a reset link with a token that will be used to verify their identity.
  * it is important to not disclose whether or not the email exists in the database.
  */
-export const resetPassword = async (req: Request, res: Response): Promise<Response> => {
+export const resetPassword = async (req: ResidentRequest, res: Response): Promise<Response> => {
   // Email will be added to the request from the previous email validation middleware
   const email = req[REQUEST_EMAIL]
   if (!email) {

@@ -1,8 +1,9 @@
-import { Request, Response } from 'express'
+import { Response } from 'express'
 import { makeAFakeUser } from '../../test-utils/mockUsers'
 import { HTTP_SUCCESS } from '../../constants/http'
 import { getAllUsers } from './getAllUsers'
 import { User } from '../../db/types'
+import { ResidentRequest } from '../../types'
 
 const fakeUser: Partial<User> = makeAFakeUser({ id: '123' })
 
@@ -17,7 +18,7 @@ jest.mock('../../services/index', () => ({
 }))
 
 describe('Controller: GetAllUsers', () => {
-  let mockRequest: Partial<Request>
+  let mockRequest: Partial<ResidentRequest>
   let mockResponse: Partial<Response>
 
   beforeAll(() => {})
@@ -30,18 +31,18 @@ describe('Controller: GetAllUsers', () => {
   })
 
   it('Gets All Users', async () => {
-    await getAllUsers(mockRequest as Request, mockResponse as Response)
+    await getAllUsers(mockRequest as ResidentRequest, mockResponse as Response)
     expect(mockResponse.json).toHaveBeenCalledWith({ users: [fakeUser, fakeUser, fakeUser] })
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.OK)
   })
 
   it('Gets No Users', async () => {
-    await getAllUsers(mockRequest as Request, mockResponse as Response)
+    await getAllUsers(mockRequest as ResidentRequest, mockResponse as Response)
     expect(mockResponse.json).toHaveBeenCalledWith({ users: [] })
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.OK)
   })
 
   it('Handles an error from the service', async () => {
-    await expect(getAllUsers(mockRequest as Request, mockResponse as Response)).rejects.toThrow('S.N.A.F.U')
+    await expect(getAllUsers(mockRequest as ResidentRequest, mockResponse as Response)).rejects.toThrow('S.N.A.F.U')
   })
 })

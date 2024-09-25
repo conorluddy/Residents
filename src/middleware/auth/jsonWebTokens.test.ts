@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express'
+import { NextFunction, Response } from 'express'
 import { ROLES } from '../../constants/database'
 import { PublicUser, User } from '../../db/types'
 import { makeAFakeSafeUser, makeAFakeUser } from '../../test-utils/mockUsers'
@@ -7,9 +7,10 @@ import { generateJwtFromUser } from '../../utils/generateJwt'
 import { authenticateToken } from './jsonWebTokens'
 import { UnauthorizedError } from '../../errors'
 import MESSAGES from '../../constants/messages'
+import { ResidentRequest } from '../../types'
 
 describe('Middleware:JWT', () => {
-  let mockRequest: Partial<Request> & { [REQUEST_USER]: PublicUser }
+  let mockRequest: Partial<ResidentRequest> & { [REQUEST_USER]: PublicUser }
   let mockResponse: Partial<Response>
   let nextFunction: NextFunction
   let mockDefaultUser: User
@@ -36,7 +37,7 @@ describe('Middleware:JWT', () => {
 
   it('Happy Path: should allow passthrough if the JWT is verified', () => {
     mockRequest[REQUEST_USER] = makeAFakeSafeUser(mockDefaultUser)
-    authenticateToken(mockRequest as Request, mockResponse as Response, nextFunction)
+    authenticateToken(mockRequest as ResidentRequest, mockResponse as Response, nextFunction)
     expect(nextFunction).toHaveBeenCalled()
   })
 
@@ -44,9 +45,9 @@ describe('Middleware:JWT', () => {
     mockRequest[REQUEST_USER] = makeAFakeSafeUser(mockDefaultUser)
     delete mockRequest?.headers?.authorization
 
-    await expect(() => authenticateToken(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
-      new UnauthorizedError(MESSAGES.JWT_TOKEN_NOT_PROVIDED)
-    )
+    await expect(() =>
+      authenticateToken(mockRequest as ResidentRequest, mockResponse as Response, nextFunction)
+    ).toThrow(new UnauthorizedError(MESSAGES.JWT_TOKEN_NOT_PROVIDED))
 
     expect(nextFunction).not.toHaveBeenCalled()
   })
@@ -55,9 +56,9 @@ describe('Middleware:JWT', () => {
     mockRequest[REQUEST_USER] = makeAFakeSafeUser(mockDefaultUser)
     mockRequest.headers = { authorization: `Bearer ${generateJwtFromUser(mockDefaultUser, '1ms')}` }
 
-    await expect(() => authenticateToken(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
-      new UnauthorizedError(MESSAGES.TOKEN_INVALID)
-    )
+    await expect(() =>
+      authenticateToken(mockRequest as ResidentRequest, mockResponse as Response, nextFunction)
+    ).toThrow(new UnauthorizedError(MESSAGES.TOKEN_INVALID))
 
     expect(nextFunction).not.toHaveBeenCalled()
   })
@@ -69,9 +70,9 @@ describe('Middleware:JWT', () => {
       mockRequest.headers.authorization = `Bearer ${jwt}`
     }
 
-    await expect(() => authenticateToken(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
-      new UnauthorizedError(MESSAGES.TOKEN_INVALID)
-    )
+    await expect(() =>
+      authenticateToken(mockRequest as ResidentRequest, mockResponse as Response, nextFunction)
+    ).toThrow(new UnauthorizedError(MESSAGES.TOKEN_INVALID))
 
     expect(nextFunction).not.toHaveBeenCalled()
   })

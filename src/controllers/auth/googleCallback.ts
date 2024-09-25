@@ -1,14 +1,15 @@
-import { Request, Response } from 'express'
+import { Response } from 'express'
 import MESSAGES from '../../constants/messages'
 import { LoginError } from '../../errors'
 import { handleSuccessResponse } from '../../middleware/util/successHandler'
 import { generateJwtFromUser } from '../../utils/generateJwt'
 import { SafeUser } from '../../db/types'
+import { ResidentRequest } from '../../types'
 
 /**
  * googleCallback
  */
-export const googleCallback = (req: Request, res: Response): Response => {
+export const googleCallback = (req: ResidentRequest, res: Response): Response => {
   const user = req.user as SafeUser
 
   if (!user) {

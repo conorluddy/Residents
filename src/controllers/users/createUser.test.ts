@@ -1,8 +1,9 @@
-import { Request, Response } from 'express'
+import { Response } from 'express'
 import { HTTP_SUCCESS } from '../../constants/http'
 import { createUser } from './createUser'
 import { ROLES } from '../../constants/database'
 import MESSAGES from '../../constants/messages'
+import { ResidentRequest } from '../../types'
 
 jest.mock('../../services/index', () => ({
   createToken: jest.fn(),
@@ -11,7 +12,7 @@ jest.mock('../../services/index', () => ({
 }))
 
 describe('Controller: CreateUser', () => {
-  let mockRequest: Partial<Request>
+  let mockRequest: Partial<ResidentRequest>
   let mockResponse: Partial<Response>
 
   beforeEach(() => {
@@ -32,20 +33,22 @@ describe('Controller: CreateUser', () => {
   })
 
   it('Create User - Happy path', async () => {
-    await createUser(mockRequest as Request, mockResponse as Response)
+    await createUser(mockRequest as ResidentRequest, mockResponse as Response)
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.CREATED)
     expect(mockResponse.json).toHaveBeenCalledWith({ message: MESSAGES.USER_REGISTERED })
   })
 
   it('Create User - Missing data', async () => {
     mockRequest.body = {}
-    await expect(createUser(mockRequest as Request, mockResponse as Response)).rejects.toThrow(
+    await expect(createUser(mockRequest as ResidentRequest, mockResponse as Response)).rejects.toThrow(
       MESSAGES.MISSING_REQUIRED_FIELDS
     )
   })
 
   it('Create User - Invalid email', async () => {
     mockRequest.body.email = 'invalid-email'
-    await expect(createUser(mockRequest as Request, mockResponse as Response)).rejects.toThrow(MESSAGES.INVALID_EMAIL)
+    await expect(createUser(mockRequest as ResidentRequest, mockResponse as Response)).rejects.toThrow(
+      MESSAGES.INVALID_EMAIL
+    )
   })
 })

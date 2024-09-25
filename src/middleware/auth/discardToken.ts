@@ -1,13 +1,14 @@
-import { NextFunction, Request, RequestHandler, Response } from 'express'
+import { NextFunction, RequestHandler, Response } from 'express'
 import { REQUEST_TOKEN } from '../../types/requestSymbols'
 import SERVICES from '../../services'
 import { ForbiddenError } from '../../errors'
 import MESSAGES from '../../constants/messages'
+import { ResidentRequest } from '../../types'
 
 /**
  * Middleware for discarding a token after it has been used.
  */
-const discardToken: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
+const discardToken: RequestHandler = async (req: ResidentRequest, res: Response, next: NextFunction) => {
   const requestToken = req[REQUEST_TOKEN]
 
   if (!requestToken) {

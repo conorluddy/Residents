@@ -1,9 +1,10 @@
-import { Request, Response } from 'express'
+import { Response } from 'express'
 import { HTTP_SUCCESS } from '../../constants/http'
 import { User } from '../../db/types'
 import { makeAFakeUserWithHashedPassword } from '../../test-utils/mockUsers'
 import { login } from './login'
 import MESSAGES from '../../constants/messages'
+import { ResidentRequest } from '../../types'
 
 jest.mock('../../services/index', () => ({
   getUserByUsername: jest
@@ -21,7 +22,7 @@ jest.mock('../../utils/generateJwt', () => ({
 }))
 
 describe('Controller: Login', () => {
-  let mockRequest: Partial<Request> & { body: Partial<User> }
+  let mockRequest: Partial<ResidentRequest> & { body: Partial<User> }
   let mockResponse: Partial<Response>
 
   beforeAll(() => {
@@ -44,7 +45,7 @@ describe('Controller: Login', () => {
   })
 
   it('should allow login with correct username and password', async () => {
-    await login(mockRequest as Request, mockResponse as Response)
+    await login(mockRequest as ResidentRequest, mockResponse as Response)
     expect(mockResponse.json).toHaveBeenCalledWith({ token: 'fakeToken' })
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.OK)
     expect(mockResponse.cookie).toHaveBeenCalledWith('refreshToken', 'token123', {
@@ -58,20 +59,24 @@ describe('Controller: Login', () => {
   it('should reject login with incorrect username', async () => {
     mockRequest.body.username = 'MrsFake'
     mockRequest.body.password = 'testpassword'
-    await expect(login(mockRequest as Request, mockResponse as Response)).rejects.toThrow(MESSAGES.USER_NOT_FOUND)
+    await expect(login(mockRequest as ResidentRequest, mockResponse as Response)).rejects.toThrow(
+      MESSAGES.USER_NOT_FOUND
+    )
   })
 
   it('should reject login with incorrect password', async () => {
     mockRequest.body.username = 'MrFake'
     mockRequest.body.password = 'wrongpassword'
-    await expect(login(mockRequest as Request, mockResponse as Response)).rejects.toThrow(MESSAGES.USER_NOT_FOUND)
+    await expect(login(mockRequest as ResidentRequest, mockResponse as Response)).rejects.toThrow(
+      MESSAGES.USER_NOT_FOUND
+    )
   })
 
   it('should reject login with missing username/password', async () => {
     mockRequest.body.username = null
     mockRequest.body.email = null
     mockRequest.body.password = 'testpassword'
-    await expect(login(mockRequest as Request, mockResponse as Response)).rejects.toThrow(
+    await expect(login(mockRequest as ResidentRequest, mockResponse as Response)).rejects.toThrow(
       MESSAGES.USERNAME_OR_EMAIL_REQUIRED
     )
   })
@@ -79,18 +84,24 @@ describe('Controller: Login', () => {
   it('should reject login with missing password', async () => {
     mockRequest.body.username = 'MrFake'
     mockRequest.body.password = null
-    await expect(login(mockRequest as Request, mockResponse as Response)).rejects.toThrow(MESSAGES.PASSWORD_REQUIRED)
+    await expect(login(mockRequest as ResidentRequest, mockResponse as Response)).rejects.toThrow(
+      MESSAGES.PASSWORD_REQUIRED
+    )
   })
 
   it('should reject login with invalid email address', async () => {
     mockRequest.body.username = null
     mockRequest.body.email = 'notanemailaddress'
     mockRequest.body.password = 'testpassword'
-    await expect(login(mockRequest as Request, mockResponse as Response)).rejects.toThrow(MESSAGES.INVALID_EMAIL)
+    await expect(login(mockRequest as ResidentRequest, mockResponse as Response)).rejects.toThrow(
+      MESSAGES.INVALID_EMAIL
+    )
   })
 
   it('should catch errors', async () => {
     delete mockRequest.cookies
-    await expect(login(mockRequest as Request, mockResponse as Response)).rejects.toThrow(MESSAGES.USER_NOT_FOUND)
+    await expect(login(mockRequest as ResidentRequest, mockResponse as Response)).rejects.toThrow(
+      MESSAGES.USER_NOT_FOUND
+    )
   })
 })
