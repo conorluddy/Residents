@@ -1,51 +1,55 @@
+import { JwtPayload } from 'jsonwebtoken'
 import { PublicUser, SafeUser } from '../db/types'
 
-// Need to strip this back to id and role and maybe name
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function isJwtUser(jwt: any): jwt is SafeUser {
+function isJwtUser(jwt: unknown): jwt is SafeUser {
+  if (typeof jwt !== 'object' || jwt === null) {
+    return false
+  }
+  const maybeJwt = jwt as Partial<SafeUser> & Partial<JwtPayload>
   return (
-    typeof jwt === 'object' &&
-    jwt !== null &&
-    typeof jwt.iat === 'number' &&
-    typeof jwt.exp === 'number' &&
-    typeof jwt.id === 'string' &&
-    typeof jwt.username === 'string' &&
-    typeof jwt.email === 'string' &&
-    typeof jwt.role === 'string' &&
-    (typeof jwt.firstName === 'string' || jwt.firstName === undefined) &&
-    (typeof jwt.lastName === 'string' || jwt.lastName === undefined)
+    typeof maybeJwt.iat === 'number' &&
+    typeof maybeJwt.exp === 'number' &&
+    typeof maybeJwt.id === 'string' &&
+    typeof maybeJwt.username === 'string' &&
+    typeof maybeJwt.email === 'string' &&
+    typeof maybeJwt.role === 'string' &&
+    (typeof maybeJwt.firstName === 'string' || maybeJwt.firstName === undefined) &&
+    (typeof maybeJwt.lastName === 'string' || maybeJwt.lastName === undefined)
   )
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function isSafeUser(user: any): user is SafeUser {
+function isSafeUser(user: unknown): user is SafeUser {
+  if (typeof user !== 'object' || user === null) {
+    return false
+  }
+  const maybeUser = user as Partial<SafeUser> & Partial<JwtPayload>
   return (
-    typeof user === 'object' &&
-    user !== null &&
-    typeof user.id === 'string' &&
-    typeof user.username === 'string' &&
-    typeof user.email === 'string' &&
-    typeof user.role === 'string' &&
-    (typeof user.firstName === 'string' || user.firstName === undefined) &&
-    (typeof user.lastName === 'string' || user.lastName === undefined) &&
-    (typeof user.status === 'string' || user.status === undefined) &&
-    (user.createdAt instanceof Date || typeof user.createdAt === 'string') &&
-    (user.deletedAt instanceof Date || user.deletedAt === undefined || typeof user.deletedAt === 'string')
+    typeof maybeUser.id === 'string' &&
+    typeof maybeUser.username === 'string' &&
+    typeof maybeUser.email === 'string' &&
+    typeof maybeUser.role === 'string' &&
+    (typeof maybeUser.firstName === 'string' || maybeUser.firstName === undefined) &&
+    (typeof maybeUser.lastName === 'string' || maybeUser.lastName === undefined) &&
+    (typeof maybeUser.status === 'string' || maybeUser.status === undefined) &&
+    (maybeUser.createdAt instanceof Date || typeof maybeUser.createdAt === 'string') &&
+    (maybeUser.deletedAt instanceof Date ||
+      maybeUser.deletedAt === undefined ||
+      typeof maybeUser.deletedAt === 'string')
   )
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function isPublicUser(user: any): user is PublicUser {
+function isPublicUser(user: unknown): user is PublicUser {
+  if (typeof user !== 'object' || user === null) {
+    return false
+  }
+  const maybePublicUser = user as Partial<PublicUser> & Partial<JwtPayload>
   return (
-    typeof user === 'object' &&
-    user !== null &&
-    typeof user.id === 'string' &&
-    typeof user.username === 'string' &&
-    typeof user.email === 'string' &&
-    typeof user.role === 'string' &&
-    (typeof user.firstName === 'string' || user.firstName === undefined) &&
-    (typeof user.lastName === 'string' || user.lastName === undefined)
+    typeof maybePublicUser.id === 'string' &&
+    typeof maybePublicUser.username === 'string' &&
+    typeof maybePublicUser.email === 'string' &&
+    typeof maybePublicUser.role === 'string' &&
+    (typeof maybePublicUser.firstName === 'string' || maybePublicUser.firstName === undefined) &&
+    (typeof maybePublicUser.lastName === 'string' || maybePublicUser.lastName === undefined)
   )
 }
 

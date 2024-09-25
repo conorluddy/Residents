@@ -6,7 +6,7 @@ import MESSAGES from '../constants/messages'
 
 // using Twilio SendGrid's v3 Node.js Library
 // https://github.com/sendgrid/sendgrid-nodejs
-if (process.env.NODE_ENV !== 'test') {
+if (process.env.NODE_ENV !== 'test' && SENDGRID_API_KEY) {
   sgMail.setApiKey(SENDGRID_API_KEY)
 }
 
@@ -18,6 +18,10 @@ interface MailProps {
 
 export const sendMail = async ({ to, subject, body }: MailProps): Promise<[ClientResponse, object] | undefined> => {
   try {
+    if (!SENDGRID_VERIFIED_EMAIL) {
+      throw new EmailError(MESSAGES.MISSING_REQUIRED_ENV_VARS)
+    }
+
     const msg = {
       to,
       from: SENDGRID_VERIFIED_EMAIL,

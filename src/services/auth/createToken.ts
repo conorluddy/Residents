@@ -37,7 +37,7 @@ const createToken = async ({ userId, type, expiry }: Props): Promise<Token['id']
     .values({
       userId,
       type,
-      expiresAt: new Date(Date.now() + TOKEN_TYPE_EXPIRATION_MAP[type]),
+      expiresAt: new Date(Date.now() + (TOKEN_TYPE_EXPIRATION_MAP[type] ?? 0)), // Note: Expires instantly if values arent provided
     })
     .returning()
 
