@@ -1,4 +1,4 @@
-import { faker } from '@faker-js/faker/.'
+import { faker } from '@faker-js/faker'
 import MESSAGES from '../constants/messages'
 import { User, SafeUser, PublicUser } from '../db/types'
 import SERVICES from '../services'
