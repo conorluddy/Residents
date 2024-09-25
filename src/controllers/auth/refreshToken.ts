@@ -17,8 +17,8 @@ import { ResidentRequest, ResidentResponse } from '../../types'
  * Refreshes the access token using the refresh token.
  */
 export const refreshToken = async (req: ResidentRequest, res: Response<ResidentResponse>): Promise<Response> => {
-  const refreshTokenId = req.cookies?.[REFRESH_TOKEN]
-  const userId = req.cookies?.[RESIDENT_TOKEN]
+  const refreshTokenId: string = req.cookies?.[REFRESH_TOKEN]
+  const userId: string = req.cookies?.[RESIDENT_TOKEN]
 
   if (!refreshTokenId) {
     throw new TokenError(MESSAGES.REFRESH_TOKEN_REQUIRED)
