@@ -26,7 +26,7 @@ export function userToPublicUser(user: User | SafeUser | PublicUser): PublicUser
 export function sanitizeUsername(input: string): string {
   return input
     .replace(/[^a-zA-Z0-9]/g, '') // Remove non-alphanumeric characters
-    .replace(/(\w)(\w*)/g, (g0, g1, g2) => g1.toUpperCase() + g2.toLowerCase())
+    .replace(/(\w)(\w*)/g, (g0: string, g1: string, g2: string) => g1.toUpperCase() + g2.toLowerCase())
     .slice(0, 30) // Truncate to 30 characters
 }
 

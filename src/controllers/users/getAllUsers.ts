@@ -1,16 +1,17 @@
 import SERVICES from '../../services'
-import { Request, Response } from 'express'
+import { Response } from 'express'
 import { handleSuccessResponse } from '../../middleware/util/successHandler'
 import { DEFAULT_PAGE_SIZE_ROW_LIMIT } from '../../services/user/getAllUsers'
 import { getQueryNumber, getStringFromQuery } from '../../utils/queryStrings'
 import { ROLES, ROLES_ARRAY, STATUS, STATUS_ARRAY } from '../../constants/database'
 import { BadRequestError } from '../../errors'
 import MESSAGES from '../../constants/messages'
+import { ResidentRequest, ResidentResponse } from '../../types'
 
 /**
  * getAllUsers
  */
-export const getAllUsers = async (req: Request, res: Response): Promise<Response> => {
+export const getAllUsers = async (req: ResidentRequest, res: Response<ResidentResponse>): Promise<Response> => {
   // Pagination
   const limit = getQueryNumber(req.query?.limit, DEFAULT_PAGE_SIZE_ROW_LIMIT)
   const offset = getQueryNumber(req.query?.offset, 0)

@@ -1,4 +1,4 @@
-import { Request, Response } from 'express'
+import { Response } from 'express'
 import { HTTP_SUCCESS } from '../../constants/http'
 import { BadRequestError } from '../../errors'
 import { REQUEST_EMAIL } from '../../types/requestSymbols'
@@ -9,18 +9,19 @@ import { sendMail } from '../../mail/sendgrid'
 import { SENDGRID_TEST_EMAIL } from '../../config'
 import { logger } from '../../utils/logger'
 import MESSAGES from '../../constants/messages'
+import { ResidentRequest, ResidentResponse } from '../../types'
 
 /**
  * magicLogin
  */
-export const magicLogin = async (req: Request, res: Response): Promise<Response> => {
+export const magicLogin = async (req: ResidentRequest, res: Response<ResidentResponse>): Promise<Response> => {
   // Email will be added to the request from the previous email validation middleware
   const email = req[REQUEST_EMAIL]
   if (!email) {
     throw new BadRequestError(MESSAGES.MISSING_USER_DATA)
   }
 
-  let debugTokenId
+  // let debugTokenId
 
   const user = await SERVICES.getUserByEmail(email)
 
@@ -44,11 +45,11 @@ export const magicLogin = async (req: Request, res: Response): Promise<Response>
     })
 
     logger.info(`${MESSAGES.MAGIC_LOGIN_EMAIL_SENT} ${email}, token id: ${tokenId}`)
-    debugTokenId = tokenId
+    // debugTokenId = tokenId
   }
 
   return res.status(HTTP_SUCCESS.OK).json({
     message: MESSAGES.CHECK_EMAIL_MAGIC_LINK,
-    debug: `http://localhost:3000/auth/magic-login/${debugTokenId}`, // TODO: Remove
+    // debug: `http://localhost:3000/auth/magic-login/${debugTokenId}`, // TODO: Remove
   })
 }

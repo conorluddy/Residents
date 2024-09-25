@@ -1,15 +1,16 @@
-import { Request, Response } from 'express'
+import { Response } from 'express'
 import { Meta } from '../../db/types'
 import { BadRequestError } from '../../errors'
 import SERVICES from '../../services'
 import { REQUEST_TARGET_USER_ID } from '../../types/requestSymbols'
 import { handleSuccessResponse } from '../../middleware/util/successHandler'
 import MESSAGES from '../../constants/messages'
+import { ResidentRequest, ResidentResponse } from '../../types'
 
 /**
  * updateUserMeta
  */
-export const updateUserMeta = async (req: Request, res: Response): Promise<Response> => {
+export const updateUserMeta = async (req: ResidentRequest, res: Response<ResidentResponse>): Promise<Response> => {
   const { id } = req.params
   const targetUserId = req[REQUEST_TARGET_USER_ID]
 

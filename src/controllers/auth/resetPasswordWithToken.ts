@@ -1,4 +1,4 @@
-import { Request, Response } from 'express'
+import { Response } from 'express'
 import { isStrongPassword } from 'validator'
 import { TOKEN_TYPE } from '../../constants/database'
 import { PASSWORD_STRENGTH_CONFIG } from '../../constants/password'
@@ -9,12 +9,16 @@ import { createHash } from '../../utils/crypt'
 import { logger } from '../../utils/logger'
 import { handleSuccessResponse } from '../../middleware/util/successHandler'
 import MESSAGES from '../../constants/messages'
+import { ResidentRequest, ResidentResponse } from '../../types'
 
 /**
  * resetPasswordWithToken
  * POST
  */
-export const resetPasswordWithToken = async (req: Request, res: Response): Promise<Response> => {
+export const resetPasswordWithToken = async (
+  req: ResidentRequest,
+  res: Response<ResidentResponse>
+): Promise<Response> => {
   const token = req[REQUEST_TOKEN]
   const plainPassword: string = req.body.password
 

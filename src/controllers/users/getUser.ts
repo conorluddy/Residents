@@ -1,15 +1,16 @@
-import { Request, Response } from 'express'
+import { Response } from 'express'
 import { BadRequestError, NotFoundError } from '../../errors'
 import SERVICES from '../../services'
 import { REQUEST_TARGET_USER_ID } from '../../types/requestSymbols'
 import { handleSuccessResponse } from '../../middleware/util/successHandler'
 import MESSAGES from '../../constants/messages'
+import { ResidentRequest, ResidentResponse } from '../../types'
 
 /**
  * getUser
  * @param req[REQUEST_TARGET_USER_ID] - The ID of the user to get, provided by upstream middleware
  */
-export const getUser = async (req: Request, res: Response): Promise<Response> => {
+export const getUser = async (req: ResidentRequest, res: Response<ResidentResponse>): Promise<Response> => {
   //
   const userId = req[REQUEST_TARGET_USER_ID]
   if (!userId) {

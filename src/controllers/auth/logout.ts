@@ -1,14 +1,15 @@
 import SERVICES from '../../services'
-import { Request, Response } from 'express'
+import { Response } from 'express'
 import { BadRequestError } from '../../errors'
 import { REFRESH_TOKEN, RESIDENT_TOKEN, XSRF_TOKEN } from '../../constants/keys'
 import { handleSuccessResponse } from '../../middleware/util/successHandler'
 import MESSAGES from '../../constants/messages'
+import { ResidentRequest, ResidentResponse } from '../../types'
 
 /**
  * logout
  */
-export const logout = async (req: Request, res: Response): Promise<Response> => {
+export const logout = async (req: ResidentRequest, res: Response<ResidentResponse>): Promise<Response> => {
   // Clear the cookies regardless of whether we have any existing ones
 
   res.cookie(REFRESH_TOKEN, '', {

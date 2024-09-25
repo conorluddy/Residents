@@ -6,8 +6,10 @@ import { POSTGRES_URL, POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB, POSTGRES_P
 import dotenv from 'dotenv'
 dotenv.config()
 
+const DEFAULT_POSTGRES_PORT = '5432'
+
 const dbClient = new Client({
-  port: parseInt(POSTGRES_PORT, 10),
+  port: parseInt(POSTGRES_PORT ?? DEFAULT_POSTGRES_PORT, 10),
   host: POSTGRES_URL,
   user: POSTGRES_USER,
   password: POSTGRES_PASSWORD,

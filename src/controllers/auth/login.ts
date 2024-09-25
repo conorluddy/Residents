@@ -1,4 +1,4 @@
-import { Request, Response } from 'express'
+import { Response } from 'express'
 import { isEmail } from 'validator'
 import { TOKEN_TYPE } from '../../constants/database'
 import { User } from '../../db/schema'
@@ -11,11 +11,12 @@ import { REFRESH_TOKEN, XSRF_TOKEN, RESIDENT_TOKEN } from '../../constants/keys'
 import { EXPIRATION_REFRESH_TOKEN_MS } from '../../config'
 import { handleSuccessResponse } from '../../middleware/util/successHandler'
 import MESSAGES from '../../constants/messages'
+import { ResidentRequest, ResidentResponse } from '../../types'
 
 /**
  * login
  */
-export const login = async (req: Request, res: Response): Promise<Response> => {
+export const login = async (req: ResidentRequest, res: Response<ResidentResponse>): Promise<Response> => {
   const { username, email, password } = (req.body ?? {}) as Pick<User, 'username' | 'email' | 'password'>
 
   if (!username && !email) {

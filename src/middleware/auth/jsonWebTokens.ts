@@ -1,12 +1,13 @@
 import jwt from 'jsonwebtoken'
-import { Request, Response, NextFunction } from 'express'
+import { Response, NextFunction } from 'express'
 import { JWT_TOKEN_SECRET } from '../../config'
 import TYPEGUARD from '../../types/typeguards'
 import { REQUEST_USER } from '../../types/requestSymbols'
 import { InternalServerError, UnauthorizedError } from '../../errors'
 import MESSAGES from '../../constants/messages'
+import { ResidentRequest } from '../../types'
 
-export const authenticateToken = (req: Request, res: Response, next: NextFunction): void => {
+export const authenticateToken = (req: ResidentRequest, res: Response, next: NextFunction): void => {
   const authHeader = req.headers['authorization']
   const token = authHeader && authHeader.split(' ')[1]
   const secret = JWT_TOKEN_SECRET

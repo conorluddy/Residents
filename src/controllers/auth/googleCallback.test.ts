@@ -1,8 +1,9 @@
-import { Request, Response } from 'express'
+import { Response } from 'express'
 import { HTTP_SUCCESS } from '../../constants/http'
 import { makeAFakeSafeUser } from '../../test-utils/mockUsers'
 import { googleCallback } from './googleCallback'
 import { EmailError, NotFoundError, UnauthorizedError } from '../../errors'
+import { ResidentRequest } from '../../types'
 
 jest.mock('google-auth-library')
 jest.mock('../../services', () => ({
@@ -14,7 +15,7 @@ jest.mock('../../services', () => ({
 }))
 
 describe.skip('Controller: GoogleCallback', () => {
-  let mockRequest: Partial<Request>
+  let mockRequest: Partial<ResidentRequest>
   let mockResponse: Partial<Response>
 
   beforeAll(() => {
@@ -36,20 +37,24 @@ describe.skip('Controller: GoogleCallback', () => {
   })
 
   it('successfully authenticates a user with Google', async () => {
-    await googleCallback(mockRequest as Request, mockResponse as Response)
+    await googleCallback(mockRequest as ResidentRequest, mockResponse as Response)
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.OK)
     expect(mockResponse.json).toHaveBeenCalledWith({ token: expect.any(String) })
   })
 
   it('returns unauthorized when token is invalid', async () => {
-    await expect(googleCallback(mockRequest as Request, mockResponse as Response)).rejects.toThrow(UnauthorizedError)
+    await expect(googleCallback(mockRequest as ResidentRequest, mockResponse as Response)).rejects.toThrow(
+      UnauthorizedError
+    )
   })
 
   it('throws EmailError when no email is found in Google payload', async () => {
-    await expect(googleCallback(mockRequest as Request, mockResponse as Response)).rejects.toThrow(EmailError)
+    await expect(googleCallback(mockRequest as ResidentRequest, mockResponse as Response)).rejects.toThrow(EmailError)
   })
 
   it('throws NotFoundError when user is not found', async () => {
-    await expect(googleCallback(mockRequest as Request, mockResponse as Response)).rejects.toThrow(NotFoundError)
+    await expect(googleCallback(mockRequest as ResidentRequest, mockResponse as Response)).rejects.toThrow(
+      NotFoundError
+    )
   })
 })

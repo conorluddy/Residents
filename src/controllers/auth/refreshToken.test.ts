@@ -1,5 +1,5 @@
 import { refreshToken } from './refreshToken'
-import { Request, Response } from 'express'
+import { Response } from 'express'
 import { HTTP_SUCCESS } from '../../constants/http'
 import { makeAFakeUser } from '../../test-utils/mockUsers'
 import { ROLES } from '../../constants/database'
@@ -10,6 +10,7 @@ import generateXsrfToken from '../../middleware/util/xsrfToken'
 import jwt from 'jsonwebtoken'
 import { RESIDENT_TOKEN } from '../../constants/keys'
 import MESSAGES from '../../constants/messages'
+import { ResidentRequest } from '../../types'
 
 const mockDefaultUser = makeAFakeUser({ role: ROLES.DEFAULT })
 
@@ -47,7 +48,7 @@ jest.mock('../../services/index', () => ({
 }))
 
 describe('Controller: Refresh token: Happy path', () => {
-  let mockRequest: Partial<Request> & { body: Partial<User> }
+  let mockRequest: Partial<ResidentRequest> & { body: Partial<User> }
   let mockResponse: Partial<Response>
   let jwtDecodeSpy: jest.MockedFunction<typeof jwt.decode>
   let xsrf: string
@@ -75,7 +76,7 @@ describe('Controller: Refresh token: Happy path', () => {
   })
 
   it('should allow tokens to refresh if existing tokens are legit', async () => {
-    await refreshToken(mockRequest as Request, mockResponse as Response)
+    await refreshToken(mockRequest as ResidentRequest, mockResponse as Response)
     expect(logger.error).not.toHaveBeenCalled()
     expect(mockResponse.json).toHaveBeenCalledWith({ token: 'testAccessToken' })
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.OK)
@@ -102,7 +103,7 @@ describe('Controller: Refresh token: Happy path', () => {
 })
 
 describe('Should return errors if', () => {
-  let mockRequest: Partial<Request> & { body: Partial<User> }
+  let mockRequest: Partial<ResidentRequest> & { body: Partial<User> }
   let mockResponse: Partial<Response>
   let token: string
   let jwtDecodeSpy: jest.MockedFunction<typeof jwt.decode>
@@ -133,31 +134,35 @@ describe('Should return errors if', () => {
 
   it('theres no refresh token in the request body', async () => {
     delete mockRequest.cookies?.refreshToken
-    await expect(refreshToken(mockRequest as Request, mockResponse as Response)).rejects.toThrow(
+    await expect(refreshToken(mockRequest as ResidentRequest, mockResponse as Response)).rejects.toThrow(
       MESSAGES.REFRESH_TOKEN_REQUIRED
     )
   })
 
   it('theres no UserId in the cookies', async () => {
     delete mockRequest.cookies?.[RESIDENT_TOKEN]
-    await expect(refreshToken(mockRequest as Request, mockResponse as Response)).rejects.toThrow(
+    await expect(refreshToken(mockRequest as ResidentRequest, mockResponse as Response)).rejects.toThrow(
       MESSAGES.REFRESH_TOKEN_COUNTERPART_REQUIRED
     )
   })
   it('the token isnt found in the database', async () => {
-    await expect(refreshToken(mockRequest as Request, mockResponse as Response)).rejects.toThrow(
+    await expect(refreshToken(mockRequest as ResidentRequest, mockResponse as Response)).rejects.toThrow(
       MESSAGES.TOKEN_NOT_FOUND
     )
   })
   it('the token user does not match the JWT user', async () => {
-    await expect(refreshToken(mockRequest as Request, mockResponse as Response)).rejects.toThrow(
+    await expect(refreshToken(mockRequest as ResidentRequest, mockResponse as Response)).rejects.toThrow(
       MESSAGES.TOKEN_USER_INVALID
     )
   })
   it('the token has a USED flag set', async () => {
-    await expect(refreshToken(mockRequest as Request, mockResponse as Response)).rejects.toThrow(MESSAGES.TOKEN_USED)
+    await expect(refreshToken(mockRequest as ResidentRequest, mockResponse as Response)).rejects.toThrow(
+      MESSAGES.TOKEN_USED
+    )
   })
   it('the token has expired', async () => {
-    await expect(refreshToken(mockRequest as Request, mockResponse as Response)).rejects.toThrow(MESSAGES.TOKEN_EXPIRED)
+    await expect(refreshToken(mockRequest as ResidentRequest, mockResponse as Response)).rejects.toThrow(
+      MESSAGES.TOKEN_EXPIRED
+    )
   })
 })

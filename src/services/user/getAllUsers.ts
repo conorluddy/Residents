@@ -1,7 +1,7 @@
 import db from '../../db'
 import { tableUsers } from '../../db/schema'
 import { SafeUser } from '../../db/types'
-import { asc, ilike, eq, and } from 'drizzle-orm'
+import { asc, ilike, eq, and, SQL } from 'drizzle-orm'
 import { ROLES, STATUS } from '../../constants/database'
 
 interface GetAllUsersProps {
@@ -34,7 +34,7 @@ const getAllUsers = async (
 ): Promise<SafeUser[]> => {
   const cappedLimit = Math.min(limit, MAX_PAGE_SIZE_ROW_LIMIT) // Cap the limit - can move these limits to .env
 
-  const conditions = []
+  const conditions: SQL<unknown>[] = []
 
   if (firstName) {
     conditions.push(ilike(tableUsers.firstName, `%${firstName}%`))

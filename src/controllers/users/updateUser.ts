@@ -1,15 +1,16 @@
-import { Request, Response } from 'express'
+import { Response } from 'express'
 import { UserUpdate } from '../../db/types'
 import { BadRequestError, ForbiddenError } from '../../errors'
 import SERVICES from '../../services'
 import { REQUEST_TARGET_USER_ID } from '../../types/requestSymbols'
 import { handleSuccessResponse } from '../../middleware/util/successHandler'
 import MESSAGES from '../../constants/messages'
+import { ResidentRequest, ResidentResponse } from '../../types'
 
 /**
  * updateUser
  */
-export const updateUser = async (req: Request, res: Response): Promise<Response> => {
+export const updateUser = async (req: ResidentRequest, res: Response<ResidentResponse>): Promise<Response> => {
   const { id } = req.params
   const targetUserId = req[REQUEST_TARGET_USER_ID]
   //

@@ -1,11 +1,12 @@
-import { NextFunction, Request, Response } from 'express'
+import { NextFunction, Response } from 'express'
 import { ROLES } from '../../constants/database'
 import xsrfTokens from './xsrfTokens'
 import { UnauthorizedError } from '../../errors'
 import MESSAGES from '../../constants/messages'
+import { ResidentRequest } from '../../types'
 
 describe('Middleware: XSRF Tokens: ', () => {
-  let mockRequest: Partial<Request>
+  let mockRequest: Partial<ResidentRequest>
   let mockResponse: Partial<Response>
   let nextFunction: NextFunction
   let originalEnv: string | undefined
@@ -35,21 +36,21 @@ describe('Middleware: XSRF Tokens: ', () => {
   })
 
   it('Returns early in test environment', () => {
-    xsrfTokens(mockRequest as Request, mockResponse as Response, nextFunction)
+    xsrfTokens(mockRequest as ResidentRequest, mockResponse as Response, nextFunction)
     expect(nextFunction).toHaveBeenCalled()
   })
 
   it('Returns early if request is a GET', () => {
     process.env.NODE_ENV = 'not-test'
     mockRequest.method = 'GET'
-    xsrfTokens(mockRequest as Request, mockResponse as Response, nextFunction)
+    xsrfTokens(mockRequest as ResidentRequest, mockResponse as Response, nextFunction)
     expect(nextFunction).toHaveBeenCalled()
   })
 
   it('Requires an XSRF token in non-test environment', async () => {
     process.env.NODE_ENV = 'not-test'
     mockRequest.headers = {}
-    await expect(() => xsrfTokens(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
+    await expect(() => xsrfTokens(mockRequest as ResidentRequest, mockResponse as Response, nextFunction)).toThrow(
       new UnauthorizedError(MESSAGES.XSRF_TOKEN_INVALID)
     )
     expect(nextFunction).not.toHaveBeenCalled()
@@ -57,7 +58,7 @@ describe('Middleware: XSRF Tokens: ', () => {
 
   it('Requires a valid XSRF token in non-test environment', async () => {
     process.env.NODE_ENV = 'not-test'
-    await expect(() => xsrfTokens(mockRequest as Request, mockResponse as Response, nextFunction)).toThrow(
+    await expect(() => xsrfTokens(mockRequest as ResidentRequest, mockResponse as Response, nextFunction)).toThrow(
       new UnauthorizedError(MESSAGES.XSRF_TOKEN_INVALID)
     )
     expect(nextFunction).not.toHaveBeenCalled()

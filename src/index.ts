@@ -12,6 +12,7 @@ import errorHandler from './middleware/util/errorHandler'
 import path from 'path'
 import { handleSuccessResponse } from './middleware/util/successHandler'
 import MESSAGES from './constants/messages'
+import { ResidentRequest } from './types'
 
 dotenv.config()
 
@@ -30,7 +31,7 @@ app.use(rateLimiter)
 app.use(express.json())
 
 // Health check
-app.get('/health', (_req, res) => handleSuccessResponse({ res, message: '👌' }))
+app.get('/health', (_req: ResidentRequest, res) => handleSuccessResponse({ res, message: '👌' }))
 
 app.use(cookieParser())
 
