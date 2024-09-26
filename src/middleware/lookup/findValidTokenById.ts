@@ -3,12 +3,16 @@ import SERVICES from '../../services'
 import { REQUEST_TOKEN, REQUEST_TOKEN_ID } from '../../types/requestSymbols'
 import { BadRequestError, ForbiddenError } from '../../errors'
 import MESSAGES from '../../constants/messages'
-import { ResidentRequest } from '../../types'
+import { ResidentRequest, ResidentResponse } from '../../types'
 
 /**
  * Middleware for finding a token and the user it belongs to.
  */
-const findValidTokenById: RequestHandler = async (req: ResidentRequest, res: Response, next: NextFunction) => {
+const findValidTokenById: RequestHandler = async (
+  req: ResidentRequest,
+  _res: Response<ResidentResponse>,
+  next: NextFunction
+): Promise<void> => {
   const tokenId = req[REQUEST_TOKEN_ID]
 
   if (!tokenId) {

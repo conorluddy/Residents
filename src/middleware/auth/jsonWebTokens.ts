@@ -5,9 +5,9 @@ import TYPEGUARD from '../../types/typeguards'
 import { REQUEST_USER } from '../../types/requestSymbols'
 import { InternalServerError, UnauthorizedError } from '../../errors'
 import MESSAGES from '../../constants/messages'
-import { ResidentRequest } from '../../types'
+import { ResidentRequest, ResidentResponse } from '../../types'
 
-export const authenticateToken = (req: ResidentRequest, res: Response, next: NextFunction): void => {
+export const authenticateToken = (req: ResidentRequest, _res: Response<ResidentResponse>, next: NextFunction): void => {
   const authHeader = req.headers['authorization']
   const token = authHeader && authHeader.split(' ')[1]
   const secret = JWT_TOKEN_SECRET

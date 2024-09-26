@@ -34,7 +34,7 @@ export function generatePassword(length: number = 16): string {
 }
 
 function getRandomIndex(max: number): number {
-  let randomNumber
+  let randomNumber: number
   const limit = 256 - (256 % max)
   do {
     randomNumber = randomBytes(1)[0]

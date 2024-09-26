@@ -8,7 +8,7 @@ import canGetUser from './canGetUser'
 import canUpdateUser from './canUpdateUser'
 import getTargetUser from './getTargetUser'
 import MESSAGES from '../../../constants/messages'
-import { ResidentRequest } from '../../../types'
+import { ResidentRequest, ResidentResponse } from '../../../types'
 
 /**
  * Check if the user has the required permission to access the resource
@@ -17,42 +17,42 @@ import { ResidentRequest } from '../../../types'
  */
 const checkPermission =
   (permission: PERMISSIONS) =>
-    (req: ResidentRequest, res: Response, next: NextFunction): void => {
-      const user = req[REQUEST_USER]
+  (req: ResidentRequest, res: Response<ResidentResponse>, next: NextFunction): void => {
+    const user = req[REQUEST_USER]
 
-      if (!user) {
-        throw new BadRequestError(MESSAGES.MISSING_USER_DATA)
-      }
-      if (user.deletedAt) {
-        throw new ForbiddenError(MESSAGES.USER_DELETED)
-      }
-      if (!user.role) {
-        throw new ForbiddenError(MESSAGES.USER_HAS_NO_ROLE)
-      }
-
-      if (ROLES.LOCKED === user.role) {
-        throw new ForbiddenError(MESSAGES.ACCOUNT_LOCKED)
-      }
-      if (STATUS.BANNED === user.status) {
-        throw new ForbiddenError(MESSAGES.ACCOUNT_BANNED)
-      }
-      if (STATUS.DELETED === user.status) {
-        throw new ForbiddenError(MESSAGES.ACCOUNT_DELETED)
-      }
-      if (STATUS.SUSPENDED === user.status) {
-        throw new ForbiddenError(MESSAGES.ACCOUNT_SUSPENDED)
-      }
-      if (STATUS.UNVERIFIED === user.status) {
-        throw new ForbiddenError(MESSAGES.ACCOUNT_NOT_VERIFIED)
-      }
-
-      // Finally check the actual ACL
-      if (user.role && !ACL[user.role].includes(permission)) {
-        throw new ForbiddenError(MESSAGES.INSUFFICIENT_PERMISSIONS)
-      }
-
-      next()
+    if (!user) {
+      throw new BadRequestError(MESSAGES.MISSING_USER_DATA)
     }
+    if (user.deletedAt) {
+      throw new ForbiddenError(MESSAGES.USER_DELETED)
+    }
+    if (!user.role) {
+      throw new ForbiddenError(MESSAGES.USER_HAS_NO_ROLE)
+    }
+
+    if (ROLES.LOCKED === user.role) {
+      throw new ForbiddenError(MESSAGES.ACCOUNT_LOCKED)
+    }
+    if (STATUS.BANNED === user.status) {
+      throw new ForbiddenError(MESSAGES.ACCOUNT_BANNED)
+    }
+    if (STATUS.DELETED === user.status) {
+      throw new ForbiddenError(MESSAGES.ACCOUNT_DELETED)
+    }
+    if (STATUS.SUSPENDED === user.status) {
+      throw new ForbiddenError(MESSAGES.ACCOUNT_SUSPENDED)
+    }
+    if (STATUS.UNVERIFIED === user.status) {
+      throw new ForbiddenError(MESSAGES.ACCOUNT_NOT_VERIFIED)
+    }
+
+    // Finally check the actual ACL
+    if (user.role && !ACL[user.role].includes(permission)) {
+      throw new ForbiddenError(MESSAGES.INSUFFICIENT_PERMISSIONS)
+    }
+
+    next()
+  }
 
 const RBAC = {
   getTargetUser,
