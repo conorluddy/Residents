@@ -2,10 +2,10 @@ import { NextFunction, RequestHandler, Response } from 'express'
 import { isEmail } from 'validator'
 import { REQUEST_EMAIL } from '../../types/requestSymbols'
 import { BadRequestError } from '../../errors'
+import { ResidentRequest, ResidentResponse } from '../../types'
 import MESSAGES from '../../constants/messages'
-import { ResidentRequest } from '../../types'
 
-const validateEmail: RequestHandler = (req: ResidentRequest, res: Response, next: NextFunction) => {
+const validateEmail: RequestHandler = (req: ResidentRequest, _res: Response<ResidentResponse>, next: NextFunction) => {
   const email: string | undefined = req.params?.email || req.body?.email || req.query?.email
 
   if (!email) {

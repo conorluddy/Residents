@@ -27,7 +27,7 @@ export const updateUser = async (req: ResidentRequest, res: Response<ResidentRes
 
   // TODO: This is a check that should be done way before even looking up the target user
   // TODO: Needs to be done in a payload validation middleware
-  if (!body || Object.keys(req.body).length === 0) {
+  if (!body || Object.keys(body).length === 0) {
     throw new BadRequestError(MESSAGES.NO_UPDATE_DATA)
   }
   // TODO: Once the validation middlewares run they should put the payload into a request suymbol

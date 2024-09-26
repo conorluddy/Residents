@@ -17,7 +17,8 @@ const validateUserMeta: RequestHandler = (
   _res: Response<ResidentResponse>,
   next: NextFunction
 ) => {
-  const updateUserMetaPayload: UserUpdate = req.body
+  const { body }: Record<'body', UserUpdate> = req
+  const updateUserMetaPayload: UserUpdate = body
 
   // Ensure the payload is an object
   if (typeof updateUserMetaPayload !== 'object' || updateUserMetaPayload === null) {

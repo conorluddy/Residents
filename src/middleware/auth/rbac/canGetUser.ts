@@ -4,7 +4,7 @@ import { ROLES_ARRAY } from '../../../constants/database'
 import { BadRequestError, ForbiddenError } from '../../../errors'
 import { REQUEST_TARGET_USER, REQUEST_USER } from '../../../types/requestSymbols'
 import MESSAGES from '../../../constants/messages'
-import { ResidentRequest } from '../../../types'
+import { ResidentRequest, ResidentResponse } from '../../../types'
 
 /**
  * Check if the user has the required permission to get the target user
@@ -12,7 +12,7 @@ import { ResidentRequest } from '../../../types'
  * @param res
  * @param next
  */
-function canGetUser(req: ResidentRequest, res: Response, next: NextFunction): void {
+function canGetUser(req: ResidentRequest, res: Response<ResidentResponse>, next: NextFunction): void {
   const user = req[REQUEST_USER]
   const targetUser = req[REQUEST_TARGET_USER]
 

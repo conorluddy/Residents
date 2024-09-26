@@ -1,5 +1,7 @@
 import { JwtPayload } from 'jsonwebtoken'
 import { PublicUser, SafeUser } from '../db/types'
+import { SendGridError } from '.'
+import { ROLES, STATUS } from '../constants/database'
 
 function isJwtUser(jwt: unknown): jwt is SafeUser {
   if (typeof jwt !== 'object' || jwt === null) {
@@ -53,6 +55,40 @@ function isPublicUser(user: unknown): user is PublicUser {
   )
 }
 
-const TYPEGUARD = { isSafeUser, isPublicUser, isJwtUser }
+function isSendGridError(error: unknown): error is SendGridError {
+  if (typeof error !== 'object' || error === null) {
+    return false
+  }
+  const { message, code, response } = error as Partial<SendGridError>
+  return (
+    typeof message === 'string' &&
+    (typeof code === 'string' || typeof code === 'number') &&
+    typeof response === 'object' &&
+    response !== null &&
+    'body' in response &&
+    typeof response.body === 'object' &&
+    response.body !== null &&
+    'errors' in response.body &&
+    Array.isArray(response.body.errors)
+  )
+}
+
+/**
+ * isValidRole
+ * @param role
+ */
+export function isValidRole(role: string): role is ROLES {
+  return Object.values(ROLES).includes(role as ROLES)
+}
+
+/**
+ * isValidStatus
+ * @param status
+ */
+export function isValidStatus(status: string): status is STATUS {
+  return Object.values(STATUS).includes(status as STATUS)
+}
+
+const TYPEGUARD = { isSafeUser, isPublicUser, isJwtUser, isSendGridError, isValidRole, isValidStatus }
 
 export default TYPEGUARD

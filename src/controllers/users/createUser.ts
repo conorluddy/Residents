@@ -17,8 +17,9 @@ import { ResidentRequest, ResidentResponse } from '../../types'
 /**
  * createUser
  */
-export const createUser = async ({ body }: ResidentRequest, res: Response<ResidentResponse>): Promise<Response> => {
-  const { username, firstName, lastName, email, password, role }: NewUser = body
+export const createUser = async (req: ResidentRequest, res: Response<ResidentResponse>): Promise<Response> => {
+  const { body }: Record<'body', NewUser> = req
+  const { username, firstName, lastName, email, password, role } = body
 
   if (![username, firstName, lastName, email, password].every(Boolean)) {
     throw new BadRequestError(MESSAGES.MISSING_REQUIRED_FIELDS)

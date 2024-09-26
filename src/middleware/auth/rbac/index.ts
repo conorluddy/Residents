@@ -8,7 +8,7 @@ import canGetUser from './canGetUser'
 import canUpdateUser from './canUpdateUser'
 import getTargetUser from './getTargetUser'
 import MESSAGES from '../../../constants/messages'
-import { ResidentRequest } from '../../../types'
+import { ResidentRequest, ResidentResponse } from '../../../types'
 
 /**
  * Check if the user has the required permission to access the resource
@@ -17,7 +17,7 @@ import { ResidentRequest } from '../../../types'
  */
 const checkPermission =
   (permission: PERMISSIONS) =>
-    (req: ResidentRequest, res: Response, next: NextFunction): void => {
+    (req: ResidentRequest, res: Response<ResidentResponse>, next: NextFunction): void => {
       const user = req[REQUEST_USER]
 
       if (!user) {

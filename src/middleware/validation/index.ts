@@ -4,7 +4,13 @@ import validateTokenId from './validateTokenId'
 import validateUserMeta from './validateUserMeta'
 // TODO: Validate Password Strength
 
-const VALIDATE: Record<string, RequestHandler> = {
+interface ValidatorMap {
+  email: RequestHandler
+  tokenId: RequestHandler
+  userMeta: RequestHandler
+}
+
+const VALIDATE: ValidatorMap = {
   email: validateEmail,
   tokenId: validateTokenId,
   userMeta: validateUserMeta,

@@ -28,16 +28,16 @@ const timeToMs = (timeString: string): number => {
     y: 365 * 24 * 60 * 60 * 1000,
   }
 
-  const match = timeString.match(/^(\d+)([smhdwy])$/)
+  const match = timeString.match(/^(\d+)([smhdwy])$/) as RegExpMatchArray | null
 
   if (!match) {
     throw new ValidationError(`${MESSAGES.INVALID_TIME_FORMAT} ${timeString}`)
   }
 
   const value = parseInt(match[1], 10)
-  const unit: TimeUnit = match[2] as TimeUnit
+  const unit = match[2]
 
-  return value * timeUnitConversions[unit]
+  return value * timeUnitConversions[unit as TimeUnit]
 }
 
 type TimeUnit = 's' | 'm' | 'h' | 'd' | 'w' | 'y'

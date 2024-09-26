@@ -17,7 +17,13 @@ import { ResidentRequest, ResidentResponse } from '../../types'
  * login
  */
 export const login = async (req: ResidentRequest, res: Response<ResidentResponse>): Promise<Response> => {
-  const { username, email, password } = (req.body ?? {}) as Pick<User, 'username' | 'email' | 'password'>
+  const { body }: Record<'body', User> = req
+
+  if (!body) {
+    throw new BadRequestError(MESSAGES.MISSING_REQUIRED_FIELDS)
+  }
+
+  const { username, email, password } = body
 
   if (!username && !email) {
     throw new BadRequestError(MESSAGES.USERNAME_OR_EMAIL_REQUIRED)

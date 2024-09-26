@@ -1,11 +1,10 @@
 import { NextFunction, Response } from 'express'
-
 import { ROLES, ROLES_ARRAY, STATUS } from '../../../constants/database'
 import { BadRequestError, ForbiddenError, NotFoundError, UnauthorizedError } from '../../../errors'
 import SERVICES from '../../../services'
 import { REQUEST_TARGET_USER, REQUEST_TARGET_USER_ID, REQUEST_USER } from '../../../types/requestSymbols'
 import MESSAGES from '../../../constants/messages'
-import { ResidentRequest } from '../../../types'
+import { ResidentRequest, ResidentResponse } from '../../../types'
 
 /**
  * Get the target user from the request params if the user has the required permissions
@@ -13,7 +12,11 @@ import { ResidentRequest } from '../../../types'
  * @param res
  * @param next
  */
-async function getTargetUser(req: ResidentRequest, _res: Response, next: NextFunction): Promise<void> {
+async function getTargetUser(
+  req: ResidentRequest,
+  _res: Response<ResidentResponse>,
+  next: NextFunction
+): Promise<void> {
   const user = req[REQUEST_USER]
   if (!user) {
     throw new BadRequestError(MESSAGES.MISSING_USER_DATA)

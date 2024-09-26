@@ -24,6 +24,7 @@ export type UserWithMeta = SafeUser & { meta: Meta }
 
 export type Meta = InferSelectModel<typeof tableUserMeta>
 export type NewMeta = InferInsertModel<typeof tableUserMeta>
+export type MetaUpdate = Pick<InferInsertModel<typeof tableUserMeta>, 'metaItem'>
 
 // Federated Credentials
 export type FederatedCredentials = InferSelectModel<typeof tfc>
