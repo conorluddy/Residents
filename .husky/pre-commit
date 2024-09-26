@@ -15,7 +15,7 @@ npm version patch --no-git-tag-version
 git add package.json
 
 # Run type coverage check
-run_command "npx type-coverage --json-output > .github/type-coverage.json"
+run_command "npx type-coverage --at-least 0 --detail --json-output .github/type-coverage.json"
 
 # Add type coverage output to the commit
 git add .github/type-coverage.json
