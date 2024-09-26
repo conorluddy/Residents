@@ -19,8 +19,10 @@ export const resetPasswordWithToken = async (
   req: ResidentRequest,
   res: Response<ResidentResponse>
 ): Promise<Response> => {
+  const {
+    body: { password: plainPassword },
+  }: Record<'body', Record<'password', string>> = req
   const token = req[REQUEST_TOKEN]
-  const plainPassword: string = req.body.password
 
   // Alternatively here we can generate a temporary PW and email it to the user,
   // and make that configurable for the app. Probably overlaps with magic login.
@@ -29,8 +31,13 @@ export const resetPasswordWithToken = async (
   if (!token || !token.userId) {
     throw new TokenError(MESSAGES.TOKEN_MISSING)
   }
+
   if (token.type !== TOKEN_TYPE.RESET) {
     throw new TokenError(MESSAGES.INVALID_TOKEN_TYPE)
+  }
+
+  if (!plainPassword) {
+    throw new PasswordStrengthError(MESSAGES.PASSWORD_REQUIRED)
   }
 
   // Centralise configuration for this somewhere - can use it for registration too
