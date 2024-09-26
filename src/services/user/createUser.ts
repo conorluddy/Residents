@@ -29,7 +29,7 @@ const createUser = async (userProps: NewUser): Promise<User['id'] | null> => {
   const normalisedEmail = normalizeEmail(email, { all_lowercase: true })
 
   if (!normalisedEmail) {
-    throw new EmailError(`Problem with email normalization for ${email}`)
+    throw new EmailError(MESSAGES.EMAIL_NORMALISATION_ERROR)
   }
 
   const hashedPassword = await createHash(password)
