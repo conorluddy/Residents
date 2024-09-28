@@ -3,9 +3,15 @@ import { logger } from '../../utils/logger'
 import { NewUser } from '../types'
 import SERVICES from '../../services'
 import MESSAGES from '../../constants/messages'
+import config from '../../config'
 
 // Make this an EVN
-export const DEFAULT_SEED_PASSWORD = 'R351D3NT!zero'
+
+const SEEDED_OWNER_USERNAME = config.SEEDED_OWNER_USERNAME ?? 'resident'
+const SEEDED_OWNER_FIRSTNAME = config.SEEDED_OWNER_FIRSTNAME ?? 'Resident'
+const SEEDED_OWNER_LASTNAME = config.SEEDED_OWNER_LASTNAME ?? 'Zero'
+const SEEDED_OWNER_EMAIL = config.SEEDED_OWNER_EMAIL ?? 'resident@resident.resident'
+const SEEDED_OWNER_PASSWORD = config.SEEDED_OWNER_PASSWORD ?? 'R351D3NT!zero'
 
 /**
  * Seed the first user in the database
@@ -13,7 +19,7 @@ export const DEFAULT_SEED_PASSWORD = 'R351D3NT!zero'
  *
  * @param {string} password - The password to use for the first user
  */
-const seedUserZero = async (password: string = DEFAULT_SEED_PASSWORD): Promise<void> => {
+const seedUserZero = async (password: string = SEEDED_OWNER_PASSWORD): Promise<void> => {
   try {
     const usersAlreadyExist = (await SERVICES.getUserCount()) > 0
 
@@ -23,11 +29,11 @@ const seedUserZero = async (password: string = DEFAULT_SEED_PASSWORD): Promise<v
     }
 
     const userZero: NewUser = {
-      username: 'resident',
-      firstName: 'Resident',
-      lastName: 'Zero',
-      email: 'resident@resident.resident',
-      password,
+      password: password,
+      username: SEEDED_OWNER_USERNAME,
+      firstName: SEEDED_OWNER_FIRSTNAME,
+      lastName: SEEDED_OWNER_LASTNAME,
+      email: SEEDED_OWNER_EMAIL,
       role: ROLES.OWNER,
       status: STATUS.VERIFIED,
     }
@@ -46,7 +52,7 @@ const seedUserZero = async (password: string = DEFAULT_SEED_PASSWORD): Promise<v
 
 // Gets the amount of users to seed from the command line
 const args = process.argv.slice(2)
-const password = args.length > 0 ? args[0] : DEFAULT_SEED_PASSWORD
+const password = args.length > 0 ? args[0] : SEEDED_OWNER_PASSWORD
 
 seedUserZero(password)
 

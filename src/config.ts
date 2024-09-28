@@ -39,6 +39,14 @@ requiredEnvVars.forEach((_, index) => {
 })
 
 const config: Config = {
+  // Owner
+
+  SEEDED_OWNER_FIRSTNAME: process.env.SEEDED_OWNER_FIRSTNAME,
+  SEEDED_OWNER_LASTNAME: process.env.SEEDED_OWNER_LASTNAME,
+  SEEDED_OWNER_EMAIL: process.env.SEEDED_OWNER_EMAIL,
+  SEEDED_OWNER_USERNAME: process.env.SEEDED_OWNER_USERNAME,
+  SEEDED_OWNER_PASSWORD: process.env.SEEDED_OWNER_PASSWORD,
+
   // Database
 
   POSTGRES_DB: process.env.POSTGRES_DB,
@@ -74,6 +82,11 @@ const config: Config = {
 }
 
 export const {
+  SEEDED_OWNER_FIRSTNAME,
+  SEEDED_OWNER_LASTNAME,
+  SEEDED_OWNER_EMAIL,
+  SEEDED_OWNER_USERNAME,
+  SEEDED_OWNER_PASSWORD,
   POSTGRES_DB,
   POSTGRES_USER,
   POSTGRES_PASSWORD,
@@ -100,6 +113,11 @@ export const {
 export default config
 
 interface Config {
+  SEEDED_OWNER_FIRSTNAME?: string
+  SEEDED_OWNER_LASTNAME?: string
+  SEEDED_OWNER_EMAIL?: string
+  SEEDED_OWNER_USERNAME?: string
+  SEEDED_OWNER_PASSWORD?: string
   POSTGRES_DB?: string
   POSTGRES_USER?: string
   POSTGRES_PASSWORD?: string
