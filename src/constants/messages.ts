@@ -125,6 +125,7 @@ const MESSAGES = {
   RESET_PASSWORD_PROMPT: 'Reset your password.',
   ROLE_REQUIRED: 'Role must be provided.',
   SIGTERM_RECEIVED_CLOSING_SERVER: 'SIGTERM signal received: closing HTTP server.',
+  SERVER_SHUTDOWN: 'Server shut down.',
   SOMETHING_WENT_WRONG: 'Something went kaput...',
   STATUS_REQUIRED: 'Status must be provided.',
   TARGET_USER_DATA_MISSING: 'Target user data is missing.',

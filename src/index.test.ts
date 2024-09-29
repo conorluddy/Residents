@@ -14,7 +14,7 @@ describe('Test SIGTERM handling', () => {
     process.emit('SIGTERM')
     setTimeout(() => {
       expect(logger.info).toHaveBeenCalledWith(MESSAGES.SIGTERM_RECEIVED_CLOSING_SERVER)
-      expect(logger.info).toHaveBeenCalledWith('HTTP server closed')
+      expect(logger.info).toHaveBeenCalledWith(MESSAGES.SERVER_SHUTDOWN)
       done()
     }, 500)
   })

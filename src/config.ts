@@ -13,21 +13,27 @@ const requiredEnvVars = [
   process.env.POSTGRES_PASSWORD,
   process.env.POSTGRES_URL,
   process.env.POSTGRES_PORT,
+
   // JWT
   process.env.JWT_TOKEN_SECRET,
   process.env.EXPIRATION_JWT_TOKEN,
+
   // Expirations
   process.env.EXPIRATION_XSRF_TOKEN,
   process.env.EXPIRATION_REFRESH_TOKEN,
   process.env.EXPIRATION_PASSWORD_RESET_TOKEN,
   process.env.EXPIRATION_MAGIC_LOGIN_TOKEN,
   process.env.EXPIRATION_VALIDATION_TOKEN,
+
   // Sendgrid
   // process.env.SENDGRID_API_KEY,
   // process.env.SENDGRID_VERIFIED_EMAIL,
   // process.env.SENDGRID_TEST_EMAIL,
 ]
 
+/**
+ * App won't start without the required vars
+ */
 requiredEnvVars.forEach((_, index) => {
   if (!requiredEnvVars[index]) {
     // Codescan does not like us logging the names here, even though they're harmless
@@ -39,6 +45,14 @@ requiredEnvVars.forEach((_, index) => {
 })
 
 const config: Config = {
+  // Owner
+
+  SEEDED_OWNER_FIRSTNAME: process.env.SEEDED_OWNER_FIRSTNAME,
+  SEEDED_OWNER_LASTNAME: process.env.SEEDED_OWNER_LASTNAME,
+  SEEDED_OWNER_EMAIL: process.env.SEEDED_OWNER_EMAIL,
+  SEEDED_OWNER_USERNAME: process.env.SEEDED_OWNER_USERNAME,
+  SEEDED_OWNER_PASSWORD: process.env.SEEDED_OWNER_PASSWORD,
+
   // Database
 
   POSTGRES_DB: process.env.POSTGRES_DB,
@@ -46,6 +60,10 @@ const config: Config = {
   POSTGRES_PASSWORD: process.env.POSTGRES_PASSWORD,
   POSTGRES_URL: process.env.POSTGRES_URL,
   POSTGRES_PORT: process.env.POSTGRES_PORT,
+
+  // Network
+
+  TRUST_PROXY_NUMBER: process.env.TRUST_PROXY_NUMBER, // https://express-rate-limit.mintlify.app/guides/troubleshooting-proxy-issues#the-global-limiter-problem
 
   // Tokens
 
@@ -74,12 +92,21 @@ const config: Config = {
 }
 
 export const {
+  SEEDED_OWNER_FIRSTNAME,
+  SEEDED_OWNER_LASTNAME,
+  SEEDED_OWNER_EMAIL,
+  SEEDED_OWNER_USERNAME,
+  SEEDED_OWNER_PASSWORD,
+
   POSTGRES_DB,
   POSTGRES_USER,
   POSTGRES_PASSWORD,
   POSTGRES_URL,
   POSTGRES_PORT,
+
+  TRUST_PROXY_NUMBER,
   JWT_TOKEN_SECRET,
+
   EXPIRATION_JWT_TOKEN,
   EXPIRATION_REFRESH_TOKEN,
   EXPIRATION_XSRF_TOKEN,
@@ -92,6 +119,7 @@ export const {
   EXPIRATION_PASSWORD_RESET_TOKEN_MS,
   EXPIRATION_MAGIC_LOGIN_TOKEN_MS,
   EXPIRATION_VALIDATION_TOKEN_MS,
+
   SENDGRID_API_KEY,
   SENDGRID_VERIFIED_EMAIL,
   SENDGRID_TEST_EMAIL,
@@ -100,11 +128,17 @@ export const {
 export default config
 
 interface Config {
+  SEEDED_OWNER_FIRSTNAME?: string
+  SEEDED_OWNER_LASTNAME?: string
+  SEEDED_OWNER_EMAIL?: string
+  SEEDED_OWNER_USERNAME?: string
+  SEEDED_OWNER_PASSWORD?: string
   POSTGRES_DB?: string
   POSTGRES_USER?: string
   POSTGRES_PASSWORD?: string
   POSTGRES_URL?: string
   POSTGRES_PORT?: string
+  TRUST_PROXY_NUMBER?: string
   JWT_TOKEN_SECRET?: string
   EXPIRATION_JWT_TOKEN?: string
   EXPIRATION_REFRESH_TOKEN?: string
