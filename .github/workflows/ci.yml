@@ -46,6 +46,7 @@ jobs:
           until pg_isready --host=localhost --port=5432 --username=postgres; do
             sleep 1
           done
+      # Database 
       - name: Initialise the database
         env:
           POSTGRES_USER: postgres
@@ -53,6 +54,7 @@ jobs:
           POSTGRES_URL: localhost
           POSTGRES_DB: testdb
         run: npm run push
+      # Tests
       - name: Run tests
         env:
           POSTGRES_USER: postgres
@@ -60,3 +62,32 @@ jobs:
           POSTGRES_URL: localhost
           POSTGRES_DB: testdb
         run: npm test
+
+  deploy-to-ecr:
+    needs: build-test-and-report-coverage
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::264455911727:role/Residents-Github-to-ECR
+          aws-region: eu-west-1
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build, tag, and push image to Amazon ECR
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: residents
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+          
