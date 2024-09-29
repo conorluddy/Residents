@@ -13,6 +13,7 @@ import path from 'path'
 import { handleSuccessResponse } from './middleware/util/successHandler'
 import MESSAGES from './constants/messages'
 import { ResidentRequest } from './types'
+import config from './config'
 
 dotenv.config()
 
@@ -20,6 +21,15 @@ const isTestEnv = process.env.NODE_ENV === 'test'
 const isDevEnv = process.env.NODE_ENV === 'development'
 const port = process.env.LOCAL_API_PORT
 const app = express()
+
+////////////////////////////////////////////////
+// Config
+////////////////////////////////////////////////
+
+const trustProxyNumber = config.TRUST_PROXY_NUMBER ? parseInt(config.TRUST_PROXY_NUMBER, 10) : 0
+if (trustProxyNumber > 0) {
+  app.set('trust proxy', config.TRUST_PROXY_NUMBER)
+}
 
 ////////////////////////////////////////////////
 // Middlewares
@@ -80,14 +90,13 @@ if (isDevEnv) {
 const serverPort = isTestEnv ? 0 : port
 // Run
 const server = app.listen(serverPort, () => {
-  logger.info(`Running: http://localhost:${serverPort}`)
-  logger.info(`Swagger API docs are available at http://localhost:${serverPort}/api-docs`)
+  logger.info('Server is Running. Swagger Docs @ /api-docs.')
 })
 
 // Graceful shutdown
 process.on('SIGTERM', () => {
   logger.info(MESSAGES.SIGTERM_RECEIVED_CLOSING_SERVER)
-  server.close(() => logger.info('HTTP server closed'))
+  server.close(() => logger.info('Server shutdown.'))
 })
 
 export { app, server }

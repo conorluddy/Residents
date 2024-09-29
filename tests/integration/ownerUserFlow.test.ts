@@ -1,9 +1,10 @@
 import request from 'supertest'
 import { app } from '../../src'
 import { dbClient } from '../../src/db'
-import seedUserZero, { DEFAULT_SEED_PASSWORD } from '../../src/db/utils/seedUserZero'
+import seedUserZero from '../../src/db/utils/seedUserZero'
 import { seedUsers } from '../../src/db/utils/seedUsers'
 import { HTTP_SUCCESS } from '../../src/constants/http'
+import config from '../../src/config'
 
 /**
  * - Seed the default owner user into the DB
@@ -13,6 +14,9 @@ import { HTTP_SUCCESS } from '../../src/constants/http'
  * - Delete a user
  * - Get a specific user
  */
+
+// TODO: Set up a test user rather than using the Owner
+const DEFAULT_SEED_PASSWORD = config.SEEDED_OWNER_PASSWORD ?? 'R351D3NT!zero'
 
 describe('Integration: Owner flow from seeded default owner', () => {
   let jwt: string
