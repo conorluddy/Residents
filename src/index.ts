@@ -96,7 +96,7 @@ const server = app.listen(serverPort, () => {
 // Graceful shutdown
 process.on('SIGTERM', () => {
   logger.info(MESSAGES.SIGTERM_RECEIVED_CLOSING_SERVER)
-  server.close(() => logger.info('Server shutdown.'))
+  server.close(() => logger.info(MESSAGES.SERVER_SHUTDOWN))
 })
 
 export { app, server }
