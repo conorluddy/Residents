@@ -1,3 +1,5 @@
+// TODO: Better grouping and organisation
+
 const MESSAGES = {
   // Authentication
   TOKEN_REQUIRED: 'A token is required.',
