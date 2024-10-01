@@ -10,5 +10,5 @@ import { ResidentRequest, ResidentResponse } from '../../types'
  */
 export const deleteExpiredTokens = async (req: ResidentRequest, res: Response<ResidentResponse>): Promise<Response> => {
   const count = await SERVICES.deleteExpiredTokens()
-  return handleSuccessResponse({ res, message: `${count} ${MESSAGES.EXPIRED_TOKENS_DELETED}.` })
+  return handleSuccessResponse({ res, message: `${count} ${MESSAGES.EXPIRED_TOKENS_DELETED}` })
 }

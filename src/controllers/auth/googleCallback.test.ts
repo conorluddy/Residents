@@ -1,9 +1,10 @@
 import { Response } from 'express'
 import { HTTP_SUCCESS } from '../../constants/http'
+import { LoginError } from '../../errors'
 import { makeAFakeSafeUser } from '../../test-utils/mockUsers'
-import { googleCallback } from './googleCallback'
-import { EmailError, NotFoundError, UnauthorizedError } from '../../errors'
 import { ResidentRequest } from '../../types'
+import { googleCallback } from './googleCallback'
+import MESSAGES from '../../constants/messages'
 
 jest.mock('google-auth-library')
 jest.mock('../../services', () => ({
@@ -13,8 +14,11 @@ jest.mock('../../services', () => ({
     .mockImplementationOnce(() => makeAFakeSafeUser({ username: 'Hackermaner' }))
     .mockImplementationOnce(() => null),
 }))
+jest.mock('../../utils/generateJwt', () => ({
+  generateJwtFromUser: jest.fn().mockReturnValue('JWT'),
+}))
 
-describe.skip('Controller: GoogleCallback', () => {
+describe('Controller: GoogleCallback', () => {
   let mockRequest: Partial<ResidentRequest>
   let mockResponse: Partial<Response>
 
@@ -23,8 +27,12 @@ describe.skip('Controller: GoogleCallback', () => {
   })
 
   beforeEach(() => {
+    jest.clearAllMocks()
+  })
+
+  beforeEach(() => {
     mockRequest = {
-      body: { idToken: 'fake-id-token' },
+      user: makeAFakeSafeUser({ username: 'Hackerman' }),
     }
     mockResponse = {
       status: jest.fn().mockReturnThis(),
@@ -32,29 +40,16 @@ describe.skip('Controller: GoogleCallback', () => {
     }
   })
 
-  afterEach(() => {
-    jest.clearAllMocks()
-  })
-
   it('successfully authenticates a user with Google', async () => {
     await googleCallback(mockRequest as ResidentRequest, mockResponse as Response)
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.OK)
-    expect(mockResponse.json).toHaveBeenCalledWith({ token: expect.any(String) })
+    expect(mockResponse.json).toHaveBeenCalledWith({ token: 'JWT' })
   })
 
-  it('returns unauthorized when token is invalid', async () => {
-    await expect(googleCallback(mockRequest as ResidentRequest, mockResponse as Response)).rejects.toThrow(
-      UnauthorizedError
-    )
-  })
-
-  it('throws EmailError when no email is found in Google payload', async () => {
-    await expect(googleCallback(mockRequest as ResidentRequest, mockResponse as Response)).rejects.toThrow(EmailError)
-  })
-
-  it('throws NotFoundError when user is not found', async () => {
-    await expect(googleCallback(mockRequest as ResidentRequest, mockResponse as Response)).rejects.toThrow(
-      NotFoundError
+  it('throws LoginError when user is not found', () => {
+    delete mockRequest.user
+    expect(() => googleCallback(mockRequest as ResidentRequest, mockResponse as Response)).toThrow(
+      new LoginError(MESSAGES.USER_NOT_FOUND_FEDERATED_CREDENTIALS)
     )
   })
 })

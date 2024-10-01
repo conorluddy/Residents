@@ -18,10 +18,8 @@ export const magicLogin = async (req: ResidentRequest, res: Response<ResidentRes
   // Email will be added to the request from the previous email validation middleware
   const email = req[REQUEST_EMAIL]
   if (!email) {
-    throw new BadRequestError(MESSAGES.MISSING_USER_DATA)
+    throw new BadRequestError(MESSAGES.EMAIL_REQUIRED)
   }
-
-  // let debugTokenId
 
   const user = await SERVICES.getUserByEmail(email)
 
@@ -37,16 +35,20 @@ export const magicLogin = async (req: ResidentRequest, res: Response<ResidentRes
       expiry: TIMESPAN.MINUTE * 10, // Make configurable
     })
 
+    // Needs to be set to user.email for real use
+    const userEmail = SENDGRID_TEST_EMAIL ?? ''
+
     sendMail({
-      to: SENDGRID_TEST_EMAIL ?? '', //userNoPW.email, - Faker might seed with real emails, be careful not to spam people
+      to: userEmail, //userNoPW.email, - Faker might seed with real emails, be careful not to spam people
       subject: MESSAGES.MAGIC_LOGIN_LINK_MESSAGE,
       body: `Magic link - Click to magically log in: http://localhost:3000/auth/magic-login/${tokenId}`,
       // Obviously this is a test link, in production you'd want to use a real domain
     })
 
     logger.info(`${MESSAGES.MAGIC_LOGIN_EMAIL_SENT} ${email}, token id: ${tokenId}`)
-    // debugTokenId = tokenId
   }
+
+  // Bad actors are not told whether or not the email exists in the system.
 
   return res.status(HTTP_SUCCESS.OK).json({
     message: MESSAGES.CHECK_EMAIL_MAGIC_LINK,

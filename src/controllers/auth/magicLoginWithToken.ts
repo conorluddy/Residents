@@ -18,6 +18,10 @@ import { ResidentRequest, ResidentResponse } from '../../types'
 export const magicLoginWithToken = async (req: ResidentRequest, res: Response<ResidentResponse>): Promise<Response> => {
   const token = req[REQUEST_TOKEN]!
 
+  if (!req[REQUEST_TOKEN]) {
+    throw new ForbiddenError(MESSAGES.TOKEN_REQUIRED)
+  }
+
   const [user] = await Promise.all([SERVICES.getUserById(token.userId), SERVICES.deleteToken({ tokenId: token.id })])
 
   if (!user) {
