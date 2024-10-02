@@ -35,10 +35,6 @@ jobs:
         run: npm install
       - name: Run build
         run: npm run build
-      - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v4.0.1
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
       - name: Run Typescript coverage report
         run: npm run typecoverage
       - name: Wait for PostgreSQL to be ready
@@ -62,6 +58,10 @@ jobs:
           POSTGRES_URL: localhost
           POSTGRES_DB: testdb
         run: npm test
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4.0.1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   deploy-to-ecr:
     needs: build-test-and-report-coverage
