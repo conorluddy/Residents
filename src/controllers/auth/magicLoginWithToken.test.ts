@@ -15,7 +15,7 @@ jest.mock('../../services/index', () => ({
     .mockResolvedValue(makeAFakeSafeUser({ email: 'mr@token.com' }))
     .mockResolvedValueOnce(null),
   deleteToken: jest.fn().mockReturnThis(),
-  createToken: jest.fn().mockResolvedValue('refreshToken01'),
+  createToken: jest.fn().mockResolvedValueOnce('refreshToken01').mockResolvedValueOnce(null),
 }))
 
 describe('Controller: MagicLoginWithToken', () => {
