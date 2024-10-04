@@ -1,17 +1,15 @@
-import { makeAFakeSafeUser } from '../../test-utils/mockUsers'
-import { SafeUser } from '../../db/types'
+import { ROLES, STATUS } from '../../constants/database'
 import { getAllUsers } from './getAllUsers'
-
-let fakeUser: SafeUser
 
 jest.mock('../../db', () => ({
   select: jest.fn().mockReturnValue({
     from: jest.fn().mockReturnValue({
-      orderby: jest.fn().mockReturnValue({
-        limit: jest.fn().mockReturnValue({
-          offset: jest.fn().mockReturnValue(() => {
-            fakeUser = makeAFakeSafeUser({ id: 'USERID' })
-            return [fakeUser, fakeUser, fakeUser, fakeUser]
+      where: jest.fn().mockReturnValue({
+        orderBy: jest.fn().mockReturnValue({
+          limit: jest.fn().mockReturnValue({
+            offset: jest
+              .fn()
+              .mockResolvedValue([{ id: 'USERID' }, { id: 'USERID' }, { id: 'USERID' }, { id: 'USERID' }]),
           }),
         }),
       }),
@@ -19,9 +17,18 @@ jest.mock('../../db', () => ({
   }),
 }))
 
-describe.skip('Services: GetAllUsers', () => {
+describe('Services: GetAllUsers', () => {
   it('GetAllUsers', async () => {
-    const users = await getAllUsers()
+    const users = await getAllUsers({
+      firstName: 'xx',
+      lastName: 'xx',
+      email: 'email@mail.e',
+      username: 'test',
+      role: ROLES.DEFAULT,
+      status: STATUS.VERIFIED,
+      offset: 0,
+      limit: 10,
+    })
     expect(users).toHaveLength(4)
   })
 })
