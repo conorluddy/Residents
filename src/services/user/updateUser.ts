@@ -20,6 +20,7 @@ const updateUser = async ({ userId, username, firstName, lastName, email, passwo
   if (!userId) {
     throw new BadRequestError(MESSAGES.MISSING_USER_ID)
   }
+
   if (email && !isEmail(email)) {
     throw new EmailError(MESSAGES.INVALID_EMAIL)
   }
