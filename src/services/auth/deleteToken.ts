@@ -9,12 +9,12 @@ interface Props {
   tokenId: string
 }
 
-const deleteToken = async ({ tokenId }: Props): Promise<Token['id'] | null> => {
+const deleteToken = async ({ tokenId }: Props): Promise<Token['id']> => {
   if (!tokenId) {
     throw new TokenError(MESSAGES.NO_TOKEN_ID_PROVIDED)
   }
   const [deleted] = await db.delete(tableTokens).where(eq(tableTokens.id, tokenId)).returning()
-  return deleted?.id ?? null
+  return deleted?.id
 }
 
 export { deleteToken }
