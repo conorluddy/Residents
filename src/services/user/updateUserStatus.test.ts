@@ -1,7 +1,8 @@
+import { STATUS } from '../../constants/database'
 import MESSAGES from '../../constants/messages'
 import db from '../../db'
 import { BadRequestError } from '../../errors'
-import { updateUserMeta } from './updateUserMeta'
+import { updateUserStatus } from './updateUserStatus'
 
 jest.mock('../../db', () => ({
   update: jest.fn().mockReturnValue({
@@ -13,33 +14,31 @@ jest.mock('../../db', () => ({
   }),
 }))
 
-describe('updateUserMeta', () => {
-  let mockUserUpdate: { userId: string; metaItem?: string }
+describe('updateUserStatus', () => {
+  let mockUserUpdate: { userId: string; status: STATUS }
 
   beforeEach(() => {
     jest.clearAllMocks()
     mockUserUpdate = {
       userId: 'userid',
-      metaItem: 'metaItem',
+      status: STATUS.VERIFIED,
     }
   })
 
   it('should throw a BadRequestError if userId is missing', async () => {
     mockUserUpdate.userId = null as unknown as string
-    await expect(updateUserMeta(mockUserUpdate)).rejects.toThrow(new BadRequestError(MESSAGES.MISSING_USER_ID))
+    await expect(updateUserStatus(mockUserUpdate)).rejects.toThrow(new BadRequestError(MESSAGES.MISSING_USER_ID))
     expect(db.update).not.toHaveBeenCalled()
   })
 
-  it('should throw a BadRequestError if email is invalid', async () => {
-    mockUserUpdate.metaItem = undefined
-    await expect(updateUserMeta(mockUserUpdate)).rejects.toThrow(
-      new BadRequestError(MESSAGES.NO_METADATA_PROVIDED_FOR_UPDATE)
-    )
+  it('should throw a BadRequestError if status is missing', async () => {
+    mockUserUpdate.status = null as unknown as STATUS
+    await expect(updateUserStatus(mockUserUpdate)).rejects.toThrow(new BadRequestError(MESSAGES.STATUS_REQUIRED))
     expect(db.update).not.toHaveBeenCalled()
   })
 
   it('should update the database if everything is valid', async () => {
-    const result = await updateUserMeta(mockUserUpdate)
+    const result = await updateUserStatus(mockUserUpdate)
     expect(result).toBe('USERID')
     expect(db.update).toHaveBeenCalledTimes(1)
   })
