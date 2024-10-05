@@ -1,6 +1,5 @@
 import db from '../../db'
 import { TOKEN_TYPE, TOKEN_TYPE_ARRAY } from '../../constants/database'
-import { TIMESPAN } from '../../constants/time'
 import { tableTokens } from '../../db/schema'
 import { Token } from '../../db/types'
 import { TokenError } from '../../errors'
@@ -15,7 +14,7 @@ import {
 interface Props {
   userId: string
   type: TOKEN_TYPE
-  expiry?: TIMESPAN
+  expiry?: number
 }
 
 const createToken = async ({ userId, type, expiry }: Props): Promise<Token['id'] | null> => {
@@ -46,7 +45,7 @@ const createToken = async ({ userId, type, expiry }: Props): Promise<Token['id']
 
 export { createToken }
 
-const TOKEN_TYPE_EXPIRATION_MAP = {
+export const TOKEN_TYPE_EXPIRATION_MAP = {
   [TOKEN_TYPE.REFRESH]: EXPIRATION_REFRESH_TOKEN_MS,
   [TOKEN_TYPE.RESET]: EXPIRATION_PASSWORD_RESET_TOKEN_MS,
   [TOKEN_TYPE.MAGIC]: EXPIRATION_MAGIC_LOGIN_TOKEN_MS,

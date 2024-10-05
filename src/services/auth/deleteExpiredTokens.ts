@@ -11,7 +11,7 @@ const deleteExpiredTokens = async (): Promise<number> => {
   const result = await db
     .delete(tableTokens)
     .where(or(eq(tableTokens.used, true), lt(tableTokens.expiresAt, sql`now()`)))
-    .returning({ deletedId: tableTokens.id })
+    .returning()
 
   return result.length
 }
