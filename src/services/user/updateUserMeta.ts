@@ -17,13 +17,13 @@ const updateUserMeta = async ({ userId, metaItem }: Params): Promise<string> => 
     throw new BadRequestError(MESSAGES.NO_METADATA_PROVIDED_FOR_UPDATE)
   }
 
-  const [{ updatedUserId }] = await db
+  const [updatedUser] = await db
     .update(tableUserMeta)
     .set({ metaItem })
     .where(eq(tableUserMeta.userId, userId))
     .returning({ updatedUserId: tableUserMeta.id })
 
-  return updatedUserId
+  return updatedUser?.updatedUserId
 }
 
 export { updateUserMeta }
