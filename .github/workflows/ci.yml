@@ -5,7 +5,7 @@ on:
   pull_request:
     branches: [main]
 jobs:
-  build-test-and-report-coverage:
+  build-test-and-coverage:
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -64,7 +64,7 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
 
   deploy-to-ecr:
-    needs: build-test-and-report-coverage
+    needs: build-test-and-coverage
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
