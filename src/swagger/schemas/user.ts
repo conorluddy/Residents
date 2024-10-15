@@ -114,4 +114,5 @@
  *   tags:
  *     - name: Users
  *       description: The users managing API
+ *
  */
