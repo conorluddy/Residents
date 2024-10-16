@@ -4,12 +4,7 @@ import winston from 'winston'
 
 const logger = winston.createLogger({
   level: 'debug', //  "info", // Minimum level to log
-  format: winston.format.combine(
-    winston.format.prettyPrint(),
-    winston.format.colorize(),
-    winston.format.simple(),
-    winston.format.json()
-  ),
+  format: winston.format.combine(winston.format.colorize(), winston.format.simple()),
   transports: [
     // Write all logs with level `info` and below to `combined.log`
     new winston.transports.File({ filename: 'logs/combined.log' }),
