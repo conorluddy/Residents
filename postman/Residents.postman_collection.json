@@ -645,7 +645,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"metaItem\": \"bansana\"\n}",
+							"raw": "{\n    \"metaItem\": \"This is some meta stuff\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -653,7 +653,7 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:3000/users/meta/kwwmlz57qlf8afkkd6p8r0q4",
+							"raw": "localhost:3000/users/meta/svhjydi1tyf30nfq2jowrjpx",
 							"host": [
 								"localhost"
 							],
@@ -661,7 +661,7 @@
 							"path": [
 								"users",
 								"meta",
-								"kwwmlz57qlf8afkkd6p8r0q4"
+								"svhjydi1tyf30nfq2jowrjpx"
 							]
 						}
 					},
@@ -793,6 +793,30 @@
 							"path": [
 								"users",
 								"yc92thpsc31l68wxa5d5c30l"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "UTIL",
+			"item": [
+				{
+					"name": "OpenApi JSON",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api-json",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api-json"
 							]
 						}
 					},
