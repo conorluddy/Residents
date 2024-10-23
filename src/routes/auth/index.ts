@@ -11,12 +11,12 @@ import logout from './logout'
 import validateAccount from './validateAccount'
 import deleteExpiredTokens from './deleteExpiredTokens'
 import xsrfTokens from '../../middleware/auth/xsrfTokens'
-// import errorHandler from '../../middleware/util/errorHandler'
+import errorHandler from '../../middleware/util/errorHandler'
 
 const router = Router()
 
 // Middleware
-// router.use(errorHandler)
+router.use(errorHandler)
 
 // Publicly Exposed Routes
 router.use(login)

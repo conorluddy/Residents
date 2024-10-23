@@ -12,7 +12,6 @@ import errorHandler from './middleware/util/errorHandler'
 import path from 'path'
 import { handleSuccessResponse } from './middleware/util/successHandler'
 import MESSAGES from './constants/messages'
-// import { ResidentRequest, ResidentResponse } from './types'
 import config from './config'
 
 dotenv.config()

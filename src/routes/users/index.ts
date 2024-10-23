@@ -8,12 +8,12 @@ import deleteUser from './deleteUser'
 import getSelf from './getSelf'
 import xsrfTokens from '../../middleware/auth/xsrfTokens'
 import rateLimiter from '../../middleware/util/rateLimiter'
-// import errorHandler from '../../middleware/util/errorHandler'
+import errorHandler from '../../middleware/util/errorHandler'
 
 const router = Router()
 
 // Middleware
-// router.use(errorHandler)
+router.use(errorHandler)
 router.use(xsrfTokens)
 
 // General rate limiter for all of these User CRUD routes
