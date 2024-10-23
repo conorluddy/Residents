@@ -16,7 +16,7 @@ import { ResidentRequest, ResidentResponse } from '../../types'
 /**
  * login
  */
-export const login = async (req: ResidentRequest, res: Response<ResidentResponse>): Promise<Response> => {
+export const login = async (req: ResidentRequest, res: Response<ResidentResponse>): Promise<void> => {
   const { body }: Record<'body', User> = req
 
   if (!body) {
@@ -90,5 +90,5 @@ export const login = async (req: ResidentRequest, res: Response<ResidentResponse
     maxAge: EXPIRATION_REFRESH_TOKEN_MS,
   })
 
-  return handleSuccessResponse({ res, token: accessToken })
+  handleSuccessResponse({ res, token: accessToken })
 }

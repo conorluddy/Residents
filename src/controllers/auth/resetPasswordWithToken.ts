@@ -15,10 +15,7 @@ import { ResidentRequest, ResidentResponse } from '../../types'
  * resetPasswordWithToken
  * POST
  */
-export const resetPasswordWithToken = async (
-  req: ResidentRequest,
-  res: Response<ResidentResponse>
-): Promise<Response> => {
+export const resetPasswordWithToken = async (req: ResidentRequest, res: Response<ResidentResponse>): Promise<void> => {
   const {
     body: { password: plainPassword },
   }: Record<'body', Record<'password', string>> = req
@@ -59,5 +56,5 @@ export const resetPasswordWithToken = async (
 
   logger.info(`${MESSAGES.PASSWORD_WAS_RESET} UID:${token.userId}`)
 
-  return handleSuccessResponse({ res, message: MESSAGES.PASSWORD_RESET_SUCCESS })
+  handleSuccessResponse({ res, message: MESSAGES.PASSWORD_RESET_SUCCESS })
 }

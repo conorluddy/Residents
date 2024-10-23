@@ -15,7 +15,7 @@ import { ResidentRequest, ResidentResponse } from '../../types'
 /**
  * GET: magicLoginWithToken
  */
-export const magicLoginWithToken = async (req: ResidentRequest, res: Response<ResidentResponse>): Promise<Response> => {
+export const magicLoginWithToken = async (req: ResidentRequest, res: Response<ResidentResponse>): Promise<void> => {
   const token = req[REQUEST_TOKEN]!
 
   if (!req[REQUEST_TOKEN]) {
@@ -63,5 +63,5 @@ export const magicLoginWithToken = async (req: ResidentRequest, res: Response<Re
     maxAge: EXPIRATION_REFRESH_TOKEN_MS,
   })
 
-  return handleSuccessResponse({ res, token: jwt })
+  handleSuccessResponse({ res, token: jwt })
 }

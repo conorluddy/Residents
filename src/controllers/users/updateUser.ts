@@ -10,7 +10,7 @@ import { ResidentRequest, ResidentResponse } from '../../types'
 /**
  * updateUser
  */
-export const updateUser = async (req: ResidentRequest, res: Response<ResidentResponse>): Promise<Response> => {
+export const updateUser = async (req: ResidentRequest, res: Response<ResidentResponse>): Promise<void> => {
   const { id } = req.params
   const { body }: Record<'body', UserUpdate> = req
   const targetUserId = req[REQUEST_TARGET_USER_ID]
@@ -36,5 +36,5 @@ export const updateUser = async (req: ResidentRequest, res: Response<ResidentRes
   // Add user meta fields here too so they be updated in parallel from a single payload?
   const updatedUserId = await SERVICES.updateUser({ userId: id, username, firstName, lastName, email, password })
 
-  return handleSuccessResponse({ res, message: `User ${updatedUserId} updated successfully` })
+  handleSuccessResponse({ res, message: `User ${updatedUserId} updated successfully` })
 }

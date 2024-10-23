@@ -10,7 +10,7 @@ import { ResidentRequest, ResidentResponse } from '../../types'
  * getUser
  * @param req[REQUEST_TARGET_USER_ID] - The ID of the user to get, provided by upstream middleware
  */
-export const getUser = async (req: ResidentRequest, res: Response<ResidentResponse>): Promise<Response> => {
+export const getUser = async (req: ResidentRequest, res: Response<ResidentResponse>): Promise<void> => {
   //
   const userId = req[REQUEST_TARGET_USER_ID]
   if (!userId) {
@@ -22,7 +22,7 @@ export const getUser = async (req: ResidentRequest, res: Response<ResidentRespon
     throw new NotFoundError(MESSAGES.USER_NOT_FOUND)
   }
   //
-  return handleSuccessResponse({ res, user })
+  handleSuccessResponse({ res, user })
 }
 
 export default getUser

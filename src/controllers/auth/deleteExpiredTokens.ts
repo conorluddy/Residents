@@ -8,7 +8,7 @@ import { ResidentRequest, ResidentResponse } from '../../types'
  * deleteExpiredTokens
  * Utility to probably to be run on a cron job or similar
  */
-export const deleteExpiredTokens = async (req: ResidentRequest, res: Response<ResidentResponse>): Promise<Response> => {
+export const deleteExpiredTokens = async (req: ResidentRequest, res: Response<ResidentResponse>): Promise<void> => {
   const count = await SERVICES.deleteExpiredTokens()
-  return handleSuccessResponse({ res, message: `${count} ${MESSAGES.EXPIRED_TOKENS_DELETED}` })
+  handleSuccessResponse({ res, message: `${count} ${MESSAGES.EXPIRED_TOKENS_DELETED}` })
 }

@@ -9,7 +9,7 @@ import { ResidentRequest, ResidentResponse } from '../../types'
 /**
  * googleCallback
  */
-export const googleCallback = (req: ResidentRequest, res: Response<ResidentResponse>): Response => {
+export const googleCallback = (req: ResidentRequest, res: Response<ResidentResponse>): void => {
   const user = req.user as SafeUser
 
   if (!user) {
@@ -27,5 +27,5 @@ export const googleCallback = (req: ResidentRequest, res: Response<ResidentRespo
     role,
   })
 
-  return handleSuccessResponse({ res, token })
+  handleSuccessResponse({ res, token })
 }

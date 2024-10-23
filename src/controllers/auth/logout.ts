@@ -9,7 +9,7 @@ import { ResidentRequest, ResidentResponse } from '../../types'
 /**
  * logout
  */
-export const logout = async (req: ResidentRequest, res: Response<ResidentResponse>): Promise<Response> => {
+export const logout = async (req: ResidentRequest, res: Response<ResidentResponse>): Promise<void> => {
   // Clear the cookies regardless of whether we have any existing ones
 
   res.cookie(REFRESH_TOKEN, '', {
@@ -41,5 +41,5 @@ export const logout = async (req: ResidentRequest, res: Response<ResidentRespons
 
   await SERVICES.deleteRefreshTokensByUserId({ userId })
 
-  return handleSuccessResponse({ res, message: MESSAGES.LOGOUT_SUCCESS })
+  handleSuccessResponse({ res, message: MESSAGES.LOGOUT_SUCCESS })
 }

@@ -6,14 +6,12 @@ import updateUser from './updateUser'
 import updateUserMeta from './updateUserMeta'
 import deleteUser from './deleteUser'
 import getSelf from './getSelf'
-import MW from '../../middleware'
 import xsrfTokens from '../../middleware/auth/xsrfTokens'
 import rateLimiter from '../../middleware/util/rateLimiter'
 
 const router = Router()
 
 // Middleware
-router.use(MW.errorHandler)
 router.use(xsrfTokens)
 
 // General rate limiter for all of these User CRUD routes

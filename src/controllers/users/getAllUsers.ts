@@ -12,7 +12,7 @@ import TYPEGUARD from '../../types/typeguards'
 /**
  * getAllUsers
  */
-export const getAllUsers = async (req: ResidentRequest, res: Response<ResidentResponse>): Promise<Response> => {
+export const getAllUsers = async (req: ResidentRequest, res: Response<ResidentResponse>): Promise<void> => {
   // Pagination
   const limit = getQueryNumber(req.query?.limit, DEFAULT_PAGE_SIZE_ROW_LIMIT)
   const offset = getQueryNumber(req.query?.offset, 0)
@@ -51,7 +51,7 @@ export const getAllUsers = async (req: ResidentRequest, res: Response<ResidentRe
     status: verifiedStatus,
   })
 
-  return handleSuccessResponse({ res, users })
+  handleSuccessResponse({ res, users })
 }
 
 export default getAllUsers

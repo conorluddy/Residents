@@ -25,8 +25,8 @@ jest.mock('../../middleware/auth/rbac', () => ({
 }))
 
 CONTROLLERS.USER.getAllUsers = jest.fn(async (_req, res) => {
-  fakeUser = makeAFakeUser({})
-  return await handleSuccessResponse({ res, users: [fakeUser, fakeUser, fakeUser] })
+  fakeUser = await makeAFakeUser({})
+  handleSuccessResponse({ res, users: [fakeUser, fakeUser, fakeUser] })
 })
 
 jest.mock('../../services/user/getAllUsers', () => ({

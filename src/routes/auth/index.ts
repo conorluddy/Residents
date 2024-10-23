@@ -9,14 +9,10 @@ import refreshToken from './refreshToken'
 import googleLogin from './googleLogin'
 import logout from './logout'
 import validateAccount from './validateAccount'
-import MW from '../../middleware'
 import deleteExpiredTokens from './deleteExpiredTokens'
 import xsrfTokens from '../../middleware/auth/xsrfTokens'
 
 const router = Router()
-
-// Middleware
-router.use(MW.errorHandler)
 
 // Publicly Exposed Routes
 router.use(login)

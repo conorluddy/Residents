@@ -17,7 +17,7 @@ import { ResidentRequest, ResidentResponse } from '../../types'
 /**
  * createUser
  */
-export const createUser = async (req: ResidentRequest, res: Response<ResidentResponse>): Promise<Response> => {
+export const createUser = async (req: ResidentRequest, res: Response<ResidentResponse>): Promise<void> => {
   const { body }: Record<'body', NewUser> = req
   const { username, firstName, lastName, email, password, role } = body
 
@@ -48,5 +48,5 @@ export const createUser = async (req: ResidentRequest, res: Response<ResidentRes
   //   })
   // }
 
-  return handleCreatedResponse({ res, message: MESSAGES.USER_REGISTERED })
+  handleCreatedResponse({ res, message: MESSAGES.USER_REGISTERED })
 }

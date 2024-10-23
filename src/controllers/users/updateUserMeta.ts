@@ -10,7 +10,7 @@ import { ResidentRequest, ResidentResponse } from '../../types'
 /**
  * updateUserMeta
  */
-export const updateUserMeta = async (req: ResidentRequest, res: Response<ResidentResponse>): Promise<Response> => {
+export const updateUserMeta = async (req: ResidentRequest, res: Response<ResidentResponse>): Promise<void> => {
   const { id } = req.params
   const { body }: Record<'body', MetaUpdate> = req
   const targetUserId = req[REQUEST_TARGET_USER_ID]
@@ -33,5 +33,5 @@ export const updateUserMeta = async (req: ResidentRequest, res: Response<Residen
 
   await SERVICES.updateUserMeta({ userId: id, metaItem })
 
-  return handleSuccessResponse({ res, message: MESSAGES.USER_META_UPDATED })
+  handleSuccessResponse({ res, message: MESSAGES.USER_META_UPDATED })
 }

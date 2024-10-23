@@ -31,5 +31,7 @@ const specs = swaggerJsDoc(options)
 
 export default function swaggerSetup(app: Express): void {
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs))
-  app.get('/api-json', (_req, res) => res.json(specs))
+  app.get('/api-json', (_req, res) => {
+    res.json(specs)
+  })
 }
