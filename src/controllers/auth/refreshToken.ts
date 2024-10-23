@@ -16,7 +16,7 @@ import { ResidentRequest, ResidentResponse } from '../../types'
  *
  * Refreshes the access token using the refresh token.
  */
-export const refreshToken = async (req: ResidentRequest, res: Response<ResidentResponse>): Promise<Response> => {
+export const refreshToken = async (req: ResidentRequest, res: Response<ResidentResponse>): Promise<void> => {
   const refreshTokenId: string = req.cookies?.[REFRESH_TOKEN]
   const userId: string = req.cookies?.[RESIDENT_TOKEN]
 
@@ -90,5 +90,5 @@ export const refreshToken = async (req: ResidentRequest, res: Response<ResidentR
 
   await SERVICES.deleteToken({ tokenId: token.id })
 
-  return handleSuccessResponse({ res, token: accessToken })
+  handleSuccessResponse({ res, token: accessToken })
 }

@@ -39,7 +39,7 @@ jest.mock('../../services/user/getUserById', () => ({
 }))
 
 CONTROLLERS.USER.getUser = jest.fn(async (_req, res) => {
-  return await handleSuccessResponse({ res, message: MESSAGES.USER_RETRIEVED })
+  await handleSuccessResponse({ res, message: MESSAGES.USER_RETRIEVED })
 })
 
 describe('GET /user/:id', () => {

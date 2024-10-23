@@ -9,7 +9,7 @@ import { handleSuccessResponse } from '../../middleware/util/successHandler'
 import MESSAGES from '../../constants/messages'
 
 CONTROLLERS.USER.createUser = jest.fn(async (_req, res) => {
-  return await handleSuccessResponse({ res, message: MESSAGES.USER_CREATED })
+  await handleSuccessResponse({ res, message: MESSAGES.USER_CREATED })
 })
 
 jest.mock('../../services/index', () => ({

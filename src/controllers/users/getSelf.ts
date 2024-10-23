@@ -9,7 +9,7 @@ import { ResidentRequest, ResidentResponse } from '../../types'
 /**
  * getSelf - gets own user record
  */
-export const getSelf = async (req: ResidentRequest, res: Response<ResidentResponse>): Promise<Response> => {
+export const getSelf = async (req: ResidentRequest, res: Response<ResidentResponse>): Promise<void> => {
   //
   const userId = req[REQUEST_USER]?.id
   if (!userId) {
@@ -21,7 +21,7 @@ export const getSelf = async (req: ResidentRequest, res: Response<ResidentRespon
     throw new NotFoundError(MESSAGES.USER_NOT_FOUND)
   }
   //
-  return handleSuccessResponse({ res, user })
+  handleSuccessResponse({ res, user })
 }
 
 export default getSelf

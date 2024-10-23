@@ -45,7 +45,7 @@ describe('GET /self', () => {
   beforeAll(() => {
     process.env.JWT_TOKEN_SECRET = 'TESTSECRET'
     CONTROLLERS.USER.getSelf = jest.fn(async (_req, res) => {
-      return await handleSuccessResponse({ res, user: fakeUser })
+      await handleSuccessResponse({ res, user: fakeUser })
     })
   })
 

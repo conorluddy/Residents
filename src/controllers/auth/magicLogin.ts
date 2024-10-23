@@ -14,7 +14,7 @@ import { ResidentRequest, ResidentResponse } from '../../types'
 /**
  * magicLogin
  */
-export const magicLogin = async (req: ResidentRequest, res: Response<ResidentResponse>): Promise<Response> => {
+export const magicLogin = async (req: ResidentRequest, res: Response<ResidentResponse>): Promise<void> => {
   // Email will be added to the request from the previous email validation middleware
   const email = req[REQUEST_EMAIL]
   if (!email) {
@@ -50,7 +50,7 @@ export const magicLogin = async (req: ResidentRequest, res: Response<ResidentRes
 
   // Bad actors are not told whether or not the email exists in the system.
 
-  return res.status(HTTP_SUCCESS.OK).json({
+  res.status(HTTP_SUCCESS.OK).json({
     message: MESSAGES.CHECK_EMAIL_MAGIC_LINK,
     // debug: `http://localhost:3000/auth/magic-login/${debugTokenId}`, // TODO: Remove
   })

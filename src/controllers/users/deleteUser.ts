@@ -9,7 +9,7 @@ import { ResidentRequest, ResidentResponse } from '../../types'
 /**
  * deleteUser
  */
-export const deleteUser = async (req: ResidentRequest, res: Response<ResidentResponse>): Promise<Response> => {
+export const deleteUser = async (req: ResidentRequest, res: Response<ResidentResponse>): Promise<void> => {
   // The param ID is the ID of the user to be deleted from the URL
   const { id } = req.params
   // The targetUserId is the same ID of the user to be deleted, but will
@@ -26,5 +26,5 @@ export const deleteUser = async (req: ResidentRequest, res: Response<ResidentRes
 
   const deletedUserId = await SERVICES.deleteUser({ userId: id })
 
-  return handleSuccessResponse({ res, message: `User ${deletedUserId} deleted` })
+  handleSuccessResponse({ res, message: `User ${deletedUserId} deleted` })
 }

@@ -11,7 +11,7 @@ import { ResidentRequest, ResidentResponse } from '../../types'
 /**
  * validateAccount
  */
-export const validateAccount = async (req: ResidentRequest, res: Response<ResidentResponse>): Promise<Response> => {
+export const validateAccount = async (req: ResidentRequest, res: Response<ResidentResponse>): Promise<void> => {
   const { tokenId, userId: userIdFromUrlParam } = req.params
   const token = req[REQUEST_TOKEN]
 
@@ -32,5 +32,5 @@ export const validateAccount = async (req: ResidentRequest, res: Response<Reside
 
   logger.info(`${MESSAGES.USER_VALIDATED} ${userIdFromUrlParam}`)
 
-  return handleSuccessResponse({ res, message: MESSAGES.ACCOUNT_VALIDATED })
+  handleSuccessResponse({ res, message: MESSAGES.ACCOUNT_VALIDATED })
 }
