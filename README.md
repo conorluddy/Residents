@@ -3,9 +3,16 @@
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/conorluddy/Residents/ci.yml) [![codecov](https://codecov.io/gh/conorluddy/Residents/branch/main/graph/badge.svg?token=WTHO1C6UL4)](https://codecov.io/gh/conorluddy/Residents) ![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fconorluddy%2FResidents%2Fmain%2F.github%2Ftype-coverage.json&query=%24.percentString&suffix=%25&style=flat&logo=typescript&label=TS%20Coverage&color=abff3d)
  ![Last Commit](https://img.shields.io/github/last-commit/conorluddy/Residents) ![License](https://img.shields.io/github/license/conorluddy/Residents) ![Version](https://img.shields.io/github/package-json/v/conorluddy/Residents) 
 
-The goal of this project is to build out a repo that I can reuse as a jump-off point for other applications, where it would provide an initial backend API providing the core components that most apps would need - users, authentication and authorization. Feel free to fork it if it provides you any value, and see details below for a loose roadmap.
 
-**Note: Readme needs updating. Will document this fully when it's stable, soon**
+
+https://residents.rest
+
+Welcome, Resident.
+
+Residents is a robust, TypeScript-based backend API designed to serve as a solid foundation for building user-centric applications. Born out of the need for a reusable, secure, and feature-rich starting point, this project focuses on providing essential user management, authentication, and authorization functionalities. With a strong emphasis on developer experience, code quality, and best practices, Residents aims to streamline the development process for various applications requiring user accounts and access control.
+
+The core strengths of this project lie in its comprehensive user management system, flexible authentication options (including social logins), and a well-structured codebase with high type coverage. Built on modern technologies like Express, PostgreSQL, and Drizzle ORM, Residents prioritizes security, scalability, and ease of extension. Whether you're building a small project or laying the groundwork for a larger application, Residents provides the essential backend infrastructure to get you started quickly and securely.
+
 
 ![Residents](https://github.com/user-attachments/assets/7da7ff38-0406-4a07-b2f0-62671213868a)
 
@@ -34,7 +41,7 @@ The goal of this project is to build out a repo that I can reuse as a jump-off p
 
 ## Tech Stack
 
-- Server: `Express [V5 - beta]`
+- Server: `Express 5`
 - Database: `PostGres` 
 - ORM: `Drizzle`
 - Authentication: `JSON Web Tokens [JWT]`
@@ -44,10 +51,11 @@ The goal of this project is to build out a repo that I can reuse as a jump-off p
 - Codebase: `Typescript`
 - Tests: `Jest` `Supertest`
 - Containers: `Docker`
-  
+
+Database, ORM and Email service should be relatively easy to swap out if preferred.
+
 
 ## Main goals
-
 
 ### Functional
 
@@ -166,9 +174,9 @@ For production you'd want to do a `build` and then a `start`, but do so at your 
 | Endpoint                      | Built | Unit Tests | Integration Tests | SwaggerDocs |
 |-------------------------------|-------|------------|-------------------|-------------|
 | `POST /auth/login`            | ✅    | ✅         | ⛔️                | ⛔️          |
-| `POST /auth/logout`           | ✅    | ⛔️         | ⛔️                | ⛔️          |
-| `POST /auth/magic-login`      | ⛔️    | ⛔️         | ⛔️                | ⛔️          |
-| `POST /auth/magic-login-token`| ⛔️    | ⛔️         | ⛔️                | ⛔️          |
+| `POST /auth/logout`           | ✅    | ✅         | ⛔️                | ⛔️          |
+| `POST /auth/magic-login`      | ✅    | ✅         | ⛔️                | ⛔️          |
+| `POST /auth/magic-login-token`| ✅    | ✅         | ⛔️                | ⛔️          |
 | `POST /auth/reset-password`   | ✅    | ✅         | ⛔️                | ⛔️          |
 | `POST /auth/refresh`          | ✅    | ✅         | ⛔️                | ⛔️          |
 | `POST /auth/reset-password-token` | ✅ | ✅         | ⛔️                | ⛔️          |
