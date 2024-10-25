@@ -11,13 +11,13 @@ import {
   EXPIRATION_VALIDATION_TOKEN_MS,
 } from '../../config'
 
-interface Props {
+interface CreateTokenProps {
   userId: string
   type: TOKEN_TYPE
   expiry?: number
 }
 
-const createToken = async ({ userId, type, expiry }: Props): Promise<Token['id'] | null> => {
+const createToken = async ({ userId, type, expiry }: CreateTokenProps): Promise<Token['id'] | null> => {
   if (!userId) {
     throw new TokenError(MESSAGES.TOKEN_REQUIRES_USER_ID)
   }
@@ -43,7 +43,7 @@ const createToken = async ({ userId, type, expiry }: Props): Promise<Token['id']
   return token.id
 }
 
-export { createToken }
+export { createToken, CreateTokenProps }
 
 export const TOKEN_TYPE_EXPIRATION_MAP = {
   [TOKEN_TYPE.REFRESH]: EXPIRATION_REFRESH_TOKEN_MS,

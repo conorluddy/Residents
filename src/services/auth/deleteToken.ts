@@ -5,11 +5,11 @@ import { Token } from '../../db/types'
 import { TokenError } from '../../errors'
 import { eq } from 'drizzle-orm'
 
-interface Props {
+interface DeleteTokenProps {
   tokenId: string
 }
 
-const deleteToken = async ({ tokenId }: Props): Promise<Token['id']> => {
+const deleteToken = async ({ tokenId }: DeleteTokenProps): Promise<Token['id']> => {
   if (!tokenId) {
     throw new TokenError(MESSAGES.NO_TOKEN_ID_PROVIDED)
   }
@@ -17,4 +17,4 @@ const deleteToken = async ({ tokenId }: Props): Promise<Token['id']> => {
   return deleted?.id
 }
 
-export { deleteToken }
+export { deleteToken, DeleteTokenProps }

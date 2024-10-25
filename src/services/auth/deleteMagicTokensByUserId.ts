@@ -5,11 +5,11 @@ import { tableTokens } from '../../db/schema'
 import { TokenError } from '../../errors'
 import MESSAGES from '../../constants/messages'
 
-interface Props {
+interface DeleteMagicTokensByUserIdProps {
   userId: string
 }
 
-const deleteMagicTokensByUserId = async ({ userId }: Props): Promise<number> => {
+const deleteMagicTokensByUserId = async ({ userId }: DeleteMagicTokensByUserIdProps): Promise<number> => {
   if (!userId) {
     throw new TokenError(MESSAGES.MISSING_USER_ID)
   }
@@ -22,4 +22,4 @@ const deleteMagicTokensByUserId = async ({ userId }: Props): Promise<number> => 
   return deleted.length
 }
 
-export { deleteMagicTokensByUserId }
+export { deleteMagicTokensByUserId, DeleteMagicTokensByUserIdProps }

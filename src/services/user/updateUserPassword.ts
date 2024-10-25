@@ -6,12 +6,12 @@ import { tableUsers } from '../../db/schema'
 import { BadRequestError, PasswordStrengthError } from '../../errors'
 import MESSAGES from '../../constants/messages'
 
-interface Params {
+interface UpdateUserPasswordParams {
   userId: string
   password?: string
 }
 
-const updateUserPassword = async ({ userId, password }: Params): Promise<string> => {
+const updateUserPassword = async ({ userId, password }: UpdateUserPasswordParams): Promise<string> => {
   if (!userId) {
     throw new BadRequestError(MESSAGES.MISSING_USER_ID)
   }
@@ -31,4 +31,4 @@ const updateUserPassword = async ({ userId, password }: Params): Promise<string>
   return updatedUserId
 }
 
-export { updateUserPassword }
+export { updateUserPassword, UpdateUserPasswordParams }

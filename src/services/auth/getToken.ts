@@ -5,11 +5,11 @@ import { Token } from '../../db/types'
 import { TokenError } from '../../errors'
 import MESSAGES from '../../constants/messages'
 
-interface Props {
+interface GetTokenProps {
   tokenId: string
 }
 
-const getToken = async ({ tokenId }: Props): Promise<Token | null> => {
+const getToken = async ({ tokenId }: GetTokenProps): Promise<Token | null> => {
   if (!tokenId) {
     throw new TokenError(MESSAGES.NO_TOKEN_ID_PROVIDED)
   }
@@ -24,4 +24,4 @@ const getToken = async ({ tokenId }: Props): Promise<Token | null> => {
   return token
 }
 
-export { getToken }
+export { getToken, GetTokenProps }

@@ -17,3 +17,4 @@ const VALIDATE: ValidatorMap = {
 }
 
 export default VALIDATE
+export { ValidatorMap }

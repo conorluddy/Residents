@@ -4,11 +4,11 @@ import { tableTokens } from '../../db/schema'
 import { TokenError } from '../../errors'
 import MESSAGES from '../../constants/messages'
 
-interface Props {
+interface DeleteAllUserTokensProps {
   userId: string
 }
 
-const deleteAllUserTokens = async ({ userId }: Props): Promise<number> => {
+const deleteAllUserTokens = async ({ userId }: DeleteAllUserTokensProps): Promise<number> => {
   if (!userId) {
     throw new TokenError(MESSAGES.MISSING_USER_ID)
   }
@@ -18,4 +18,4 @@ const deleteAllUserTokens = async ({ userId }: Props): Promise<number> => {
   return deleted.length
 }
 
-export { deleteAllUserTokens }
+export { deleteAllUserTokens, DeleteAllUserTokensProps }

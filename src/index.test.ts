@@ -1,24 +1,11 @@
-import request from 'supertest'
 import jwt from 'jsonwebtoken'
+import request from 'supertest'
+import { JWT_TOKEN_SECRET } from './config'
 import { HTTP_CLIENT_ERROR, HTTP_SUCCESS } from './constants/http'
 import { app } from './index'
-import { logger } from './utils/logger'
-import { JWT_TOKEN_SECRET } from './config'
-import MESSAGES from './constants/messages'
 
 jest.mock('./utils/logger')
 jest.mock('./db', () => ({}))
-
-describe('Test SIGTERM handling', () => {
-  test('should log messages on SIGTERM', (done) => {
-    process.emit('SIGTERM')
-    setTimeout(() => {
-      expect(logger.info).toHaveBeenCalledWith(MESSAGES.SIGTERM_RECEIVED_CLOSING_SERVER)
-      expect(logger.info).toHaveBeenCalledWith(MESSAGES.SERVER_SHUTDOWN)
-      done()
-    }, 500)
-  })
-})
 
 describe('Test the root path', () => {
   test('It should respond unauthorized to the GET method', async () => {

@@ -7,7 +7,7 @@ import { PASSWORD_STRENGTH_CONFIG } from '../../constants/password'
 import { BadRequestError, EmailError, PasswordStrengthError } from '../../errors'
 import MESSAGES from '../../constants/messages'
 
-interface Params {
+interface UpdateUserParams {
   userId: string
   username?: string | null
   firstName?: string | null
@@ -16,7 +16,14 @@ interface Params {
   password?: string | null
 }
 
-const updateUser = async ({ userId, username, firstName, lastName, email, password }: Params): Promise<string> => {
+const updateUser = async ({
+  userId,
+  username,
+  firstName,
+  lastName,
+  email,
+  password,
+}: UpdateUserParams): Promise<string> => {
   if (!userId) {
     throw new BadRequestError(MESSAGES.MISSING_USER_ID)
   }
@@ -55,4 +62,4 @@ const updateUser = async ({ userId, username, firstName, lastName, email, passwo
   return updatedUserId
 }
 
-export { updateUser }
+export { updateUser, UpdateUserParams }

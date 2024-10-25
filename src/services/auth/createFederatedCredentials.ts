@@ -4,7 +4,7 @@ import db from '../../db'
 import { tableFederatedCredentials } from '../../db/schema'
 import { LoginError } from '../../errors'
 
-interface Props {
+interface CreateFederatedCredentialsProps {
   userId: string
   provider: Profile['provider']
   profileId: string
@@ -13,7 +13,11 @@ interface Props {
 /**
  *
  */
-const createFederatedCredentials = async ({ userId, provider, profileId }: Props): Promise<string> => {
+const createFederatedCredentials = async ({
+  userId,
+  provider,
+  profileId,
+}: CreateFederatedCredentialsProps): Promise<string> => {
   if (!userId) {
     throw new LoginError(MESSAGES.MISSING_PASSPORT_USER_ID)
   }
@@ -43,4 +47,4 @@ const createFederatedCredentials = async ({ userId, provider, profileId }: Props
   return federateddCredentials.userId
 }
 
-export { createFederatedCredentials }
+export { createFederatedCredentials, CreateFederatedCredentialsProps }

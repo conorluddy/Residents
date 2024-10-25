@@ -1,10 +1,11 @@
 {
   "name": "residents",
-  "version": "0.1.302",
+  "version": "0.1.303",
   "author": "Conor Luddy <conorluddy@gmail.com>",
   "license": "MIT",
   "description": "Residents is a Node.js Express back-end foundation designed for bootstrapping new projects quickly and efficiently. Its main goal is to set up a robust infrastructure for user management, because users are the core of any application. These users are your Residents. It leverages a robust stack including Postgres, Drizzle ORM, JWT, PassportJS, Docker and Swagger to streamline development and deployment processes.",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/conorluddy/residents.git"
@@ -14,7 +15,7 @@
   },
   "homepage": "https://github.com/conorluddy/residents#readme",
   "scripts": {
-    "start": "node dist/index.js",
+    "start": "node dist/server.js",
     "build": "tsc",
     "test": "jest",
     "lint": "eslint .",

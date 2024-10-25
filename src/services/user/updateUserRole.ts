@@ -5,12 +5,12 @@ import { tableUsers } from '../../db/schema'
 import { BadRequestError, ValidationError } from '../../errors'
 import MESSAGES from '../../constants/messages'
 
-interface Params {
+interface UpdateUserRoleParams {
   userId: string
   role: ROLES
 }
 
-const updateUserRole = async ({ userId, role }: Params): Promise<string> => {
+const updateUserRole = async ({ userId, role }: UpdateUserRoleParams): Promise<string> => {
   if (!userId) {
     throw new BadRequestError(MESSAGES.MISSING_USER_ID)
   }
@@ -30,4 +30,4 @@ const updateUserRole = async ({ userId, role }: Params): Promise<string> => {
   return updatedUserId
 }
 
-export { updateUserRole }
+export { updateUserRole, UpdateUserRoleParams }
