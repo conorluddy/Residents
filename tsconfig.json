@@ -3,6 +3,7 @@
     "target": "es6",                          // Target modern JavaScript
     "module": "commonjs",                     // Use CommonJS module system
     "strict": true,
+    "declaration": true,
     "esModuleInterop": true,
     "moduleResolution": "Node",
     "resolveJsonModule": true,
@@ -11,6 +12,7 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "outDir": "./dist",
+    "rootDir": "./src",
     "typeRoots": ["./node_modules/@types", "./src/types"],
   },
   "include": ["src/**/*", "src/swagger/**/*.ts"],
@@ -21,4 +23,5 @@
     "dist"
   ]
 }
+
 

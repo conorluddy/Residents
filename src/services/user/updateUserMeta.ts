@@ -4,12 +4,12 @@ import { tableUserMeta } from '../../db/schema'
 import { BadRequestError } from '../../errors'
 import MESSAGES from '../../constants/messages'
 
-interface Params {
+interface UpdateUserMetaParams {
   userId: string
   metaItem?: string | null // Example property - customise these properties to your needs
 }
 
-const updateUserMeta = async ({ userId, metaItem }: Params): Promise<string> => {
+const updateUserMeta = async ({ userId, metaItem }: UpdateUserMetaParams): Promise<string> => {
   if (!userId) {
     throw new BadRequestError(MESSAGES.MISSING_USER_ID)
   }
@@ -26,4 +26,4 @@ const updateUserMeta = async ({ userId, metaItem }: Params): Promise<string> => 
   return updatedUser?.updatedUserId
 }
 
-export { updateUserMeta }
+export { updateUserMeta, UpdateUserMetaParams }

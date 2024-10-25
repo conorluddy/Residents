@@ -4,7 +4,7 @@ import discardToken from './auth/discardToken'
 import errorHandler from './util/errorHandler'
 import findUserByValidEmail from './lookup/findUserByValidEmail'
 import RBAC from './auth/rbac'
-import VALIDATE from './validation'
+import VALIDATE, { ValidatorMap } from './validation'
 import findValidTokenById from './lookup/findValidTokenById'
 
 const MW = {
@@ -21,3 +21,4 @@ const MW = {
 }
 
 export default MW
+export { ValidatorMap }

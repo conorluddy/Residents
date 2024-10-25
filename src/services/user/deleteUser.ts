@@ -5,11 +5,11 @@ import { tableUsers } from '../../db/schema'
 import { BadRequestError } from '../../errors'
 import MESSAGES from '../../constants/messages'
 
-interface Params {
+interface DeleteUserParams {
   userId: string
 }
 
-const deleteUser = async ({ userId }: Params): Promise<string> => {
+const deleteUser = async ({ userId }: DeleteUserParams): Promise<string> => {
   if (!userId) {
     throw new BadRequestError(MESSAGES.MISSING_USER_ID)
   }
@@ -23,4 +23,4 @@ const deleteUser = async ({ userId }: Params): Promise<string> => {
   return updatedUserId
 }
 
-export { deleteUser }
+export { deleteUser, DeleteUserParams }
