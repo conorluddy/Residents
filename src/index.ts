@@ -58,36 +58,14 @@ app.use(errorHandler)
 ////////////////////////////////////////////////
 
 export default app
-
 export { app }
 export { logger } from './utils/logger'
 export { config } from './config'
+export * from './db/types'
+// Can be used in an external app to piggyback on the same DB connection Residents uses
 export { postgresDatabaseClient, db as drizzleDatabaseClient } from './db'
-
+// Can be used by other routes in an external app to check that users are authenticated
+export { authenticateToken as jwtVerificationMiddleware } from './middleware/auth/jsonWebTokens'
 // Enums and Constants
 export { MESSAGES } from './constants/messages'
 export { ROLES, STATUS, TOKEN_TYPE } from './constants/database'
-
-// Types
-export {
-  AdminUser,
-  DefaultUser,
-  DeletedUser,
-  FederatedCredentials,
-  LockedUser,
-  Meta,
-  MetaUpdate,
-  ModeratorUser,
-  NewFederatedCredentials,
-  NewMeta,
-  NewToken,
-  NewUser,
-  OwnerUser,
-  PublicUser,
-  SafeUser,
-  Token,
-  TokenWithUser,
-  User,
-  UserUpdate,
-  UserWithMeta,
-} from './db/types'
