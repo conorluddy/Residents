@@ -8,7 +8,7 @@ dotenv.config()
 
 const DEFAULT_POSTGRES_PORT = '5432'
 
-const dbClient = new Client({
+const postgresDatabaseClient = new Client({
   port: parseInt(POSTGRES_PORT ?? DEFAULT_POSTGRES_PORT, 10),
   host: POSTGRES_URL,
   user: POSTGRES_USER,
@@ -17,10 +17,10 @@ const dbClient = new Client({
 })
 
 if (process.env.NODE_ENV !== 'test') {
-  dbClient.connect()
+  postgresDatabaseClient.connect()
 }
 
-const db = drizzle(dbClient, { schema, logger: process.env.POSTGRES_LOG === 'true' })
+const db = drizzle(postgresDatabaseClient, { schema, logger: process.env.POSTGRES_LOG === 'true' })
 
 export default db
-export { dbClient }
+export { postgresDatabaseClient, db }

@@ -54,10 +54,40 @@ swaggerSetup(app)
 app.use(errorHandler)
 
 ////////////////////////////////////////////////
-// Exports
+// Exports for NPM etc
 ////////////////////////////////////////////////
 
 export default app
-export * from './db/types'
-export { logger } from './utils/logger'
+
 export { app }
+export { logger } from './utils/logger'
+export { config } from './config'
+export { postgresDatabaseClient, db as drizzleDatabaseClient } from './db'
+
+// Enums and Constants
+export { MESSAGES } from './constants/messages'
+export { ROLES, STATUS, TOKEN_TYPE } from './constants/database'
+
+// Types
+export {
+  AdminUser,
+  DefaultUser,
+  DeletedUser,
+  FederatedCredentials,
+  LockedUser,
+  Meta,
+  MetaUpdate,
+  ModeratorUser,
+  NewFederatedCredentials,
+  NewMeta,
+  NewToken,
+  NewUser,
+  OwnerUser,
+  PublicUser,
+  SafeUser,
+  Token,
+  TokenWithUser,
+  User,
+  UserUpdate,
+  UserWithMeta,
+} from './db/types'

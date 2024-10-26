@@ -157,6 +157,7 @@ const MESSAGES = {
 }
 
 export default MESSAGES
+export { MESSAGES }
 
 /**  TODO
 Problem with email normalization for

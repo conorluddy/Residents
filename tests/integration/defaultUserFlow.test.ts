@@ -1,6 +1,6 @@
 import request from 'supertest'
 import { app } from '../../src'
-import { dbClient } from '../../src/db'
+import { postgresDatabaseClient } from '../../src/db'
 import { HTTP_SUCCESS } from '../../src/constants/http'
 import { ROLES } from '../../src/constants/database'
 import MESSAGES from '../../src/constants/messages'
@@ -13,15 +13,15 @@ import MESSAGES from '../../src/constants/messages'
  */
 describe('Integration: Default User flow', () => {
   beforeAll(async () => {
-    await dbClient.connect()
-    await dbClient.query('BEGIN') // Transaction
-    await dbClient.query('DELETE FROM users')
+    await postgresDatabaseClient.connect()
+    await postgresDatabaseClient.query('BEGIN') // Transaction
+    await postgresDatabaseClient.query('DELETE FROM users')
   })
 
   afterAll(async () => {
-    await dbClient.query('DELETE FROM users')
-    await dbClient.query('ROLLBACK') // Rollback the transaction
-    await dbClient.end()
+    await postgresDatabaseClient.query('DELETE FROM users')
+    await postgresDatabaseClient.query('ROLLBACK') // Rollback the transaction
+    await postgresDatabaseClient.end()
   })
 
   it('Creates a new user', async () => {
