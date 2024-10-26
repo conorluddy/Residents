@@ -1,6 +1,6 @@
 import request from 'supertest'
 import { app } from '../../src'
-import { dbClient } from '../../src/db'
+import { postgresDatabaseClient } from '../../src/db'
 import seedUserZero from '../../src/db/utils/seedUserZero'
 import { seedUsers } from '../../src/db/utils/seedUsers'
 import { HTTP_SUCCESS } from '../../src/constants/http'
@@ -22,17 +22,17 @@ describe('Integration: Owner flow from seeded default owner', () => {
   let jwt: string
 
   beforeAll(async () => {
-    await dbClient.connect()
-    await dbClient.query('BEGIN') // Transaction
-    await dbClient.query('DELETE FROM users')
+    await postgresDatabaseClient.connect()
+    await postgresDatabaseClient.query('BEGIN') // Transaction
+    await postgresDatabaseClient.query('DELETE FROM users')
     await seedUserZero()
     await seedUsers(10)
   })
 
   afterAll(async () => {
-    await dbClient.query('DELETE FROM users')
-    await dbClient.query('ROLLBACK') // Rollback the transaction
-    await dbClient.end()
+    await postgresDatabaseClient.query('DELETE FROM users')
+    await postgresDatabaseClient.query('ROLLBACK') // Rollback the transaction
+    await postgresDatabaseClient.end()
   })
 
   it('Log in as the owner - Resident Zero', async () => {

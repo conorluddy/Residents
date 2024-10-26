@@ -126,6 +126,7 @@ export const {
 } = config
 
 export default config
+export { config }
 
 interface Config {
   SEEDED_OWNER_FIRSTNAME?: string

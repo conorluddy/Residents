@@ -1,18 +1,18 @@
 import request from 'supertest'
 import { app } from '../../src'
-import { dbClient } from '../../src/db'
+import { postgresDatabaseClient } from '../../src/db'
 import { ROLES } from '../../src/constants/database'
 import MESSAGES from '../../src/constants/messages'
 
 describe('Integration: Can CreateUser', () => {
   beforeAll(async () => {
-    await dbClient.connect()
-    await dbClient.query('BEGIN') // Transaction
+    await postgresDatabaseClient.connect()
+    await postgresDatabaseClient.query('BEGIN') // Transaction
   })
-  beforeEach(async () => await dbClient.query('DELETE FROM users'))
+  beforeEach(async () => await postgresDatabaseClient.query('DELETE FROM users'))
   afterAll(async () => {
-    await dbClient.query('ROLLBACK') // Rollback the transaction
-    await dbClient.end()
+    await postgresDatabaseClient.query('ROLLBACK') // Rollback the transaction
+    await postgresDatabaseClient.end()
   })
 
   it('should create a new user successfully', async () => {
