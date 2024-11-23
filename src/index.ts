@@ -10,6 +10,7 @@ import { handleSuccessResponse } from './middleware/util/successHandler'
 import authRouter from './routes/auth'
 import usersRouter from './routes/users/index'
 import swaggerSetup from './swagger'
+import cors from 'cors'
 
 dotenv.config()
 
@@ -22,6 +23,16 @@ const app = express()
 const trustProxyNumber = config.TRUST_PROXY_NUMBER ? parseInt(config.TRUST_PROXY_NUMBER, 10) : 0
 if (trustProxyNumber > 0) {
   app.set('trust proxy', config.TRUST_PROXY_NUMBER)
+}
+
+// Enable CORS for running localhost examples in dev mode
+if (process.env.NODE_ENV === 'development') {
+  app.use(
+    cors({
+      origin: /^http:\/\/localhost(:\d+)?$/, // Allows any port on localhost
+      credentials: true,
+    })
+  )
 }
 
 ////////////////////////////////////////////////

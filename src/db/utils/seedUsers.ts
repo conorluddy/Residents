@@ -18,7 +18,7 @@ async function createRandomUsers(amount: number): Promise<NewUser[]> {
   logger.info(MESSAGES.CREATING_USERS)
 
   for (let i = 0; i < amount; i++) {
-    const username = faker.internet.userName()
+    const username = faker.internet.username()
     const password = await createHash(username)
     users.push({
       username: username.toLowerCase(),
