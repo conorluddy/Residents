@@ -36,6 +36,7 @@ describe('Middleware: errorHandler', () => {
   const nextFunction = jest.fn()
 
   beforeEach(() => {
+    mockRequest = {}
     mockResponse = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn(),

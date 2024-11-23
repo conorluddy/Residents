@@ -42,7 +42,7 @@ const makeAFakeUser = ({
   password: password ?? faker.internet.password(),
   role: role === null ? null : (role ?? faker.helpers.arrayElement(ROLES_ARRAY)),
   status: status ?? faker.helpers.arrayElement(STATUS_ARRAY),
-  username: username ?? faker.internet.userName(),
+  username: username ?? faker.internet.username(),
   createdAt: createdAt ?? new Date(),
 })
 
@@ -66,7 +66,7 @@ const makeAFakeUserWithHashedPassword = async ({
   password: await createHash(password ?? username ?? ''), // default password is username
   role: role === null ? null : (role ?? faker.helpers.arrayElement(ROLES_ARRAY)),
   status: status ?? faker.helpers.arrayElement(STATUS_ARRAY),
-  username: username ?? faker.internet.userName(),
+  username: username ?? faker.internet.username(),
   createdAt: createdAt ?? new Date(),
 })
 
@@ -88,13 +88,13 @@ const makeAFakeSafeUser = ({
   lastName: lastName ?? faker.person.lastName(),
   role: role === null ? null : (role ?? faker.helpers.arrayElement(ROLES_ARRAY)),
   status: status ?? faker.helpers.arrayElement(STATUS_ARRAY),
-  username: username ?? faker.internet.userName(),
+  username: username ?? faker.internet.username(),
   createdAt: createdAt ?? new Date(),
 })
 
 const makeAFakePublicUser = ({ id, email, firstName, lastName, role, username = 'U53rn4m3' }: Params): PublicUser => ({
   id: id ?? createId(),
-  username: username ?? faker.internet.userName(),
+  username: username ?? faker.internet.username(),
   email: email ?? faker.internet.email(),
   firstName: firstName ?? faker.person.firstName(),
   lastName: lastName ?? faker.person.lastName(),
