@@ -1,35 +1,46 @@
 import './App.css'
-import Login, { Credentials } from './components/login'
+import Login from './components/login'
+import Profile from './components/profile'
+import { AuthProvider } from './context/AuthContext/AuthProvider'
+import { UserJwt } from './types'
+import { useCallback, useState } from 'react'
 
 function App(): React.ReactElement {
-  return <Login onSubmit={handleLogin} />
+  const [user, setUser] = useState<UserJwt | null>(null)
+  const [token, setToken] = useState<string | null>(null)
+
+  const isLoggedIn = !!token
+
+  const onLoginSuccess = (token: string, user: UserJwt): void => {
+    setToken(token)
+    setUser(user)
+  }
+
+  const onLoginError = (errorMessage: string): void => {
+    // eslint-disable-next-line no-console
+    console.error(errorMessage)
+  }
+
+  const logout = useCallback(() => {
+    setToken(null)
+    setUser(null)
+  }, [])
+
+  return (
+    <AuthProvider value={{ jwt: token, user, logout }}>
+      {!isLoggedIn && <Login onSuccess={onLoginSuccess} onError={onLoginError} />}
+
+      {user?.exp && <h3>Auth Expires: {new Date(user.exp * 1000).toUTCString()}</h3>}
+
+      {user && <Profile />}
+
+      {isLoggedIn && (
+        <button type="button" onClick={logout}>
+          Log out
+        </button>
+      )}
+    </AuthProvider>
+  )
 }
 
 export default App
-
-async function handleLogin(credentials: Credentials): Promise<void> {
-  const url = 'http://localhost:3000/auth'
-
-  try {
-    const response = await fetch(url, {
-      method: 'POST',
-      body: JSON.stringify(credentials),
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-
-    if (!response.ok) {
-      throw new Error(`Response status: ${response.status}`)
-    }
-
-    const json = await response.json()
-
-    // eslint-disable-next-line no-console
-    console.log(json)
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error(error)
-  }
-}
