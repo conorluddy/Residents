@@ -4,7 +4,8 @@ import { useAuth } from '../../context/AuthContext/useAuth'
 export default function Component(): React.ReactElement {
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [userProfile, setUserProfile] = useState<Record<string, string> | null>(null)
-  const { jwt } = useAuth()
+
+  const { jwt, isLoggedIn } = useAuth()
 
   const fetchProfile = useCallback(async (): Promise<void> => {
     const url = 'http://localhost:3000/users/self'
@@ -20,6 +21,7 @@ export default function Component(): React.ReactElement {
       if (!response.ok) {
         const { message } = (await response.json()) as Record<'message', string>
         setErrorMessage(message)
+        setUserProfile(null)
         throw new Error(`Response status: ${response.status}`)
       }
 
@@ -33,23 +35,32 @@ export default function Component(): React.ReactElement {
   }, [jwt])
 
   useEffect(() => {
-    fetchProfile()
-  }, [fetchProfile, jwt])
+    if (isLoggedIn) {
+      fetchProfile()
+    }
+  }, [fetchProfile, isLoggedIn])
 
-  if (!userProfile) {
-    return <>-</>
+  if (!isLoggedIn) {
+    return <></>
   }
 
   return (
     <div>
-      <>
-        {Object.entries(userProfile.user).map(([key, val]) => (
-          <pre>
-            {key}: {typeof val === 'string' ? val : JSON.stringify(val)}
-          </pre>
-        ))}
-      </>
-      {errorMessage}
+      {userProfile && (
+        <>
+          {Object.entries(userProfile.user).map(([key, val]) => (
+            <pre>
+              {key}: {typeof val === 'string' ? val : JSON.stringify(val)}
+            </pre>
+          ))}
+        </>
+      )}
+
+      {errorMessage && <h4>{errorMessage}</h4>}
+
+      <button type="button" onClick={fetchProfile}>
+        Refetch
+      </button>
     </div>
   )
 }

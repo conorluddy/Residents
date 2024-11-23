@@ -7,5 +7,12 @@
 }
 
 button, input {
-  margin: 1rem 0;
+  margin: 1rem;
+}
+
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
 }
