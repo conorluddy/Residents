@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { AuthContext, AuthContextType } from './AuthContext'
 import { UserJwt } from '../../types'
 import { jwtDecode } from 'jwt-decode'
@@ -32,13 +32,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode; value: AuthCont
   /**
    * logout
    */
-  const logout = useCallback(() => {
-    setJwt(null)
-    // These are secure cookies, so can't be accessed by the client, so
-    // we need to call the logout endpoint and server will nuke them...
-    // document.cookie = 'refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
-    // document.cookie = 'residentToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
-    // document.cookie = 'xsrfToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+  const logout = useCallback(async () => {
+    const url = 'http://localhost:3000/auth/logout'
+    try {
+      await fetch(url, { method: 'GET', credentials: 'include' })
+      setJwt(null)
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(error)
+    }
   }, [setJwt])
 
   /**
@@ -81,6 +83,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode; value: AuthCont
 
   const isLoggedIn = !!user?.role
   const isTokenExpired = !user || user.exp < Date.now() / 1000
+
+  // Google redirects us back to the app with a token param when login succeeds, so we pick it up here
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const token = params.get('token')
+    if (token) {
+      // Remove the token from the URL
+      window.history.replaceState({}, document.title, window.location.pathname)
+      setJwt(token)
+    }
+  }, [])
 
   return (
     <AuthContext.Provider value={{ jwt, user, isLoggedIn, isTokenExpired, login, logout, refresh }}>

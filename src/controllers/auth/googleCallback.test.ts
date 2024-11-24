@@ -1,9 +1,8 @@
 import { Response } from 'express'
-import { HTTP_SUCCESS } from '../../constants/http'
 import { LoginError } from '../../errors'
 import { makeAFakeSafeUser } from '../../test-utils/mockUsers'
 import { ResidentRequest } from '../../types'
-import { googleCallback } from './googleCallback'
+import { googleCallback, googleLoginRedirectURL } from './googleCallback'
 import MESSAGES from '../../constants/messages'
 
 jest.mock('google-auth-library')
@@ -37,13 +36,13 @@ describe('Controller: GoogleCallback', () => {
     mockResponse = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn(),
+      redirect: jest.fn(),
     }
   })
 
   it('successfully authenticates a user with Google', async () => {
     await googleCallback(mockRequest as ResidentRequest, mockResponse as Response)
-    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.OK)
-    expect(mockResponse.json).toHaveBeenCalledWith({ token: 'JWT' })
+    expect(mockResponse.redirect).toHaveBeenCalledWith(`${googleLoginRedirectURL}?token=JWT`)
   })
 
   it('throws LoginError when user is not found', () => {
