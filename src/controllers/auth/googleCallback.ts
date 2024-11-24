@@ -1,10 +1,9 @@
 import { Response } from 'express'
 import MESSAGES from '../../constants/messages'
-import { LoginError } from '../../errors'
-import { handleSuccessResponse } from '../../middleware/util/successHandler'
-import { generateJwtFromUser } from '../../utils/generateJwt'
 import { SafeUser } from '../../db/types'
+import { LoginError } from '../../errors'
 import { ResidentRequest, ResidentResponse } from '../../types'
+import { generateJwtFromUser } from '../../utils/generateJwt'
 
 /**
  * googleCallback
@@ -27,5 +26,11 @@ export const googleCallback = (req: ResidentRequest, res: Response<ResidentRespo
     role,
   })
 
-  handleSuccessResponse({ res, token })
+  // TODO: We need to add the logged in cookies here, refreshtoken etc
+
+  // This just responds with JSON but we want to redirect to a FE with a param
+  // handleSuccessResponse({ res, token })
+  res.redirect(`${googleLoginRedirectURL}?token=${token}`)
 }
+
+export const googleLoginRedirectURL = process.env.FRONTEND_URL || 'http://localhost:5173'

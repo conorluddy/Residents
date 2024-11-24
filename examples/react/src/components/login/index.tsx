@@ -54,6 +54,8 @@ export default function Component(): React.ReactElement {
       {/* {errorMessage && <strong>{errorMessage}</strong>} */}
 
       <pre>resident / R351D3NT!zero</pre>
+
+      <a href="http://localhost:3000/auth/google">Log in with Google</a>
     </div>
   )
 }
