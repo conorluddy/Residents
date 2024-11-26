@@ -65,9 +65,6 @@ export const login = async (req: ResidentRequest, res: Response<ResidentResponse
 
   // Set the tokens in HTTP-only secure cookies
 
-  // Set the tokens in HTTP-only secure cookies
-
-  const accessToken = generateJwtFromUser(user)
   res.cookie(REFRESH_TOKEN, refreshTokenId, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
@@ -75,20 +72,22 @@ export const login = async (req: ResidentRequest, res: Response<ResidentResponse
     maxAge: EXPIRATION_REFRESH_TOKEN_MS,
   })
 
-  const xsrfToken = generateXsrfToken()
-  res.cookie(XSRF_TOKEN, xsrfToken, {
+  res.cookie(XSRF_TOKEN, generateXsrfToken(), {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',
     maxAge: EXPIRATION_REFRESH_TOKEN_MS,
   })
 
+  // This is probably redundant as the id is in the jwt anyway... Revisit
   res.cookie(RESIDENT_TOKEN, user.id, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',
     maxAge: EXPIRATION_REFRESH_TOKEN_MS,
   })
+
+  const accessToken = generateJwtFromUser(user)
 
   handleSuccessResponse({ res, token: accessToken })
 }
