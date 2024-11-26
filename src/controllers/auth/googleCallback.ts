@@ -10,6 +10,8 @@ import { REFRESH_TOKEN, RESIDENT_TOKEN, XSRF_TOKEN } from '../../constants/keys'
 import { EXPIRATION_REFRESH_TOKEN_MS } from '../../config'
 import generateXsrfToken from '../../middleware/util/xsrfToken'
 
+const isSecureCookie = process.env.NODE_ENV === 'production'
+
 /**
  * googleCallback
  */
@@ -41,24 +43,24 @@ export const googleCallback = async (req: ResidentRequest, res: Response<Residen
   }
 
   res.cookie(REFRESH_TOKEN, refreshTokenId, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
+    secure: isSecureCookie,
     sameSite: 'strict',
+    httpOnly: true,
     maxAge: EXPIRATION_REFRESH_TOKEN_MS,
   })
 
   res.cookie(XSRF_TOKEN, generateXsrfToken(), {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
+    secure: isSecureCookie,
     sameSite: 'strict',
+    httpOnly: true,
     maxAge: EXPIRATION_REFRESH_TOKEN_MS,
   })
 
   // This is probably redundant as the id is in the jwt anyway... Revisit
   res.cookie(RESIDENT_TOKEN, user.id, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
+    secure: isSecureCookie,
     sameSite: 'strict',
+    httpOnly: true,
     maxAge: EXPIRATION_REFRESH_TOKEN_MS,
   })
 
