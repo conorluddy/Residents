@@ -54,7 +54,7 @@
     "drizzle-orm": "^0.38.4",
     "express": "^5.0.1",
     "express-rate-limit": "^7.5.0",
-    "google-auth-library": "^9.15.0",
+    "google-auth-library": "^9.15.1",
     "helmet": "^8.0.0",
     "jsonwebtoken": "^9.0.2",
     "passport": "^0.7.0",
