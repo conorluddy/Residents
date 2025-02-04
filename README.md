@@ -4,7 +4,6 @@
  ![Last Commit](https://img.shields.io/github/last-commit/conorluddy/Residents) ![License](https://img.shields.io/github/license/conorluddy/Residents) ![Version](https://img.shields.io/github/package-json/v/conorluddy/Residents) 
 
 
-
 https://residents.rest
 
 Welcome, Resident.
@@ -211,4 +210,3 @@ But there is a bunch of core features, fixes and refactoring I need to hit up fi
 If you got this far, drop a star ⭐️
 
 Thanks for looking! 
-
