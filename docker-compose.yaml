@@ -2,7 +2,10 @@ version: '3.8'
 
 services:
   app:
-    build: .
+    build:
+      context: .
+      # Platform suits EC2 config
+      platform: linux/arm64
     ports:
       - "${DOCKER_API_PORT}:3000"
     environment:
@@ -32,6 +35,7 @@ services:
       - postgres
   postgres:
     image: postgres:latest
+    platform: linux/arm64
     restart: always
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
