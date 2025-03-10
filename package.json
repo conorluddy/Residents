@@ -51,7 +51,7 @@
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
-    "drizzle-orm": "^0.39.3",
+    "drizzle-orm": "^0.40.0",
     "express": "^5.0.1",
     "express-rate-limit": "^7.5.0",
     "google-auth-library": "^9.15.1",
