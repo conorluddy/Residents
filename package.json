@@ -85,7 +85,7 @@
     "@types/swagger-ui-express": "^4.1.8",
     "@types/validator": "^13.12.2",
     "@typescript-eslint/parser": "^8.26.0",
-    "@typescript-eslint/eslint-plugin": "^8.25.0",
+    "@typescript-eslint/eslint-plugin": "^8.26.1",
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "drizzle-kit": "^0.30.5",
