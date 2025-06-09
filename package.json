@@ -47,7 +47,7 @@
     "@paralleldrive/cuid2": "^2.2.2",
     "@sendgrid/mail": "^8.1.5",
     "@types/cors": "^2.8.17",
-    "bcrypt": "^5.1.1",
+    "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
