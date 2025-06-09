@@ -88,7 +88,7 @@
     "@typescript-eslint/eslint-plugin": "^8.32.1",
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0",
-    "drizzle-kit": "^0.31.0",
+    "drizzle-kit": "^0.31.1",
     "eslint": "^9.28.0",
     "eslint-config-prettier": "^10.1.1",
     "globals": "^16.2.0",
