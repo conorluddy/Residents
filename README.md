@@ -6,6 +6,8 @@
 
 https://residents.rest
 
+https://deepwiki.com/conorluddy/Residents
+
 Welcome, Resident.
 
 Residents is a robust, TypeScript-based backend API designed to serve as a solid foundation for building user-centric applications. Born out of the need for a reusable, secure, and feature-rich starting point, this project focuses on providing essential user management, authentication, and authorization functionalities. With a strong emphasis on developer experience, code quality, and best practices, Residents aims to streamline the development process for various applications requiring user accounts and access control.
