@@ -46,7 +46,7 @@
   "dependencies": {
     "@paralleldrive/cuid2": "^2.2.2",
     "@sendgrid/mail": "^8.1.5",
-    "@types/cors": "^2.8.17",
+    "@types/cors": "^2.8.19",
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
