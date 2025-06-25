@@ -63,7 +63,7 @@
     "reflect-metadata": "^0.2.2",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
-    "validator": "^13.12.0",
+    "validator": "^13.15.15",
     "winston": "^3.17.0"
   },
   "devDependencies": {
@@ -83,7 +83,7 @@
     "@types/supertest": "^6.0.2",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",
-    "@types/validator": "^13.12.2",
+    "@types/validator": "^13.15.2",
     "@typescript-eslint/parser": "^8.32.1",
     "@typescript-eslint/eslint-plugin": "^8.32.1",
     "babel-cli": "^6.26.0",
