@@ -75,7 +75,7 @@
     "@types/cookie-parser": "^1.4.8",
     "@types/express": "^5.0.2",
     "@types/jest": "^29.5.14",
-    "@types/jsonwebtoken": "^9.0.9",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^22.15.19",
     "@types/passport": "^1.0.17",
     "@types/passport-google-oauth20": "^2.0.16",
