@@ -1,12 +1,12 @@
 # Residents
 
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/conorluddy/Residents/ci.yml) [![codecov](https://codecov.io/gh/conorluddy/Residents/branch/main/graph/badge.svg?token=WTHO1C6UL4)](https://codecov.io/gh/conorluddy/Residents) ![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fconorluddy%2FResidents%2Fmain%2F.github%2Ftype-coverage.json&query=%24.percentString&suffix=%25&style=flat&logo=typescript&label=TS%20Coverage&color=abff3d)
- ![Last Commit](https://img.shields.io/github/last-commit/conorluddy/Residents) ![License](https://img.shields.io/github/license/conorluddy/Residents) ![Version](https://img.shields.io/github/package-json/v/conorluddy/Residents) 
-
+ ![Last Commit](https://img.shields.io/github/last-commit/conorluddy/Residents) ![License](https://img.shields.io/github/license/conorluddy/Residents) ![Version](https://img.shields.io/github/package-json/v/conorluddy/Residents) [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/conorluddy/Residents)
 
 https://residents.rest
 
-https://deepwiki.com/conorluddy/Residents
+
+
 
 Welcome, Resident.
 
