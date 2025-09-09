@@ -1,4 +1,3 @@
-
 This file provides guidance to LLM/AI Agents when working with code in this repository.
 
 ## Project Overview
@@ -163,11 +162,9 @@ Consistent response structure:
 - **Functions**: Async/await preferred, explicit return types, validate inputs early
 - **Files**: Controllers in `/controllers`, services in `/services`, middleware patterns
 - **Tests**: Jest with `.test.ts` suffix, 90%+ coverage required, mock external dependencies, test edge cases
-- **TypeScript:** Strict mode, no `any` types, explicit return types
-- **Services:** All business logic in services, not controllers
-- **Errors:** Use custom error classes, not generic errors
-- **Database:** Use Drizzle ORM methods, not raw SQL
-- **Security:** Never log sensitive data, use parameterized queries
+- **Services**: All business logic in services, not controllers
+- **Database**: Use Drizzle ORM methods, not raw SQL
+- **Security**: Never log sensitive data, use parameterized queries
 
 ## Common Tasks
 
