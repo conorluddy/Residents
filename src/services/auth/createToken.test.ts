@@ -1,7 +1,6 @@
 import { TOKEN_TYPE } from '../../constants/database'
 import MESSAGES from '../../constants/messages'
 import db from '../../db'
-import { TokenError } from '../../errors'
 import { createToken, TOKEN_TYPE_EXPIRATION_MAP } from './createToken'
 
 jest.mock('../../utils/crypt')
@@ -32,16 +31,16 @@ describe('createToken', () => {
 
   it('should throw TokenError if user ID is missing', async () => {
     const incompleteToken = { ...mockToken, userId: null as unknown as string }
-    await expect(createToken(incompleteToken)).rejects.toThrow(new TokenError(MESSAGES.TOKEN_REQUIRES_USER_ID))
+    await expect(createToken(incompleteToken)).rejects.toThrow(MESSAGES.TOKEN_REQUIRES_USER_ID)
   })
 
   it('should throw TokenError if token type is missing', async () => {
     const incompleteToken = { ...mockToken, type: null as unknown as TOKEN_TYPE }
-    await expect(createToken(incompleteToken)).rejects.toThrow(new TokenError(MESSAGES.TOKEN_TYPE_REQUIRED))
+    await expect(createToken(incompleteToken)).rejects.toThrow(MESSAGES.TOKEN_TYPE_REQUIRED)
   })
 
   it('should throw TokenError if token type is missing', async () => {
     const incompleteToken = { ...mockToken, type: 'HACKERTOKEN' as unknown as TOKEN_TYPE }
-    await expect(createToken(incompleteToken)).rejects.toThrow(new TokenError(MESSAGES.TOKEN_TYPE_INVALID))
+    await expect(createToken(incompleteToken)).rejects.toThrow(MESSAGES.TOKEN_TYPE_INVALID)
   })
 })

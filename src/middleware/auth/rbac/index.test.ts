@@ -387,7 +387,7 @@ describe('Middleware:RBAC:getTargetUser', () => {
     mockRequest[REQUEST_USER] = { ...mockAdminUser, role: 'FAKE_ROLE' as ROLES }
     await expect(() =>
       RBAC.getTargetUser(mockRequest as ResidentRequest, mockResponse as Response, nextFunction)
-    ).rejects.toThrow(new ForbiddenError(MESSAGES.INVALID_ROLE))
+    ).rejects.toThrow(MESSAGES.INVALID_ROLE)
     expect(nextFunction).not.toHaveBeenCalled()
   })
 
@@ -395,7 +395,7 @@ describe('Middleware:RBAC:getTargetUser', () => {
     mockRequest[REQUEST_USER] = undefined
     await expect(() =>
       RBAC.getTargetUser(mockRequest as ResidentRequest, mockResponse as Response, nextFunction)
-    ).rejects.toThrow(new ForbiddenError(MESSAGES.MISSING_USER_DATA))
+    ).rejects.toThrow(MESSAGES.MISSING_USER_DATA)
     expect(nextFunction).not.toHaveBeenCalled()
   })
 
@@ -403,7 +403,7 @@ describe('Middleware:RBAC:getTargetUser', () => {
     mockRequest[REQUEST_USER] = mockDefaultUser
     await expect(() =>
       RBAC.getTargetUser(mockRequest as ResidentRequest, mockResponse as Response, nextFunction)
-    ).rejects.toThrow(new ForbiddenError(MESSAGES.ROLE_SUPERIORITY_REQUIRED))
+    ).rejects.toThrow(MESSAGES.ROLE_SUPERIORITY_REQUIRED)
     expect(nextFunction).not.toHaveBeenCalled()
   })
 
@@ -411,7 +411,7 @@ describe('Middleware:RBAC:getTargetUser', () => {
     mockRequest[REQUEST_USER] = mockDefaultUser
     await expect(() =>
       RBAC.getTargetUser(mockRequest as ResidentRequest, mockResponse as Response, nextFunction)
-    ).rejects.toThrow(new ForbiddenError(MESSAGES.ROLE_SUPERIORITY_REQUIRED))
+    ).rejects.toThrow(MESSAGES.ROLE_SUPERIORITY_REQUIRED)
     expect(nextFunction).not.toHaveBeenCalled()
   })
 
@@ -419,7 +419,7 @@ describe('Middleware:RBAC:getTargetUser', () => {
     mockRequest[REQUEST_USER] = mockLockedUser
     await expect(() =>
       RBAC.getTargetUser(mockRequest as ResidentRequest, mockResponse as Response, nextFunction)
-    ).rejects.toThrow(new ForbiddenError(MESSAGES.ACCOUNT_LOCKED))
+    ).rejects.toThrow(MESSAGES.ACCOUNT_LOCKED)
     expect(nextFunction).not.toHaveBeenCalled()
   })
 
@@ -427,7 +427,7 @@ describe('Middleware:RBAC:getTargetUser', () => {
     mockRequest[REQUEST_USER] = mockDefaultUser
     await expect(() =>
       RBAC.getTargetUser(mockRequest as ResidentRequest, mockResponse as Response, nextFunction)
-    ).rejects.toThrow(new ForbiddenError(MESSAGES.ROLE_SUPERIORITY_REQUIRED))
+    ).rejects.toThrow(MESSAGES.ROLE_SUPERIORITY_REQUIRED)
     expect(nextFunction).not.toHaveBeenCalled()
   })
 
@@ -441,7 +441,7 @@ describe('Middleware:RBAC:getTargetUser', () => {
     mockRequest[REQUEST_USER] = mockDeletedAdminUser
     await expect(() =>
       RBAC.getTargetUser(mockRequest as ResidentRequest, mockResponse as Response, nextFunction)
-    ).rejects.toThrow(new ForbiddenError(MESSAGES.ACCOUNT_DELETED))
+    ).rejects.toThrow(MESSAGES.ACCOUNT_DELETED)
     expect(nextFunction).not.toHaveBeenCalled()
   })
 
@@ -449,7 +449,7 @@ describe('Middleware:RBAC:getTargetUser', () => {
     mockRequest[REQUEST_USER] = mockUserNoRole
     await expect(() =>
       RBAC.getTargetUser(mockRequest as ResidentRequest, mockResponse as Response, nextFunction)
-    ).rejects.toThrow(new ForbiddenError(MESSAGES.USER_HAS_NO_ROLE))
+    ).rejects.toThrow(MESSAGES.USER_HAS_NO_ROLE)
     expect(nextFunction).not.toHaveBeenCalled()
   })
 })

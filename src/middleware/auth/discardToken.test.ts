@@ -3,7 +3,6 @@ import { TOKEN_TYPE } from '../../constants/database'
 import { Token } from '../../db/types'
 import { REQUEST_TOKEN } from '../../types/requestSymbols'
 import discardToken from './discardToken'
-import { ForbiddenError } from '../../errors'
 import SERVICES from '../../services'
 import MESSAGES from '../../constants/messages'
 import { ResidentRequest } from '../../types'
@@ -49,7 +48,7 @@ describe('Middleware: discardToken', () => {
     mockRequest[REQUEST_TOKEN] = undefined as unknown as Token
     await expect(() =>
       discardToken(mockRequest as ResidentRequest, mockResponse as Response, nextFunction)
-    ).rejects.toThrow(new ForbiddenError(MESSAGES.MISSING_TOKEN_IN_DISCARD_TOKEN_MIDDLEWARE))
+    ).rejects.toThrow(MESSAGES.MISSING_TOKEN_IN_DISCARD_TOKEN_MIDDLEWARE)
     expect(nextFunction).not.toHaveBeenCalled()
   })
 
@@ -57,7 +56,7 @@ describe('Middleware: discardToken', () => {
     mockRequest = { [REQUEST_TOKEN]: { ...testToken, id: 'YYY' } }
     await expect(() =>
       discardToken(mockRequest as ResidentRequest, mockResponse as Response, nextFunction)
-    ).rejects.toThrow(new ForbiddenError(`${MESSAGES.ERROR_DISCARDING_TOKEN} YYY`))
+    ).rejects.toThrow(`${MESSAGES.ERROR_DISCARDING_TOKEN} YYY`)
     expect(nextFunction).not.toHaveBeenCalled()
   })
 })

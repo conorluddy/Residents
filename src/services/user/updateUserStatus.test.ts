@@ -1,7 +1,6 @@
 import { STATUS } from '../../constants/database'
 import MESSAGES from '../../constants/messages'
 import db from '../../db'
-import { BadRequestError } from '../../errors'
 import { updateUserStatus } from './updateUserStatus'
 
 jest.mock('../../db', () => ({
@@ -27,13 +26,13 @@ describe('updateUserStatus', () => {
 
   it('should throw a BadRequestError if userId is missing', async () => {
     mockUserUpdate.userId = null as unknown as string
-    await expect(updateUserStatus(mockUserUpdate)).rejects.toThrow(new BadRequestError(MESSAGES.MISSING_USER_ID))
+    await expect(updateUserStatus(mockUserUpdate)).rejects.toThrow(MESSAGES.MISSING_USER_ID)
     expect(db.update).not.toHaveBeenCalled()
   })
 
   it('should throw a BadRequestError if status is missing', async () => {
     mockUserUpdate.status = null as unknown as STATUS
-    await expect(updateUserStatus(mockUserUpdate)).rejects.toThrow(new BadRequestError(MESSAGES.STATUS_REQUIRED))
+    await expect(updateUserStatus(mockUserUpdate)).rejects.toThrow(MESSAGES.STATUS_REQUIRED)
     expect(db.update).not.toHaveBeenCalled()
   })
 

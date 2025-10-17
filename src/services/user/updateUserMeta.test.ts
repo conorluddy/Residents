@@ -26,7 +26,7 @@ describe('updateUserMeta', () => {
 
   it('should throw a BadRequestError if userId is missing', async () => {
     mockUserUpdate.userId = null as unknown as string
-    await expect(updateUserMeta(mockUserUpdate)).rejects.toThrow(new BadRequestError(MESSAGES.MISSING_USER_ID))
+    await expect(updateUserMeta(mockUserUpdate)).rejects.toThrow(MESSAGES.MISSING_USER_ID)
     expect(db.update).not.toHaveBeenCalled()
   })
 

@@ -1,6 +1,5 @@
 import MESSAGES from '../../constants/messages'
 import db from '../../db'
-import { BadRequestError } from '../../errors'
 import { deleteAllUserTokens } from './deleteAllUserTokens'
 
 jest.mock('../../db', () => ({
@@ -24,7 +23,7 @@ describe('Services: GetFederatedCredentials', () => {
 
   it('should throw a BadRequestError if user ID is missing', async () => {
     await expect(deleteAllUserTokens({ userId: null as unknown as string })).rejects.toThrow(
-      new BadRequestError(MESSAGES.MISSING_USER_ID)
+      MESSAGES.MISSING_USER_ID
     )
     expect(db.delete).not.toHaveBeenCalled()
   })

@@ -1,6 +1,5 @@
 import MESSAGES from '../../constants/messages'
 import db from '../../db'
-import { BadRequestError } from '../../errors'
 import { getToken } from './getToken'
 
 jest.mock('../../db', () => ({
@@ -28,7 +27,7 @@ describe('Services: GetToken', () => {
 
   it('should throw a BadRequestError if id is missing', async () => {
     await expect(getToken({ tokenId: null as unknown as string })).rejects.toThrow(
-      new BadRequestError(MESSAGES.NO_TOKEN_ID_PROVIDED)
+      MESSAGES.NO_TOKEN_ID_PROVIDED
     )
     expect(db.select).not.toHaveBeenCalled()
   })
