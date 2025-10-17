@@ -1,6 +1,5 @@
 import MESSAGES from '../../constants/messages'
 import db from '../../db'
-import { BadRequestError } from '../../errors'
 import { getUserByEmail } from './getUserByEmail'
 
 jest.mock('../../db', () => ({
@@ -23,12 +22,12 @@ describe('Services: GetUserByEmail', () => {
   })
 
   it('should throw a BadRequestError if email is missing', async () => {
-    await expect(getUserByEmail('')).rejects.toThrow(new BadRequestError(MESSAGES.EMAIL_REQUIRED))
+    await expect(getUserByEmail('')).rejects.toThrow(MESSAGES.EMAIL_REQUIRED)
     expect(db.select).not.toHaveBeenCalled()
   })
 
   it('should throw a BadRequestError if email is missing', async () => {
-    await expect(getUserByEmail('notEmail')).rejects.toThrow(new BadRequestError(MESSAGES.INVALID_EMAIL))
+    await expect(getUserByEmail('notEmail')).rejects.toThrow(MESSAGES.INVALID_EMAIL)
     expect(db.select).not.toHaveBeenCalled()
   })
 })

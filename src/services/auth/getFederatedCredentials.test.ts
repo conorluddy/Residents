@@ -1,7 +1,6 @@
 import { Profile } from 'passport'
 import MESSAGES from '../../constants/messages'
 import db from '../../db'
-import { BadRequestError } from '../../errors'
 import { getFederatedCredentials } from './getFederatedCredentials'
 
 jest.mock('../../db', () => ({
@@ -27,14 +26,14 @@ describe('Services: GetFederatedCredentials', () => {
   it('should throw a BadRequestError if provider is missing', async () => {
     await expect(
       getFederatedCredentials({ profileId: '123', provider: null as unknown as Profile['provider'] })
-    ).rejects.toThrow(new BadRequestError(MESSAGES.MISSING_PASSPORT_PROVIDER))
+    ).rejects.toThrow(MESSAGES.MISSING_PASSPORT_PROVIDER)
     expect(db.select).not.toHaveBeenCalled()
   })
 
   it('should throw a BadRequestError if profile ID is missing', async () => {
     await expect(
       getFederatedCredentials({ profileId: null as unknown as string, provider: mockProvider })
-    ).rejects.toThrow(new BadRequestError(MESSAGES.MISSING_PASSPORT_PROFILE_ID))
+    ).rejects.toThrow(MESSAGES.MISSING_PASSPORT_PROFILE_ID)
     expect(db.select).not.toHaveBeenCalled()
   })
 })

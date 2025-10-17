@@ -39,13 +39,13 @@ describe('updateUser', () => {
 
   it('should throw a BadRequestError if userId is missing', async () => {
     mockUserUpdate.userId = null as unknown as string
-    await expect(updateUser(mockUserUpdate)).rejects.toThrow(new BadRequestError(MESSAGES.MISSING_USER_ID))
+    await expect(updateUser(mockUserUpdate)).rejects.toThrow(MESSAGES.MISSING_USER_ID)
     expect(db.update).not.toHaveBeenCalled()
   })
 
   it('should throw a BadRequestError if email is invalid', async () => {
     mockUserUpdate.email = 'not an email'
-    await expect(updateUser(mockUserUpdate)).rejects.toThrow(new BadRequestError(MESSAGES.INVALID_EMAIL))
+    await expect(updateUser(mockUserUpdate)).rejects.toThrow(MESSAGES.INVALID_EMAIL)
     expect(db.update).not.toHaveBeenCalled()
   })
 

@@ -1,6 +1,5 @@
 import MESSAGES from '../../constants/messages'
 import db from '../../db'
-import { BadRequestError, PasswordStrengthError } from '../../errors'
 import { updateUserPassword } from './updateUserPassword'
 
 jest.mock('../../db', () => ({
@@ -26,13 +25,13 @@ describe('updateUserPassword', () => {
 
   it('should throw a BadRequestError if userId is missing', async () => {
     mockUserUpdate.userId = null as unknown as string
-    await expect(updateUserPassword(mockUserUpdate)).rejects.toThrow(new BadRequestError(MESSAGES.MISSING_USER_ID))
+    await expect(updateUserPassword(mockUserUpdate)).rejects.toThrow(MESSAGES.MISSING_USER_ID)
     expect(db.update).not.toHaveBeenCalled()
   })
 
   it('should throw a BadRequestError if password is missing', async () => {
     mockUserUpdate.password = undefined
-    await expect(updateUserPassword(mockUserUpdate)).rejects.toThrow(new BadRequestError(MESSAGES.PASSWORD_NEEDED))
+    await expect(updateUserPassword(mockUserUpdate)).rejects.toThrow(MESSAGES.PASSWORD_NEEDED)
     expect(db.update).not.toHaveBeenCalled()
   })
 
