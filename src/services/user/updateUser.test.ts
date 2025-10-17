@@ -1,7 +1,7 @@
 import MESSAGES from '../../constants/messages'
 import db from '../../db'
 import { UserUpdate } from '../../db/types'
-import { BadRequestError, PasswordStrengthError } from '../../errors'
+import { PasswordStrengthError } from '../../errors'
 import { updateUser } from './updateUser'
 
 jest.mock('../../utils/crypt')
@@ -57,7 +57,7 @@ describe('updateUser', () => {
 
   it('should throw a BadRequestError if theres nothing passed to update with', async () => {
     await expect(updateUser({ userId: 'userid' })).rejects.toThrow(
-      new BadRequestError(MESSAGES.AT_LEAST_ONE_PROPERTY_REQUIRED)
+      MESSAGES.AT_LEAST_ONE_PROPERTY_REQUIRED
     )
     expect(db.update).not.toHaveBeenCalled()
   })
