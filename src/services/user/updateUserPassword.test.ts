@@ -1,5 +1,6 @@
 import MESSAGES from '../../constants/messages'
 import db from '../../db'
+import { PasswordStrengthError } from '../../errors'
 import { updateUserPassword } from './updateUserPassword'
 
 jest.mock('../../db', () => ({
