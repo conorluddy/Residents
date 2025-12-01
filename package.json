@@ -52,7 +52,7 @@
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "drizzle-orm": "^0.44.6",
-    "express": "^5.1.0",
+    "express": "^5.2.1",
     "express-rate-limit": "^8.1.0",
     "google-auth-library": "^10.4.1",
     "helmet": "^8.1.0",
