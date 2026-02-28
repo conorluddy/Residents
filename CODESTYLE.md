@@ -47,10 +47,10 @@
 
 ## Testing
 
-- Testing trophy: mostly integration tests. Static analysis → unit → integration (widest) → E2E (critical journeys only).
+- Testing trophy: mostly integration tests — they catch more real failure modes with less coupling to implementation detail than unit tests alone. Static analysis → unit → integration (widest) → E2E (critical journeys only).
 - Test behaviour, not implementation. One concept per test.
 - Test names describe scenarios: `test('user can add items to cart')`
-- 80% coverage minimum, focused on critical paths.
+- 80% line coverage minimum (current enforcer: Codecov), focused on critical paths.
 
 ## Observability
 
@@ -82,7 +82,8 @@ Every token your code consumes in an agent's context window is a token it can't 
 ## Project Navigation
 
 - **CLAUDE.md at root**: Entry points, key patterns, common tasks. Under 200 lines.
-- **README.md per major module**: Purpose, key decisions, gotchas.
+- **AGENTS.md at root**: AI agent entry point — setup commands, architecture overview, and code style summary. `CODESTYLE.md` is the full style reference; `AGENTS.md` links to it.
+- **README.md per major module** *(goal — not yet in place)*: Purpose, key decisions, gotchas.
 - **Progressive context hierarchy**: Root README → module README → section comments → function docs → inline "why" comments. Each level self-sufficient.
 
 ## Anti-Patterns
