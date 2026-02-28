@@ -1,6 +1,4 @@
-import jwt from 'jsonwebtoken'
 import request from 'supertest'
-import { JWT_TOKEN_SECRET } from './config'
 import { HTTP_CLIENT_ERROR, HTTP_SUCCESS } from './constants/http'
 import { app } from './index'
 
@@ -25,12 +23,8 @@ describe('Test the /auth/login path', () => {
   })
 
   test('It should throw a bad request because of the email format.', async () => {
-    const csrfToken = jwt.sign({}, JWT_TOKEN_SECRET!, { expiresIn: '1h' })
-
     const response = await request(app)
       .post('/auth')
-      .set('Cookie', `xsrfToken=${csrfToken}`)
-      .set('x-csrf-token', csrfToken)
       .send({ email: 'email', password: 'lemme-in' })
 
     expect(response.statusCode).toBe(HTTP_CLIENT_ERROR.BAD_REQUEST)

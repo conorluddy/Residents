@@ -68,16 +68,6 @@ describe('Controller: MagicLoginWithToken', () => {
       })
     )
     expect(mockResponse.cookie).toHaveBeenCalledWith(
-      'xsrfToken',
-      expect.any(String),
-      expect.objectContaining({
-        httpOnly: true,
-        maxAge: 60000,
-        sameSite: 'strict',
-        secure: false,
-      })
-    )
-    expect(mockResponse.cookie).toHaveBeenCalledWith(
       'residentToken',
       expect.any(String),
       expect.objectContaining({

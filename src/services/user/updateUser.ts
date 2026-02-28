@@ -6,6 +6,7 @@ import { isEmail, isStrongPassword, normalizeEmail } from 'validator'
 import { PASSWORD_STRENGTH_CONFIG } from '../../constants/password'
 import { BadRequestError, EmailError, PasswordStrengthError } from '../../errors'
 import MESSAGES from '../../constants/messages'
+import { createHash } from '../../utils/crypt'
 
 interface UpdateUserParams {
   userId: string
@@ -37,20 +38,22 @@ const updateUser = async ({
     throw new EmailError(MESSAGES.INVALID_EMAIL)
   }
 
+  if (password && !isStrongPassword(password, PASSWORD_STRENGTH_CONFIG)) {
+    throw new PasswordStrengthError()
+  }
+
+  const passwordHash = password ? await createHash(password) : null
+
   const updatedUserProperties: Partial<UserUpdate> = {
     ...(username && { username }),
     ...(firstName && { firstName }),
     ...(lastName && { lastName }),
     ...(emailNormalized && { email: emailNormalized }),
-    ...(password && { password }),
+    ...(passwordHash && { password: passwordHash }),
   }
 
   if (Object.keys(updatedUserProperties).length === 0) {
     throw new BadRequestError(MESSAGES.AT_LEAST_ONE_PROPERTY_REQUIRED)
-  }
-
-  if (updatedUserProperties.password && !isStrongPassword(updatedUserProperties.password, PASSWORD_STRENGTH_CONFIG)) {
-    throw new PasswordStrengthError()
   }
 
   const [{ updatedUserId }] = await db
