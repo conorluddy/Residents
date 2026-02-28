@@ -13,7 +13,7 @@
 
 - Be specific: `activeUsers` not `users`, `httpTimeoutMs` not `timeout`
 - Include units: `delayMs`, `maxRetries`
-- No abbreviations: `customer` not `cust`, `configuration` not `cfg`
+- No abbreviations: `customer` not `cust`, `configuration` not `cfg` — established project-level aliases (`MW`, `SERVICES`, `CONTROLLERS`) are exceptions
 - Use domain language over technical abstractions
 - Boolean prefixes: `isValid`, `hasPermission`, `canEdit`, `shouldRetry`
 - Verbs for functions: `validateEmailFormat()` not `checkEmail()`
@@ -29,7 +29,8 @@
 
 ## Error Handling
 
-- Use `Result<T, E>` types for expected failures (API calls, I/O, validation). Reserve exceptions for truly unrecoverable situations.
+- **Current pattern:** thrown errors (`BadRequestError`, `ForbiddenError`, etc.) caught by centralised error middleware.
+- **Aspirational:** migrate to `Result<T, E>` types for expected failures (API calls, I/O, validation) — reserve exceptions for truly unrecoverable situations.
 - Use branded types (`ValidatedEmail`, `UserId`) to validate at boundaries and carry proof through the type system.
 - Never silently swallow errors — log or propagate.
 - Fail fast at boundaries — validate inputs immediately.
@@ -65,7 +66,7 @@
 - **Atomic changes**: Each function/commit independently testable and verifiable without understanding the entire system.
 - **Convention over configuration**: Consistent naming (`*.test.ts`, `*.types.ts`), predictable directory structure, standard CRUD patterns. Reduce the search space.
 - **Contract-first design**: Define types before implementation. Types are the cheapest documentation — an agent reading types understands data flow without reading function bodies.
-- **Observable side effects**: Mutations return `{ data, changes[], warnings[] }` so agents can verify their actions.
+- **Observable side effects** *(aspirational)*: Mutations return `{ data, changes[], warnings[] }` so agents can verify their actions.
 
 ## Context Optimisation
 
