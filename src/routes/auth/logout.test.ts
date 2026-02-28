@@ -18,6 +18,7 @@ jest.mock('../../services', () => ({
 const app = express()
 app.use(logoutRoute)
 
+// TODO: route test needs updating — wrong method (GET→POST) and stale expected response
 describe.skip('GET /logout', () => {
   // Remove or comment out the mockRequest and mockResponse setup
 

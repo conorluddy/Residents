@@ -29,10 +29,10 @@ export const refreshToken = async (req: ResidentRequest, res: Response<ResidentR
     throw new ForbiddenError(MESSAGES.TOKEN_NOT_FOUND)
   }
 
-  // Intentional: delete ALL sessions for this user before validating the token further.
-  // If the token is reused or tampered with, nuking all sessions is the correct response
-  // (indicates likely token theft). Trade-off: a replayed expired token will log out all
-  // active sessions for that user.
+  // Intentional: delete ALL of this user's sessions before further validation.
+  // A replayed/stolen token triggers full session wipe, forcing re-authentication — this
+  // is the theft-detection mechanism. Token IDs are CUID2 so enumeration is infeasible;
+  // the risk of an attacker guessing a valid ID to DoS sessions is negligible.
   await SERVICES.deleteRefreshTokensByUserId({ userId: token.userId })
   if (token.used) {
     throw new ForbiddenError(MESSAGES.TOKEN_USED)

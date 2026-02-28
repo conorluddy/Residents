@@ -33,10 +33,6 @@ const router = Router()
  *     cookies:
  *       refreshToken:
  *         description: HTTP-only cookie containing the refresh token
- *       residentToken:
- *         description: HTTP-only cookie containing the user ID for cross checking with the token
- *       xsrfToken:
- *         description: HTTP-only cookie containing the XSRF token
  */
 router.post('/refresh', rateLimitTenPerTenMins, CONTROLLERS.AUTH.refreshToken)
 
