@@ -42,7 +42,7 @@ const updateUser = async ({
     throw new PasswordStrengthError()
   }
 
-  const passwordHash = password ? await createHash(password) : null
+  const passwordHash = password ? await createHash(password) : undefined
 
   const updatedUserProperties: Partial<UserUpdate> = {
     ...(username && { username }),

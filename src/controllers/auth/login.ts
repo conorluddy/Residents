@@ -62,7 +62,8 @@ export const login = async (req: ResidentRequest, res: Response<ResidentResponse
     throw new ForbiddenError(MESSAGES.REFRESH_TOKEN_CREATION_FAILED)
   }
 
-  // Set the tokens in HTTP-only secure cookies
+  // Set the tokens in HTTP-only secure cookies.
+  // sameSite: 'strict' provides CSRF protection — no separate CSRF token needed.
 
   res.cookie(REFRESH_TOKEN, refreshTokenId, {
     httpOnly: true,
