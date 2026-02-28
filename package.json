@@ -1,6 +1,6 @@
 {
   "name": "residents",
-  "version": "0.3.14",
+  "version": "0.3.15",
   "author": "Conor Luddy <conorluddy@gmail.com>",
   "license": "MIT",
   "description": "Residents is a Node.js Express back-end foundation designed for bootstrapping new projects quickly and efficiently. Its main goal is to set up a robust infrastructure for user management, because users are the core of any application. These users are your Residents. It leverages a robust stack including Postgres, Drizzle ORM, JWT, PassportJS, Docker and Swagger to streamline development and deployment processes.",
@@ -88,9 +88,7 @@
     "@types/validator": "^13.15.3",
     "@typescript-eslint/eslint-plugin": "^8.56.1",
     "@typescript-eslint/parser": "^8.56.1",
-    "babel-cli": "^6.26.0",
     "babel-jest": "^30.2.0",
-    "babel-preset-env": "^1.7.0",
     "drizzle-kit": "^0.31.5",
     "eslint": "^10.0.0",
     "eslint-config-prettier": "^10.1.8",
