@@ -1,7 +1,7 @@
 import { Response } from 'express'
 import { EXPIRATION_REFRESH_TOKEN_MS } from '../../config'
 import { TOKEN_TYPE } from '../../constants/database'
-import { REFRESH_TOKEN, RESIDENT_TOKEN } from '../../constants/keys'
+import { REFRESH_TOKEN } from '../../constants/keys'
 import MESSAGES from '../../constants/messages'
 import { TIMESPAN } from '../../constants/time'
 import { ForbiddenError } from '../../errors'
@@ -41,13 +41,6 @@ export const magicLoginWithToken = async (req: ResidentRequest, res: Response<Re
 
   const jwt = generateJwtFromUser(user)
   res.cookie(REFRESH_TOKEN, refreshTokenId, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
-    maxAge: EXPIRATION_REFRESH_TOKEN_MS,
-  })
-
-  res.cookie(RESIDENT_TOKEN, user.id, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',

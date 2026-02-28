@@ -12,6 +12,7 @@ export const generateJwtFromUser = (user: User | SafeUser | PublicUser, expiryOv
     throw new Error(MESSAGES.JWT_SECRET_NOT_FOUND)
   }
   return jwt.sign(userToPublicUser(user), JWT_TOKEN_SECRET, {
+    algorithm: 'HS256',
     expiresIn: (expiryOverride ?? EXPIRATION_JWT_TOKEN ?? DEFAULT_EXPIRATION) as StringValue,
   })
 }

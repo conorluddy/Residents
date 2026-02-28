@@ -6,7 +6,7 @@ import { ResidentRequest, ResidentResponse } from '../../types'
 import { generateJwtFromUser } from '../../utils/generateJwt'
 import SERVICES from '../../services'
 import { TOKEN_TYPE } from '../../constants/database'
-import { REFRESH_TOKEN, RESIDENT_TOKEN } from '../../constants/keys'
+import { REFRESH_TOKEN } from '../../constants/keys'
 import { EXPIRATION_REFRESH_TOKEN_MS } from '../../config'
 
 const isSecureCookie = process.env.NODE_ENV === 'production'
@@ -42,14 +42,6 @@ export const googleCallback = async (req: ResidentRequest, res: Response<Residen
   }
 
   res.cookie(REFRESH_TOKEN, refreshTokenId, {
-    secure: isSecureCookie,
-    sameSite: 'strict',
-    httpOnly: true,
-    maxAge: EXPIRATION_REFRESH_TOKEN_MS,
-  })
-
-  // This is probably redundant as the id is in the jwt anyway... Revisit
-  res.cookie(RESIDENT_TOKEN, user.id, {
     secure: isSecureCookie,
     sameSite: 'strict',
     httpOnly: true,
