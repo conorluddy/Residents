@@ -3,12 +3,13 @@ import { HTTP_SUCCESS } from '../../constants/http'
 import { SafeUser } from '../../db/types'
 import { logout } from './logout'
 import { REQUEST_USER } from '../../types/requestSymbols'
-import { RESIDENT_TOKEN, REFRESH_TOKEN } from '../../constants/keys'
+import { REFRESH_TOKEN } from '../../constants/keys'
 import MESSAGES from '../../constants/messages'
 import { ResidentRequest } from '../../types'
 
 jest.mock('../../services/index', () => ({
   deleteRefreshTokensByUserId: jest.fn().mockImplementation(() => '123'),
+  getToken: jest.fn().mockImplementation(() => ({ userId: '123' })),
 }))
 
 describe('Controller: Logout', () => {
@@ -18,7 +19,6 @@ describe('Controller: Logout', () => {
   beforeEach(() => {
     mockRequest = {
       cookies: {
-        [RESIDENT_TOKEN]: '123',
         [REFRESH_TOKEN]: '123',
       },
     }
@@ -41,12 +41,6 @@ describe('Controller: Logout', () => {
     expect(mockResponse.json).toHaveBeenCalledWith({ message: MESSAGES.LOGOUT_SUCCESS })
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.OK)
     expect(mockResponse.cookie).toHaveBeenCalledWith('refreshToken', '', {
-      httpOnly: true,
-      expires: expect.any(Date),
-      sameSite: 'strict',
-      secure: false,
-    })
-    expect(mockResponse.cookie).toHaveBeenCalledWith('residentToken', '', {
       httpOnly: true,
       expires: expect.any(Date),
       sameSite: 'strict',
