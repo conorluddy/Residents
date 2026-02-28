@@ -2,6 +2,11 @@ module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
   testMatch: ['**/*.test.ts'],
+  // @faker-js/faker v10 is ESM-only; tell Jest to transform it via ts-jest
+  transformIgnorePatterns: ['node_modules/(?!@faker-js)'],
+  transform: {
+    '^.+\\.[tj]s$': ['ts-jest', { tsconfig: { allowJs: true } }],
+  },
   collectCoverage: true,
   coverageDirectory: 'coverage',
   coverageReporters: ['text', 'lcov'],
