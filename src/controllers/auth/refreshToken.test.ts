@@ -6,7 +6,6 @@ import { ROLES } from '../../constants/database'
 import { generateJwtFromUser } from '../../utils/generateJwt'
 import { User } from '../../db/types'
 import { logger } from '../../utils/logger'
-import generateXsrfToken from '../../middleware/util/xsrfToken'
 import jwt from 'jsonwebtoken'
 import { RESIDENT_TOKEN } from '../../constants/keys'
 import MESSAGES from '../../constants/messages'
@@ -51,7 +50,6 @@ describe('Controller: Refresh token: Happy path', () => {
   let mockRequest: Partial<ResidentRequest> & { body: Partial<User> }
   let mockResponse: Partial<Response>
   let jwtDecodeSpy: jest.MockedFunction<typeof jwt.decode>
-  let xsrf: string
   let token: string
 
   beforeAll(() => {
@@ -62,7 +60,6 @@ describe('Controller: Refresh token: Happy path', () => {
   beforeEach(() => {
     process.env.JWT_TOKEN_SECRET = 'TESTSECRET'
     token = generateJwtFromUser(mockDefaultUser)
-    xsrf = generateXsrfToken()
     mockRequest = {
       body: {},
       headers: { authorization: `Bearer ${token}` },
@@ -80,20 +77,14 @@ describe('Controller: Refresh token: Happy path', () => {
     expect(logger.error).not.toHaveBeenCalled()
     expect(mockResponse.json).toHaveBeenCalledWith({ token: 'testAccessToken' })
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.OK)
-    expect(mockResponse.cookie).toHaveBeenCalledTimes(3)
+    expect(mockResponse.cookie).toHaveBeenCalledTimes(2)
     expect(mockResponse.cookie).toHaveBeenNthCalledWith(1, 'refreshToken', 'tok1', {
       httpOnly: true,
       maxAge: 60000,
       sameSite: 'strict',
       secure: false,
     })
-    expect(mockResponse.cookie).toHaveBeenNthCalledWith(2, 'xsrfToken', xsrf, {
-      httpOnly: true,
-      maxAge: 60000,
-      sameSite: 'strict',
-      secure: false,
-    })
-    expect(mockResponse.cookie).toHaveBeenNthCalledWith(3, 'residentToken', mockDefaultUser.id, {
+    expect(mockResponse.cookie).toHaveBeenNthCalledWith(2, 'residentToken', mockDefaultUser.id, {
       httpOnly: true,
       maxAge: 60000,
       sameSite: 'strict',

@@ -72,10 +72,6 @@ const MESSAGES = {
   CHECK_EMAIL_RESET_LINK: 'Check your email for your reset password link.',
   PASSWORD_RESET_SUCCESS: 'Password successfully updated.',
 
-  // CSRF
-  XSRF_TOKEN_INVALID: 'XSRF token is invalid.',
-  XSRF_TOKEN_REQUIRED: 'XSRF token is required.',
-
   // Misc
   FIRST_USER_SEEDED: 'First user seeded with Owner role.',
   API_DOCUMENTATION: 'API documentation.',

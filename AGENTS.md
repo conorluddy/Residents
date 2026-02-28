@@ -81,7 +81,7 @@ Uses CUID2 for IDs, soft delete via `deleted_at`, and PostgreSQL enums for type 
 ### Authentication Flow
 1. JWT access tokens (15 min) stored in cookies
 2. Refresh tokens (7 days) stored in database
-3. XSRF protection for state-changing operations
+3. CSRF protection via `sameSite: strict` on all auth cookies
 4. Support for local auth, Google OAuth, and magic links
 
 ### Testing Patterns

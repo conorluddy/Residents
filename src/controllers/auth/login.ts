@@ -3,11 +3,10 @@ import { isEmail } from 'validator'
 import { TOKEN_TYPE } from '../../constants/database'
 import { User } from '../../db/schema'
 import { BadRequestError, ForbiddenError, LoginError } from '../../errors'
-import generateXsrfToken from '../../middleware/util/xsrfToken'
 import SERVICES from '../../services'
 import { validateHash } from '../../utils/crypt'
 import { generateJwtFromUser } from '../../utils/generateJwt'
-import { REFRESH_TOKEN, XSRF_TOKEN, RESIDENT_TOKEN } from '../../constants/keys'
+import { REFRESH_TOKEN, RESIDENT_TOKEN } from '../../constants/keys'
 import { EXPIRATION_REFRESH_TOKEN_MS } from '../../config'
 import { handleSuccessResponse } from '../../middleware/util/successHandler'
 import MESSAGES from '../../constants/messages'
@@ -63,16 +62,10 @@ export const login = async (req: ResidentRequest, res: Response<ResidentResponse
     throw new ForbiddenError(MESSAGES.REFRESH_TOKEN_CREATION_FAILED)
   }
 
-  // Set the tokens in HTTP-only secure cookies
+  // Set the tokens in HTTP-only secure cookies.
+  // sameSite: 'strict' provides CSRF protection — no separate CSRF token needed.
 
   res.cookie(REFRESH_TOKEN, refreshTokenId, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
-    maxAge: EXPIRATION_REFRESH_TOKEN_MS,
-  })
-
-  res.cookie(XSRF_TOKEN, generateXsrfToken(), {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',

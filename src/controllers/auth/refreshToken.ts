@@ -1,11 +1,10 @@
 import SERVICES from '../../services'
-import generateXsrfToken from '../../middleware/util/xsrfToken'
 import { Response } from 'express'
 import { TOKEN_TYPE } from '../../constants/database'
 import { TIMESPAN } from '../../constants/time'
 import { ForbiddenError, TokenError } from '../../errors'
 import { generateJwtFromUser } from '../../utils/generateJwt'
-import { REFRESH_TOKEN, RESIDENT_TOKEN, XSRF_TOKEN } from '../../constants/keys'
+import { REFRESH_TOKEN, RESIDENT_TOKEN } from '../../constants/keys'
 import { handleSuccessResponse } from '../../middleware/util/successHandler'
 import MESSAGES from '../../constants/messages'
 import { EXPIRATION_REFRESH_TOKEN_MS } from '../../config'
@@ -67,14 +66,6 @@ export const refreshToken = async (req: ResidentRequest, res: Response<ResidentR
 
   const accessToken = generateJwtFromUser(user)
   res.cookie(REFRESH_TOKEN, freshRefreshTokenId, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
-    maxAge: EXPIRATION_REFRESH_TOKEN_MS,
-  })
-
-  const xsrfToken = generateXsrfToken()
-  res.cookie(XSRF_TOKEN, xsrfToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',
