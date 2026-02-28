@@ -1,12 +1,11 @@
 import { Response } from 'express'
 import { EXPIRATION_REFRESH_TOKEN_MS } from '../../config'
 import { TOKEN_TYPE } from '../../constants/database'
-import { REFRESH_TOKEN, RESIDENT_TOKEN, XSRF_TOKEN } from '../../constants/keys'
+import { REFRESH_TOKEN, RESIDENT_TOKEN } from '../../constants/keys'
 import MESSAGES from '../../constants/messages'
 import { TIMESPAN } from '../../constants/time'
 import { ForbiddenError } from '../../errors'
 import { handleSuccessResponse } from '../../middleware/util/successHandler'
-import generateXsrfToken from '../../middleware/util/xsrfToken'
 import SERVICES from '../../services'
 import { REQUEST_TOKEN } from '../../types/requestSymbols'
 import { generateJwtFromUser } from '../../utils/generateJwt'
@@ -42,14 +41,6 @@ export const magicLoginWithToken = async (req: ResidentRequest, res: Response<Re
 
   const jwt = generateJwtFromUser(user)
   res.cookie(REFRESH_TOKEN, refreshTokenId, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
-    maxAge: EXPIRATION_REFRESH_TOKEN_MS,
-  })
-
-  const xsrfToken = generateXsrfToken()
-  res.cookie(XSRF_TOKEN, xsrfToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',

@@ -10,8 +10,6 @@ import googleLogin from './googleLogin'
 import logout from './logout'
 import validateAccount from './validateAccount'
 import deleteExpiredTokens from './deleteExpiredTokens'
-import xsrfTokens from '../../middleware/auth/xsrfTokens'
-
 const router = Router()
 
 // Publicly Exposed Routes
@@ -26,7 +24,6 @@ router.use(googleLogin)
 router.use(googleLoginCallback)
 
 // Private Routes
-router.use(xsrfTokens) // This middleware must be after the public routes
 router.use(logout)
 router.use(deleteExpiredTokens)
 
