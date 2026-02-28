@@ -21,15 +21,15 @@ export const logout = async (req: ResidentRequest, res: Response<ResidentRespons
   // Look up userId via the refresh token — avoids trusting a separate cookie
   const refreshTokenId = req.cookies?.[REFRESH_TOKEN]
   if (!refreshTokenId) {
-    throw new BadRequestError(MESSAGES.MISSING_USER_ID)
+    throw new BadRequestError(MESSAGES.REFRESH_TOKEN_REQUIRED)
   }
 
+  // Best-effort DB cleanup: token may already be expired/deleted (e.g. admin purge).
+  // Cookie is already cleared above, so the user is effectively logged out regardless.
   const token = await SERVICES.getToken({ tokenId: refreshTokenId })
-  if (!token?.userId) {
-    throw new BadRequestError(MESSAGES.MISSING_USER_ID)
+  if (token?.userId) {
+    await SERVICES.deleteRefreshTokensByUserId({ userId: token.userId })
   }
-
-  await SERVICES.deleteRefreshTokensByUserId({ userId: token.userId })
 
   handleSuccessResponse({ res, message: MESSAGES.LOGOUT_SUCCESS })
 }

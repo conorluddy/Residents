@@ -25,14 +25,15 @@ export const refreshToken = async (req: ResidentRequest, res: Response<ResidentR
   // Get the refresh token from the DB — userId is authoritative from here, not a cookie
   const token = await SERVICES.getToken({ tokenId: refreshTokenId })
 
-  // Regardless of validity, clear tokens once we've fetched the record
-  if (token) {
-    await SERVICES.deleteRefreshTokensByUserId({ userId: token.userId })
-  }
-
   if (!token) {
     throw new ForbiddenError(MESSAGES.TOKEN_NOT_FOUND)
   }
+
+  // Intentional: delete ALL sessions for this user before validating the token further.
+  // If the token is reused or tampered with, nuking all sessions is the correct response
+  // (indicates likely token theft). Trade-off: a replayed expired token will log out all
+  // active sessions for that user.
+  await SERVICES.deleteRefreshTokensByUserId({ userId: token.userId })
   if (token.used) {
     throw new ForbiddenError(MESSAGES.TOKEN_USED)
   }
