@@ -44,7 +44,7 @@
     ]
   },
   "dependencies": {
-    "@paralleldrive/cuid2": "^2.3.1",
+    "@paralleldrive/cuid2": "^3.0.0",
     "@sendgrid/mail": "^8.1.6",
     "@types/cors": "^2.8.19",
     "bcrypt": "^6.0.0",
@@ -67,6 +67,8 @@
     "winston": "^3.18.3"
   },
   "devDependencies": {
+    "@babel/core": "^7.29.0",
+    "@babel/preset-env": "^7.29.0",
     "@eslint/compat": "^2.0.2",
     "@eslint/eslintrc": "^3.3.1",
     "@eslint/js": "^10.0.0",
@@ -87,6 +89,7 @@
     "@typescript-eslint/eslint-plugin": "^8.56.1",
     "@typescript-eslint/parser": "^8.56.1",
     "babel-cli": "^6.26.0",
+    "babel-jest": "^30.2.0",
     "babel-preset-env": "^1.7.0",
     "drizzle-kit": "^0.31.5",
     "eslint": "^10.0.0",

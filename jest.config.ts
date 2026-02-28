@@ -2,10 +2,11 @@ module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
   testMatch: ['**/*.test.ts'],
-  // @faker-js/faker v10 is ESM-only; tell Jest to transform it via ts-jest
-  transformIgnorePatterns: ['node_modules/(?!@faker-js)'],
+  // ESM-only packages: faker v10 and cuid2 v3 — transform their .js files via babel-jest
+  transformIgnorePatterns: ['node_modules/(?!@faker-js|@paralleldrive|@noble)'],
   transform: {
-    '^.+\\.[tj]s$': ['ts-jest', { tsconfig: { allowJs: true } }],
+    '^.+\\.tsx?$': 'ts-jest',
+    '^.+\\.jsx?$': 'babel-jest',
   },
   collectCoverage: true,
   coverageDirectory: 'coverage',
