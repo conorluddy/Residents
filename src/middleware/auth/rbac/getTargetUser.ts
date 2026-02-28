@@ -29,7 +29,9 @@ async function getTargetUser(
   }
 
   const isSelfLookup = req.url === '/self'
-  const targetUserId = isSelfLookup ? user.id : req.params.id
+  // req.params values are always strings for Express route params; cast needed due to
+  // @types/express-serve-static-core typing ParamsDictionary as string | string[]
+  const targetUserId = isSelfLookup ? user.id : (req.params.id as string)
 
   // OPTIMISATION: Make a map for these to make it more efficient sometime
   if (!ROLES_ARRAY.includes(user.role)) {
