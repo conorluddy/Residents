@@ -81,7 +81,7 @@
     "@types/node": "^25.3.3",
     "@types/passport": "^1.0.17",
     "@types/passport-google-oauth20": "^2.0.16",
-    "@types/pg": "^8.15.5",
+    "@types/pg": "^8.18.0",
     "@types/supertest": "^7.2.0",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",
