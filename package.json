@@ -94,7 +94,7 @@
     "drizzle-kit": "^0.31.5",
     "eslint": "^10.0.0",
     "eslint-config-prettier": "^10.1.8",
-    "globals": "^17.0.0",
+    "globals": "^17.4.0",
     "husky": "^9.1.7",
     "jest": "^30.2.0",
     "openapi-typescript": "^7.10.1",
