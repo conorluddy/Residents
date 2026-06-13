@@ -25,8 +25,7 @@ npm run typecoverage # Check type coverage (must be ≥90%)
 ### Database Management
 ```bash
 npm run dockerup    # Start PostgreSQL container
-npm run push        # Push schema to database (development)
-npm run migrate     # Run production migrations
+npm run push        # Push schema to database (Drizzle's push workflow)
 npm run studio      # Open Drizzle Studio GUI
 npm run seed        # Seed test users
 npm run seed:owner  # Create initial admin user
@@ -185,9 +184,8 @@ Consistent response structure:
 
 ### Modifying Database Schema
 1. Update schema in `/src/db/schema/`
-2. Run `npm run generate` to create migration
-3. Run `npm run push` (dev) or `npm run migrate` (prod)
-4. Update related services and types
+2. Run `npm run push` to apply the schema to your database
+3. Update related services and types
 
 ## Important Notes
 
