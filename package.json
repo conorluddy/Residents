@@ -65,7 +65,7 @@
     "winston": "^3.18.3"
   },
   "devDependencies": {
-    "@babel/core": "^7.29.0",
+    "@babel/core": "^8.0.1",
     "@babel/preset-env": "^8.0.2",
     "@eslint/compat": "^2.0.2",
     "@eslint/eslintrc": "^3.3.1",
