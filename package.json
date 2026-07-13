@@ -68,7 +68,7 @@
     "@babel/core": "^8.0.1",
     "@babel/preset-env": "^8.0.2",
     "@eslint/compat": "^2.0.2",
-    "@eslint/eslintrc": "^3.3.1",
+    "@eslint/eslintrc": "^3.3.6",
     "@eslint/js": "^10.0.0",
     "@faker-js/faker": "^10.5.0",
     "@types/bcrypt": "^6.0.0",
