@@ -67,7 +67,9 @@ jobs:
 
   deploy-to-ecr:
     needs: build-test-and-coverage
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    # Disabled — we are not deploying to ECR. To re-enable, restore:
+    #   if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: false
     runs-on: ubuntu-latest
     permissions:
       id-token: write
