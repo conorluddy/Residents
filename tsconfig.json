@@ -1,11 +1,11 @@
 {
   "compilerOptions": {
     "target": "es6",                          // Target modern JavaScript
-    "module": "commonjs",                     // Use CommonJS module system
+    "module": "ES2015",                       // Use ES2015 module system
     "strict": true,
     "declaration": true,
     "esModuleInterop": true,
-    "moduleResolution": "node16",
+    "moduleResolution": "node",
     "resolveJsonModule": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
