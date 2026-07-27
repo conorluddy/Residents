@@ -96,7 +96,7 @@
     "prettier": "^3.9.5",
     "superagent": "^10.2.3",
     "supertest": "^7.1.4",
-    "ts-jest": "^29.4.5",
+    "ts-jest": "^29.4.12",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
     "type-coverage": "^2.29.7",
