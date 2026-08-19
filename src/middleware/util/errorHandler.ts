@@ -1,7 +1,5 @@
 import { NextFunction, Request, Response, ErrorRequestHandler } from 'express'
 import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from '../../constants/http'
-
-type HttpError = Error & { status?: number; type?: string }
 import { logger } from '../../utils/logger'
 import {
   BadRequestError,
@@ -23,6 +21,9 @@ import {
 } from '../../errors'
 import MESSAGES from '../../constants/messages'
 
+// Body-parser sets err.status for HTTP-level errors (e.g. 413 PayloadTooLarge)
+type HttpError = Error & { status?: number }
+
 const errorHandler: ErrorRequestHandler = (err: HttpError, _req: Request, res: Response, next: NextFunction): void => {
   if (!err) {
     next()
@@ -31,9 +32,8 @@ const errorHandler: ErrorRequestHandler = (err: HttpError, _req: Request, res: R
 
   logger.error(err.message)
 
-  // Body-parser sets err.status for HTTP-level errors (e.g. 413 PayloadTooLarge)
   if (err.status === HTTP_CLIENT_ERROR.PAYLOAD_TOO_LARGE) {
-    res.status(HTTP_CLIENT_ERROR.PAYLOAD_TOO_LARGE).json({ message: 'Payload too large.' })
+    res.status(HTTP_CLIENT_ERROR.PAYLOAD_TOO_LARGE).json({ message: MESSAGES.PAYLOAD_TOO_LARGE })
     return
   }
 
