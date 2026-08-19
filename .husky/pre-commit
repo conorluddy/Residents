@@ -10,9 +10,9 @@ run_command() {
   echo "$1 done ✅"
 }
 
-# Bump the patch version in package.json
+# Bump the patch version in package.json (also updates package-lock.json)
 npm version patch --no-git-tag-version
-git add package.json
+git add package.json package-lock.json
 
 # Run type coverage check
 npx type-coverage --json-output > .github/type-coverage.json

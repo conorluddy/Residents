@@ -7,8 +7,10 @@ WORKDIR /usr/src/app
 # Copy package.json and package-lock.json
 COPY package*.json ./
 
-# Install dependencies including TypeScript
-RUN npm install
+# Install dependencies including TypeScript.
+# --legacy-peer-deps matches ci.yml: @babel/core@8 is ahead of the ^7 peer range
+# that ts-jest's babel plugins still declare.
+RUN npm ci --legacy-peer-deps
 
 # Copy TypeScript configuration and source files
 COPY tsconfig.json ./

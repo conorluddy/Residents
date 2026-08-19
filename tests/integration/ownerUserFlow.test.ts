@@ -4,6 +4,8 @@ import { postgresDatabaseClient } from '../../src/db'
 import seedUserZero from '../../src/db/utils/seedUserZero'
 import { seedUsers } from '../../src/db/utils/seedUsers'
 import { HTTP_SUCCESS } from '../../src/constants/http'
+import { ROLES } from '../../src/constants/database'
+import { SafeUser } from '../../src/db/types'
 import config from '../../src/config'
 
 /**
@@ -86,7 +88,13 @@ describe('Integration: Owner flow from seeded default owner', () => {
     const jwt = loginResponse.body.token
 
     const usersResponse = await request(app).get('/users').set('Authorization', `Bearer ${jwt}`)
-    const userIdToDelete = usersResponse.body.users[3].id
+    // GET /users also returns the seeded owner (Resident Zero). The owner can't
+    // self-delete (CANT_SELF_DELETE), so a fixed index occasionally lands on the
+    // owner and the request 403s. The owner has CAN_DELETE_ANY_USER, so pick any
+    // non-owner user, which is always safely deletable.
+    const userToDelete = usersResponse.body.users.find((u: SafeUser) => u.role !== ROLES.OWNER)
+    expect(userToDelete).toBeDefined()
+    const userIdToDelete = userToDelete.id
 
     const deleteResponse = await request(app).delete(`/users/${userIdToDelete}`).set('Authorization', `Bearer ${jwt}`)
 

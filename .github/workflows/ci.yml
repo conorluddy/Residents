@@ -34,7 +34,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - name: Install dependencies
-        run: npm install
+        run: npm install --legacy-peer-deps
       - name: Run build
         run: npm run build
       - name: Run Typescript coverage report
@@ -67,7 +67,9 @@ jobs:
 
   deploy-to-ecr:
     needs: build-test-and-coverage
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    # Disabled — we are not deploying to ECR. To re-enable, restore:
+    #   if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: false
     runs-on: ubuntu-latest
     permissions:
       id-token: write
@@ -121,7 +123,7 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --legacy-peer-deps
 
       - name: Build
         run: npm run build
