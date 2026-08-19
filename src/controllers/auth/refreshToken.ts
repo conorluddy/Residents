@@ -22,8 +22,10 @@ export const refreshToken = async (req: ResidentRequest, res: Response<ResidentR
     throw new TokenError(MESSAGES.REFRESH_TOKEN_REQUIRED)
   }
 
-  // Get the refresh token from the DB — userId is authoritative from here, not a cookie
-  const token = await SERVICES.getToken({ tokenId: refreshTokenId })
+  // Get the refresh token from the DB — userId is authoritative from here, not a cookie.
+  // Scoped to type: REFRESH so a leaked magic-login/reset-password/validate token (all
+  // emailed and logged in plaintext) can't be replayed here to mint a live session.
+  const token = await SERVICES.getToken({ tokenId: refreshTokenId, type: TOKEN_TYPE.REFRESH })
 
   if (!token) {
     throw new ForbiddenError(MESSAGES.TOKEN_NOT_FOUND)

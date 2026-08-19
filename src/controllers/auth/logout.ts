@@ -2,6 +2,7 @@ import SERVICES from '../../services'
 import { Response } from 'express'
 import { BadRequestError } from '../../errors'
 import { REFRESH_TOKEN } from '../../constants/keys'
+import { TOKEN_TYPE } from '../../constants/database'
 import { handleSuccessResponse } from '../../middleware/util/successHandler'
 import MESSAGES from '../../constants/messages'
 import { ResidentRequest, ResidentResponse } from '../../types'
@@ -26,7 +27,9 @@ export const logout = async (req: ResidentRequest, res: Response<ResidentRespons
 
   // Best-effort DB cleanup: token may already be expired/deleted (e.g. admin purge).
   // Cookie is already cleared above, so the user is effectively logged out regardless.
-  const token = await SERVICES.getToken({ tokenId: refreshTokenId })
+  // Scoped to type: REFRESH so a leaked magic-login/reset-password/validate token can't
+  // be replayed here to force-wipe another user's real sessions.
+  const token = await SERVICES.getToken({ tokenId: refreshTokenId, type: TOKEN_TYPE.REFRESH })
   if (token?.userId) {
     await SERVICES.deleteRefreshTokensByUserId({ userId: token.userId })
   }
