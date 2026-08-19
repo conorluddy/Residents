@@ -131,13 +131,19 @@ describe('Should return errors if', () => {
     expect(SERVICES.deleteRefreshTokensByUserId).not.toHaveBeenCalled()
   })
   it('the token has a USED flag set', async () => {
+    // Positive case for the theft-detection design: a known-but-used token must
+    // still trigger the full session wipe, not just get rejected.
+    ;(SERVICES.deleteRefreshTokensByUserId as jest.Mock).mockClear()
     await expect(refreshToken(mockRequest as ResidentRequest, mockResponse as Response)).rejects.toThrow(
       MESSAGES.TOKEN_USED
     )
+    expect(SERVICES.deleteRefreshTokensByUserId).toHaveBeenCalledWith({ userId: mockDefaultUser.id })
   })
   it('the token has expired', async () => {
+    ;(SERVICES.deleteRefreshTokensByUserId as jest.Mock).mockClear()
     await expect(refreshToken(mockRequest as ResidentRequest, mockResponse as Response)).rejects.toThrow(
       MESSAGES.TOKEN_EXPIRED
     )
+    expect(SERVICES.deleteRefreshTokensByUserId).toHaveBeenCalledWith({ userId: mockDefaultUser.id })
   })
 })
