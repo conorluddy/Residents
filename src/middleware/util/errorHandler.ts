@@ -21,13 +21,21 @@ import {
 } from '../../errors'
 import MESSAGES from '../../constants/messages'
 
-const errorHandler: ErrorRequestHandler = (err: Error, _req: Request, res: Response, next: NextFunction): void => {
+// Body-parser sets err.status for HTTP-level errors (e.g. 413 PayloadTooLarge)
+type HttpError = Error & { status?: number }
+
+const errorHandler: ErrorRequestHandler = (err: HttpError, _req: Request, res: Response, next: NextFunction): void => {
   if (!err) {
     next()
     return
   }
 
   logger.error(err.message)
+
+  if (err.status === HTTP_CLIENT_ERROR.PAYLOAD_TOO_LARGE) {
+    res.status(HTTP_CLIENT_ERROR.PAYLOAD_TOO_LARGE).json({ message: MESSAGES.PAYLOAD_TOO_LARGE })
+    return
+  }
 
   if (err instanceof BadRequestError) {
     res.status(HTTP_CLIENT_ERROR.BAD_REQUEST).json({ message: MESSAGES.BAD_REQUEST })

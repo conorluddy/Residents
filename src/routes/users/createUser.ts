@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import CONTROLLERS from '../../controllers'
 import MW from '../../middleware'
+import { rateLimitTenPerTenMins } from '../../middleware/util/rateLimiter'
 
 const router = Router()
 
@@ -32,7 +33,7 @@ const router = Router()
  *       500:
  *         description: Internal server error
  */
-router.post('/register', MW.VALIDATE.email, CONTROLLERS.USER.createUser)
+router.post('/register', rateLimitTenPerTenMins, MW.VALIDATE.email, CONTROLLERS.USER.createUser)
 //                      ^
 //                      RBAC.checkCanCreateUsers
 //                      We can lock this down if we don't

@@ -3,12 +3,13 @@ import { HTTP_SUCCESS } from '../../constants/http'
 import { SafeUser } from '../../db/types'
 import { logout } from './logout'
 import { REQUEST_USER } from '../../types/requestSymbols'
-import { RESIDENT_TOKEN, REFRESH_TOKEN } from '../../constants/keys'
+import { REFRESH_TOKEN } from '../../constants/keys'
 import MESSAGES from '../../constants/messages'
 import { ResidentRequest } from '../../types'
 
 jest.mock('../../services/index', () => ({
   deleteRefreshTokensByUserId: jest.fn().mockImplementation(() => '123'),
+  getToken: jest.fn().mockImplementation(() => ({ userId: '123' })),
 }))
 
 describe('Controller: Logout', () => {
@@ -18,7 +19,6 @@ describe('Controller: Logout', () => {
   beforeEach(() => {
     mockRequest = {
       cookies: {
-        [RESIDENT_TOKEN]: '123',
         [REFRESH_TOKEN]: '123',
       },
     }
@@ -29,11 +29,19 @@ describe('Controller: Logout', () => {
     }
   })
 
-  it('Throws an error if missing the user data', async () => {
+  it('Throws an error if the refresh token cookie is absent', async () => {
     mockRequest.cookies = undefined
     await expect(logout(mockRequest as ResidentRequest, mockResponse as Response)).rejects.toThrow(
-      MESSAGES.MISSING_USER_ID
+      MESSAGES.REFRESH_TOKEN_REQUIRED
     )
+  })
+
+  it('Still succeeds if the refresh token is not found in the DB (graceful degradation)', async () => {
+    const SERVICES = jest.requireMock('../../services/index')
+    SERVICES.getToken.mockImplementationOnce(() => null)
+    await logout(mockRequest as ResidentRequest, mockResponse as Response)
+    expect(mockResponse.json).toHaveBeenCalledWith({ message: MESSAGES.LOGOUT_SUCCESS })
+    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.OK)
   })
 
   it('logs out a user by deleting any of their refresh tokens', async () => {
@@ -41,12 +49,6 @@ describe('Controller: Logout', () => {
     expect(mockResponse.json).toHaveBeenCalledWith({ message: MESSAGES.LOGOUT_SUCCESS })
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.OK)
     expect(mockResponse.cookie).toHaveBeenCalledWith('refreshToken', '', {
-      httpOnly: true,
-      expires: expect.any(Date),
-      sameSite: 'strict',
-      secure: false,
-    })
-    expect(mockResponse.cookie).toHaveBeenCalledWith('residentToken', '', {
       httpOnly: true,
       expires: expect.any(Date),
       sameSite: 'strict',

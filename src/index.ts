@@ -42,7 +42,7 @@ if (process.env.NODE_ENV === 'development') {
 app.disable('x-powered-by')
 app.use(helmet())
 app.use(rateLimiter)
-app.use(express.json())
+app.use(express.json({ limit: '10kb' }))
 
 // Health check
 app.get('/health', (_req, res) => {

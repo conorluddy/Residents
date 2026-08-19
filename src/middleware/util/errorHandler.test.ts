@@ -115,6 +115,16 @@ describe('Middleware: errorHandler', () => {
     expect(logger.error).toHaveBeenCalledWith(error.message)
   })
 
+  it('handles payload-too-large errors from body-parser', () => {
+    const error = Object.assign(new Error('request entity too large'), {
+      status: HTTP_CLIENT_ERROR.PAYLOAD_TOO_LARGE,
+    })
+    errorHandler(error, mockRequest as ResidentRequest, mockResponse as Response, nextFunction)
+    expect(mockResponse.status).toHaveBeenCalledWith(HTTP_CLIENT_ERROR.PAYLOAD_TOO_LARGE)
+    expect(mockResponse.json).toHaveBeenCalledWith({ message: MESSAGES.PAYLOAD_TOO_LARGE })
+    expect(logger.error).toHaveBeenCalledWith(error.message)
+  })
+
   it('handles TokenError', () => {
     testErrorHandling(TokenError, HTTP_CLIENT_ERROR.UNAUTHORIZED, MESSAGES.TOKEN_INVALID)
   })

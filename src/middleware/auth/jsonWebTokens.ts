@@ -20,7 +20,7 @@ export const authenticateToken = (req: ResidentRequest, _res: Response<ResidentR
     throw new InternalServerError(MESSAGES.JWT_SECRET_NOT_DEFINED)
   }
 
-  jwt.verify(token, secret, (err, user) => {
+  jwt.verify(token, secret, { algorithms: ['HS256'] }, (err, user) => {
     if (err) {
       throw new UnauthorizedError(MESSAGES.TOKEN_INVALID)
     }

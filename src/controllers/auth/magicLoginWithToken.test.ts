@@ -47,6 +47,16 @@ describe('Controller: MagicLoginWithToken', () => {
     )
   })
 
+  it('Throws an error if the token is not a magic-login token', async () => {
+    mockRequest[REQUEST_TOKEN] = {
+      ...mockRequest[REQUEST_TOKEN]!,
+      type: TOKEN_TYPE.RESET,
+    }
+    await expect(magicLoginWithToken(mockRequest as ResidentRequest, mockResponse as Response)).rejects.toThrow(
+      MESSAGES.INVALID_TOKEN_TYPE
+    )
+  })
+
   it('Throws an error if a user isnt found matching the given token', async () => {
     await expect(magicLoginWithToken(mockRequest as ResidentRequest, mockResponse as Response)).rejects.toThrow(
       MESSAGES.USER_NOT_FOUND_FOR_TOKEN
@@ -60,16 +70,6 @@ describe('Controller: MagicLoginWithToken', () => {
     expect(mockResponse.cookie).toHaveBeenCalledWith(
       'refreshToken',
       'refreshToken01',
-      expect.objectContaining({
-        httpOnly: true,
-        maxAge: 60000,
-        sameSite: 'strict',
-        secure: false,
-      })
-    )
-    expect(mockResponse.cookie).toHaveBeenCalledWith(
-      'residentToken',
-      expect.any(String),
       expect.objectContaining({
         httpOnly: true,
         maxAge: 60000,

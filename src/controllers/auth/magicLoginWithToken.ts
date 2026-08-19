@@ -1,10 +1,10 @@
 import { Response } from 'express'
 import { EXPIRATION_REFRESH_TOKEN_MS } from '../../config'
 import { TOKEN_TYPE } from '../../constants/database'
-import { REFRESH_TOKEN, RESIDENT_TOKEN } from '../../constants/keys'
+import { REFRESH_TOKEN } from '../../constants/keys'
 import MESSAGES from '../../constants/messages'
 import { TIMESPAN } from '../../constants/time'
-import { ForbiddenError } from '../../errors'
+import { ForbiddenError, TokenError } from '../../errors'
 import { handleSuccessResponse } from '../../middleware/util/successHandler'
 import SERVICES from '../../services'
 import { REQUEST_TOKEN } from '../../types/requestSymbols'
@@ -19,6 +19,13 @@ export const magicLoginWithToken = async (req: ResidentRequest, res: Response<Re
 
   if (!req[REQUEST_TOKEN]) {
     throw new ForbiddenError(MESSAGES.TOKEN_REQUIRED)
+  }
+
+  // findValidTokenById only checks the token is unused/unexpired, not its type — a
+  // reset-password or validate-account token (both longer-lived than a magic-login
+  // token) would otherwise authenticate as this token's owner too.
+  if (token.type !== TOKEN_TYPE.MAGIC) {
+    throw new TokenError(MESSAGES.INVALID_TOKEN_TYPE)
   }
 
   const [user] = await Promise.all([SERVICES.getUserById(token.userId), SERVICES.deleteToken({ tokenId: token.id })])
@@ -41,13 +48,6 @@ export const magicLoginWithToken = async (req: ResidentRequest, res: Response<Re
 
   const jwt = generateJwtFromUser(user)
   res.cookie(REFRESH_TOKEN, refreshTokenId, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
-    maxAge: EXPIRATION_REFRESH_TOKEN_MS,
-  })
-
-  res.cookie(RESIDENT_TOKEN, user.id, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',

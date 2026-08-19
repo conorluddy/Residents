@@ -7,9 +7,9 @@ import { generateJwtFromUser } from '../../utils/generateJwt'
 import { User } from '../../db/types'
 import { logger } from '../../utils/logger'
 import jwt from 'jsonwebtoken'
-import { RESIDENT_TOKEN } from '../../constants/keys'
 import MESSAGES from '../../constants/messages'
 import { ResidentRequest } from '../../types'
+import SERVICES from '../../services'
 
 const mockDefaultUser = makeAFakeUser({ role: ROLES.DEFAULT })
 
@@ -30,10 +30,6 @@ jest.mock('../../services/index', () => ({
       userId: mockDefaultUser.id,
     }))
     .mockImplementationOnce(() => undefined)
-    .mockImplementationOnce(() => ({
-      id: 'tok1',
-      userId: '456',
-    }))
     .mockImplementationOnce(() => ({
       id: 'tok3',
       used: true,
@@ -63,7 +59,7 @@ describe('Controller: Refresh token: Happy path', () => {
     mockRequest = {
       body: {},
       headers: { authorization: `Bearer ${token}` },
-      cookies: { refreshToken: 'REFRESHME', [RESIDENT_TOKEN]: mockDefaultUser.id },
+      cookies: { refreshToken: 'REFRESHME' },
     }
     mockResponse = {
       status: jest.fn().mockReturnThis(),
@@ -77,14 +73,8 @@ describe('Controller: Refresh token: Happy path', () => {
     expect(logger.error).not.toHaveBeenCalled()
     expect(mockResponse.json).toHaveBeenCalledWith({ token: 'testAccessToken' })
     expect(mockResponse.status).toHaveBeenCalledWith(HTTP_SUCCESS.OK)
-    expect(mockResponse.cookie).toHaveBeenCalledTimes(2)
+    expect(mockResponse.cookie).toHaveBeenCalledTimes(1)
     expect(mockResponse.cookie).toHaveBeenNthCalledWith(1, 'refreshToken', 'tok1', {
-      httpOnly: true,
-      maxAge: 60000,
-      sameSite: 'strict',
-      secure: false,
-    })
-    expect(mockResponse.cookie).toHaveBeenNthCalledWith(2, 'residentToken', mockDefaultUser.id, {
       httpOnly: true,
       maxAge: 60000,
       sameSite: 'strict',
@@ -114,7 +104,7 @@ describe('Should return errors if', () => {
       headers: {
         authorization: `Bearer ${token}`,
       },
-      cookies: { refreshToken: 'REFRESHME', [RESIDENT_TOKEN]: mockDefaultUser.id },
+      cookies: { refreshToken: 'REFRESHME' },
     }
     mockResponse = {
       status: jest.fn().mockReturnThis(),
@@ -130,30 +120,30 @@ describe('Should return errors if', () => {
     )
   })
 
-  it('theres no UserId in the cookies', async () => {
-    delete mockRequest.cookies?.[RESIDENT_TOKEN]
-    await expect(refreshToken(mockRequest as ResidentRequest, mockResponse as Response)).rejects.toThrow(
-      MESSAGES.REFRESH_TOKEN_COUNTERPART_REQUIRED
-    )
-  })
   it('the token isnt found in the database', async () => {
+    // Regression guard: an unknown token must not trigger the session-wipe path.
+    // Before the fix, this ran unconditionally off a client-supplied cookie, letting
+    // an attacker wipe any user's sessions with a forged token ID.
+    ;(SERVICES.deleteRefreshTokensByUserId as jest.Mock).mockClear()
     await expect(refreshToken(mockRequest as ResidentRequest, mockResponse as Response)).rejects.toThrow(
       MESSAGES.TOKEN_NOT_FOUND
     )
-  })
-  it('the token user does not match the JWT user', async () => {
-    await expect(refreshToken(mockRequest as ResidentRequest, mockResponse as Response)).rejects.toThrow(
-      MESSAGES.TOKEN_USER_INVALID
-    )
+    expect(SERVICES.deleteRefreshTokensByUserId).not.toHaveBeenCalled()
   })
   it('the token has a USED flag set', async () => {
+    // Positive case for the theft-detection design: a known-but-used token must
+    // still trigger the full session wipe, not just get rejected.
+    ;(SERVICES.deleteRefreshTokensByUserId as jest.Mock).mockClear()
     await expect(refreshToken(mockRequest as ResidentRequest, mockResponse as Response)).rejects.toThrow(
       MESSAGES.TOKEN_USED
     )
+    expect(SERVICES.deleteRefreshTokensByUserId).toHaveBeenCalledWith({ userId: mockDefaultUser.id })
   })
   it('the token has expired', async () => {
+    ;(SERVICES.deleteRefreshTokensByUserId as jest.Mock).mockClear()
     await expect(refreshToken(mockRequest as ResidentRequest, mockResponse as Response)).rejects.toThrow(
       MESSAGES.TOKEN_EXPIRED
     )
+    expect(SERVICES.deleteRefreshTokensByUserId).toHaveBeenCalledWith({ userId: mockDefaultUser.id })
   })
 })

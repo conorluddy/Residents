@@ -6,7 +6,7 @@ import { BadRequestError, ForbiddenError, LoginError } from '../../errors'
 import SERVICES from '../../services'
 import { validateHash } from '../../utils/crypt'
 import { generateJwtFromUser } from '../../utils/generateJwt'
-import { REFRESH_TOKEN, RESIDENT_TOKEN } from '../../constants/keys'
+import { REFRESH_TOKEN } from '../../constants/keys'
 import { EXPIRATION_REFRESH_TOKEN_MS } from '../../config'
 import { handleSuccessResponse } from '../../middleware/util/successHandler'
 import MESSAGES from '../../constants/messages'
@@ -66,14 +66,6 @@ export const login = async (req: ResidentRequest, res: Response<ResidentResponse
   // sameSite: 'strict' provides CSRF protection — no separate CSRF token needed.
 
   res.cookie(REFRESH_TOKEN, refreshTokenId, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
-    maxAge: EXPIRATION_REFRESH_TOKEN_MS,
-  })
-
-  // This is probably redundant as the id is in the jwt anyway... Revisit
-  res.cookie(RESIDENT_TOKEN, user.id, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',
