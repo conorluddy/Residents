@@ -8,12 +8,9 @@ import { TOKEN_TYPE } from '../../constants/database'
 
 interface GetTokenProps {
   tokenId: string
-  // Optional for backwards compatibility with callers that still need to look up
-  // any token type (e.g. findValidTokenById, shared across magic-login/reset-password/
-  // validate-account). Callers that treat the result as authoritative for a specific
-  // action (e.g. refreshToken, logout) MUST pass this — tokenTypes are not otherwise
-  // distinguished by ID alone, so an unscoped lookup lets a token minted for one
-  // purpose (e.g. a magic-login link) be replayed as another (e.g. a refresh token).
+  // Optional only for findValidTokenById's shared any-type lookup. Every other caller
+  // MUST pass this — otherwise a token minted for one purpose (e.g. a magic-login
+  // link) can be replayed as another (e.g. a refresh token).
   type?: TOKEN_TYPE
 }
 
