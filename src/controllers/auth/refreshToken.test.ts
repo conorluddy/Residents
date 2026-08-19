@@ -9,6 +9,7 @@ import { logger } from '../../utils/logger'
 import jwt from 'jsonwebtoken'
 import MESSAGES from '../../constants/messages'
 import { ResidentRequest } from '../../types'
+import SERVICES from '../../services'
 
 const mockDefaultUser = makeAFakeUser({ role: ROLES.DEFAULT })
 
@@ -120,9 +121,14 @@ describe('Should return errors if', () => {
   })
 
   it('the token isnt found in the database', async () => {
+    // Regression guard: an unknown token must not trigger the session-wipe path.
+    // Before the fix, this ran unconditionally off a client-supplied cookie, letting
+    // an attacker wipe any user's sessions with a forged token ID.
+    ;(SERVICES.deleteRefreshTokensByUserId as jest.Mock).mockClear()
     await expect(refreshToken(mockRequest as ResidentRequest, mockResponse as Response)).rejects.toThrow(
       MESSAGES.TOKEN_NOT_FOUND
     )
+    expect(SERVICES.deleteRefreshTokensByUserId).not.toHaveBeenCalled()
   })
   it('the token has a USED flag set', async () => {
     await expect(refreshToken(mockRequest as ResidentRequest, mockResponse as Response)).rejects.toThrow(
