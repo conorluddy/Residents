@@ -66,7 +66,7 @@ export const refreshToken = async (req: ResidentRequest, res: Response<ResidentR
     maxAge: EXPIRATION_REFRESH_TOKEN_MS,
   })
 
-  await SERVICES.deleteToken({ tokenId: token.id })
-
+  // No need to delete `token` here — deleteRefreshTokensByUserId already removed it
+  // above, along with every other refresh token belonging to this user.
   handleSuccessResponse({ res, token: accessToken })
 }
