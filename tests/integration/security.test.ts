@@ -91,5 +91,20 @@ describe('Integration: Security hardening', () => {
       const stillValid = await SERVICES.getToken({ tokenId: magicTokenId as string, type: TOKEN_TYPE.MAGIC })
       expect(stillValid).toBeTruthy()
     })
+
+    it('rejects a reset-password token id presented to magic-login', async () => {
+      // findValidTokenById (shared by magic-login/reset-password/validate) only checks
+      // used/expired, not type — a longer-lived RESET token (1hr) must not authenticate
+      // via the magic-login endpoint (10min-token, no password required).
+      const resetTokenId = await SERVICES.createToken({
+        userId,
+        type: TOKEN_TYPE.RESET,
+        expiry: TIMESPAN.HOUR,
+      })
+      const response = await request(app).get(`/auth/magic-login/${resetTokenId}`)
+      expect(response.status).toBe(401)
+      expect(response.body).toMatchObject({ message: MESSAGES.TOKEN_INVALID })
+      expect(response.body).not.toHaveProperty('token')
+    })
   })
 })
