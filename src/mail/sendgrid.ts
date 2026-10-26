@@ -1,4 +1,4 @@
-import sgMail, { ClientResponse } from '@sendgrid/mail'
+import sgMail from '@sendgrid/mail'
 import { logger } from '../utils/logger'
 import { SENDGRID_API_KEY, SENDGRID_VERIFIED_EMAIL } from '../config'
 import { EmailError } from '../errors'
@@ -17,7 +17,7 @@ interface MailProps {
   body: string
 }
 
-export const sendMail = async ({ to, subject, body }: MailProps): Promise<[ClientResponse, object] | undefined> => {
+export const sendMail = async ({ to, subject, body }: MailProps): Promise<unknown> => {
   try {
     if (!SENDGRID_VERIFIED_EMAIL) {
       throw new EmailError(MESSAGES.MISSING_REQUIRED_ENV_VARS)
