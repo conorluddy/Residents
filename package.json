@@ -88,7 +88,7 @@
     "@typescript-eslint/parser": "^8.72.1",
     "babel-jest": "^30.2.0",
     "drizzle-kit": "^0.31.5",
-    "eslint": "^10.0.0",
+    "eslint": "^10.14.0",
     "eslint-config-prettier": "^10.1.8",
     "globals": "^17.11.0",
     "husky": "^9.1.7",
